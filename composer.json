@@ -17,6 +17,9 @@
     "require-dev": {
     },
     "config": {
+        "platform": {
+            "php": "8.1"
+        },
         "allow-plugins": {
             "symfony/flex": true,
             "symfony/runtime": true
