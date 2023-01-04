@@ -1,0 +1,12 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 8baee57..92b2199 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -130,6 +130,7 @@ class DragonTreasure
+     /**
+      * A human-readable representation of when this treasure was plundered.
+      */
++    #[Groups(['treasure:read'])]
+     public function getPlunderedAtAgo(): string
+     {
+         return Carbon::instance($this->plunderedAt)->diffForHumans();
