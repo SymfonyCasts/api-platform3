@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
 #[ApiResource(
-    shortName: 'treasure',
+    shortName: 'Treasure',
     description: 'A rare and valuable treasure.',
     operations: [
         new Get(),
