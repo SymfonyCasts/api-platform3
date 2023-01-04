@@ -94,6 +94,7 @@ class DragonTreasure
         return $this->description;
     }
 
+    #[Groups(['treasure:read'])]
     public function getShortDescription(): string
     {
         return u($this->getDescription())->truncate(40, '...');
