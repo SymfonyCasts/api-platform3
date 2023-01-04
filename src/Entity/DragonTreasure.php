@@ -80,6 +80,8 @@ class DragonTreasure
 
     #[ORM\Column]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[Assert\GreaterThanOrEqual(0)]
+    #[Assert\LessThanOrEqual(10)]
     private ?int $coolFactor = null;
 
     #[ORM\Column]
