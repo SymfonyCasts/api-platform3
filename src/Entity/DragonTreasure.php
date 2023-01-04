@@ -23,7 +23,7 @@ use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
 #[ApiResource(
-    shortName: 'treasure',
+    shortName: 'Treasure',
     description: 'A rare and valuable treasure.',
     operations: [
         new Get(),
