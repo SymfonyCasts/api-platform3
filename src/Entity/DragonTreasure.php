@@ -39,9 +39,6 @@ use function Symfony\Component\String\u;
         'groups' => ['treasure:write'],
     ],
 )]
-#[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
-#[ApiFilter(RangeFilter::class, properties: ['value'])]
 #[ApiFilter(PropertyFilter::class)]
 class DragonTreasure
 {
@@ -52,10 +49,12 @@ class DragonTreasure
 
     #[ORM\Column(length: 255)]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['treasure:read'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $description = null;
 
     /**
@@ -63,6 +62,7 @@ class DragonTreasure
      */
     #[ORM\Column]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[ApiFilter(RangeFilter::class)]
     private ?int $value = null;
 
     #[ORM\Column]
@@ -73,6 +73,7 @@ class DragonTreasure
     private \DateTimeImmutable $plunderedAt;
 
     #[ORM\Column]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $isPublished = false;
 
     public function __construct(string $name = null)
