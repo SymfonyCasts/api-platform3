@@ -1,8 +1,8 @@
 diff --git a/README.md b/README.md
-index 822b849..5290870 100644
+index 822b849..32d3cba 100644
 --- a/README.md
 +++ b/README.md
-@@ -21,6 +21,34 @@ composer install
+@@ -21,6 +21,33 @@ composer install
  You may alternatively need to run `php composer.phar install`, depending
  on how you installed Composer.
  
@@ -27,7 +27,6 @@ index 822b849..5290870 100644
 +# but its aware of your database container
 +symfony console doctrine:database:create --if-not-exists
 +symfony console doctrine:migrations:migrate
-+symfony console doctrine:fixtures:load
 +```
 +
 +If you do *not* want to use Docker, just make sure to start your own
