@@ -66,6 +66,7 @@ class DragonTreasure
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['treasure:read'])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     /**
@@ -74,6 +75,7 @@ class DragonTreasure
     #[ORM\Column]
     #[Groups(['treasure:read', 'treasure:write'])]
     #[ApiFilter(RangeFilter::class)]
+    #[Assert\GreaterThanOrEqual(0)]
     private ?int $value = null;
 
     #[ORM\Column]
