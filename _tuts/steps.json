@@ -104,7 +104,72 @@
             "id": "serialization-add-getcreatedatago-method",
             "name": "Serialization: Add getCreatedAtAgo() method",
             "description": null
+        },
+        {
+            "id": "groups-add-normalizationcontext-and-groups",
+            "name": "Groups: Add normalizationContext & groups",
+            "description": null
+        },
+        {
+            "id": "groups-add-groups-to-several-fields",
+            "name": "Groups: Add groups to several fields",
+            "description": null
+        },
+        {
+            "id": "groups-add-denormalizationcontext",
+            "name": "Groups: Add denormalizationContext",
+            "description": null
+        },
+        {
+            "id": "groups-add-groups-to-writable-fields",
+            "name": "Groups: Add groups to writable fields",
+            "description": null
+        },
+        {
+            "id": "groups-add-group-above-getplunderedatago-method",
+            "name": "Groups: Add group above getPlunderedAtAgo() method",
+            "description": null
+        },
+        {
+            "id": "groups-add-group-to-settextdescription-method",
+            "name": "Groups: Add group to setTextDescription() method",
+            "description": null
+        },
+        {
+            "id": "groups-re-add-setdescription-method",
+            "name": "Groups: Re-Add setDescription() method",
+            "description": null
+        },
+        {
+            "id": "groups-default-the-ispublished-field",
+            "name": "Groups: Default the isPublished field",
+            "description": null
+        },
+        {
+            "id": "serializationtricks-serializedname",
+            "name": "SerializationTricks: SerializedName",
+            "description": null
+        },
+        {
+            "id": "serializationtricks-add-a-constructor-arg",
+            "name": "SerializationTricks: Add a constructor arg",
+            "description": null
+        },
+        {
+            "id": "serializationtricks-rename-arg",
+            "name": "SerializationTricks: rename arg",
+            "description": null
+        },
+        {
+            "id": "serializationtricks-change-argument-name-back",
+            "name": "SerializationTricks: change argument name back",
+            "description": null
+        },
+        {
+            "id": "serializationtricks-make-the-constructor-arg-optional",
+            "name": "SerializationTricks: Make the constructor arg optional",
+            "description": null
         }
     ],
-    "sha": "ffdbf7ca18f49123f2e560e24d8198a943c5abe4"
+    "sha": "e1d921ba5b58edbfb00aab38209990ae15c339ef"
 }
