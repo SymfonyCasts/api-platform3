@@ -93,6 +93,11 @@ class DragonTreasure
         return $this->description;
     }
 
+    public function getShortDescription(): string
+    {
+        return \strlen($this->description) > 40 ? \substr($this->description, 0, 40) . '...' : $this->description;
+    }
+
     public function setDescription(string $description): self
     {
         $this->description = $description;
