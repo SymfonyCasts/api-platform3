@@ -34,6 +34,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     denormalizationContext: [
         'groups' => ['treasure:write'],
     ],
+    paginationItemsPerPage: 10
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
 class DragonTreasure
