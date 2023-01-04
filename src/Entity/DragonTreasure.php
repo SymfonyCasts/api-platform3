@@ -39,7 +39,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
-#[ApiFilter(RangeFilter::class, properties: ['value'])]
 class DragonTreasure
 {
     #[ORM\Id]
@@ -60,6 +59,7 @@ class DragonTreasure
      */
     #[ORM\Column]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[ApiFilter(RangeFilter::class)]
     private ?int $value = null;
 
     #[ORM\Column]
