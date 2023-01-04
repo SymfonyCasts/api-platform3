@@ -1,0 +1,27 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 0b45258..009bef3 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Patch;
+ use ApiPlatform\Metadata\Post;
+ use ApiPlatform\Metadata\Put;
+ use App\Repository\DragonTreasureRepository;
++use Carbon\Carbon;
+ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
+ 
+@@ -115,6 +116,14 @@ class DragonTreasure
+         return $this->plunderedAt;
+     }
+ 
++    /**
++     * A human-readable representation of when this treasure was plundered.
++     */
++    public function getPlunderedAtAgo(): string
++    {
++        return Carbon::instance($this->plunderedAt)->diffForHumans();
++    }
++
+     public function getIsPublished(): ?bool
+     {
+         return $this->isPublished;

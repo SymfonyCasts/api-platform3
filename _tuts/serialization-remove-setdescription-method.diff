@@ -1,0 +1,18 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 698b4f9..dbf528b 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -74,13 +74,6 @@ class DragonTreasure
+         return $this->description;
+     }
+ 
+-    public function setDescription(string $description): self
+-    {
+-        $this->description = $description;
+-
+-        return $this;
+-    }
+-
+     public function setTextDescription(string $description): self
+     {
+         $this->description = nl2br($description);

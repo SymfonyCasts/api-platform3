@@ -26,6 +26,16 @@
             "description": null
         },
         {
+            "id": "firstentity-correct-isispublished",
+            "name": "FirstEntity: correct isIsPublished()",
+            "description": null
+        },
+        {
+            "id": "firstentity-make-migration",
+            "name": "FirstEntity: make:migration",
+            "description": null
+        },
+        {
             "id": "firstentity-add-apiresource",
             "name": "FirstEntity: Add ApiResource",
             "description": null
@@ -69,7 +79,32 @@
             "id": "operations-remove-dummy-config",
             "name": "Operations: remove dummy config",
             "description": null
+        },
+        {
+            "id": "serialization-add-settextdescription-method",
+            "name": "Serialization: Add setTextDescription() method",
+            "description": null
+        },
+        {
+            "id": "serialization-remove-setdescription-method",
+            "name": "Serialization: Remove setDescription() method",
+            "description": null
+        },
+        {
+            "id": "serialization-remove-setplunderedat-method",
+            "name": "Serialization: Remove setPlunderedAt method",
+            "description": null
+        },
+        {
+            "id": "serialization-install-carbon",
+            "name": "Serialization: install carbon",
+            "description": null
+        },
+        {
+            "id": "serialization-add-getcreatedatago-method",
+            "name": "Serialization: Add getCreatedAtAgo() method",
+            "description": null
         }
     ],
-    "sha": "df2490b7a0578d50f64b346bafa3e53bd352fad6"
+    "sha": "ffdbf7ca18f49123f2e560e24d8198a943c5abe4"
 }

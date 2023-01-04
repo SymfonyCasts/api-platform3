@@ -1,0 +1,13 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 56e30c4..75e2846 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -97,7 +97,7 @@ class DragonTreasure
+         return $this;
+     }
+ 
+-    public function isIsPublished(): ?bool
++    public function getIsPublished(): ?bool
+     {
+         return $this->isPublished;
+     }
