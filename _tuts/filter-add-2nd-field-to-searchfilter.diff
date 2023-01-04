@@ -1,0 +1,12 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index bda4a75..ff4f10c 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -50,6 +50,7 @@ class DragonTreasure
+ 
+     #[ORM\Column(type: Types::TEXT)]
+     #[Groups(['treasure:read'])]
++    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+     private ?string $description = null;
+ 
+     /**
