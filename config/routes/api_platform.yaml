@@ -2,7 +2,3 @@ api_platform:
     resource: .
     type: api_platform
     prefix: /api
-    formats:
-        jsonld: ['application/ld+json']
-        json: ['application/json']
-        html: ['text/html']
