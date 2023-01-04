@@ -169,7 +169,62 @@
             "id": "serializationtricks-make-the-constructor-arg-optional",
             "name": "SerializationTricks: Make the constructor arg optional",
             "description": null
+        },
+        {
+            "id": "fixtures-install-fixtures-and-foundry",
+            "name": "Fixtures: install fixtures & foundry",
+            "description": null
+        },
+        {
+            "id": "fixtures-make-factory",
+            "name": "Fixtures: make:factory",
+            "description": null
+        },
+        {
+            "id": "fixtures-tweak-getdefaults",
+            "name": "Fixtures: Tweak getDefaults()",
+            "description": null
+        },
+        {
+            "id": "fixtures-add-fixtures-to-appfixtures",
+            "name": "Fixtures: Add fixtures to AppFixtures",
+            "description": null
+        },
+        {
+            "id": "filter-add-booleanfilter",
+            "name": "Filter: Add BooleanFilter",
+            "description": null
+        },
+        {
+            "id": "filter-move-above-property",
+            "name": "Filter: Move above property",
+            "description": null
+        },
+        {
+            "id": "filter-add-searchfilter",
+            "name": "Filter: Add SearchFilter",
+            "description": null
+        },
+        {
+            "id": "filter-add-2nd-field-to-searchfilter",
+            "name": "Filter: Add 2nd field to SearchFilter",
+            "description": null
+        },
+        {
+            "id": "filter-add-range-filter-on-value",
+            "name": "Filter: Add range filter on value",
+            "description": null
+        },
+        {
+            "id": "filter-add-getshortdescription-method",
+            "name": "Filter: Add getShortDescription() method",
+            "description": null
+        },
+        {
+            "id": "filter-add-propertyfilter",
+            "name": "Filter: Add PropertyFilter",
+            "description": null
         }
     ],
-    "sha": "e1d921ba5b58edbfb00aab38209990ae15c339ef"
+    "sha": "0344821d9005ac35cba792dd65b0a619d51fa90a"
 }
