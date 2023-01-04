@@ -146,22 +146,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->treasures;
     }
 
-    public function addTreasure(DragonTreasure $dragonTreasure): self
+    public function addTreasure(DragonTreasure $treasure): self
     {
-        if (!$this->treasures->contains($dragonTreasure)) {
-            $this->treasures->add($dragonTreasure);
-            $dragonTreasure->setOwner($this);
+        if (!$this->treasures->contains($treasure)) {
+            $this->treasures->add($treasure);
+            $treasure->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeTreasure(DragonTreasure $dragonTreasure): self
+    public function removeTreasure(DragonTreasure $treasure): self
     {
-        if ($this->treasures->removeElement($dragonTreasure)) {
+        if ($this->treasures->removeElement($treasure)) {
             // set the owning side to null (unless already changed)
-            if ($dragonTreasure->getOwner() === $this) {
-                $dragonTreasure->setOwner(null);
+            if ($treasure->getOwner() === $this) {
+                $treasure->setOwner(null);
             }
         }
 
