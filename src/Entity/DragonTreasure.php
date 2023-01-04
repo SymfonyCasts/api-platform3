@@ -37,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     ],
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 class DragonTreasure
 {
     #[ORM\Id]
