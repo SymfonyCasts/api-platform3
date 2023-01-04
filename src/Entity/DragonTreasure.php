@@ -65,7 +65,7 @@ class DragonTreasure
     #[ORM\Column]
     private bool $isPublished = false;
 
-    public function __construct(string $name)
+    public function __construct(string $name = null)
     {
         $this->name = $name;
         $this->plunderedAt = new \DateTimeImmutable();
