@@ -1,0 +1,14 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 23250d5..d55650e 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -27,6 +27,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
+     ],
+     normalizationContext: [
+         'groups' => ['treasure:read'],
++    ],
++    denormalizationContext: [
++        'groups' => ['treasure:write'],
+     ]
+ )]
+ class DragonTreasure
