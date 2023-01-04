@@ -18,6 +18,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
 #[ApiResource(
@@ -95,7 +96,7 @@ class DragonTreasure
 
     public function getShortDescription(): string
     {
-        return \strlen($this->description) > 40 ? \substr($this->description, 0, 40) . '...' : $this->description;
+        return u($this->getDescription())->truncate(40, '...');
     }
 
     public function setDescription(string $description): self
