@@ -62,7 +62,7 @@ class DragonTreasure
     private \DateTimeImmutable $plunderedAt;
 
     #[ORM\Column]
-    private ?bool $isPublished = null;
+    private bool $isPublished = false;
 
     public function __construct()
     {
@@ -144,7 +144,7 @@ class DragonTreasure
         return Carbon::instance($this->plunderedAt)->diffForHumans();
     }
 
-    public function getIsPublished(): ?bool
+    public function getIsPublished(): bool
     {
         return $this->isPublished;
     }
