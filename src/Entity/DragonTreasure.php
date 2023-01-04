@@ -27,12 +27,12 @@ use function Symfony\Component\String\u;
     shortName: 'Treasure',
     description: 'A rare and valuable treasure.',
     operations: [
-        new Get(),
-        new GetCollection(
+        new Get(
             normalizationContext: [
                 'groups' => ['treasure:read', 'treasure:item:get'],
             ],
         ),
+        new GetCollection(),
         new Post(),
         new Put(),
         new Patch(),
