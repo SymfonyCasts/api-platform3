@@ -1,0 +1,15 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index d072b21..8ad33c6 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -8,7 +8,9 @@ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
+ 
+ #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
+-#[ApiResource]
++#[ApiResource(
++    description: 'A rare and valuable treasure.'
++)]
+ class DragonTreasure
+ {
+     #[ORM\Id]

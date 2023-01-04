@@ -1,0 +1,27 @@
+diff --git a/composer.json b/composer.json
+index 942ac3e..fc80ea1 100644
+--- a/composer.json
++++ b/composer.json
+@@ -87,5 +87,8 @@
+             "type": "path",
+             "url": "/Users/weaverryan/Sites/os/ai-maker-bundle"
+         }
+-    ]
++    ],
++    "require-dev": {
++        "symfony/maker-bundle": "^1.48"
++    }
+ }
+diff --git a/composer.lock b/composer.lock
+index b178b86..9f1099f 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,7 +4,7 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+         "This file is @generated automatically"
+     ],
+-    "content-hash": "791a2c11471495eb5d8e37088ba91e49",
++    "content-hash": "f4ed848c8a98539d7762147fb3d60e2b",
+     "packages": [
+         {
+             "name": "api-platform/core",

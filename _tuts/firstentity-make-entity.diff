@@ -1,0 +1,230 @@
+diff --git a/migrations/Version20230104143326.php b/migrations/Version20230104143326.php
+new file mode 100644
+index 0000000..5504713
+--- /dev/null
++++ b/migrations/Version20230104143326.php
+@@ -0,0 +1,35 @@
++<?php
++
++declare(strict_types=1);
++
++namespace DoctrineMigrations;
++
++use Doctrine\DBAL\Schema\Schema;
++use Doctrine\Migrations\AbstractMigration;
++
++/**
++ * Auto-generated Migration: Please modify to your needs!
++ */
++final class Version20230104143326 extends AbstractMigration
++{
++    public function getDescription(): string
++    {
++        return '';
++    }
++
++    public function up(Schema $schema): void
++    {
++        // this up() migration is auto-generated, please modify it to your needs
++        $this->addSql('CREATE SEQUENCE dragon_treasure_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
++        $this->addSql('CREATE TABLE dragon_treasure (id INT NOT NULL, name VARCHAR(255) NOT NULL, description TEXT NOT NULL, value INT NOT NULL, cool_factor INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, is_published BOOLEAN NOT NULL, PRIMARY KEY(id))');
++        $this->addSql('COMMENT ON COLUMN dragon_treasure.created_at IS \'(DC2Type:datetime_immutable)\'');
++    }
++
++    public function down(Schema $schema): void
++    {
++        // this down() migration is auto-generated, please modify it to your needs
++        $this->addSql('CREATE SCHEMA public');
++        $this->addSql('DROP SEQUENCE dragon_treasure_id_seq CASCADE');
++        $this->addSql('DROP TABLE dragon_treasure');
++    }
++}
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+new file mode 100644
+index 0000000..eba7330
+--- /dev/null
++++ b/src/Entity/DragonTreasure.php
+@@ -0,0 +1,111 @@
++<?php
++
++namespace App\Entity;
++
++use App\Repository\DragonTreasureRepository;
++use Doctrine\DBAL\Types\Types;
++use Doctrine\ORM\Mapping as ORM;
++
++#[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
++class DragonTreasure
++{
++    #[ORM\Id]
++    #[ORM\GeneratedValue]
++    #[ORM\Column]
++    private ?int $id = null;
++
++    #[ORM\Column(length: 255)]
++    private ?string $name = null;
++
++    #[ORM\Column(type: Types::TEXT)]
++    private ?string $description = null;
++
++    #[ORM\Column]
++    private ?int $value = null;
++
++    #[ORM\Column]
++    private ?int $coolFactor = null;
++
++    #[ORM\Column]
++    private ?\DateTimeImmutable $createdAt = null;
++
++    #[ORM\Column]
++    private ?bool $isPublished = null;
++
++    public function getId(): ?int
++    {
++        return $this->id;
++    }
++
++    public function getName(): ?string
++    {
++        return $this->name;
++    }
++
++    public function setName(string $name): self
++    {
++        $this->name = $name;
++
++        return $this;
++    }
++
++    public function getDescription(): ?string
++    {
++        return $this->description;
++    }
++
++    public function setDescription(string $description): self
++    {
++        $this->description = $description;
++
++        return $this;
++    }
++
++    public function getValue(): ?int
++    {
++        return $this->value;
++    }
++
++    public function setValue(int $value): self
++    {
++        $this->value = $value;
++
++        return $this;
++    }
++
++    public function getCoolFactor(): ?int
++    {
++        return $this->coolFactor;
++    }
++
++    public function setCoolFactor(int $coolFactor): self
++    {
++        $this->coolFactor = $coolFactor;
++
++        return $this;
++    }
++
++    public function getCreatedAt(): ?\DateTimeImmutable
++    {
++        return $this->createdAt;
++    }
++
++    public function setCreatedAt(\DateTimeImmutable $createdAt): self
++    {
++        $this->createdAt = $createdAt;
++
++        return $this;
++    }
++
++    public function isIsPublished(): ?bool
++    {
++        return $this->isPublished;
++    }
++
++    public function setIsPublished(bool $isPublished): self
++    {
++        $this->isPublished = $isPublished;
++
++        return $this;
++    }
++}
+diff --git a/src/Repository/DragonTreasureRepository.php b/src/Repository/DragonTreasureRepository.php
+new file mode 100644
+index 0000000..62a044b
+--- /dev/null
++++ b/src/Repository/DragonTreasureRepository.php
+@@ -0,0 +1,66 @@
++<?php
++
++namespace App\Repository;
++
++use App\Entity\DragonTreasure;
++use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
++use Doctrine\Persistence\ManagerRegistry;
++
++/**
++ * @extends ServiceEntityRepository<DragonTreasure>
++ *
++ * @method DragonTreasure|null find($id, $lockMode = null, $lockVersion = null)
++ * @method DragonTreasure|null findOneBy(array $criteria, array $orderBy = null)
++ * @method DragonTreasure[]    findAll()
++ * @method DragonTreasure[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
++ */
++class DragonTreasureRepository extends ServiceEntityRepository
++{
++    public function __construct(ManagerRegistry $registry)
++    {
++        parent::__construct($registry, DragonTreasure::class);
++    }
++
++    public function save(DragonTreasure $entity, bool $flush = false): void
++    {
++        $this->getEntityManager()->persist($entity);
++
++        if ($flush) {
++            $this->getEntityManager()->flush();
++        }
++    }
++
++    public function remove(DragonTreasure $entity, bool $flush = false): void
++    {
++        $this->getEntityManager()->remove($entity);
++
++        if ($flush) {
++            $this->getEntityManager()->flush();
++        }
++    }
++
++//    /**
++//     * @return DragonTreasure[] Returns an array of DragonTreasure objects
++//     */
++//    public function findByExampleField($value): array
++//    {
++//        return $this->createQueryBuilder('d')
++//            ->andWhere('d.exampleField = :val')
++//            ->setParameter('val', $value)
++//            ->orderBy('d.id', 'ASC')
++//            ->setMaxResults(10)
++//            ->getQuery()
++//            ->getResult()
++//        ;
++//    }
++
++//    public function findOneBySomeField($value): ?DragonTreasure
++//    {
++//        return $this->createQueryBuilder('d')
++//            ->andWhere('d.exampleField = :val')
++//            ->setParameter('val', $value)
++//            ->getQuery()
++//            ->getOneOrNullResult()
++//        ;
++//    }
++}

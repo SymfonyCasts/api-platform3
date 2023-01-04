@@ -1,0 +1,75 @@
+{
+    "steps": [
+        {
+            "id": "start",
+            "name": "start",
+            "description": null
+        },
+        {
+            "id": "install-install-apip",
+            "name": "Install: install apip",
+            "description": null
+        },
+        {
+            "id": "install-update-readme-for-database",
+            "name": "Install: update README for database",
+            "description": null
+        },
+        {
+            "id": "install-install-maker",
+            "name": "Install: install maker",
+            "description": null
+        },
+        {
+            "id": "firstentity-make-entity",
+            "name": "FirstEntity: make:entity",
+            "description": null
+        },
+        {
+            "id": "firstentity-add-apiresource",
+            "name": "FirstEntity: Add ApiResource",
+            "description": null
+        },
+        {
+            "id": "openapi-add-phpdoc-above-value",
+            "name": "OpenApi: Add phpdoc above value",
+            "description": null
+        },
+        {
+            "id": "openapi-add-description-option",
+            "name": "OpenApi: Add description option",
+            "description": null
+        },
+        {
+            "id": "debug-compose-require-debug",
+            "name": "Debug: compose require debug",
+            "description": null
+        },
+        {
+            "id": "operations-add-5-core-operations",
+            "name": "Operations: Add 5 core operations",
+            "description": null
+        },
+        {
+            "id": "operations-remove-delete-operation",
+            "name": "Operations: remove Delete operation",
+            "description": null
+        },
+        {
+            "id": "operations-configure-shortname",
+            "name": "Operations: Configure shortName",
+            "description": null
+        },
+        {
+            "id": "operations-use-uritemplate-for-getcollection",
+            "name": "Operations: Use uriTemplate for GetCollection",
+            "description": null
+        },
+        {
+            "id": "operations-remove-dummy-config",
+            "name": "Operations: remove dummy config",
+            "description": null
+        }
+    ],
+    "sha": "df2490b7a0578d50f64b346bafa3e53bd352fad6"
+}

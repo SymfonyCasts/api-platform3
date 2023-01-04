@@ -1,0 +1,20 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 864e022..fb9f6f2 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -3,7 +3,6 @@
+ namespace App\Entity;
+ 
+ use ApiPlatform\Metadata\ApiResource;
+-use ApiPlatform\Metadata\Delete;
+ use ApiPlatform\Metadata\Get;
+ use ApiPlatform\Metadata\GetCollection;
+ use ApiPlatform\Metadata\Patch;
+@@ -22,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
+         new Post(),
+         new Put(),
+         new Patch(),
+-        new Delete(),
+     ]
+ )]
+ class DragonTreasure
