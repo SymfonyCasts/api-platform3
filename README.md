@@ -21,6 +21,34 @@ composer install
 You may alternatively need to run `php composer.phar install`, depending
 on how you installed Composer.
 
+### Database Setup
+
+The code comes with a `docker-compose.yaml` file and we recommend using
+Docker to boot a database container. You will still have PHP installed
+locally, but you'll connect to a database inside Docker. This is optional,
+but I think you'll love it!
+
+First, make sure you have [Docker installed](https://docs.docker.com/get-docker/)
+and running. To start the container, run:
+
+```
+docker-compose up -d
+```
+
+Next, build the database and the schema with:
+
+```
+# "symfony console" is equivalent to "bin/console"
+# but its aware of your database container
+symfony console doctrine:database:create --if-not-exists
+symfony console doctrine:migrations:migrate
+symfony console doctrine:fixtures:load
+```
+
+If you do *not* want to use Docker, just make sure to start your own
+database server and update the `DATABASE_URL` environment variable in
+`.env` or `.env.local` before running the commands above.
+
 ### Start the Symfony web server
 
 You can use Nginx or Apache, but Symfony's local web server
