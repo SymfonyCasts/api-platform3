@@ -38,6 +38,7 @@ use function Symfony\Component\String\u;
     denormalizationContext: [
         'groups' => ['treasure:write'],
     ],
+    paginationItemsPerPage: 10
 )]
 #[ApiFilter(PropertyFilter::class)]
 class DragonTreasure
