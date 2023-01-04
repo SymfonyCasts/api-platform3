@@ -1,0 +1,20 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index ff4f10c..0e692f7 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -4,6 +4,7 @@ namespace App\Entity;
+ 
+ use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
++use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+ use ApiPlatform\Metadata\ApiFilter;
+ use ApiPlatform\Metadata\ApiResource;
+ use ApiPlatform\Metadata\Get;
+@@ -58,6 +59,7 @@ class DragonTreasure
+      */
+     #[ORM\Column]
+     #[Groups(['treasure:read', 'treasure:write'])]
++    #[ApiFilter(RangeFilter::class)]
+     private ?int $value = null;
+ 
+     #[ORM\Column]
