@@ -130,6 +130,7 @@ class DragonTreasure
     /**
      * A human-readable representation of when this treasure was plundered.
      */
+    #[Groups(['treasure:read'])]
     public function getPlunderedAtAgo(): string
     {
         return Carbon::instance($this->plunderedAt)->diffForHumans();
