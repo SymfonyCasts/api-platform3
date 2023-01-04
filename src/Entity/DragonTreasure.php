@@ -36,8 +36,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         'groups' => ['treasure:write'],
     ],
 )]
-#[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 class DragonTreasure
 {
     #[ORM\Id]
@@ -47,10 +45,12 @@ class DragonTreasure
 
     #[ORM\Column(length: 255)]
     #[Groups(['treasure:read', 'treasure:write'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['treasure:read'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $description = null;
 
     /**
@@ -68,6 +68,7 @@ class DragonTreasure
     private \DateTimeImmutable $plunderedAt;
 
     #[ORM\Column]
+    #[ApiFilter(BooleanFilter::class)]
     private bool $isPublished = false;
 
     public function __construct(string $name = null)
