@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
 #[ApiResource(
@@ -98,6 +99,7 @@ class DragonTreasure
         return $this;
     }
 
+    #[SerializedName('description')]
     #[Groups(['treasure:write'])]
     public function setTextDescription(string $description): self
     {
