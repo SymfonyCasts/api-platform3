@@ -49,11 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $username = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class)]
-    private Collection $dragonTreasures;
+    private Collection $treasures;
 
     public function __construct()
     {
-        $this->dragonTreasures = new ArrayCollection();
+        $this->treasures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,15 +141,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, DragonTreasure>
      */
-    public function getDragonTreasures(): Collection
+    public function getTreasures(): Collection
     {
-        return $this->dragonTreasures;
+        return $this->treasures;
     }
 
     public function addDragonTreasure(DragonTreasure $dragonTreasure): self
     {
-        if (!$this->dragonTreasures->contains($dragonTreasure)) {
-            $this->dragonTreasures->add($dragonTreasure);
+        if (!$this->treasures->contains($dragonTreasure)) {
+            $this->treasures->add($dragonTreasure);
             $dragonTreasure->setOwner($this);
         }
 
@@ -158,7 +158,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeDragonTreasure(DragonTreasure $dragonTreasure): self
     {
-        if ($this->dragonTreasures->removeElement($dragonTreasure)) {
+        if ($this->treasures->removeElement($dragonTreasure)) {
             // set the owning side to null (unless already changed)
             if ($dragonTreasure->getOwner() === $this) {
                 $dragonTreasure->setOwner(null);
