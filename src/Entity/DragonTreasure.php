@@ -28,7 +28,11 @@ use function Symfony\Component\String\u;
     description: 'A rare and valuable treasure.',
     operations: [
         new Get(),
-        new GetCollection(),
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['treasure:read', 'treasure:item:get'],
+            ],
+        ),
         new Post(),
         new Put(),
         new Patch(),
