@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
@@ -41,6 +42,7 @@ use function Symfony\Component\String\u;
 #[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
 #[ApiFilter(RangeFilter::class, properties: ['value'])]
+#[ApiFilter(PropertyFilter::class)]
 class DragonTreasure
 {
     #[ORM\Id]
