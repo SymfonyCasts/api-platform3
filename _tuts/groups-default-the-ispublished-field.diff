@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 016ad80..50e79b0 100644
+index fa6dea4..aa0fef0 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -62,7 +62,7 @@ class DragonTreasure
@@ -11,7 +11,7 @@ index 016ad80..50e79b0 100644
  
      public function __construct()
      {
-@@ -144,7 +144,7 @@ class DragonTreasure
+@@ -151,7 +151,7 @@ class DragonTreasure
          return Carbon::instance($this->plunderedAt)->diffForHumans();
      }
  
