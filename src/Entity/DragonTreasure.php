@@ -27,6 +27,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     normalizationContext: [
         'groups' => ['treasure:read'],
+    ],
+    denormalizationContext: [
+        'groups' => ['treasure:write'],
     ]
 )]
 class DragonTreasure
