@@ -93,6 +93,7 @@ class DragonTreasure
 
     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['treasure:read', 'treasure:write'])]
     private ?User $owner = null;
 
     public function __construct(string $name = null)
