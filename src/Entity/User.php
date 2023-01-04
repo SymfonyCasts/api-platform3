@@ -146,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->treasures;
     }
 
-    public function addDragonTreasure(DragonTreasure $dragonTreasure): self
+    public function addTreasure(DragonTreasure $dragonTreasure): self
     {
         if (!$this->treasures->contains($dragonTreasure)) {
             $this->treasures->add($dragonTreasure);
@@ -156,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeDragonTreasure(DragonTreasure $dragonTreasure): self
+    public function removeTreasure(DragonTreasure $dragonTreasure): self
     {
         if ($this->treasures->removeElement($dragonTreasure)) {
             // set the owning side to null (unless already changed)
