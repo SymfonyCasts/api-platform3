@@ -91,6 +91,7 @@ class DragonTreasure
         return $this->description;
     }
 
+    #[Groups(['treasure:write'])]
     public function setTextDescription(string $description): self
     {
         $this->description = nl2br($description);
