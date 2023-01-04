@@ -135,6 +135,13 @@ class DragonTreasure
         return $this->plunderedAt;
     }
 
+    public function setPlunderedAt(\DateTimeImmutable $plunderedAt): self
+    {
+        $this->plunderedAt = $plunderedAt;
+
+        return $this;
+    }
+
     /**
      * A human-readable representation of when this treasure was plundered.
      */
