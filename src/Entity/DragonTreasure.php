@@ -23,6 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
         new Post(),
         new Put(),
         new Patch(),
+    ],
+    normalizationContext: [
+        'groups' => ['treasure:read'],
     ]
 )]
 class DragonTreasure
