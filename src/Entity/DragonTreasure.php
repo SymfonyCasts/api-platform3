@@ -91,7 +91,7 @@ class DragonTreasure
     #[ApiFilter(BooleanFilter::class)]
     private bool $isPublished = false;
 
-    #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
+    #[ORM\ManyToOne(inversedBy: 'treasures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
