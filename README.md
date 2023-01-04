@@ -42,6 +42,7 @@ Next, build the database and the schema with:
 # but its aware of your database container
 symfony console doctrine:database:create --if-not-exists
 symfony console doctrine:migrations:migrate
+symfony console doctrine:fixtures:load
 ```
 
 If you do *not* want to use Docker, just make sure to start your own
