@@ -1,0 +1,20 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index f6db370..0ac5c32 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -35,7 +35,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
+         'groups' => ['treasure:write'],
+     ],
+ )]
+-#[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
+ class DragonTreasure
+ {
+     #[ORM\Id]
+@@ -66,6 +65,7 @@ class DragonTreasure
+     private \DateTimeImmutable $plunderedAt;
+ 
+     #[ORM\Column]
++    #[ApiFilter(BooleanFilter::class)]
+     private bool $isPublished = false;
+ 
+     public function __construct(string $name = null)
