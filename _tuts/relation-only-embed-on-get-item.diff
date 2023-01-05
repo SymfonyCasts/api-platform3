@@ -1,0 +1,30 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index af1b252..647f88a 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -27,7 +27,11 @@ use function Symfony\Component\String\u;
+     shortName: 'Treasure',
+     description: 'A rare and valuable treasure.',
+     operations: [
+-        new Get(),
++        new Get(
++            normalizationContext: [
++                'groups' => ['treasure:read', 'treasure:item:get'],
++            ],
++        ),
+         new GetCollection(),
+         new Post(),
+         new Put(),
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 7976c5e..9f9d7a6 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     private ?string $password = null;
+ 
+     #[ORM\Column(length: 255, unique: true)]
+-    #[Groups(['user:read', 'user:write', 'treasure:read'])]
++    #[Groups(['user:read', 'user:write', 'treasure:item:get'])]
+     #[Assert\NotBlank]
+     private ?string $username = null;
+ 
