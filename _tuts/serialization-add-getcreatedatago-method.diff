@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 0b45258..009bef3 100644
+index bf02af5..c441b39 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Patch;

@@ -1,0 +1,32 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 88d443b..d459396 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -32,13 +32,6 @@ use function Symfony\Component\String\u;
+         new Put(),
+         new Patch(),
+     ],
+-    normalizationContext: [
+-        'groups' => ['treasure:read'],
+-    ],
+-    denormalizationContext: [
+-        'groups' => ['treasure:write'],
+-    ],
+-    paginationItemsPerPage: 10,
+     formats: [
+         'jsonld',
+         'json',
+@@ -46,6 +39,13 @@ use function Symfony\Component\String\u;
+         'jsonhal',
+         'csv' => 'text/csv',
+     ],
++    normalizationContext: [
++        'groups' => ['treasure:read'],
++    ],
++    denormalizationContext: [
++        'groups' => ['treasure:write'],
++    ],
++    paginationItemsPerPage: 10,
+ )]
+ #[ApiFilter(PropertyFilter::class)]
+ class DragonTreasure
