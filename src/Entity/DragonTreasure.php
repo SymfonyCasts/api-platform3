@@ -53,8 +53,8 @@ use function Symfony\Component\String\u;
     paginationItemsPerPage: 10,
 )]
 #[ApiResource(
-    shortName: 'Treasure',
     uriTemplate: '/users/{user_id}/treasures',
+    shortName: 'Treasure',
     operations: [new GetCollection()],
 )]
 #[ApiFilter(PropertyFilter::class)]
