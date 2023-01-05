@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 54ecf66..f4916e0 100644
+index f1c569e..4e3d112 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
@@ -10,9 +10,9 @@ index 54ecf66..f4916e0 100644
  use App\Repository\DragonTreasureRepository;
  use Carbon\Carbon;
  use Doctrine\DBAL\Types\Types;
-@@ -38,6 +39,7 @@ use function Symfony\Component\String\u;
-         'groups' => ['treasure:write'],
+@@ -39,6 +40,7 @@ use function Symfony\Component\String\u;
      ],
+     paginationItemsPerPage: 10
  )]
 +#[ApiFilter(PropertyFilter::class)]
  class DragonTreasure
