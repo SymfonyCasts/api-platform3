@@ -52,6 +52,10 @@ use function Symfony\Component\String\u;
     ],
     paginationItemsPerPage: 10,
 )]
+#[ApiResource(
+    uriTemplate: '/users/{user_id}/treasures',
+    operations: [new GetCollection()],
+)]
 #[ApiFilter(PropertyFilter::class)]
 #[ApiFilter(SearchFilter::class, properties: [
     'owner.username' => 'partial',
