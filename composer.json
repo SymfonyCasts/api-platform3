@@ -28,8 +28,7 @@
         "symfony/serializer": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
         "symfony/validator": "6.2.*",
-        "symfony/yaml": "6.2.*",
-        "symfonycasts/ai-maker-bundle": "@dev"
+        "symfony/yaml": "6.2.*"
     },
     "config": {
         "platform": {
@@ -81,11 +80,5 @@
             "require": "6.2.*",
             "docker": true
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "/Users/weaverryan/Sites/os/ai-maker-bundle"
-        }
-    ]
+    }
 }
