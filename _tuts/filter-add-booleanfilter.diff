@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 6c06f54..f6db370 100644
+index b127d69..45a6ecc 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -2,6 +2,8 @@
@@ -11,12 +11,9 @@ index 6c06f54..f6db370 100644
  use ApiPlatform\Metadata\ApiResource;
  use ApiPlatform\Metadata\Get;
  use ApiPlatform\Metadata\GetCollection;
-@@ -31,8 +33,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
+@@ -34,6 +36,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
      ],
-     denormalizationContext: [
-         'groups' => ['treasure:write'],
--    ]
-+    ],
+     paginationItemsPerPage: 10
  )]
 +#[ApiFilter(BooleanFilter::class, properties: ['isPublished'])]
  class DragonTreasure
