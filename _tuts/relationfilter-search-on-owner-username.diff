@@ -1,0 +1,14 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index f38e8a4..fb13817 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -53,6 +53,9 @@ use function Symfony\Component\String\u;
+     paginationItemsPerPage: 10,
+ )]
+ #[ApiFilter(PropertyFilter::class)]
++#[ApiFilter(SearchFilter::class, properties: [
++    'owner.username' => 'partial',
++])]
+ class DragonTreasure
+ {
+     #[ORM\Id]

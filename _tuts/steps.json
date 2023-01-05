@@ -191,6 +191,11 @@
             "description": null
         },
         {
+            "id": "pagination-set-max-items-on-dragontreasure",
+            "name": "Pagination: Set max items on DragonTreasure",
+            "description": null
+        },
+        {
             "id": "filter-add-booleanfilter",
             "name": "Filter: Add BooleanFilter",
             "description": null
@@ -224,7 +229,207 @@
             "id": "filter-add-propertyfilter",
             "name": "Filter: Add PropertyFilter",
             "description": null
+        },
+        {
+            "id": "formats-copy-core-formats-into-config",
+            "name": "Formats: copy core formats into config",
+            "description": null
+        },
+        {
+            "id": "formats-add-jsonhal-format",
+            "name": "Formats: Add jsonhal format",
+            "description": null
+        },
+        {
+            "id": "formats-add-csv-format-to-dragontreasure",
+            "name": "Formats: Add csv format to DragonTreasure",
+            "description": null
+        },
+        {
+            "id": "formats-sort-arguments",
+            "name": "Formats: sort arguments",
+            "description": null
+        },
+        {
+            "id": "validation-add-constraints-to-name",
+            "name": "Validation: Add constraints to name",
+            "description": null
+        },
+        {
+            "id": "validation-add-more-constraints",
+            "name": "Validation: Add more constraints",
+            "description": null
+        },
+        {
+            "id": "validation-add-a-few-property-defaults",
+            "name": "Validation: add a few property defaults",
+            "description": null
+        },
+        {
+            "id": "user-make-user",
+            "name": "User: make:user",
+            "description": null
+        },
+        {
+            "id": "user-add-username-property",
+            "name": "User: Add username property",
+            "description": null
+        },
+        {
+            "id": "user-make-username-column-unique",
+            "name": "User: Make username column unique",
+            "description": null
+        },
+        {
+            "id": "user-add-migration",
+            "name": "User: add migration",
+            "description": null
+        },
+        {
+            "id": "user-make-factory-user",
+            "name": "User: make:factory User",
+            "description": null
+        },
+        {
+            "id": "user-fill-in-getdefaults-in-userfactory",
+            "name": "User: Fill in getDefaults() in UserFactory",
+            "description": null
+        },
+        {
+            "id": "user-add-30-users-in-appfixtures",
+            "name": "User: Add 30 users in AppFixtures",
+            "description": null
+        },
+        {
+            "id": "user-make-an-apiresource",
+            "name": "User: Make an ApiResource",
+            "description": null
+        },
+        {
+            "id": "user-add-serialization-groups",
+            "name": "User: Add serialization groups",
+            "description": null
+        },
+        {
+            "id": "user-add-validation-constraints",
+            "name": "User: Add validation constraints",
+            "description": null
+        },
+        {
+            "id": "relation-add-dragontreasure-owner",
+            "name": "Relation: Add DragonTreasure.owner",
+            "description": null
+        },
+        {
+            "id": "relation-make-migration",
+            "name": "Relation: make:migration",
+            "description": null
+        },
+        {
+            "id": "relation-update-factory-for-relation",
+            "name": "Relation: Update factory for relation",
+            "description": null
+        },
+        {
+            "id": "relation-expose-dragontreasure-owner-to-api",
+            "name": "Relation: Expose DragonTreasure.owner to API",
+            "description": null
+        },
+        {
+            "id": "relation-expose-user-treasures-to-the-api",
+            "name": "Relation: Expose User.treasures to the API",
+            "description": null
+        },
+        {
+            "id": "relation-embed-user-treasures",
+            "name": "Relation: Embed User.treasures",
+            "description": null
+        },
+        {
+            "id": "relation-embed-dragontreasure-owner",
+            "name": "Relation: Embed DragonTreasure.owner",
+            "description": null
+        },
+        {
+            "id": "relation-only-embed-on-get-item",
+            "name": "Relation: only embed on GET item",
+            "description": null
+        },
+        {
+            "id": "embedwrite-allow-user-owner-to-be-written-through-treasure",
+            "name": "EmbedWrite: Allow User.owner to be written through treasure",
+            "description": null
+        },
+        {
+            "id": "embedwrite-add-valid-constraint-to-owner",
+            "name": "EmbedWrite: Add Valid constraint to owner",
+            "description": null
+        },
+        {
+            "id": "embedwrite-make-treasures-writable-on-user",
+            "name": "EmbedWrite: make treasures writable on User",
+            "description": null
+        },
+        {
+            "id": "embedwrite-allow-props-in-dragontreasure-to-be-written-through-user",
+            "name": "EmbedWrite: Allow props in DragonTreasure to be written through User",
+            "description": null
+        },
+        {
+            "id": "embedwrite-add-cascade-persist-for-user-treasures",
+            "name": "EmbedWrite: Add cascade persist for User.treasures",
+            "description": null
+        },
+        {
+            "id": "embedwrite-add-valid-constraint-to-user-treasures",
+            "name": "EmbedWrite: Add Valid constraint to User.treasures",
+            "description": null
+        },
+        {
+            "id": "embedremoval-add-orphanremoval-to-user-treasures",
+            "name": "EmbedRemoval: Add orphanRemoval to User.treasures",
+            "description": null
+        },
+        {
+            "id": "relationfilter-add-propertyfilter-to-user",
+            "name": "RelationFilter: Add PropertyFilter to User",
+            "description": null
+        },
+        {
+            "id": "relationfilter-search-on-dragontreasure-owner",
+            "name": "RelationFilter: Search on DragonTreasure.owner",
+            "description": null
+        },
+        {
+            "id": "relationfilter-search-on-owner-username",
+            "name": "RelationFilter: search on owner.username",
+            "description": null
+        },
+        {
+            "id": "subresource-add-2nd-apiresource-to-dt",
+            "name": "Subresource: Add 2nd ApiResource to DT",
+            "description": null
+        },
+        {
+            "id": "subresource-add-matching-shortname",
+            "name": "Subresource: Add matching shortName",
+            "description": null
+        },
+        {
+            "id": "subresource-add-urivariables",
+            "name": "Subresource: Add uriVariables",
+            "description": null
+        },
+        {
+            "id": "subresource-add-normalizationcontext",
+            "name": "Subresource: Add normalizationContext",
+            "description": null
+        },
+        {
+            "id": "subresource-add-subresource-on-the-other-side",
+            "name": "Subresource: Add subresource on the other side",
+            "description": null
         }
     ],
-    "sha": "0344821d9005ac35cba792dd65b0a619d51fa90a"
+    "sha": "8e5573e6e24e35b75fa4c3f590ec4148a8d441df"
 }
