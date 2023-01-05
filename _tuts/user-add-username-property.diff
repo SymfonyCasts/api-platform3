@@ -1,0 +1,31 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 13e9cf1..d23163e 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -28,6 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     #[ORM\Column]
+     private ?string $password = null;
+ 
++    #[ORM\Column(length: 255)]
++    private ?string $username = null;
++
+     public function getId(): ?int
+     {
+         return $this->id;
+@@ -97,4 +100,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         // If you store any temporary, sensitive data on the user, clear it here
+         // $this->plainPassword = null;
+     }
++
++    public function getUsername(): ?string
++    {
++        return $this->username;
++    }
++
++    public function setUsername(string $username): self
++    {
++        $this->username = $username;
++
++        return $this;
++    }
+ }
