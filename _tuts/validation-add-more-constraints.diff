@@ -1,0 +1,26 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 2f7280a..984a702 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -66,6 +66,7 @@ class DragonTreasure
+     #[ORM\Column(type: Types::TEXT)]
+     #[Groups(['treasure:read'])]
+     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
++    #[Assert\NotBlank]
+     private ?string $description = null;
+ 
+     /**
+@@ -74,10 +75,13 @@ class DragonTreasure
+     #[ORM\Column]
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[ApiFilter(RangeFilter::class)]
++    #[Assert\GreaterThanOrEqual(0)]
+     private ?int $value = null;
+ 
+     #[ORM\Column]
+     #[Groups(['treasure:read', 'treasure:write'])]
++    #[Assert\GreaterThanOrEqual(0)]
++    #[Assert\LessThanOrEqual(10)]
+     private ?int $coolFactor = null;
+ 
+     #[ORM\Column]
