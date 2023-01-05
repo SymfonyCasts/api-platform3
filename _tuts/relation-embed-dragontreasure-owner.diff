@@ -1,0 +1,13 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 35f82c2..7976c5e 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     private ?string $password = null;
+ 
+     #[ORM\Column(length: 255, unique: true)]
+-    #[Groups(['user:read', 'user:write'])]
++    #[Groups(['user:read', 'user:write', 'treasure:read'])]
+     #[Assert\NotBlank]
+     private ?string $username = null;
+ 
