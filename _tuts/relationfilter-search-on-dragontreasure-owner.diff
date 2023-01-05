@@ -1,0 +1,12 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 55525d2..f38e8a4 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -99,6 +99,7 @@ class DragonTreasure
+     #[ORM\JoinColumn(nullable: false)]
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[Assert\Valid]
++    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+     private ?User $owner = null;
+ 
+     public function __construct(string $name = null)
