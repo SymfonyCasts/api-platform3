@@ -276,8 +276,5 @@
     },
     "symfony/yaml": {
         "version": "v6.2.2"
-    },
-    "symfonycasts/ai-maker-bundle": {
-        "version": "1.x-dev"
     }
 }
