@@ -1,0 +1,12 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 647f88a..6e81eae 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -98,6 +98,7 @@ class DragonTreasure
+     #[ORM\ManyToOne(inversedBy: 'treasures')]
+     #[ORM\JoinColumn(nullable: false)]
+     #[Groups(['treasure:read', 'treasure:write'])]
++    #[Assert\Valid]
+     private ?User $owner = null;
+ 
+     public function __construct(string $name = null)
