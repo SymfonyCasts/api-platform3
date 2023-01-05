@@ -1,0 +1,29 @@
+diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
+index 659a526..6b46258 100644
+--- a/src/DataFixtures/AppFixtures.php
++++ b/src/DataFixtures/AppFixtures.php
+@@ -11,7 +11,11 @@ class AppFixtures extends Fixture
+ {
+     public function load(ObjectManager $manager): void
+     {
+-        DragonTreasureFactory::createMany(40);
+         UserFactory::createMany(10);
++        DragonTreasureFactory::createMany(40, function () {
++            return [
++                'owner' => UserFactory::random(),
++            ];
++        });
+     }
+ }
+diff --git a/src/Factory/DragonTreasureFactory.php b/src/Factory/DragonTreasureFactory.php
+index 428b5a2..6ae3d58 100644
+--- a/src/Factory/DragonTreasureFactory.php
++++ b/src/Factory/DragonTreasureFactory.php
+@@ -53,6 +53,7 @@ final class DragonTreasureFactory extends ModelFactory
+             'name' => self::faker()->randomElement(self::TREASURE_NAMES),
+             'plunderedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year')),
+             'value' => self::faker()->numberBetween(1000, 1000000),
++            'owner' => UserFactory::new(),
+         ];
+     }
+ 
