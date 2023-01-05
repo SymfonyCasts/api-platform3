@@ -93,15 +93,6 @@
     "symfony/http-kernel": {
         "version": "v6.2.4"
     },
-    "symfony/maker-bundle": {
-        "version": "1.48",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
-        }
-    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.27.0"
     },
@@ -141,8 +132,5 @@
     },
     "symfony/yaml": {
         "version": "v6.2.2"
-    },
-    "symfonycasts/ai-maker-bundle": {
-        "version": "1.x-dev"
     }
 }
