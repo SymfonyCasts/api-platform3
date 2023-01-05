@@ -1,0 +1,11 @@
+diff --git a/config/packages/api_platform.yaml b/config/packages/api_platform.yaml
+new file mode 100644
+index 0000000..b7aad3c
+--- /dev/null
++++ b/config/packages/api_platform.yaml
+@@ -0,0 +1,5 @@
++api_platform:
++    formats:
++        jsonld: [ 'application/ld+json' ]
++        json: [ 'application/json' ]
++        html: [ 'text/html' ]
