@@ -1,0 +1,13 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index d23163e..5155214 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     #[ORM\Column]
+     private ?string $password = null;
+ 
+-    #[ORM\Column(length: 255)]
++    #[ORM\Column(length: 255, unique: true)]
+     private ?string $username = null;
+ 
+     public function getId(): ?int
