@@ -1,0 +1,20 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 984a702..92dca01 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -76,13 +76,13 @@ class DragonTreasure
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[ApiFilter(RangeFilter::class)]
+     #[Assert\GreaterThanOrEqual(0)]
+-    private ?int $value = null;
++    private ?int $value = 0;
+ 
+     #[ORM\Column]
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[Assert\GreaterThanOrEqual(0)]
+     #[Assert\LessThanOrEqual(10)]
+-    private ?int $coolFactor = null;
++    private ?int $coolFactor = 0;
+ 
+     #[ORM\Column]
+     private \DateTimeImmutable $plunderedAt;
