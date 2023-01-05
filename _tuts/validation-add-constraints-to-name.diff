@@ -1,0 +1,21 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index d459396..2f7280a 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -17,6 +17,7 @@ use App\Repository\DragonTreasureRepository;
+ use Carbon\Carbon;
+ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
++use Symfony\Component\Validator\Constraints as Assert;
+ use Symfony\Component\Serializer\Annotation\Groups;
+ use Symfony\Component\Serializer\Annotation\SerializedName;
+ use function Symfony\Component\String\u;
+@@ -58,6 +59,8 @@ class DragonTreasure
+     #[ORM\Column(length: 255)]
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
++    #[Assert\NotBlank]
++    #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
+     private ?string $name = null;
+ 
+     #[ORM\Column(type: Types::TEXT)]

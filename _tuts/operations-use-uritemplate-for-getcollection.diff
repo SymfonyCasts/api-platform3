@@ -1,9 +1,9 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 12d30e6..4c50e41 100644
+index 47ab9ec..d1b4d0b 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
-     shortName: 'treasure',
+     shortName: 'Treasure',
      description: 'A rare and valuable treasure.',
      operations: [
 -        new Get(),
