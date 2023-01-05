@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index d912aa2..23250d5 100644
+index 46bee49..33ec6ac 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -12,6 +12,7 @@ use App\Repository\DragonTreasureRepository;
