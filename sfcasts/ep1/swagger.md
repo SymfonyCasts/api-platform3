@@ -2,34 +2,34 @@
 
 The interactive documentation that you're looking at right now is actually not
 something from API platform. This is an open source API documentation library called
-Swagger ui. And the really cool thing about Swagger UI is that if your a p I contains
-the right metadata that describes your A api, then any API can get this really cool
+Swagger ui. And the really cool thing about Swagger UI is that if your API contains
+the right metadata that describes your API, then any API can get this really cool
 interactive documentation for free. And fortunately, API platform does provide all of
 that metadata out of the box, but more on that in a few seconds. Let's play with this
 a little bit. Let's use the post endpoint to create a new dragon treasure. Let's put
 in some gold coins have we got from Scrooge McDuck and none of the other fields
 really matter all that much. And then down here, hit execute and boom. Cool. Down
 here you can see that it made a post request to /API /dragon treasures and then sent
-all of that data as JS O. And what it returned was a 2 0 1 status code. A 2 0 1
-status code means a resource on our a P I was created and then it returned this J S
-O. Check it out ID one. Yes, it really did. Just insert that into the database. That
-is awesome.
+all of that data as .json. And what it returned was a 2 0 1 status code. A 2 0 1
+status code means a resource on our API was created and then it returned this .json.
+Check it out. ID one. Yes, it really did. Just insert that into the database. That is
+awesome.
 
 There's also a couple of extra fields here that I mentioned earlier at contacts at ID
 and at Type, and we'll talk about those soon. All right, so now that we have a dragon
-treasure, let's open up this get end point here. Hit try it out, hit execute and
-perfect. This is super simple. In made a get request to /api /dragon_treasures. This
+treasure, let's open up this get end point here. Hit try it out, hit execute, and
+perfect. This is super simple. In made a get request to /API /dragon_treasures. This
 question Mark Page equal one is even optional and return this here you can see it's
-inside something called hydro ember. We'll talk about that later. But it's basically
+inside something called Hydro ember. We'll talk about that later. But it's basically
 just a list of the all of the dragon treasures we currently have, which is just this
 one right here. So in just about just a couple minutes of work, we have a fully
-featured API for our doctrine entity. I'm going to copy this U URL right here, open a
-new tab and paste that in. Whoa, wait, this returned html, but a second ago it said
-that it made a get request that you were URL and it returned to J S O N. What's going
-on here? Well, one of the features of API platform is it has is is called, called
-content negotiation. It has the ability to return the same resource like our Dragon
-treasure in multiple formats. Like for example, I could return it as J S O N or it
-could return it as HTML
+featured API for our doctrine entity. I'm going to copy this. You all right here,
+open a new tab and paste that in. Whoa, wait, this returned html, but a second ago it
+said that it made a get request that you were out and it returned to .json. What's
+going on here? Well, one of the features of API platform is it has is is called,
+called Content Negotiation. It has the ability to return the same resource like our
+Dragon treasure in multiple formats. Like for example, I could return it as .json or
+it could return it as HTML
 
 Or other formats. The way that you tell API platform what format you want is by
 passing this accept header. So you can see when we use the interactive docs, it
