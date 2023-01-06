@@ -1,10 +1,10 @@
 diff --git a/composer.json b/composer.json
-index 96ada45..686933f 100644
+index 00bb326..54ae659 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -90,10 +90,12 @@
+@@ -83,10 +83,12 @@
          }
-     ],
+     },
      "require-dev": {
 +        "doctrine/doctrine-fixtures-bundle": "^3.4",
          "symfony/debug-bundle": "6.2.*",
@@ -17,34 +17,34 @@ index 96ada45..686933f 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index dab2698..57fd611 100644
+index 2e69255..f9ba6cd 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "d580ebcbe3a293e3af1ad15c5b535190",
-+    "content-hash": "81b3331ae45c64d6c37105ba8e31f48a",
+-    "content-hash": "fc0b0f09521c4a07186dd174b22749f5",
++    "content-hash": "739e38a2e28d712d0a777db76352e6de",
      "packages": [
          {
              "name": "api-platform/core",
-@@ -6615,6 +6615,239 @@
+@@ -6275,6 +6275,239 @@
          }
      ],
      "packages-dev": [
 +        {
 +            "name": "doctrine/data-fixtures",
-+            "version": "1.6.1",
++            "version": "1.6.2",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/doctrine/data-fixtures.git",
-+                "reference": "1a4232c15143ca3c127812d19b23a7961c41eeed"
++                "reference": "d52cc6d392717734fac908768a7319f8a417401a"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/1a4232c15143ca3c127812d19b23a7961c41eeed",
-+                "reference": "1a4232c15143ca3c127812d19b23a7961c41eeed",
++                "url": "https://api.github.com/repos/doctrine/data-fixtures/zipball/d52cc6d392717734fac908768a7319f8a417401a",
++                "reference": "d52cc6d392717734fac908768a7319f8a417401a",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -97,7 +97,7 @@ index dab2698..57fd611 100644
 +            ],
 +            "support": {
 +                "issues": "https://github.com/doctrine/data-fixtures/issues",
-+                "source": "https://github.com/doctrine/data-fixtures/tree/1.6.1"
++                "source": "https://github.com/doctrine/data-fixtures/tree/1.6.2"
 +            },
 +            "funding": [
 +                {
@@ -113,7 +113,7 @@ index dab2698..57fd611 100644
 +                    "type": "tidelift"
 +                }
 +            ],
-+            "time": "2022-12-23T12:13:51+00:00"
++            "time": "2023-01-05T18:42:27+00:00"
 +        },
 +        {
 +            "name": "doctrine/doctrine-fixtures-bundle",
@@ -269,7 +269,7 @@ index dab2698..57fd611 100644
          {
              "name": "monolog/monolog",
              "version": "3.2.0",
-@@ -7035,6 +7268,206 @@
+@@ -6844,6 +7077,206 @@
                  }
              ],
              "time": "2022-12-29T18:33:43+00:00"
@@ -477,10 +477,10 @@ index dab2698..57fd611 100644
      ],
      "aliases": [],
 diff --git a/config/bundles.php b/config/bundles.php
-index f115bea..af30282 100644
+index fd27cd9..865268d 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
-@@ -13,4 +13,6 @@ return [
+@@ -12,4 +12,6 @@ return [
      Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
      Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
      Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true],
@@ -524,7 +524,7 @@ index 0000000..987f6fe
 +    }
 +}
 diff --git a/symfony.lock b/symfony.lock
-index 90d94ad..9d068cf 100644
+index 6e47bb7..57eb3a3 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -35,6 +35,18 @@
@@ -546,10 +546,10 @@ index 90d94ad..9d068cf 100644
      "doctrine/doctrine-migrations-bundle": {
          "version": "3.2",
          "recipe": {
-@@ -292,5 +304,17 @@
+@@ -289,5 +301,17 @@
      },
-     "symfonycasts/ai-maker-bundle": {
-         "version": "1.x-dev"
+     "symfony/yaml": {
+         "version": "v6.2.2"
 +    },
 +    "zenstruck/foundry": {
 +        "version": "1.26",
