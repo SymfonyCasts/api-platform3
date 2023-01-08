@@ -1,19 +1,22 @@
 # Swagger UI: Interactive Docs
 
-The interactive documentation that you're looking at right now is actually not
-something from API platform. This is an open source API documentation library called
-Swagger ui. And the really cool thing about Swagger UI is that if your API contains
-the right metadata that describes your API, then any API can get this really cool
-interactive documentation for free. And fortunately, API platform does provide all of
-that metadata out of the box, but more on that in a few seconds. Let's play with this
-a little bit. Let's use the post endpoint to create a new dragon treasure. Let's put
-in some gold coins have we got from Scrooge McDuck and none of the other fields
-really matter all that much. And then down here, hit execute and boom. Cool. Down
-here you can see that it made a post request to /API /dragon treasures and then sent
-all of that data as .json. And what it returned was a 2 0 1 status code. A 2 0 1
-status code means a resource on our API was created and then it returned this .json.
-Check it out. ID one. Yes, it really did. Just insert that into the database. That is
-awesome.
+The amazing interactive documentation that we've stumbled across is *not* something
+from API platform! It's actually an open source API documentation library called
+Swagger UI. And the *really* cool thing about Swagger UI is that if your API contains
+metadata that *describes* your API, then *any* API can get this really cool,
+interactive documentation for free! I love free stuff.
+
+We get this because API platform *provides*  that metadata out of the box. But more
+on that in a minute.
+
+Let's play with this. Use the POST endpoint to create a new dragon treasure: we've
+recently plundered some gold coins... which we got from Scrooge McDuck. None of the
+other fields really matter. Down here, hit Execute and boom! Down here you can see
+that this made a POST request to `/api/dragon_treasures` and sent all of that data as
+JSON! Then, our API returned a 201 status code. A 201 status code means the request
+was successful and resource was created. Then it returned this JSON... which includes
+`id: 1`. Yes: this isn't just documentation. We really *do* already have a working
+API!
 
 There's also a couple of extra fields here that I mentioned earlier at contacts at ID
 and at Type, and we'll talk about those soon. All right, so now that we have a dragon

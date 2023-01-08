@@ -49,7 +49,7 @@ project from scratch: with a perf normal and boring Symfony project. Why? Becaus
 want you to see *exactly* how everything works under the hood. Then, if you want to
 use this Distribution later on, you *totally* can.
 
-## Installing API Platform
+## Project Setup & Our Project
 
 Okay, to be a *true* "API Platform JSON Returning Champion", you should *definitely*
 code along with me. You can download the source code from this page. After unzipping
@@ -76,6 +76,8 @@ Because if there's one thing a dragon likes more than treasure, it's *bragging* 
 it. Yup, we'll create a rich API that lets tech savvy dragons post *new* treasures,
 *fetch* treasures, *search* treasures from other dragons, and *more*.
 
+## Installing API Platform
+
 So let's get API Platform installed! Spin back over to your terminal and run:
 
 ```terminal
@@ -100,7 +102,7 @@ if you run
 git status
 ```
 
-.. yep! It updated the usual files... and also added a bunch of configuration files
+... yep! It updated the usual files... and also added a bunch of configuration files
 for the new packages. It *looks* like there's a lot here, but looks can be deceiving.
 All of these directories are empty... and these are simple config files. We also have
 some `docker-compose` files that we'll use in a minute to spin up a database.
