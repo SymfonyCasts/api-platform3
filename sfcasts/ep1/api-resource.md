@@ -1,65 +1,47 @@
 # Creating your First ApiResource
 
-The point we're about to build an API so that dragons can show off their treasure.
-Right now our project doesn't even have any database entities, so we're going to need
-one to store the individual treasures. To do that, find your terminal and first run
-compose. Require maker-dev to install Maker bundle. Perfect. And then run bin
-console. `make:entity`. Perfect. Let's call our entity Dragon Treasure. And then it's
-going to ask us a question you maybe didn't see, have never seen before. Mark this
-class as an API platform resource. Because API platform is installed. It's asking us
-this question. I'm going to say no and we're, because we're going to do this step
-manually in a second so that you can see it. All right, let's start adding some
-properties. Name has a string. Type 2 55, not knowing the database. Then description
-has a text type, not knowing the database. Let's do a, a value like how much the
-treasure is worth. That'll be an integer. Also not know. Then you gotta have a cool
-factor. That's going to be from one to 10. So let's do an integer on that. Then A
-created at datetime. Immutable is perfect. And then finally, an is published,
+We're about to build an API that will allow dragons to show off their treasure. Right now, our project doesn't have a *single* database entity, and we're going to need one to store the individual treasures. To create it, find your terminal and, first, run
 
-Which will be a boo type. Also not, no. And then I'll enter to finish. So nothing
-very special here so far. That created two classes. The Dragon Treasury Repository,
-which we're not going to worry about. And the Dragon Treasure entity itself with id
-name, description, value, and the other properties and the gitters and setters below.
+```terminal
+composer require maker --dev
+```
 
-So super boring though. There is one little bug in this version of Maker Your bundle.
-It generated and is is published method. So let's just change that to a Git is
-published. It's trying to be a little bit too clever. All right, so we have our
-entity. Now we need a migration for it, but first we don't even have our database set
-up yet. I'm actually going to set up the database via Docker. The doctrine bundle
-gave us a nice Docker compose. That YAML file that boots up Postgres. So I'm going to
-use that. So I'll spin on over and start Docker composed with Docker, compose up-D.
-Perfect. Now if you want to use a, if you don't want to use.for some reason, then you
-can start your own database engine and then in.N for MT. Local, just configure your
-database. So you were all correctly. Because I'm using Docker and also the Symfony
-binary, I don't need to configure anything. The Symfony Web server is going to
-automatically detect, automatically set that database URL environment variable for
-me. All right, so to make the migration run Symfony console, make migration Symfony
-console is just like Bin Console, except because we're running through Symfony. It's
-going to inject that environment variable so that it talks to the DA Docker database.
+to install Maker Bundle. *Then* run:
 
-Perfect. And as usual, I'd like to spin over and check out the new migration. Make
-sure it doesn't contain any surprises. Perfect. It's gray on the table. Dragon
-Treasure. So now spin back over and run Symfony Consult doctrine. Migrations migrate.
-Yay. All right. So we now have an entity and a database table. But if, but if you go
-and refresh our documentation, there's still nothing there. What we need to do is
-tell API platform to expose our new Dragon Treasure entity as an API resource. To do
-this, go above the class and add a new attribute called API resource, and a tab to
-add that use statement. That's it.
+```terminal
+./bin/console make:entity
+```
 
-As soon as we do that in refresh, whoa, the documentation grows. It's now saying that
-we have five different endpoints. A way to get all of the dragon treasures. A way to
-get an individual dragon treasure. Create one, two endpoints to edit dragon
-treasures, and one to delete a dragon treasure. And this is more than documentation.
-These end points actually exist, and you can even try it. So I'll try it out here,
-can execute and it doesn't actually return anything. You can see this is an empty
-array erase set here because our database is empty, but it is working. And we're
-going to talk about all these other fancy keys are here in just a little bit. They're
-super important. Now, as you just saw, the easiest way to create an API is by adding
-this API resource above your entity. One thing I do want to mention is you can also
-add API resource, have this API resource attribute to classes that are not entities,
-and that's something we're going to talk about in a future tutorial. This can often
-be a nice way to separate what your API looks like from where your entity looks like
-a little bit, especially in bigger APIs. But we'll talk about in the future. For now,
-using API resource on top of our entity is going to work. Great. All right. Next
+Perfect! Let's call our entity `DragonTreasure`. Then it's going to ask us a question that you may have never seen before - `Mark this class as an API platform resource`? - because API Platform is installed. I'm going to say `no` for now, because we're going to do this step *manually* in a moment so you can see it.
 
-We need to talk about something important called Open api, which is the key to how
-these interactive docs are being generated.
+Okay, let's start adding some properties. I'll add `name` as a string, with a Field Length of the default 255, and make it *not* null in the database. Then, I'll add `description` with a `text` type, and make *that* not null the database as well. We should also add a `value`, like... how much the treasure is *worth*. That will be an `integer` and *also* not null. We simply *have to* have a `coolFactor` too, because other dragons need to know just how cool this treaure is. We'll rank that from 1 to 10, so let's make this an `integer` which will be *not* null. Then, we'll need a `createdAt` `datetime_immutable` that's not null. *Finally*, let's add an `isPublished` property, which will be a `boolean` type, also not null, and hit "enter" to finish.
+
+There's nothing very special here so far. This created two classes: The `DragonTreasureRepository` (which we're not going to worry about), and the `DragonTreasure` entity itself with `$id`, `$name`, `$description`, `$value`, as well as some other properties and the getters and setters below. So... pretty boring at the moment. There *is* one little bug in this version of MakerBundle, though. You can see here that it generated and `isIsPublished()` method, so let's change that to `getIsPublished()` instead. It's trying to be a little *too* clever.
+
+All right, so we have our entity. Now we need a migration for it, but that might be a little difficult since we don't have our database set up yet. I'm actually going to set up our database using Docker. The Doctrine bundle gave us a nice `docker-compose.yml` file that boots up Postgres, so we're going to use that. Spin over to your terminal and run:
+
+```terminal
+docker-compose up -d
+```
+
+If you don't want to use Docker for some reason, then you can start your own database engine and then, in `.env` or `.env.local`, just configure your database URL correctly. Because I'm using Docker and also the Symfony binary, I don't need to configure anything. The Symfony web server will automatically set that database URL environment variable for me.
+
+Okay, to make the migration, run:
+
+```terminal
+symfony console make:migration
+```
+
+This `symfony console` is just like `./bin/console` except, because we're running it through Symfony, it's going to inject that environment variable so that it talks to the Docker database. Perfect! And, as usual, we're going to spin over and check out the new migration to make sure it doesn't contain any surprises. And... looks good! The table `dragon_treasure` is currently grayed out. So spin back over and run:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+Done!
+
+We now have an entity and a database table, but if you go and refresh the documentation... there's still nothing there. What we need to do is tell API Platform to expose our new `DragonTreasure` entity as an API resource. To do this, go above the class and add a new attribute called `ApiResource` and hit "tab" to add that `use` statement. That's it! As soon as we do that... and refresh... whoa! The documentation grew! It now shows that we have *five* different endpoints: One to retrieve *all* of the `DragonTreasure` resources, one to retrive an *individual* `DragonTreasure`, one to *create* a `DragonTreasure`, one to *replace* a `DragonTreasure`, one to update it, and one to delete it. And this is more than just documentation. These end points actually *exist*. Go over and click "Try it Out", then "Execute", and... it doesn't actually return anything because our database is currently empty, but we *do* have an empty array set here, so this *is* working. And we'll talk about all of the other fancy keys here shortly. They're *super* important.
+
+As you just saw, the easiest way to create an API is by adding this `ApiResource` above your entity. One thing I want to mention is that you can *also* add this `ApiResource` attribute to classes that are *not* entities, and that's something we're going to talk about in a future tutorial. This can be a nice way to separate what your API looks like from what your entity looks like, especially in bigger APIs. We'll discuss the details behind that later. For now, using `ApiResource` on top of our entity is going to work out great.
+
+Next: We need to talk about something *important* called "OpenAPI". This is the *key* to how these interactive docs are being generated.
