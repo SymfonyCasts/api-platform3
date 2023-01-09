@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 42d5b2e..96ada45 100644
+index b24438d..00bb326 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -13,6 +13,7 @@
@@ -11,15 +11,15 @@ index 42d5b2e..96ada45 100644
          "phpstan/phpdoc-parser": "^1.15",
          "symfony/asset": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index 794e0d2..dab2698 100644
+index acb3470..2e69255 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "07acb2e189e0d4301af070290233b319",
-+    "content-hash": "d580ebcbe3a293e3af1ad15c5b535190",
+-    "content-hash": "374c7ec6bab5e689608a5484fb62fe16",
++    "content-hash": "fc0b0f09521c4a07186dd174b22749f5",
      "packages": [
          {
              "name": "api-platform/core",
@@ -130,9 +130,9 @@ index 794e0d2..dab2698 100644
 +            "time": "2023-01-01T23:17:36+00:00"
 +        },
          {
-             "name": "nikic/php-parser",
-             "version": "v4.15.2",
-@@ -5478,6 +5580,104 @@
+             "name": "phpdocumentor/reflection-common",
+             "version": "2.2.0",
+@@ -5163,6 +5265,104 @@
              ],
              "time": "2022-12-14T16:11:27+00:00"
          },
@@ -257,7 +257,7 @@ index 0000000..abb76aa
 +#            lokalise:
 +#                dsn: '%env(LOKALISE_DSN)%'
 diff --git a/symfony.lock b/symfony.lock
-index 1b4214e..90d94ad 100644
+index e92cc6c..6e47bb7 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -230,6 +230,19 @@
