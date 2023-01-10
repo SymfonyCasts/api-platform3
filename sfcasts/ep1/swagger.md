@@ -1,77 +1,21 @@
 # Swagger UI: Interactive Docs
 
-The amazing interactive documentation that we've stumbled across is *not* something
-from API platform! It's actually an open source API documentation library called
-Swagger UI. And the *really* cool thing about Swagger UI is that if your API contains
-metadata that *describes* your API, then *any* API can get this really cool,
-interactive documentation for free! I love free stuff.
+The amazing interactive documentation that we've stumbled across is *not* something from API platform! It's actually an open source API documentation library called Swagger UI. And the *really* cool thing about Swagger UI is that if your API contains metadata that *describes* your API, then *any* API can get this really cool, interactive documentation for free! I love free stuff! We get this because API platform *provides* that metadata out of the box. But more on that in a minute.
 
-We get this because API platform *provides*  that metadata out of the box. But more
-on that in a minute.
+So let's play around with this. Use the POST endpoint to create a new `DragonTreasure`. We've recently plundered some "Gold coins"... which we got from "Scrooge McDuck". For our purposes, none of the other fields really matter. Down here, hit "Execute" and... boom! If you scroll down, you can see that this made a POST request to `/api/dragon_treasures` and sent all of that data as JSON! Then, our API returned a "201" status code. A 201 status code means the request was successful and resource was created. Then it returned this JSON, which includes an `id` of `1`. So this isn't *just* documentation. We really *do* have a working API now! There are a couple of extra fields here too, which I mentioned earlier - `@context`, `@id`, and `@type` - and we'll talk about those soon.
 
-Let's play with this. Use the POST endpoint to create a new dragon treasure: we've
-recently plundered some gold coins... which we got from Scrooge McDuck. None of the
-other fields really matter. Down here, hit Execute and boom! Down here you can see
-that this made a POST request to `/api/dragon_treasures` and sent all of that data as
-JSON! Then, our API returned a 201 status code. A 201 status code means the request
-was successful and resource was created. Then it returned this JSON... which includes
-`id: 1`. Yes: this isn't just documentation. We really *do* already have a working
-API!
+Now that we have a `DragonTreasure` to work with, let's open up this "GET" endpoint here. Click "Try it Out", then "Execute", and... perfect! This is *super* simple. In made a `GET` request to `/api/dragon_treasures`. This `?page=1` is optional. The returned information is inside something called `hydro:member`. We'll talk about that more later on, but it's basically just a list of the all of the `DragonTreasures` we currently have, which, at the moment, is just this one here. So in just a few minutes of work, we have a fully featured API for our Doctrine entity. I'm going to copy this URL, open a new tab, and paste that in. Whoa! Wait... this returned HTML? A second ago, it said that it made a `GET` request to that URL and it returned *JSON*. What's going on here?
 
-There's also a couple of extra fields here that I mentioned earlier at contacts at ID
-and at Type, and we'll talk about those soon. All right, so now that we have a dragon
-treasure, let's open up this get end point here. Hit try it out, hit execute, and
-perfect. This is super simple. In made a get request to /API /dragon_treasures. This
-question Mark Page equal one is even optional and return this here you can see it's
-inside something called Hydro ember. We'll talk about that later. But it's basically
-just a list of the all of the dragon treasures we currently have, which is just this
-one right here. So in just about just a couple minutes of work, we have a fully
-featured API for our doctrine entity. I'm going to copy this. You all right here,
-open a new tab and paste that in. Whoa, wait, this returned html, but a second ago it
-said that it made a get request that you were out and it returned to .json. What's
-going on here? Well, one of the features of API platform is it has is is called,
-called Content Negotiation. It has the ability to return the same resource like our
-Dragon treasure in multiple formats. Like for example, I could return it as .json or
-it could return it as HTML
+One of the features of API Platform is called "Content Negotiation". It has the ability to return the same resource, like our `DragonTreasure`, in *multiple* formats, like JSON, HTML, etc. We can tell API Platform which format we're looking for by passing this `accept` header. When we use the interactive docs, you can see that it passes this `accept` header to `application/ld+json`. And even though we don't see it here, if you go to a page in your browser like this, your browser automatically sends an `accept` header that tells it you want text/HTML. So this is actually API Platform showing us what this resource looks like in its HTML format, which is just the documentation. In fact, as soon as I open up that endpoint, it *automatically* executed it for me. This means, if we want the JSON version, we need to pass this `accept` header, which is super easy, for example, if you're writing JavaScript.
 
-Or other formats. The way that you tell API platform what format you want is by
-passing this accept header. So you can see when we use the interactive docs, it
-passes this accept header it /you application /LD plus J S O. And even though we
-don't see it here, if you go to a page in your browser like this, your browser
-automatically sends an accept header that says you want text /html. So this is
-actually API platform showing us what this resource looks like and it's HTML format.
-And it's HTML format is just the documentation. In fact, as soon as I open up that
-endpointed, automatically executed it for me. So this means if we want the J S O N
-version, we need to pass this accept header,
+*But* passing a custom `accept` header isn't easy to do in a browser, and it would be nice to see the JSON version of this. Fortunately, API Platform gives you a way to cheat. I'll remove this `?page=1` to simplify things, and on the end of any endpoint, you can say `.jsonld`. This format, `.jsonld`, is something we're going to talk about in a moment, but *now* we see the `DragonTreasure` resource in that format. API Platform also supports JSON out of the box, so we can see the same thing, but in pure, normal JSON.
 
-Which you can easily do. For example, if you are writing JavaScript, but it is kind
-of, it's not passing a custom accept header. Not really easy in a browser. And it
-would be nice to see the jsun version of this. Fortunately, there's a platform gives
-you a way to cheat. I'm actually going to take off this question Mark Page = one just
-to simplify things. And on the end of any point you can say.json ld. You can say dot.
-And then the format JSON LD is something we're going to talk about in a moment.
-That's what gives us these extra this this specific format here. But now we see the
-Dragon Treasure resource in the J S O LD format platform also supports JS O outta the
-box. So same thing, but just in pure normal J S O N.
+Okay, at this point, we know we have a new route for `/api`, and *apparently* we also have a number of *other* routes, like `/api/dragon_treasures` and so on. *Each* of these is a route, but where do those routes come from? How are those being dynamically added to my app? If you spin over to your terminal and run
 
-All
+```terminal
+./bin/console debug:router
+```
 
-Right, so at this point we know we have a new route for /API and apparently we also
-have a number of other routes like /API /dragon treasures and these, each of these is
-a route, but where do those routes come from? How are those being dynamically added
-to my app? Well, if you spin over to your terminal and re bin console debug router,
-you'll see that all of these are just normal routes. Lemme make that a little bit
-smaller. These are just normal traditional routes that are being added to our system.
-How are these being added to our system? The answer to that is when we installed API
-platform, its recipe added, a config routes API platform.yaml file.
+you'll see that all of these are just normal routes. I'll make this a little smaller so we can see everything. These are just normal, traditional routes that are being added to our system. *How* are these being added? When we installed API Platform, its recipe added a `/config/routes/api_platform.yaml` file. This is actually a route import. It looks a little weird, but this activates API Platform while the routing is loading. Then, API Platform finds all of the API resources in our application and generates a route for all of the endpoints. This means that all we need to focus on is creating these beautiful PHP classes, decorating them with API resource, and API Platform takes care of all the heavy lifting of hooking up those end points *for* us. Of course, we'll need to tweak the configuration and talk about more advanced things, but hey! That's the point of this tutorial. We're *already* off to an awesome start.
 
-This is actually a route import. I know it looks a little bit weird, but this
-activates API platform while the routing is loading. And then API platform finds all
-of the API resource things in our app, in our application and generates a route for
-all of the endpoints. So what this means is all we need to focus on is creating these
-beautiful PHP classes, decorating them with API resource. An a API platform takes
-care of all the heavy lifting of hooking up those end points for us. Of course, we're
-going to need to tweak configuration and talk about more advanced things, but hey,
-that's the point of this tutorial. We're also off. We're already off to an awesome
-start. So next I want to talk about the secret behind how this swagger UI gen
-documentation is generated. It's called Open api.
+Next: I want to talk about the secret behind how this Swagger UI documentation is generated. It's called *OpenAPI*.
