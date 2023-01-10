@@ -56,4 +56,5 @@ Go over and click "Try it Out", then "Execute", and... it doesn't actually retur
 
 Oh, but I do want to mention one thing. As we just saw, the easiest way to create a set of API endpoints is by adding this `ApiResource` above your entity class. But you can *also* add this `ApiResource` attribute above classes *any* class: *not* just entities. That's something we're going to talk about in a future tutorial: it can be a nice way to separate what your API looks like from what your entity looks like, especially in bigger APIs. but again, that's for *later*. Right now, using `ApiResource` on top of our entity is going to work great.
 
-Next: We need to cover a tiny bit of API theory: specifically "OpenAPI"... because that's the *key* to how these interactive docs are being generated.
+Next: Let's discover this cool, interactive documentation a bit more. Where did
+this come from? How does our app magically have a bunch of new routes? Let's find out!
