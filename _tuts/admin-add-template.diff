@@ -1,0 +1,13 @@
+diff --git a/templates/admin/dashboard.html.twig b/templates/admin/dashboard.html.twig
+new file mode 100644
+index 0000000..b8f69a1
+--- /dev/null
++++ b/templates/admin/dashboard.html.twig
+@@ -0,0 +1,7 @@
++{% extends 'base.html.twig' %}
++
++{% block body %}
++    <div {{ react_component('ReactAdmin', {
++        entrypoint: path('api_entrypoint')
++    }) }}></div>
++{% endblock %}
