@@ -131,10 +131,10 @@ index 14a3be2..cbed50c 100644
 +    Symfony\UX\React\ReactBundle::class => ['all' => true],
  ];
 diff --git a/package.json b/package.json
-index 1faf683..844fbb1 100644
+index 0102896..bc0a9d5 100644
 --- a/package.json
 +++ b/package.json
-@@ -4,8 +4,11 @@
+@@ -5,8 +5,11 @@
          "@babel/preset-env": "^7.16.0",
          "@hotwired/stimulus": "^3.0.0",
          "@symfony/stimulus-bridge": "^3.2.0",
