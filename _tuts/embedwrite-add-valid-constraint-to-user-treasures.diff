@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index b508619..86b6a13 100644
+index 7c46b5d..138b9da 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -50,6 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -7,6 +7,6 @@ index b508619..86b6a13 100644
      #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'])]
      #[Groups(['user:read', 'user:write'])]
 +    #[Assert\Valid]
-     private Collection $treasures;
+     private Collection $dragonTreasures;
  
      public function __construct()
