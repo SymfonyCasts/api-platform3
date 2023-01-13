@@ -1,71 +1,17 @@
 # The Powerful OpenAPI Spec
 
-I said that these interactive docs come from an open source library called Swagger
-ui, and as long as your API contains some configuration that describes the api, like
-what endpoints it has and what fields are used on each endpoint, then you can
-generate these rich swagger docs automatically. Head two, pet store three swagger.io.
-This is really cool. This is a demo project of another of the Swagger UI being used
-on another api, on a demo api, and what's really cool is that this actually sh has a
-link to the configuration file that's behind this Swagger ui. In fact, you can put
-any uh, swagger configuration up here and it'll load, so we'll open that up and
-awesome. This Jsun file fully describes the API from some basic information about the
-API itself, all the way down to the different paths that you have updating an
-existing pet, for example, adding a new pet to the store, the responses, everything
-as long as your API contains, if you have one of these files, you can get swagger
-instantly. This format is called Open api. Open API is just a standard for how APIs
-should be, should be described. It's literally this file right here,
+Earlier, I said that these interactive docs come from an open source library called Swagger UI, and as long as your API contains some configuration that *describes* the API, like what endpoints it has and what fields are used on each endpoint, then you can generate these rich Swagger docs *automatically*. Head to `petstore3.swagger.io`. This is really cool! This is a demo project where the Swagger UI is being used on a demo API. This actually has a link to the configuration file that's behind this Swagger UI. In fact, you can put *any* Swagger configuration up here and it will load. I'll open that up and... awesome! This JSON file fully describes the API, from some basic information about the API itself, all the way down to the different paths that you have, such as updating an existing pet, adding a new pet to the store, the responses... *everything*. If you have one of these files, you can get Swagger *instantly*. This format is called *OpenAPI*. OpenAPI is just a standard for how APIs should be described. It's *literally* this file right here.
 
-So back over in our docs, we must have that same configuration file, right? We do
-head to /api /docs.JSON two. See our version of that file. It looks very similar.
-It's got paths, it's describing the different operations. This is really cool. API
-platform is reading our project and generating this giant file for us. Then because
-we have this giant file, it can generate this swagger ui. In fact, the way it does
-that, if you view the page source on this page is the actual that JSON document we
-saw is actually embedded right into the HTML of the page. Then there's some swagger
-JavaScript that reads this and boots up this page. Now, this idea of having an op
-open API specification that describes your API is super powerful because there are
-increasing tools that you can build on top of this kind of like swagger ui for
-example. Go back to the API platform documentations and click on Schema generator.
-This is actually a tool written by API platform where if you want to, you can
-actually generate, you can use a service called Stoplight.
+Back over in our docs, we *must* have that same configuration file, right? We do! Head to `/api/docs.json` to see *our* version of that file. It looks *very* similar. It has paths and it's describing the different operations... *awesome*. API Platform is reading our project and generating this giant file *for* us. Then, *because* we have this giant file, it can generate the Swagger UI. In fact, if you click on "View Page Source", you can see that is does that by embedding the actual JSON document right into the HTML of the page. *Then*, there's some Swagger JavaScript that reads this and boots up this page.
 
-No, no, no.
+This idea of having an OpenAPI specification that describes your API is *super* powerful, because there's an increasing number of tools that you can build on top of Swagger UI. For example, if we go back to the API Platform documentation and click on "Schema Generator", this is a tool written by API Platform where you can use a service called "Stoplight". The screenshot down here actually shows you how to design your API. Then it will give you an OpenAPI specification document, and you can use Schema Generator to generate your PHP classes from that. We're not going to do that in *this* tutorial, but it's good to know your options.
 
-You can use a service called Stoplight. This is a screenshot down here to actually
-design your API first. It will then give you an open API specification document, and
-then you can use a tool called the Schema generator to generate your PHP classes.
-From that. It's not something we're going to do in this tutorial, but it is one of
-the options. There's also an admin generator. This is really cool. This is something
-called React Admin, and basically you point React admin at your, or it generates from
-this, and then you get an instant admin from that. And there's also another way to
-create a, there's also other ways to generate code for your front end. For example,
-you can generate next JS front end, which reads from your open API specification
-anyways, having maybe you don't care about any of that point is you get this really
-nice swagger ui, but the Open API spec behind this can be used in lots of other
-powerful ways. Now, in addition to the endpoints down here, you can also see them
-called schema. These are actually basically your models and there's a, there's two
-right here, one for JSON LD and one normal one. We're going to talk about JSON LD in
-a second, but these are basically the same
+There's also an admin generator, which is pretty cool. This is something called React Admin. It generates from this, and then you get an instant admin. There are *other* ways to generate code for your frontend too. For example, you can generate Next.js frontend, which reads from your OpenAPI specifications. The *point* is, while we have this really nice Swagger UI, the OpenAPI spec behind this can be used in a lot of other powerful ways.
 
-And E, and if you open up these things, it's actually really already really smart. It
-knows our ID as an integer. It knows our name as a string. It knows our cool factors
-as an integer, it knows our is published as a boo. All that information, again, is
-coming from this spec document. If I search for is published in here, you can see,
-yep, there is the model describing it is published as a Ty Bull APAP platform is
-reading all this from our property types. So it's very simply it sees that cool
-factor as an integer, and so it advertises it as an integer, but it's even cooler
-than that. Check out the id. It's set as read only, huh? It knows that because ID is
-a private property and there is no set ID method, so it infers that Id must be a read
-only property and it's totally correct. Yep. APAP platform reads a lot about lot of
-information from your code to generate really rich documentation automatically, and
-you can even add more stuff to this. So let's find the value property there it is,
-and I'm going to add a little documentation above this
+In addition to the endpoints down here, you can also see something called "Schemas". These are your models, and there are two right here - one for `.jsonld` and one that's normal. We're going to talk about `.json.ld` in a second, but these are basically the same. If you open one up, you can see that it's pretty smart already. It knows that our `id` is an integer, our `name` is a string, our `coolFactor` is an integer, and `isPublished` is a boolean. All of this information is, once again, coming from this spec document. If I search for `isPublished` in here... yep! *There's* the model describing `isPublished` as `type` `boolean`. API Platform is reading all of this from our *property types*.
 
-So people know that this is the estimated value of this treasure in gold coins. When
-you head over in refresh and check out your model down here for value, it shows up.
-So if you just do a really good job writing your PHP code and documenting it, you're
-going to kind of get a rich API out of the box. The same information is advertised.
-All right, let's try our get endpoint again. Next, let's talk about the, because
-next, let's talk about these weird AT fields, like at id at type and at context.
-These come from something called jsun ld, a powerful addition to J S O, and though
-it's technically optional, it's super important part of a API platform.
+Very simply, it sees that `coolFactor` is an integer, so it *advertises* it as an integer. But it gets even *better*. Check out the `id`. It's set as `readOnly`. How does it know that? This `id` is a *private* property and there's *no* `setId()` method, so it infers that `id` must be a `readOnly` property, and that's *totally correct*. Yep! API Platform reads a lot of information from your code to generate really rich documentation *automatically*, and we can add even more stuff to this.
+
+Let's find the `$value` property... there it is... and add a little documentation above this, so people know that `This is the estimated value of this treasure, in gold coins.` When you head over, refresh... and check out your model down here for `value`... it shows up! So if you good job writing your PHP code and documenting it, you're going to get a rich API right out of the box.
+
+Next: Let's talk about these weird `@` fields, like `@id`, `@type`, and `@context`. These come from something called `.jsonld` - a powerful addition to JSON. Though it's technically *optional*, it's *super* important part of API Platform.
