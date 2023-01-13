@@ -429,7 +429,67 @@
             "id": "subresource-add-subresource-on-the-other-side",
             "name": "Subresource: Add subresource on the other side",
             "description": null
+        },
+        {
+            "id": "admin-install-encore",
+            "name": "Admin: install encore",
+            "description": null
+        },
+        {
+            "id": "admin-npm-install",
+            "name": "Admin: npm install",
+            "description": null
+        },
+        {
+            "id": "admin-install-at-api-platform-admin",
+            "name": "Admin: install @api-platform\/admin",
+            "description": null
+        },
+        {
+            "id": "admin-install-symfony-ux-react",
+            "name": "Admin: install symfony\/ux-react",
+            "description": null
+        },
+        {
+            "id": "admin-ad-ux-react-bootstrap",
+            "name": "Admin: ad UX React bootstrap",
+            "description": null
+        },
+        {
+            "id": "admin-add-reactadmin-js-component",
+            "name": "Admin: Add ReactAdmin.js component",
+            "description": null
+        },
+        {
+            "id": "admin-install-react-package",
+            "name": "Admin: Install react package",
+            "description": null
+        },
+        {
+            "id": "admin-enable-react-preset",
+            "name": "Admin: enable react preset",
+            "description": null
+        },
+        {
+            "id": "admin-install-at-babel-preset-react",
+            "name": "Admin: install @babel\/preset-react",
+            "description": null
+        },
+        {
+            "id": "delete-me",
+            "name": "delete me",
+            "description": null
+        },
+        {
+            "id": "admin-add-controller",
+            "name": "Admin: Add controller",
+            "description": null
+        },
+        {
+            "id": "admin-add-template",
+            "name": "Admin: add template",
+            "description": null
         }
     ],
-    "sha": "0e20c2ca50431ae1a87ddf3e396fa92ca55af419"
+    "sha": "88f5f1ffbc50ad6bf68e6007162f0ee385b08da9"
 }
