@@ -1,17 +1,76 @@
 # The Powerful OpenAPI Spec
 
-Earlier, I said that these interactive docs come from an open source library called Swagger UI, and as long as your API contains some configuration that *describes* the API, like what endpoints it has and what fields are used on each endpoint, then you can generate these rich Swagger docs *automatically*. Head to `petstore3.swagger.io`. This is really cool! This is a demo project where the Swagger UI is being used on a demo API. This actually has a link to the configuration file that's behind this Swagger UI. In fact, you can put *any* Swagger configuration up here and it will load. I'll open that up and... awesome! This JSON file fully describes the API, from some basic information about the API itself, all the way down to the different paths that you have, such as updating an existing pet, adding a new pet to the store, the responses... *everything*. If you have one of these files, you can get Swagger *instantly*. This format is called *OpenAPI*. OpenAPI is just a standard for how APIs should be described. It's *literally* this file right here.
+Earlier, I said that these interactive docs come from an open source library called
+Swagger UI, and as long as your API contains some configuration that *describes* the
+API, like what endpoints it has and what fields are used on each endpoint, then you
+can generate these rich Swagger docs *automatically*. Head to https://petstore3.swagger.io.
+This is really cool: it's is a demo project where Swagger UI is being used on a
+demo API. And it has a link to the API configuration file that's powering this!
 
-Back over in our docs, we *must* have that same configuration file, right? We do! Head to `/api/docs.json` to see *our* version of that file. It looks *very* similar. It has paths and it's describing the different operations... *awesome*. API Platform is reading our project and generating this giant file *for* us. Then, *because* we have this giant file, it can generate the Swagger UI. In fact, if you click on "View Page Source", you can see that is does that by embedding the actual JSON document right into the HTML of the page. *Then*, there's some Swagger JavaScript that reads this and boots up this page.
+## Hello OpenAPI!
 
-This idea of having an OpenAPI specification that describes your API is *super* powerful, because there's an increasing number of tools that you can build on top of Swagger UI. For example, if we go back to the API Platform documentation and click on "Schema Generator", this is a tool written by API Platform where you can use a service called "Stoplight". The screenshot down here actually shows you how to design your API. Then it will give you an OpenAPI specification document, and you can use Schema Generator to generate your PHP classes from that. We're not going to do that in *this* tutorial, but it's good to know your options.
+Let's... see what that looks like! Woh! Yup, this JSON file fully describes the API,
+from basic information about the API itself, all the way down to the different
+URLs, lke updating an existing pet, adding a new pet to the store, the responses...
+*everything*. *If* you have one of these files for your API, then you can get Swagger
+*instantly*.
 
-There's also an admin generator, which is pretty cool. This is something called React Admin. It generates from this, and then you get an instant admin. There are *other* ways to generate code for your frontend too. For example, you can generate Next.js frontend, which reads from your OpenAPI specifications. The *point* is, while we have this really nice Swagger UI, the OpenAPI spec behind this can be used in a lot of other powerful ways.
+The format of this file is called *OpenAPI*, which is just a standard for *how*
+APIs should be described.
 
-In addition to the endpoints down here, you can also see something called "Schemas". These are your models, and there are two right here - one for `.jsonld` and one that's normal. We're going to talk about `.json.ld` in a second, but these are basically the same. If you open one up, you can see that it's pretty smart already. It knows that our `id` is an integer, our `name` is a string, our `coolFactor` is an integer, and `isPublished` is a boolean. All of this information is, once again, coming from this spec document. If I search for `isPublished` in here... yep! *There's* the model describing `isPublished` as `type` `boolean`. API Platform is reading all of this from our *property types*.
+Back over in our docs, we *must* have that same configuration file, right? We do!
+Head to `/api/docs.json` to see *our* version. Yup! It looks *very* similar.
+It has paths, it describes the different operations... everything. The *best* part
+is that API Platform reads our code and generates this giant file *for* us. Then,
+*because* we have this giant file, we get Swagger UI.
 
-Very simply, it sees that `coolFactor` is an integer, so it *advertises* it as an integer. But it gets even *better*. Check out the `id`. It's set as `readOnly`. How does it know that? This `id` is a *private* property and there's *no* `setId()` method, so it infers that `id` must be a `readOnly` property, and that's *totally correct*. Yep! API Platform reads a lot of information from your code to generate really rich documentation *automatically*, and we can add even more stuff to this.
+In fact, if you click on "View Page Source", you can see that this page works by
+embedding the actual JSON document right into the HTML. Then, there's some Swagger
+JavaScript that reads this and boots things up.
 
-Let's find the `$value` property... there it is... and add a little documentation above this, so people know that `This is the estimated value of this treasure, in gold coins.` When you head over, refresh... and check out your model down here for `value`... it shows up! So if you good job writing your PHP code and documenting it, you're going to get a rich API right out of the box.
+## OpenAPI & Free Tools
 
-Next: Let's talk about these weird `@` fields, like `@id`, `@type`, and `@context`. These come from something called `.jsonld` - a powerful addition to JSON. Though it's technically *optional*, it's *super* important part of API Platform.
+This idea of having an OpenAPI specification that describes your API is *super*
+powerful, because there are an increasing number of tools that can *use* it.
+For example, go back to the API Platform documentation and click on "Schema
+Generator". This is pretty wild: you an use a service called "Stoplight" to
+*design* your API. That will give you an OpenAPI specification document... and then
+you can use the Schema Generator to generate your PHP classes *from* that. We're
+not going to do that in *this* tutorial, but it's pretty cool.
+
+There's also an admin generator built in React - we'll play with this later - and
+even ways to help generate JavaScript that talks to your API. For example, you can
+generate a Next.js frontend by having it read from your OpenAPI specs.
+
+The *point* is, this Swagger UI is awesome. But even *more* awesome is the OpenAPI
+spec document behind this... which can be used for other stuff.
+
+## Models / Schema in OpenAPI
+
+In addition to the endpoints in Swagger, it also has something called "Schemas".
+These are your models... and there are two - one for JSON-LD and one a normal
+one. We're going to talk about JSON-LD in a minute, but these are basically the same.
+
+If you open one up, wow, this is smart. It knows that our `id` is an integer,
+`name` is a string, `coolFactor` is an integer, and `isPublished` is a boolean.
+All of this information is, once again, coming from this spec document. If we search
+for `isPublished` in here... yep! *There's* the model describing `isPublished` as
+`type` `boolean`. The best part is that API Platform is generating this by... just
+looking at our code!
+
+Very simply, it sees that `coolFactor` is an integer, so it *advertises* it as an
+integer in the OpenAPI doc. But it gets even *better*. Check out the `id`. It's set
+as `readOnly`. How does it know that? Well, `id` is a *private* property and there's
+*no* `setId()` method. and so it inferred that `id` must be `readOnly`. And
+that's *totally correct*.
+
+We can also help API Platforn. Find the `$value` property... there it is... and add
+a little documentation above this, so people know that `This is the estimated value
+of this treasure, in gold coins.` When you head over, refresh... and check out the
+model down here... for `value`... it shows up! The point is: if you good job writing
+your PHP code and documenting it, you're going to get rich API documentation thanks
+to OpenAPI, with zero extra work.
+
+Next: Let's talk about these weird `@` fields, like `@id`, `@type`, and `@context`.
+These come from something called JSONLD: a powerful addition to JSON that API Platform
+leverages.
