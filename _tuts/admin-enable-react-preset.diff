@@ -1,0 +1,13 @@
+diff --git a/webpack.config.js b/webpack.config.js
+index 408012f..8443dd0 100644
+--- a/webpack.config.js
++++ b/webpack.config.js
+@@ -63,7 +63,7 @@ Encore
+     //.enableTypeScriptLoader()
+ 
+     // uncomment if you use React
+-    //.enableReactPreset()
++    .enableReactPreset()
+ 
+     // uncomment to get integrity="..." attributes on your script & link tags
+     // requires WebpackEncoreBundle 1.4 or higher
