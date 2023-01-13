@@ -1,12 +1,12 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 92dca01..7bf84c0 100644
+index 92dca01..8b3e7ab 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -91,6 +91,10 @@ class DragonTreasure
      #[ApiFilter(BooleanFilter::class)]
      private bool $isPublished = false;
  
-+    #[ORM\ManyToOne(inversedBy: 'treasures')]
++    #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
 +    #[ORM\JoinColumn(nullable: false)]
 +    private ?User $owner = null;
 +
@@ -31,7 +31,7 @@ index 92dca01..7bf84c0 100644
 +    }
  }
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 2a5ef82..e902856 100644
+index 2a5ef82..f66b098 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -4,6 +4,8 @@ namespace App\Entity;
@@ -48,11 +48,11 @@ index 2a5ef82..e902856 100644
      private ?string $username = null;
  
 +    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class)]
-+    private Collection $treasures;
++    private Collection $dragonTreasures;
 +
 +    public function __construct()
 +    {
-+        $this->treasures = new ArrayCollection();
++        $this->dragonTreasures = new ArrayCollection();
 +    }
 +
      public function getId(): ?int
@@ -66,24 +66,24 @@ index 2a5ef82..e902856 100644
 +    /**
 +     * @return Collection<int, DragonTreasure>
 +     */
-+    public function getTreasures(): Collection
++    public function getDragonTreasures(): Collection
 +    {
-+        return $this->treasures;
++        return $this->dragonTreasures;
 +    }
 +
-+    public function addTreasure(DragonTreasure $treasure): self
++    public function addDragonTreasure(DragonTreasure $treasure): self
 +    {
-+        if (!$this->treasures->contains($treasure)) {
-+            $this->treasures->add($treasure);
++        if (!$this->dragonTreasures->contains($treasure)) {
++            $this->dragonTreasures->add($treasure);
 +            $treasure->setOwner($this);
 +        }
 +
 +        return $this;
 +    }
 +
-+    public function removeTreasure(DragonTreasure $treasure): self
++    public function removeDragonTreasure(DragonTreasure $treasure): self
 +    {
-+        if ($this->treasures->removeElement($treasure)) {
++        if ($this->dragonTreasures->removeElement($treasure)) {
 +            // set the owning side to null (unless already changed)
 +            if ($treasure->getOwner() === $this) {
 +                $treasure->setOwner(null);
