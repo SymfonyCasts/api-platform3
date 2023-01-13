@@ -1,9 +1,9 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 647f88a..6e81eae 100644
+index 5176ee2..6139382 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -98,6 +98,7 @@ class DragonTreasure
-     #[ORM\ManyToOne(inversedBy: 'treasures')]
+     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
      #[ORM\JoinColumn(nullable: false)]
      #[Groups(['treasure:read', 'treasure:write'])]
 +    #[Assert\Valid]
