@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index e902856..35f82c2 100644
+index f66b098..afd5b35 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -49,6 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -7,6 +7,6 @@ index e902856..35f82c2 100644
  
      #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class)]
 +    #[Groups(['user:read'])]
-     private Collection $treasures;
+     private Collection $dragonTreasures;
  
      public function __construct()
