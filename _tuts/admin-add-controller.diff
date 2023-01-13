@@ -1,0 +1,22 @@
+diff --git a/src/Controller/AdminController.php b/src/Controller/AdminController.php
+new file mode 100644
+index 0000000..7ed2dc4
+--- /dev/null
++++ b/src/Controller/AdminController.php
+@@ -0,0 +1,16 @@
++<?php
++
++namespace App\Controller;
++
++use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
++use Symfony\Component\HttpFoundation\Response;
++use Symfony\Component\Routing\Annotation\Route;
++
++class AdminController extends AbstractController
++{
++    #[Route('/admin')]
++    public function dashboard(): Response
++    {
++        return $this->render('admin/dashboard.html.twig');
++    }
++}
