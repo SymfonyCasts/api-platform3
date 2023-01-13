@@ -1,81 +1,19 @@
 # JSON-LD: Giving Meaning to your Data
 
-Okay, apparently I've just used the get end point to get all of my resources. I have
-a treasure with the ID of one. So let me close up this resource. I'll use this other
-get end point hit try it out, put one in for the ID and we'll fetch what just one
-looks like and beautiful. But I have a question. What are the significance of these
-fields? Like what does name or description or value actually mean? Are they, is the
-description plain text? Is it html? Is this name like a short name given to the item
-or is it a proper name? Is this value in dollars? Euros? What the heck does cool
-factor mean? <laugh>. So if you're a human, you are right, then you can probably
-figure out a lot of that information. But com machines, okay, maybe minus futuristic
-ai, they can't figure this out. They don't know what these keys actually mean. They
-don't have. The question is how can we give context and meaning to our data? So
-there's this thing called R D F Resource Description framework, which is kind of a
-set of rules about how we can describe the meaning of data so that computers can
-understand, understand it. It's a boring and abstract, but it's basically a
+Apparently, I've just used the `GET` endpoint to get *all* of my resources. I have a treasure with an `id` of `1`. I'll close up this resource... and use this other `GET` endpoint, click "Try it out", put "1" in for the ID, and click "Execute". Beautiful! But I have some questions. What's the significance of these fields? What does `name` or `description` or `value` actually *mean*? Is the description plain text? HTML? Is the `name` a short name given to the item or is it a *proper* name? Is this value in dollars? Euros? What the heck does `coolFactor` even mean? And why am I asking *YOU* all of these questions?
 
-Guide on how you can say that one piece of data has this type or one resource as a
-subclass of some other type. In html, you can a attributes to your elements to add
-this R D F metadata. You can say that this dib describes a person and that this
-person's name and telephone are these other pieces of data. This makes your random
-HTML in your site actually understandable by humans. It's even better if two
-different sites use the exact same definition of person, which is why the types are
-URL insights. Try to reuse existing types rather than invent new ones. So J S L D
-does the same. So as you can see, this is really returning J S O, but you can see in
-the content type that it says it's application /LD plus JS O. What that simply means
-when you see app, when you see application /LD plus J S O is it's saying that what
-we're going to get back is J S O N, but it's going to contain a couple of extra
-fields that add more data according to the JS O LD rules. So JSONs LD is just JS O
-with extra info.
+If you're a human (And you are... right?), then you can probably figure out a lot of that on your own. But *machines* - okay, maybe *minus* futuristic AI - *can't* figure this out. They don't know what these keys actually *mean*. The question is: How can we give context and meaning to our data?
 
-So for example, every resource like our Dragon Treasure has three at fields. Most
-important is probably at id. This is very simply the unique identifier to this
-resource. It's basically the same as id, but it's even better because it's a url. So
-instead of just saying like ID one, you have ID eight /API /dragon treasures /one. So
-not only is that going to be unique when compared to like other resources, like we
-have users in the future, it's also a url. You can actually like go to this in your
-browser and if you have the accept header or if you add.JSON L, the end at the end of
-it, whoops, let me get rid of my extra /yeah, you can go get that resource right
-there. So add ID is just that simple and it's awesome. The other thing is ADD type.
-That's a way to describe the type of this resource, like what fields it has. And if
-we have two different resour, if we have two different, if we get back two different
-resources and they both have ad type Dragon Treasure, we'll know that they're the
-same.
+There's this thing called "RDF" or "Resource Description Framework", which is a set of rules about how we describe the meaning of data so computers can understand it. It's *boring* and abstract, but it's basically a guide on how you can define that one piece of data has a certain *type*, or one resource has a subclass of some *other* type. In HTML, you can add attributes to your elements to add this RDF metadata. You can say that this `<div>` describes a "person", and that this person's name and telephone are these other pieces of data. This makes the random HTML in your site *understandable* by humans. It's even better if two different sites use the exact same definition of "person", which is why the types are URLs, and sites try to reuse existing types rather than invent new ones. This `.jsonld` does the same thing.
 
-This ad type is almost like a class definition that describes which fields are
-allowed, how can we actually see where this type is defined? That's where a context
-can help us. This is a URL to where we can get more information about the meaning of
-this. So I'm going to copy that url, pop that in your browser and beautiful. We get
-this very simple document here that basically says Dragon Treasures have name,
-description, value, cool factor created at in is published properties. And if we want
-to get even more information about what those actual individual properties mean, we
-can follow this at vocab link here to a big documentation, big other piece, pieces of
-documentation that talks about, for example, all of our, all of the classes that we
-have, like Dragon Treasure. And then you can see all the different properties like
-there's a name property. You can see it's a required false readable, true writeable
-true and also that it's a string. And you see this for all of our properties down
-here for value. You can see that the string is, this is actually an integer and this
-XMLs:integer is actually referring to another document which is up here on top, which
-actually gives you a link to where you can get information about what that means. So
+This is really returning JSON, but in the `content-type`, you can see that it says `application/ld+json`. When you see this `application/ld+json`, it's really saying that we're going to get back JSON, but it's going to contain a couple of extra fields that add more data according to the `.jsonld` rules. So `.jsonld` is just JSON with extra info. For example, every resource, like `DragonTreasure`, has three `@` fields, the most important of which is probably `@id`. This is the unique identifier to this resource. It's basically the same as `id`, but it's even *better* because it's a URL. So instead of just saying `"id": 1`, you have `@id` `/api/dragon_treasures/1`. So not only is that going to be unique when compared to *other* resources, but it's *also* a URL. You can actually go to this URL in your browser, and if you have the `accept` header or add `.jsonld` at the end of it... whoops... let me get rid of my extra `/`... yeah! You can see that resource *right there*. So `@id` is super simple and it's *awesome*.
 
-Yes, it, so at this point you might be thinking, this seems a lot like the AP Open
-API documentation and you're right, but more on that in a second. And yes, this is
-like a little bit confusing, but imagine what this would look like to a machine. It
-would be informational gold. You could figure out what all of the fields are and what
-the meanings of those fields are. And as you can see down here under value Hydroco
-description, it picked up the PHP documentation that we added to that field a second
-ago. Just like the open API doc, we can also add some extra information above our
-class. We could actually add this via pH documentation like normal, but this API
-resource actually also has some options. We can pass to it if we want. For example,
-one of those is called a description. We could say a rare and valuable treasure. And
-all this is doing is, is giving information to help build. If I refresh the JSON LD
-page and search for Rare, this actually fills out the Hyd description for if I close
-a couple things here. There we go. High description actually for the Dragon treasure
-itself. So it provides more metadata.
+Another item here is `@type`. That's a way to describe the *type* of resource, like what fields it has. And if this returns two different resources and they *both* have `@type` `DragonTreasure`, we'll know that they're the same. This `@type` is almost like a class definition that describes which fields are allowed. So... is there a way to see where this type is defined? That's where `@context` can help us. This URL takes us to a place where we can get more information. Copy the URL, paste that in your browser, and... beautiful! We get this very simple document here that tell us `DragonTreasure` has `name`, `description`, `value`, `coolFactor`, `createdAt`, and `isPublished` properties. And if we want even *more* information about what those individual properties mean, we can follow this `@vocab` link here to *other* pieces of documentation.
 
-And not surprisingly, this also shows up over here inside Swagger because that was
-also added to our open API specification. Next we need to talk about one last little
-uh, uh, theory thing, and that is what this Hydra thing means. That's showing up
-outta the place. Also explain the difference between JSON LD and Open API and why we
-have both of them in our app.
+Here we can see all of the classes we currently have, like `DragonTreasure`, and *all* of the different properties, like `name`. But more *specifically*, you can see it's `required: false`, `readable: true`, `writeable: true`, and also that it's a `string`. And you can see this kind of information for *all* of our properties. Down here for `value`, we can see that this is an `integer`. This `xmls:integer` actually refers to *another* document, up here on top, which gives you *another* info link.
+
+At this point, you might be thinking `This seems a lot like the AP OpenAPI documentation...`, and you're *right*. We'll talk more about that in a second. And *yes*, this *is* little confusing. But imagine what this would look like to a *machine*. It's an information *gold mine*. Just by digging a little, we can figure out what all of the fields and the *meanings* of those fields are. And as you can see down here under `value`... `hydra:description`... it picked up the PHP documentation that we added to that field a second ago.
+
+Just like with the OpenAPI doc, we can also add some extra information above our class. We *could* add this via PHP documentation like normal, but this API resource has some options we can pass to it as well. One of those, for example, is called a `description`. Let's *describe* this one as `A rare and valuable treasure.` All this does is give information that fills out the `hydra:description`. If I refresh the `.jsonld` page and search for "rare" (I'll close a few things here...), we can see that it added the description to the `DragonTreasure` *itself*. This provides more metadata and, not surprisingly, this same data also shows up over here inside Swagger because this was also added to our OpenAPI specification.
+
+Next: We need to talk about one last little *theory* thing, and that's what `hydra` actually means. We've seen this *all over* the place. I'll also explain the difference between `.jsonld` and OpenAPI, and why we have *both* of them in our app.
