@@ -1,8 +1,8 @@
 diff --git a/package-lock.json b/package-lock.json
-index bf414b7..17b3fa0 100644
+index e081d33..c5fe4ef 100644
 --- a/package-lock.json
 +++ b/package-lock.json
-@@ -13,8 +13,11 @@
+@@ -11,8 +11,11 @@
                  "@babel/preset-env": "^7.16.0",
                  "@hotwired/stimulus": "^3.0.0",
                  "@symfony/stimulus-bridge": "^3.2.0",
@@ -14,7 +14,7 @@ index bf414b7..17b3fa0 100644
                  "regenerator-runtime": "^0.13.9",
                  "webpack": "^5.74.0",
                  "webpack-cli": "^4.10.0",
-@@ -2319,6 +2322,17 @@
+@@ -2379,6 +2382,17 @@
                  "@hotwired/stimulus": "^3.0"
              }
          },
@@ -32,35 +32,35 @@ index bf414b7..17b3fa0 100644
          "node_modules/@symfony/webpack-encore": {
              "version": "4.2.0",
              "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-4.2.0.tgz",
-@@ -7979,7 +7993,6 @@
-             "version": "18.2.0",
+@@ -8190,7 +8204,6 @@
              "resolved": "https://registry.npmjs.org/react/-/react-18.2.0.tgz",
              "integrity": "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==",
+             "dev": true,
 -            "peer": true,
              "dependencies": {
                  "loose-envify": "^1.1.0"
              },
-@@ -8014,7 +8027,6 @@
-             "version": "18.2.0",
+@@ -8227,7 +8240,6 @@
              "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz",
              "integrity": "sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==",
+             "dev": true,
 -            "peer": true,
              "dependencies": {
                  "loose-envify": "^1.1.0",
                  "scheduler": "^0.23.0"
-@@ -8430,7 +8442,6 @@
-             "version": "0.23.0",
+@@ -8657,7 +8669,6 @@
              "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.23.0.tgz",
              "integrity": "sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==",
+             "dev": true,
 -            "peer": true,
              "dependencies": {
                  "loose-envify": "^1.1.0"
              }
 diff --git a/package.json b/package.json
-index 844fbb1..c9839db 100644
+index bc0a9d5..af3f2f4 100644
 --- a/package.json
 +++ b/package.json
-@@ -7,7 +7,7 @@
+@@ -8,7 +8,7 @@
          "@symfony/ux-react": "file:vendor/symfony/ux-react/assets",
          "@symfony/webpack-encore": "^4.0.0",
          "core-js": "^3.23.0",
