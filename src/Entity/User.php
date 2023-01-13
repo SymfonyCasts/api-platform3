@@ -54,11 +54,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['user:read', 'user:write'])]
     #[Assert\Valid]
-    private Collection $treasures;
+    private Collection $dragonTreasures;
 
     public function __construct()
     {
-        $this->treasures = new ArrayCollection();
+        $this->dragonTreasures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,24 +146,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, DragonTreasure>
      */
-    public function getTreasures(): Collection
+    public function getDragonTreasures(): Collection
     {
-        return $this->treasures;
+        return $this->dragonTreasures;
     }
 
-    public function addTreasure(DragonTreasure $treasure): self
+    public function addDragonTreasure(DragonTreasure $treasure): self
     {
-        if (!$this->treasures->contains($treasure)) {
-            $this->treasures->add($treasure);
+        if (!$this->dragonTreasures->contains($treasure)) {
+            $this->dragonTreasures->add($treasure);
             $treasure->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeTreasure(DragonTreasure $treasure): self
+    public function removeDragonTreasure(DragonTreasure $treasure): self
     {
-        if ($this->treasures->removeElement($treasure)) {
+        if ($this->dragonTreasures->removeElement($treasure)) {
             // set the owning side to null (unless already changed)
             if ($treasure->getOwner() === $this) {
                 $treasure->setOwner(null);
