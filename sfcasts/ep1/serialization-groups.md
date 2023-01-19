@@ -1,25 +1,25 @@
 # Serialization Groups: Choosing Fields
 
 Right now, whether or not a field in our class is readable or writable in the API
-is *entirely* determined by whether or that property its readable or writable in
+is *entirely* determined by whether or not that property is readable or writable in
 our class (basically, whether or not it has a getter or setter method). But what
 if you *need* a getter or setter... but *don't* want that field exposed in the API?
 For that, we have two options.
 
 ## A DTO Class?
 
-Option número uno: create a DTO class for your API resource. This is something
+Option número uno: create a DTO class for the API resource. This is something
 we'll save for another day... in a future tutorial. But in a nutshell, it's where
-you create a dedicated class for your `DragonTreasure` API. And them move the
+you create a dedicated class for your `DragonTreasure` API... and then move the
 `ApiResource` attribute onto *that*. The key thing is that you'll design the new
 class to look *exactly* like your API... because modeling your API will be its *only*
-job. It takes a little more work to set things up, but the advantage is that you'll
+job. It takes a little more work to set things up, but the advantage is that you
 then have a dedicated class for your API. Done!
 
 ## Hello Serialization Groups
 
 The *second* solution, and the one we're going to use, is *serialization groups*.
-Check it out. Over on our `ApiResource` attribute, add a new option called
+Check it out. Over on the `ApiResource` attribute, add a new option called
 `normalizationContext`. If you recall, "normalization" is the process of going
 from an object to an array, like when you're making a `GET` request to read a
 treasure. The `normalizationContext` is basically *options* that are passed to
@@ -27,21 +27,21 @@ the serializer during that process. And the *one* option that's most important
 is `groups`. Set that to one group called `treasure:read`.
 
 We'll talk about what this does in a minute. But you can see the pattern I'm using
-for the group: the name of the class (it could be `DragonTreasure` if we wanted)
+for the group: the name of the class (it could be `dragon_treasure` if we wanted)
 then `:read`... because normalization means that we're *reading* this class. You
-can name these groups however you want... this is my standard.
+can name these groups however you want: this is my standard.
 
 So... what does that *do*? Let's find out! Refresh the documentation... and, to make
-life easier, go to the URL: `/api/dragon_treasures.json.ld`. Whoops! It's just
+life easier, go to the URL: `/api/dragon_treasures.jsonld`. Whoops! It's just
 `treasures.jsonld` now. There we go. And... absolutely nothing is returned! Ok,
 we have the hydra fields, but this `hydra:member` contains the array of treasures.
 It *is* returning one treasure... but other than `@id` and `@type`... there are
-no actual fields being returned!
+no actual fields!
 
 ## How Serialization Groups Work
 
 Here's the deal. As soon as we add a `normalizationContext` with a group,
-when our object is normalized, the serializer will *only* include the properties
+when our object is normalized, the serializer will *only* include properties
 that have this group on it. And since we haven't added *any* groups to our properties,
 it returns *nothing*.
 
@@ -55,14 +55,14 @@ Good start. Move over and refresh the endpoint. Now... got it! We see `name`,
 
 ## DenormlizationContext: Controlling Writable Groups
 
-We now have control over which fields are *readable*. We can do the same thing to
-choose which fields should be *writeable* in the API. That's called
+We now have control over which fields are *readable*... and we can do the same thing
+to choose which fields should be *writeable* in the API. That's called
 "de-normalization", and I bet you can guess what we're going to do. Copy
-`normalizationContext`, change this to `denormalizationContext`... and use
+`normalizationContext`, paste, change it to `denormalizationContext`... and use
 `treasure:write`.
 
 Now head down to the `$name` property and add `treasure:write`. I'm going to skip
-`$description` for now (remember that we actually *deleted* our `setDescription()`
+`$description` (remember that we actually *deleted* our `setDescription()`
 method earlier on purpose)... but add this to `$value`... and `$coolFactor`.
 
 Oh, it's *mad* at me! As soon as we pass *multiple* groups, we need to make this
@@ -81,7 +81,7 @@ if we we check the endpoint, it's *not* there.
 To fix this, we can *also* add groups above methods. Say
 `#[Groups(['treasure:read'])]`.
 
-And when we go check... *voilà* it pops up.
+And when we go check... *voilà*, it pops up.
 
 Let's also find the `setTextDescription()` method... and do the same thing:
 `#[Groups([treasure:write])]`.
@@ -93,7 +93,7 @@ is *back*!
 ## Re-Adding Methods
 
 Hey, now we can re-add any of the getter or setter methods we removed earlier!
-Maybe I *do* need a `setDescription()` method in my code for something. Copy
+Like, maybe I *do* need a `setDescription()` method in my code for something. Copy
 `setName()` to be lazy, paste and change "name" to "description" in a few places.
 
 Got it! And even though we have that setter back, when we look at the `PUT`
@@ -118,12 +118,12 @@ When we try this... oh, dear... we get a 500 error:
 > value in column `isPublished`.
 
 We slimmed our API down to *only* the fields that we want *writeable*... but
-there's still one field that *must* be set in the database. Scroll up and find
+there's still one property that *must* be set in the database. Scroll up and find
 `isPublished`. Yup, it currently defaults to `null`. Change that to `= false`...
 and now the property will *never* be `null`.
 
-Now if we try it... the `Giant jar of pickles` is pickled into the database!
+If we try it... the `Giant jar of pickles` is pickled into the database!
 It works!
 
-Next: I want to show you a few more cool serialization tricks to give you even
+Next: let's explore a few more cool serialization tricks to give us even
 more control.
