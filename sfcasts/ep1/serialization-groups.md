@@ -1,25 +1,129 @@
-# Serialization Groups
+# Serialization Groups: Choosing Fields
 
-Right now, a field being *readable* or *writeable* in our API is determined by whether or not it's *accessible* in our class (basically, whether or not it has a getter or a setter method). But what if you need a getter or setter but *don't* want that field exposed in the API? For that, you have two options.
+Right now, whether or not a field in our class is readable or writable in the API
+is *entirely* determined by whether or that property its readable or writable in
+our class (basically, whether or not it has a getter or setter method). But what
+if you *need* a getter or setter... but *don't* want that field exposed in the API?
+For that, we have two options.
 
-Option *one* is to create a DTO class for your API resource. This is something we're going to talk about more in-depth in a future tutorial, but in a nutshell, it's where you create a dedicated class for your `DragonTreasure` API, which likely has a lot of the same fields as this, and then you *move* the API resource onto *that*. It takes a little more work to set things up, but the advantage is that you'll then have a dedicated class for your API. So you'll literally always make your class look exactly like you want it to look in the API, and then you're *done*.
+## A DTO Class?
 
-The *second* solution, and the one we're going to use, is *serialization groups*. Check this out. Over on our API resource, we're going to add a new option here called `normalizationContext`. If you'll recall, "normalization" is the process of going from an object to an array, like when you're making a `GET` request to read a treasure. The `normalizationContext` is basically *options* that are passed during that process, and the one option that's most important by far is `groups`. We're going to pass a new group here called `treasure:read`. We'll talk about what this does in a minute, but you can see the pattern for the name I'm using here is basically just the name of my class (it could be `DragonTreasure` if I wanted) and then `:read`, because the normalization means that we're *reading* this class.
+Option número uno: create a DTO class for your API resource. This is something
+we'll save for another day... in a future tutorial. But in a nutshell, it's where
+you create a dedicated class for your `DragonTreasure` API. And them move the
+`ApiResource` attribute onto *that*. The key thing is that you'll design the new
+class to look *exactly* like your API... because modeling your API will be its *only*
+job. It takes a little more work to set things up, but the advantage is that you'll
+then have a dedicated class for your API. Done!
 
-So... what does that *do*? Let's find out! I'm going to refresh the documentation and, to make life easier, we'll just go to the URL directly. Oh, whoops... it's not called "dragon_treasures" anymore, just "treasures". There we go. And... absolutely nothing is returned anymore. Check this out. This `hydra:member` is our array of resources, and it's returning one treasure. Other than these weird `@id` and `@type` fields, there are no actual fields being returned from our resource.
+## Hello Serialization Groups
 
-Here's how this works. Now that we have this `normalizationContext` on here, when our object is normalized, it's only going to include properties that have this group on it. And since we haven't *added* groups to any of our properties, it returns *nothing*. How do we add groups? We do that with *another* attribute. Above the `$name` field, we'll say `Groups()` and hit "tab" to add a `use` statement, and then `treasure:read`. We'll do this again above the `$description` field because we want *that* to be readable... and then the `$value` field... and `$coolFactor`. That's a good start. Let's go over and refresh our endpoint, and... got it! We can see `name`, `description`, `value`, and `coolFactor`.
+The *second* solution, and the one we're going to use, is *serialization groups*.
+Check it out. Over on our `ApiResource` attribute, add a new option called
+`normalizationContext`. If you recall, "normalization" is the process of going
+from an object to an array, like when you're making a `GET` request to read a
+treasure. The `normalizationContext` is basically *options* that are passed to
+the serializer during that process. And the *one* option that's most important
+is `groups`. Set that to one group called `treasure:read`.
 
-We now have control over which fields are *returned*, and we can do the same thing for the fields that are *writeable*. That's called "de-normalization", and I bet you can guess what we're going to do here. Copy that, paste... change this to `denormalizationContext`, and we'll say `treasure:write`. Right after that, we'll head down here and add `treasure:write` to the `$name` field. I'm going to skip `$description` for now (Remember that we actually *deleted* our `setDescription()` method earlier). We'll also add this to the `$value` field... and the `$coolFactor` field. You can see that it's mad at me because I forgot something important. As soon as you pass *multiple* groups in here, we need to make this an *array*. So I'll add some `[]` around those three properties. There we go. Now these properties are in *both* groups. To see if this is working, I'll go refresh the documentation... open up the `PUT` endpoint, and... nice! We see `name`, `value`, and `coolFactor`, which are now the *only* fields that are *settable* on our API.
+We'll talk about what this does in a minute. But you can see the pattern I'm using
+for the group: the name of the class (it could be `DragonTreasure` if we wanted)
+then `:read`... because normalization means that we're *reading* this class. You
+can name these groups however you want... this is my standard.
 
-We *are* missing a couple of things, though. The last time we made a `getPlunderedAtAgo()` method, and we want this to be included when we read our resource. Right now, if we we check our endpoint, it's *not* being included., so we can add the *same* group above our methods. Say `#[Groups(['treasure:read'])]`, and when we go check... *now* it pops up. Let's also find the `setTextDescription()` method, and do the same thing there: `#[Groups([treasure:write])]`. Awesome! If we head back to the documentation, you can see that this was not there a second ago. If we refresh and check out the `PUT` endpoint again... `TextDescription` is *back*. This means, if we want to, we can restore some of the setter methods we removed a second ago.
+So... what does that *do*? Let's find out! Refresh the documentation... and, to make
+life easier, go to the URL: `/api/dragon_treasures.json.ld`. Whoops! It's just
+`treasures.jsonld` now. There we go. And... absolutely nothing is returned! Ok,
+we have the hydra fields, but this `hydra:member` contains the array of treasures.
+It *is* returning one treasure... but other than `@id` and `@type`... there are
+no actual fields being returned!
 
-Maybe I *do* need a `setDescription()` method in my code to be able to do things, so I'm going to copy `setName()` to be lazy, paste, then change "name" to "description" in a couple of places. Got it! And the nice thing about this is, even though I have that setter back, now when I look at my `PUT` endpoint, it *doesn't* automatically show up because we have complete control, thanks to our denormalization fields. I'm going to do the same thing for `PlunderedAt()` as well. Sometimes it's handy, in your data fixtures especially, to be able to *set* `PlunderedAt`, so I will quickly add that. I *could* have been lazy and generated the setter, but that's okay. We're done.
+## How Serialization Groups Work
 
-So we know that *fetching* a resource works. Now let's see if we can *create* a new resource. I'll click on the `POST` endpoint, hit "Try it out", and... let's fill in some information about our new treasure, which is, of course, a `Giant jar of pickles`. This is *very* valuable and has a `coolFactor` of `10`. I'll also add a description, but this jar of pickles really speaks for itself. When we try this... oh... we get a 500 error:
+Here's the deal. As soon as we add a `normalizationContext` with a group,
+when our object is normalized, the serializer will *only* include the properties
+that have this group on it. And since we haven't added *any* groups to our properties,
+it returns *nothing*.
 
-`An exception occurred while executing a query: SQLSTATE[23502]: Not null violation: 7 ERROR: null value in column \"isPublished\" of relation \"dragon_treasure\" violates not-null constraint [...]`
+How do we add groups? With *another* attribute! Above the `$name` property, say
+`#[Groups]`, hit "tab" to add its `use` statement and then `treasure:read`. Repeat
+this above the `$description` field... because we want *that* to be readable...
+and then the `$value` field... and finally `$coolFactor`.
 
-We have reduced our API down to *just* the fields that we want to be writeable, but we're *still* missing one field that needs to be set in the database. If you scroll up and find `isPublished()`... you can see that it currently equals `null`. Let's change that to `= false` by default, and then we don't need that `?` in front of `bool`. The property's not nullable anymore, so now if we try it... the `Giant jar of pickles` is loaded into the database! It works!
+Good start. Move over and refresh the endpoint. Now... got it! We see `name`,
+`description`, `value`, and `coolFactor`.
 
-Next: I want to show you a few more cool serialization tricks that'll make your class and API *awesome*.
+## DenormlizationContext: Controlling Writable Groups
+
+We now have control over which fields are *readable*. We can do the same thing to
+choose which fields should be *writeable* in the API. That's called
+"de-normalization", and I bet you can guess what we're going to do. Copy
+`normalizationContext`, change this to `denormalizationContext`... and use
+`treasure:write`.
+
+Now head down to the `$name` property and add `treasure:write`. I'm going to skip
+`$description` for now (remember that we actually *deleted* our `setDescription()`
+method earlier on purpose)... but add this to `$value`... and `$coolFactor`.
+
+Oh, it's *mad* at me! As soon as we pass *multiple* groups, we need to make this
+an *array*. Add some `[]` around those three properties. Much happier.
+
+To check if this is A-OK, refresh the documentation... open up the `PUT` endpoint,
+and... sweet! We see `name`, `value`, and `coolFactor`, which are currently the *only*
+fields that are *writable* in our API.
+
+## Adding Groups To Methods
+
+We *are* missing a few things, though. Earlier, we made a `getPlunderedAtAgo()`
+method... and we want this to be included when we *read* our resource. Right now,
+if we we check the endpoint, it's *not* there.
+
+To fix this, we can *also* add groups above methods. Say
+`#[Groups(['treasure:read'])]`.
+
+And when we go check... *voilà* it pops up.
+
+Let's also find the `setTextDescription()` method... and do the same thing:
+`#[Groups([treasure:write])]`.
+
+Awesome! If we head back to the documentation, the field is not currently there...
+but when we refresh... and check out the `PUT` endpoint again... `textDescription`
+is *back*!
+
+## Re-Adding Methods
+
+Hey, now we can re-add any of the getter or setter methods we removed earlier!
+Maybe I *do* need a `setDescription()` method in my code for something. Copy
+`setName()` to be lazy, paste and change "name" to "description" in a few places.
+
+Got it! And even though we have that setter back, when we look at the `PUT`
+endpoint, `description` *doesn't* show up. We have complete control over our fields
+thanks to the denormalization groups. Do the same thing for `setPlunderedAt()`...
+because sometimes it's handy - in data fixtures especially - to be able to *set*
+this manually.
+
+And... done!
+
+## Adding Field Defaults
+
+So we know that *fetching* a resource works. Now let's see if we can *create* a new
+resource. Click on the `POST` endpoint, hit "Try it out", and... let's fill in
+some info about our new treasure, which is, of course, a `Giant jar of pickles`.
+This is *very* valuable and has a `coolFactor` of `10`. I'll also add a
+description... though this jar of pickles speaks for itself.
+
+When we try this... oh, dear... we get a 500 error:
+
+> An exception occurred while executing a query: Not null violation, `null`
+> value in column `isPublished`.
+
+We slimmed our API down to *only* the fields that we want *writeable*... but
+there's still one field that *must* be set in the database. Scroll up and find
+`isPublished`. Yup, it currently defaults to `null`. Change that to `= false`...
+and now the property will *never* be `null`.
+
+Now if we try it... the `Giant jar of pickles` is pickled into the database!
+It works!
+
+Next: I want to show you a few more cool serialization tricks to give you even
+more control.
