@@ -1,21 +1,86 @@
 # Serialization Tricks
 
-We've sort of tricked the system to allow a text description field when we send data. This, of course, is made possible thanks to our `setTextDescription()` method, which we added so we could run `nl2br()` on *any* description that's sent to our API. *This* means that the user *sends* a text description field when they're editing or creating a treasure, but then when they're *reading*, we send back a field called `description`. And that's totally *fine*. You're allowed to have different input fields versus output fields. But it *would* be a little cooler if, in this case, *both* of these were called `description`.
+We've sort of tricked the system to allow a `textDescription` field when we send data.
+This is made possible thanks to our `setTextDescription()` method, which we added
+so we could run `nl2br()` on the description that's sent to our API. This means
+that the user sends a `textDescription` field when editing or creating a
+treasure... but when they *read* a treasure, we send back a field called
+`description`.
 
-So... can we control what the *name* of a field is in the serializer? The answer: *Absolutely*, and we do this, as you may have predicted, via another attribute. This one is called `SerializedName`, and we'll pass it `description`. This won't change how the field is *read*, but if we refresh this page and look at the `PUT` endpoint... yep! We can *now* send `description`.
+And that's totally *fine*: you're allowed to have different input fields versus output
+fields. But it *would* be a bit cooler if, in this case, *both* of were called
+`description`.
 
-What about constructor arguments in our entity? Because when we make a `POST` request, for example, we know it's using our setter methods to set all these properties. Let's see what happens if we remove the set method. Find `setName()` and remove it. Then find the constructor and add a `string $name` argument there instead. Below, say `$this->name = $name`. If you think about it from an object-oriented perspective, this field can be set when the object is *created*, but after that, it's read-only. Heck, if you wanted to get *really* fancy, you could even add `readonly` to the property.
+## SerializedName: Controlling the Field Name
 
-This is read-only inside of PHP, so let's see what it looks like in our documentation. If you open up the `POST` request, it looks like we can *still* send a `name` field. We can test this by hitting "Try it out"... and let's talk about that `Giant slinky` we won from a real-life giant in a rather tense poker match. It's pretty valuable, has a `coolFactor` of `8`, and we'll give it a `description`. Now let's see what happens. Hit "Execute" and... it worked! And we can see in the response that the `name` was set. How is that possible?
+So... can we control what the *name* of a field? *Absolutely*! And we do this, as
+you may have predicted, via another wonderful attribute. This one is called
+`SerializedName`. Pass it `description`.
 
-If you go down and look at the `PUT` endpoint, you'll see that it *does* advertise `name` here, but I'll actually go and look up the ID, which I'm pretty sure was `4`. And when we "Execute" this... it *doesn't* change. That means it's read-only in our code as well as our API. But that raises another question. How did the `POST` request work *at all* if we don't have a setter? The *answer* is that the serializer is smart enough to set `__construct()` arguments, but the matching is done by `name`. The fact that this argument is called `name` and the property is *also* called `name` is what makes this work.
+This won't change how the field is *read*, but if we refresh the docs... and look
+at the `PUT` endpoint... yep! We will now *send* a field called `description`.
 
-For example, let's change this argument to `treasureName` in both places here. Now, spin over, refresh, and check out our POST endpoint. The field is *gone*. API Platform sees that we have a `treasureName` field that *could* be sent, but since `treasureName` doesn't correspond to any property, that field doesn't have any serialization groups, so it's not actually used. I'll go ahead and change that back to `name`. By using `name`, it looks at the `name` property,then reads and uses the serialization groups off of it to figure out if it should be set. Pretty cool!
+## Constructor Arguments
 
-However, there's still one other problem with constructor arguments that I want you to be aware of. Let's hit `Try it out` on the `POST` endpoint again. Oh, let's actually refresh first to make sure we have fresh documentation. Okay, so what happens if our user *doesn't* pass a `name` here at all and they hit "Execute"? You can see that it gives us an error with a 400 status code, *but* it's not a very *good* error. It says:
+What about constructor arguments in our entity? When we make a `POST` request, for
+example, we know it uses the setter methods to write the data onto the properties.
 
-`Cannot create an instance of App\\Entity\\DragonTreasure from serialized data because its constructor requires parameter \"name\" to be present.`
+Now try this: find `setName()` and remove it. Then find the constructor and add a
+`string $name` argument there instead. Below, say `$this->name = $name`.
 
-That's... not really helpful. What you really want is to allow *validation* to take care of that. We'll talk about validation more in a little while, but in order for validation to work, the serializer needs to be able to do its job. In this case, I'm just going to allow the `name` argument to be optional. Later, we'll add validation to make sure that's set, but this is going to give us a *much* nicer validation error than this one right here. If we try that again... that's actually a *worse* error - a 500 error - because it fails in the database. But the *point* is that it allowed our object to be created. In a few minutes, once we add validation rules, you'll see the really nice error this produces.
+From an object-oriented perspective, this field can be set when the object is
+*created*, but after that, it's read-only. Heck, if you wanted to get fancy, you
+could add `readonly` to the property.
 
-Next: To help us while we're developing, let's add a rich set of data fixtures. Then we're going to play with a great feature that API Platform gives us for *free*: *Pagination*.
+Let's see what this looks like in our documentation. Open up the `POST` endpoint.
+It looks like we can *still* send a `name` field! Test this by hitting "Try it out"...
+and let's add that `Giant slinky` we won from a real-life giant in a rather
+tense poker match. It's pretty valuable, has a `coolFactor` of `8`, and give it a
+`description`. Let's see what happens. Hit "Execute" and... it worked! And we
+can see in the response that the `name` *was* set. How is that possible?
+
+Well, if you go down and look at the `PUT` endpoint, you'll see that it *does*
+advertise `name` here. But... go up find the id of the treasure we just created -
+its 4 for me, put 4 in here to edit... then send *just* the name field up to change
+it. And... it *didn't* change! Yup, just like with our code, once a `DragonTreasure`
+is created, the name *can't* be changed.
+
+But... how did the `POST` request set the name... if there's no setter? The *answer*
+is that the serializer is smart enough to set constructor arguments... *if* the
+argument name matches the property name. Yup, the fact that the arg is called `name`
+and the property is *also* called `name` is what makes this work.
+
+Watch change the argument to `treasureName` in both places. Now, spin over, refresh,
+and check out the POST endpoint. The field is *gone*. API Platform sees that we have
+a `treasureName` argument that *could* be sent, but since `treasureName` doesn't
+correspond to any property, that field doesn't have any serialization groups. So
+it's not used. I'll go ahead and change that back to `name`.
+
+By using `name`, it looks at the `name` property, and reads *its* serialization groups.
+Pretty cool!
+
+## Optional Vs Required Constructor Args
+
+However, there *is* still one other problem with constructor arguments to be
+aware of. Hit `Try it out` on the `POST` endpoint again. Refresh the docs.
+
+What would happen if our user *doesn't* pass a `name` at all? Hit "Execute" to
+find out. Ok! We get an error with a 400 status code... *but* it's not a very *good*
+error. It says:
+
+> Cannot create an instance of `App\Entity\DragonTreasure` from serialized data
+> because its constructor requires parameter `name` to be present.
+
+That's... actually *too* technical. What we *really* want is to allow *validation*
+to take care of this... and we'll talk about validation soon. But in order for
+validation to work, the serializer needs to be able to do its job: it needs to
+
+To allow this, make the `name` argument optional. Later, we'll add validation to
+make sure that's set, which will give us a *much* nicer validation error than.
+
+Ok, try this now... better! Ok, it's *worse* - a 500 error - but we'll fix that
+with validation in a few minutes. The point is: the serializer *was* able to
+create our object.
+
+Next: To help us while we're developing, let's add a rich set of data fixtures. Then
+we'll play with a great feature that API Platform gives us for *free*: *pagination*
