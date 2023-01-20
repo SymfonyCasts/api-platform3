@@ -1,57 +1,100 @@
-# User Entity
+# Creating a User Entity
 
-Coming soon...
+We won't talk about security in this tutorial, but even still we *do* need the concept
+of a user... because each treasure in the database will be *owned* by a user...
+or really, by a dragon. Later, we'll use this to allow API users to see which
+treasures belong to which user and a bunch more.
 
-We won't talk about security in this tutorial, but even still we do need the concept
-of a user because each treasure in the database is going to be owned by a user. And
-we'll be able to see which, which of course by user I mean Dragon. And then we should
-be able to see like which treasures belong to which user and maybe later, maybe even
-users can message other users about their treasures. So let's create a user class,
-find your terminal and run bin console. Make user, I could use make entity for this,
-but instead I'll may use make user just so it sets up a little bit of the security
-stuff that will need a future tutorial. So let's use user for the security class.
-Yes, we are gonna store users in the database and then for the use email for the main
-field. And then it asks us if we need to hash and check user passwords. If the hashed
-user password is actually stored and checked in your system, you do. If you have a
-system where your user submits a password but you validate on another server, you
-don't need that. That means it's the other server that's gonna be handling passwords.
-But I'm gonna say yes to this.
+## make:user
 
-So this didn't do much. Fern Get Status created, the user entity, the repository
-class, and then a small update in security of that yammel. If you open config
-packages. The ammo, it's really basic in here. It just kind of set up our user
-provider. Nothing special. And again, we'll talk about that in the future. Tutorial.
-Inside the source entity directory, we have our U new user entity glass with ID email
-rolls and password, and then the getters and setters below. So nothing too fancy.
-This implements two interfaces that we need, but nothing that's, but those aren't
-going to be important for us right now. Now I wanna add one more feel to my user
-class, which is gonna be a username so that if dragons are talking to each other,
-they have these cool usernames that we can show. So let's spin back over and let's
-this time run, make entity. We'll update the user field. I'll add a username
-property. There'll be a string. 2 55 is good. Nodding on the database is good and
-done. Hit enter. One more time to exit. Awesome. And over here. Perfect. There's our
-username field. And while I'm here, I'm actually gonna add a little unique true that
-just makes it unique in the database.
+So, let's create that `User` class. Find your terminal and
+run
 
-Cool. So we have our new user entity class, so we need a migration for it back here,
-terminal run, symphony console, make migration. Perfect. Then I'll spin over and open
-that new migration file and yep, no surprises. It creates the user table. So close
-that up and run the migration with Symphony Console Doctrine. Migrations migrate.
-Beautiful. All right, so if we're gonna have this user entity, we probably want to
-have some nice F fixtures data for it. So let's use Foundry like we did for our
-dragon treasure. So run bin console, make factory, and we'll generate the factory for
-user. So just like before in the source factory directory, we now have a U new class
-user factory, which is really good at creating user objects. The only thing we really
-need to tweak in here is get defaults. I'm actually going to paste in new contents
-for this class, which you can copy from the code block on this page. All this said
-was update get defaults with some nice defaults. So password will be our password.
-And then it added a little after instantiation hook to hash that password. Finally,
-to actually create some fixtures with this. Open up at fixtures class
+```terminal
+php bin/console make:user
+```
 
-And we'll add user factory, colon, colon, create many, and let's just create 10. All
-right, let's see if that worked. Spin over and run. Symphony console doctrine,
-fixtures, load, and cool. No errors. All right, so we have a user class, we've got
-the migration for it. We've even got data fixtures for it, but it is not yet part of
-our api. If you refresh the documentation, there's still only treasure here. So let's
-make this part of our API next.
+We could use `make:entity`, but `make:user` will set up a bit of the security stuff
+that we'll use in a *future* tutorial. Let's call the class `User`, yes we *are*
+going to store these in the database, and use `email` for the main field.
 
+Next it asks if we need to hash and check user passwords. If the hashed version of
+user passwords will be stored in your system, say yes to this. If your users won't
+have passwords - or some external system checks the passwords - answer no. I'll
+say yes to this.
+
+This didn't do much... in a good way! It gave us the `User` entity, the repository
+class... and a small update in `config/packages/security.yaml`. Yup, it just sets
+up the user provider: nothing special. And again, we'll talk about that in a
+future tutorial.
+
+## Adding a username Property
+
+Ok, inside the `src/Entity` directory, we have our new `User` entity class with
+`id`, `email` and `password` properties... and getters and setters below. Nothing
+fancy. This implements two interfaces that we need for security... but those aren't
+important right now.
+
+Oh, but I *do* want to add one more field to this class: a `username` that we can
+show in the API.
+
+So, spin back over to your terminal and this time run:
+
+```terminal
+php bin/console make:entity
+```
+
+Update the user field, add a `username` property, `255` length is good, not null...
+and done. Hit enter one more time to exit.
+
+Back over on the class... perfect! There's the new field. While we're here, add
+`unique: true` to make this `unique` in the database.
+
+Entity done! Let's make a migration for it. Back at the terminal run:
+
+```terminal
+symfony console make:migration
+```
+
+Then...  spin over and open that new migration file. No surprises: it creates the
+`user` table. Close that up and run the migration with:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Adding the Factory & Fixtures
+
+Sweet! Though, I think our new entity deserves some nice data fixtures. Let's
+use Foundry like we did for `DragonTreasure`. Start by running
+
+```terminal
+php bin/console make:factory
+```
+
+to generate the factory for `User`.
+
+Like before, in the `src/Factory/` directory, we have a new class - `UserFactory` -
+which is really good at creating `User` objects. The main thing we need to tweak
+is `getDefaults()` to make the data even better. I'm actually going to paste in new
+contents for the entire class, which you can copy from the code block on this page.
+
+This updates `getDefaults()` to be more fun and sets the `password` to `password`.
+I'm also leveraging an `afterInstantiation` hook to hash that password.
+
+Finally, to actually create some fixtures, open up `AppFixtures`. Pretty simple
+here: `UserFactory::createMany()` and let's create 10.
+
+Let's see if that worked! Spin over and run:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+No errors!
+
+Status check: we have a `User` class, we created a migration for it. Heck, we even
+loaded some nice data fixtures. But it is not, yet, part of our API. If you refresh
+the documentation, there's still only `Treasure`.
+
+Let's make this part of our API next.
