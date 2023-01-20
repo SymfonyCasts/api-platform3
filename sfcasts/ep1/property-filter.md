@@ -9,9 +9,9 @@ This one doesn't need any other options, so... we're done! Dang... that was easy
 When we refresh... open it up, and hit "Try it out".... look at that! We have
 *a ton* of new properties - `value[between]`, `value[gt]` (or "greater than"),
 `value[gte]`, etc. Let's try `value[gt]`... with a random number... maybe `500000`.
-When we click "Execute"... yup! It updated the URL here. It's... ugly because of
-the URL encoding, but it *works*. And down in the results... apparently there
-are 18 treasures worth more than that!
+When we click "Execute"... yup! It updated the URL here. It's... not the prettiest
+URL ever - due to the coding - but it *works* like a charm. And down in the results...
+apparently there are 18 treasures worth more than that!
 
 ## PropertyFilter
 
