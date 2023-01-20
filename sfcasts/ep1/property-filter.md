@@ -1,19 +1,106 @@
-# Property Filter
+# PropertyFilter: Sparse Fieldsets
 
-Let's add *one more* filter. We have three right now, but *maybe* we want to filter the *value*, like within a range. There's actually a built-in filter for that called the `RangeFilter`. Find the `$value` property and, like we did before, use `#[ApiFilter()]` and inside that, `RangeFilter` (the one from ORM) `::class`. This one doesn't need any other options, so... we're done! Dang... that was easy. When we refresh... open it up, and hit "Try it out".... look at that! We have *a ton* of new properties - `value[between]`, `value[gt]` (or "greater than"), `value[gte]` ("greater than or equal to"), etc. Let's try `value[gt]`... and, I'm sort of picking a random number here... maybe `500000`... and when we click "Execute"... you can see that it updated the URL here. The URL looks a little ugly because of the URL encoding, but it *works*. If I look down here... cool. Apparently that just returned 18 results.
+Since dragons *love* expensive treasure, let's add a way for them to filter based
+on the *value*, like within a range. There's a built-in filter for that called
+`RangeFilter`. Find the `$value` property and, like we did before, use
+`#[ApiFilter()]` and inside `RangeFilter` (the one from ORM) `::class`.
 
-Alright, the *last* filter I want to show you isn't really a filter at all. It's a way for us to allow our API clients to *choose* which fields they want returned. To show this off, find your `getDescription()` method. Let's pretend that we want to return a shorter, truncated version of the description. To do this, I'm going to copy the `getDescription()` method, paste it below, and create a new method called `getShortDescription()`. To *truncate* this, we're going to use the `u()` function from Symphony. Type `u` and make sure to hit "tab" to autocomplete that. This is a rare function that we have in Symphony, and hitting "tab" *did* add a `use` statement for it. You can see that we have a bunch of nice methods on this, but the one we want is called `truncate()`. We'll truncate this at `40` characters, followed by a little `'...'`. *Cool*. Right now, this is a perfectly normal and *functional* PHP method. To expose this to our API, above this, we just need to add the `Groups` attribute with `treasure:read`. Beautiful!
+This one doesn't need any other options, so... we're done! Dang... that was easy.
+When we refresh... open it up, and hit "Try it out".... look at that! We have
+*a ton* of new properties - `value[between]`, `value[gt]` (or "greater than"),
+`value[gte]`, etc. Let's try `value[gt]`... with a random number... maybe `500000`.
+When we click "Execute"... yup! It updated the URL here. It's... ugly because of
+the URL encoding, but it *works*. And down in the results... apparently there
+are 18 treasures worth more than that!
 
-Okay, let's head back to the documentation and refresh. If you open the `GET` endpoint, hit "Try it out", and then "Execute"... *nice*. Here's our truncated description! But you may have noticed that now, we have *two* descriptions - the short one and the regular one. If our API client requests the short description, it may not want us to *also* return the full-length description, for the sake of bandwidth or just general sanity. To help with this, we can use the `PropertyFilter`. Let's head back to `DragonTreasure`. This is a filter that has to go *above* the class, so right here, say `ApiFilter`, and then `PropertyFilter` (in this case, there's only *one* of them) `::class`. We also have some options we can pass to this, which can be found in the documentation, but, for our purposes, we don't need any of them right now. So... what does that *do*?
+## PropertyFilter
 
-If you head back, refresh the documentation, open up the collection endpoint, and hit "Try it out"... we now see `properties[]` here and we can add a "string item" to it. Let's do that! Add a new string item called `name` and another one called `description`. Cool! Down here, I'll hit "Execute", and... there it is! It just popped these onto the URL like normal. But look at the response. It *only* contains the `name` and `description` fields. Well... it contains the JSON-LD fields. It will *always* contain those. But the *real* data is *just* those two fields. It's still returning all 40 items, but *only* those two fields. If we removed our string items, we'll get the normal response with *all* of them. So, by default, you get *all* of the fields, but it *is* possible to control *which* fields you get.
+The *last* filter I want to show you... isn't really a filter at all. It's a way
+our API clients to choose which *fields* they want returned... instead of which
+*results*.
 
-This *works*, but if you look at the API Platform documentation for the `PropertyFilter`, they actually recommend a different solution - something called "Vulcain". Nope, not Spock's home planet. We're talking about a protocol for your web server that can add features to your web server. It was created by the API Platform team, and if we scroll down a bit, they have a really good example of how it works.
+To show this off, find the `getDescription()` method. Pretend that we want to return
+a shorter, truncated version of the description. To do this, copy the
+`getDescription()` method, paste it below, and rename it to `getShortDescription()`.
+To *truncate* this, we can use the `u()` function from Symfony. Type `u` and make
+sure to hit "tab" to autocomplete that. This is a rare *function* that Symfony
+gives us and hitting "tab" *did* add a `use` statement for it.
 
-Let's pretend that we have the following API. If we make a request to `/books`, we get these two books back. Simple enough. Then maybe we want to get more information about the *first* book, so we make a request to *that* URL - `/books/1` - to see the title and author. All right, now we want more information about the author, so we'll make a request to this URL - `/authors/1` - to see the author's first and last name. So if we make a request to `/books` to get all of the information we might need, we'll actually end up making *four* requests in total - the original request, plue three others as we look for more information about the author. That's *not* really convenient. What Vulcain allows you to do is just make this *first* request, but tell the server that it should push the data from the other requests to you.
+This creates an object with all sorts of string-related goodies on it, including
+`truncate()`. Pass 40 to truncate at `40` characters followed by `...`.
 
-We can see this best in JavaScript, and there's a little example of that down here. It's really easy. All we need to do, when we're using JavaScript, is use the `fetch()` function, and tell it to `fetch("/books/1")` followed by this special `Preload` header. A better example of the `Preload` is up here - `Preload: "/member/*/author"`. That's basically going to tell our server to look at any URLs that match that pattern and follow them. I won't go into the specifics on this, but briefly, `/member/*` is going to match `/member/` *all of these*, and then `/author` will follow the `author` key once it fetches those books. The end result of passing the `Preload` header is that our API will return the normal response for `/books`, while *also* pushing the other URLs to us. In this case, it's going to push the data for `/books/1`, `/book/two`, and `/author/1`.
+Method done! To expose this to our API, above, add the `Groups` attribute with
+`treasure:read`.
 
-Down here, we have a slightly different example where we're just fetching `/book/1` with `Preload: '"/author"'`. When we do this, our book response will be completely normal. The *key* is that, a second later, if we tried to use `fetch()` again on `bookJSON.author`, it will return *immediately*. It won't make a second AJAX request because we *already* have that data. So we're writing our JavaScript like normal. All we need to do is add a new `Preload` header and we'll reap the rewards of the extra performance. That's basically all we need to know about Vulcain for now, so I won't dive any deeper into this topic. I just wanted you to be aware of this, because it can be a *very* powerful feature in your API.
+Beautiful! Okay, head back to the documentation and refresh. Open the `GET` endpoint,
+hit "Try it out", "Execute" and... *nice*. Here's our truncated description!
 
-Next: Let's talk about *formats*. We know that our API can return JSON-LD, JSON, and even HTML representations of our representations. Let's add two *new* formats, including a CSV format, which is going to be the *fastest* CSV feature you've ever built.
+Though... it *is* weird that we now return *two* descriptions: a short one and
+the regular one. If our API client requests the short description, it may not want
+us to *also* return the full-length description... for the sake of bandwidth.
+
+What can we do? Introducing: the `PropertyFilter`! Head back to `DragonTreasure`.
+Unlike the others, this filter *must* go above the class. So right here, say
+`ApiFilter`, and then `PropertyFilter` (in this case, there's only *one* of them)
+`::class`. There *are* some options you can pass to this - which you can find in
+the docs - but we don't need any of them.
+
+So... what does that *do*? Head back, refresh the documentation, open up the
+GET collection endpoint, and hit "Try it out". Woh! We now see a `properties[]`
+box and we can add items to it. Let's try it! Add a new string called `name`
+and another called `description`.
+
+Moment or truth. Hit "Execute", and... there it is! It popped these onto the URL
+like normal. But look at the response: it *only* contains the `name` and `description`
+fields. Well... it *also* contains the JSON-LD fields, but the *real* data is *just*
+those two fields.
+
+If we removed the `properties` strings, we would get the normal, full response.
+So, by default, you get *all* fields. But users can now *choose* fewer fields
+if they want to.
+
+## What about Vulcain?
+
+This all *works* quite nicely. But if you look at the API Platform documentation
+for the `PropertyFilter`, they actually recommend a different solution: something
+called "Vulcain". Nope, not Spock's home planet. We're talking about a protocol
+that adds features to your web server. It was created by the API Platform team, and
+if we scroll down a bit, they have a really good example.
+
+Pretend that we have the following API. If we make a request to `/books`, we
+get these two books back. Simple enough. Then maybe we want to get more information
+about the *first* book, so we make a request to *that* URL - `/books/1`. Great!
+But... now we want more information about the author, so we make a request to
+`/authors/1`.
+
+So, to get *all* the book information and all the author information, we ultimately
+needed to make *four* requests: the original, plus 3 more. That's not great for
+performance.
+
+What Vulcain allows you to do is just make this *first* request... but tell the server
+that it should *push* the data from the other requests *to* you.
+
+We can see this best in JavaScript, and there's a little example down here. In
+this case, imagine that we're making a request to `/books/1` but we know that
+we also need the author information. So, when we make the request, we include
+a special `Preload` header. This tells the server:
+
+> Hey! After returning the book data, use a server push to send me the information
+> found by following the `author` IRI.
+
+The *really* cool thing is that your JavaScript doesn't really change. You *still*
+use `fetch()` to make a second request to the `bookJSON.author` URL... except
+that this will return *instantly* because the browser already has the data.
+
+I'm not going to get into all the specifics, but the `Preload` on the first example
+is even more impressive: `/member/*/author`. That tells the server to push all
+the data as if we had *also* requested all of the `member` keys - so all the books -
+*and* their author URLs.
+
+The point is: if you use Vulcain, your API users can make *tiny* changes to enjoy
+huge performance benefits... without us needing to add a lot of fanciness to our
+API.
+
+Next: Let's talk about *formats*. We know that our API can return JSON-LD, JSON,
+and even HTML representations of our resources. Let's add two *new* formats, including
+a CSV format, which will be the *fastest* CSV export feature you've ever built.
