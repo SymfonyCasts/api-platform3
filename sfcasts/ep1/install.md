@@ -89,10 +89,13 @@ have that, and some other packages. At the bottom... let's see... the
 file to help add a database to our project. How nice of it! This is *optional*,
 but I'm going to say "p" for "Yes permanently". And... done!
 
-The first thing to see is in the `composer.json` file. As promised, that API Platform
-pack added a bunch of packages into our project. Technically, these aren't *all*
-required, but this is going to give us a really rich experience building our API.
-And if you run
+The first thing to see is in the `composer.json` file:
+
+[[[ code('f8a66fd06b') ]]]
+
+As promised, that API Platform pack added a bunch of packages into our project. 
+Technically, these aren't *all* required, but this is going to give us a really 
+rich experience building our API. And if you run
 
 ```terminal
 git status
