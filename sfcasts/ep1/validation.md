@@ -2,7 +2,7 @@
 
 There are a *bunch* of different ways for the users of our API to mess things up,
 like bad JSON or doing silly things like passing a negative number for the `value`
-field. This is dragon gold, not bank loans!
+field. This is dragon gold, not dragon debts!
 
 ## Invalid JSON
 
@@ -16,7 +16,7 @@ In the response, the type is `hydra:error` and it says: `An error occurred`
 and `Syntax Error`. Oh, and this `trace` only shows in the debug environment: it
 won't be shown on production.
 
-So this pretty sweet! Invalid JSON is handled out-of-the-box.
+So this is pretty sweet! Invalid JSON is handled out-of-the-box.
 
 ## Business Rules Validation Cosntraints
 
@@ -29,8 +29,8 @@ And, we expected this! We're missing is validation. Adding validation to our API
 is exactly like adding validation *anywhere* in Symfony. For example, find the
 `name` property. We need `name` to be required. So, add the `NotBlank` constraint,
 and hit tab. Oh, but I'm going to go find the `NotBlank` `use` statement... and change
-this to `Assert`. That's optional... but it's typically how you see constraints done
-in Symfony. Now say `Assert\NotBlank`.
+this to `Assert`. That's optional... but it's the way the cool kids tend do it in
+Symfony. Now say `Assert\NotBlank`.
 
 Below, add one more: `Length`. Let's say that the name should be at least two
 characters, ma `max` 50 characters.... And add a `maxMessage`:
@@ -40,7 +40,7 @@ characters, ma `max` 50 characters.... And add a `maxMessage`:
 
 Good start! Let's try it again. Take that same empty JSON, hit Execute, and yes!
 A 422 response! This is a really common response code that usually means there
-was a validation error. And check out the `@type`! It's a `ConstraintViolationList`.
+was a validation error. And behold! The `@type` is `ConstraintViolationList`.
 This is a special JSON-LD type added by API Platform. Earlier, we saw this documented
 in the `JSON-LD` documentation.
 
@@ -82,9 +82,9 @@ Good enough! This is thanks to the `setCoolFactor()` method. The system sees thi
 the `int` type and so it rejects the string with this error.
 
 So the only thing that we need to worry about in our app is writing good code that
-properly uses `type` and adding our validation constraints for business rules, like
-`value` should be greater than 0 or `description` is required. API Platform takes
-care of the rest.
+properly uses `type` and adding validation constraints: the safety net that catches
+business rule violations... like `value` should be greater than 0 or `description`
+is required. API Platform handles the rest.
 
 Next: our API only has one resource: `DragonTreasure`. Let's add a second resource -
 a `User` resource - so that we can *link* which user owns which treasure in the API.
