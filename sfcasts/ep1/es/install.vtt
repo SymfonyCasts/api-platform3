@@ -13,18 +13,18 @@ Sería increíble, ¿verdad?
 
 00:00:16.416 --> 00:00:19.976 align:middle
 Pero en realidad, estamos aquí para
-hablar de la Plataforma API Versión 3,
+hablar de la versión 3 de la API Platform,
 
 00:00:20.416 --> 00:00:24.096 align:middle
 que prometo que es tan
 divertida como jugar con Legos.
 
 00:00:24.336 --> 00:00:26.016 align:middle
-Pero no le digas a mi hijo que
-he dicho eso. La Plataforma API
+Pero no le digas a mi
+hijo que he dicho eso. API
 
 00:00:26.836 --> 00:00:31.946 align:middle
-es, sencillamente, una
+Platform es, sencillamente, una
 herramienta sobre Symfony que nos
 
 00:00:31.946 --> 00:00:36.046 align:middle
@@ -43,8 +43,8 @@ realmente, se han superado a sí
 mismos con la última versión 3.
 
 00:00:48.906 --> 00:00:54.486 align:middle
-Si eres nuevo en la Plataforma API, no
-te culparía si dijeras: Vamos Ryan...
+Si eres nuevo en API Platform, no te
+culparía si dijeras: Vamos Ryan...
 
 00:00:54.756 --> 00:00:57.566 align:middle
 crear una API no es tan difícil.
@@ -117,11 +117,11 @@ Pero crear una API rica es
 algo totalmente distinto.
 
 00:02:23.346 --> 00:02:25.756 align:middle
-Y ése es el objetivo de la Plataforma API.
+Y ése es el objetivo de API Platform.
 
 00:02:26.436 --> 00:02:32.486 align:middle
-Ah, y si estás familiarizado con la versión 2 de la
-Plataforma API, la versión 3 te resultará muy familiar.
+Ah, y si estás familiarizado con la versión 2 de API
+Platform, la versión 3 te resultará muy familiar.
 
 00:02:32.876 --> 00:02:36.026 align:middle
 Simplemente es más limpia,
@@ -131,7 +131,7 @@ más moderna y más potente.
 Así que saca tus Legos, ¡y hagámoslo!
 
 00:02:40.286 --> 00:02:43.116 align:middle
-Hay dos formas de instalar la Plataforma API.
+Hay dos formas de instalar API Platform.
 
 00:02:43.716 --> 00:02:47.896 align:middle
 Si encuentras su sitio web y haces
@@ -139,7 +139,7 @@ clic en la documentación, verás que
 
 00:02:47.896 --> 00:02:51.016 align:middle
 hablan de la "Distribución"
-de la Plataforma API.
+de la API Platform.
 
 00:02:51.576 --> 00:02:53.086 align:middle
 ¡Esto está muy bien! Es
@@ -161,8 +161,8 @@ como Mercure para
 actualizaciones en tiempo real.
 
 00:03:14.116 --> 00:03:17.406 align:middle
-Es la forma más potente de
-utilizar la Plataforma API.
+Es la forma más potente
+de utilizar API Platform.
 
 00:03:18.046 --> 00:03:21.916 align:middle
 Pero... en este tutorial,
@@ -185,7 +185,7 @@ esta Distribución, podrás hacerlo.
 
 00:03:42.616 --> 00:03:49.586 align:middle
 De acuerdo, para ser un verdadero "Campeón del Retorno
-JSON de la Plataforma API", ¡deberías codificar conmigo!
+JSON de la API Platform", ¡deberías codificar conmigo!
 
 00:03:50.286 --> 00:03:52.286 align:middle
 Descarga el código fuente de esta página.
@@ -251,7 +251,7 @@ de otros dragones, etc. Y sí,
 acabo de terminar de leer El Hobbit.
 
 00:05:08.546 --> 00:05:11.686 align:middle
-Así que, ¡vamos a instalar la Plataforma API!
+Así que, ¡vamos a instalar API Platform!
 
 00:05:12.176 --> 00:05:14.086 align:middle
 Vuelve a tu terminal y ejecuta:
@@ -309,7 +309,7 @@ Lo primero que hay que ver está
 en el archivo composer.json:
 
 00:06:10.226 --> 00:06:15.866 align:middle
-Como prometí, ese paquete Plataforma API añadió
+Como prometí, ese paquete API Platform añadió
 un montón de paquetes a nuestro proyecto.
 
 00:06:16.656 --> 00:06:19.136 align:middle
@@ -348,8 +348,8 @@ También tenemos algunos archivos docker-compose que
 utilizaremos en un minuto para poner en marcha una base de datos.
 
 00:06:51.386 --> 00:06:55.626 align:middle
-Así que... ahora que la
-Plataforma API está instalada...
+Así que... ahora que la API
+Platform está instalada...
 
 00:06:55.946 --> 00:06:58.226 align:middle
 ¿ya nos ha aportado algo?
