@@ -16,7 +16,7 @@ para instalar Maker Bundle. Luego ejecuta:
 php bin/console make:entity
 ```
 
-¡Perfecto! Llamemos a nuestra entidad `DragonTreasure`. Entonces nos hace una pregunta que quizá no hayas visto antes: `Mark this class as an API platform resource`? Pregunta porque la Plataforma API está instalada. Di `no` porque vamos a hacer este paso manualmente dentro de un momento.
+¡Perfecto! Llamemos a nuestra entidad `DragonTreasure`. Entonces nos hace una pregunta que quizá no hayas visto antes: `Mark this class as an API platform resource`? Pregunta porque la API Platform está instalada. Di `no` porque vamos a hacer este paso manualmente dentro de un momento.
 
 Bien, empecemos a añadir propiedades. Empieza con `name` como cadena, con una Longitud por defecto de 255, y haz que no sea anulable. Después, añade `description` con un tipo `text`, y haz que no sea anulable. También necesitamos un `value`, como... cuánto vale el tesoro. Eso será un `integer` no anulable. Y simplemente debemos tener un `coolFactor`: los dragones necesitan especificar lo impresionante que es este tesoro. Eso será un número del 1 al 10, así que que sea un `integer` no anulable. Luego, `createdAt` `datetime_immutable` que no sea anulable... y por último, añade una propiedad `isPublished`, que será de tipo `boolean`, también no anulable. Pulsa "intro" para terminar.
 
@@ -48,7 +48,7 @@ symfony console doctrine:migrations:migrate
 
 ## Exponiendo nuestro primer recurso API
 
-Ahora tenemos una entidad y una tabla de base de datos. Pero si vas y actualizas la documentación... todavía no hay nada. Lo que tenemos que hacer es decirle a la Plataforma API que exponga nuestra entidad `DragonTreasure` como un recurso API. Para ello, ve encima de la clase y añade un nuevo atributo llamado `ApiResource`. Pulsa "tab" para añadir la declaración `use`.
+Ahora tenemos una entidad y una tabla de base de datos. Pero si vas y actualizas la documentación... todavía no hay nada. Lo que tenemos que hacer es decirle a la API Platform que exponga nuestra entidad `DragonTreasure` como un recurso API. Para ello, ve encima de la clase y añade un nuevo atributo llamado `ApiResource`. Pulsa "tab" para añadir la declaración `use`.
 
 ¡Listo! En cuanto hagamos eso... y actualicemos... ¡guau! ¡La documentación está viva! Ahora muestra que tenemos seis rutas diferentes: Uno para recuperar todos los recursos `DragonTreasure`, uno para recuperar un `DragonTreasure` individual, uno para crear un `DragonTreasure`, dos que editan un `DragonTreasure` y uno para eliminarlo. Y esto es algo más que documentación. Estas rutas funcionan.
 
