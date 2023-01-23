@@ -7,10 +7,10 @@ on the *value*, like within a range. There's a built-in filter for that called
 
 This one doesn't need any other options, so... we're done! Dang... that was easy.
 When we refresh... open it up, and hit "Try it out".... look at that! We have
-*a ton* of new properties - `value[between]`, `value[gt]` (or "greater than"),
+*a ton* of new filters - `value[between]`, `value[gt]` (or "greater than"),
 `value[gte]`, etc. Let's try `value[gt]`... with a random number... maybe `500000`.
 When we click "Execute"... yup! It updated the URL here. It's... not the prettiest
-URL ever - due to the coding - but it *works* like a charm. And down in the results...
+URL ever - due to the encoding - but it *works* like a charm. And down in the results...
 apparently there are 18 treasures worth more than that!
 
 ## PropertyFilter
@@ -24,7 +24,7 @@ a shorter, truncated version of the description. To do this, copy the
 `getDescription()` method, paste it below, and rename it to `getShortDescription()`.
 To *truncate* this, we can use the `u()` function from Symfony. Type `u` and make
 sure to hit "tab" to autocomplete that. This is a rare *function* that Symfony
-gives us and hitting "tab" *did* add a `use` statement for it.
+gives us... and hitting "tab" *did* add a `use` statement for it.
 
 This creates an object with all sorts of string-related goodies on it, including
 `truncate()`. Pass 40 to truncate at `40` characters followed by `...`.
@@ -36,7 +36,7 @@ Beautiful! Okay, head back to the documentation and refresh. Open the `GET` endp
 hit "Try it out", "Execute" and... *nice*. Here's our truncated description!
 
 Though... it *is* weird that we now return *two* descriptions: a short one and
-the regular one. If our API client requests the short description, it may not want
+the regular one. If our API client wants the short description, it may not want
 us to *also* return the full-length description... for the sake of bandwidth.
 
 What can we do? Introducing: the `PropertyFilter`! Head back to `DragonTreasure`.
@@ -50,7 +50,7 @@ GET collection endpoint, and hit "Try it out". Woh! We now see a `properties[]`
 box and we can add items to it. Let's try it! Add a new string called `name`
 and another called `description`.
 
-Moment or truth. Hit "Execute", and... there it is! It popped these onto the URL
+Moment of truth. Hit "Execute", and... there it is! It popped these onto the URL
 like normal. But look at the response: it *only* contains the `name` and `description`
 fields. Well... it *also* contains the JSON-LD fields, but the *real* data is *just*
 those two fields.
@@ -68,9 +68,9 @@ that adds features to your web server. It was created by the API Platform team, 
 if we scroll down a bit, they have a really good example.
 
 Pretend that we have the following API. If we make a request to `/books`, we
-get these two books back. Simple enough. Then maybe we want to get more information
+get these two books back. Simple enough. Then maybe we want to get more info
 about the *first* book, so we make a request to *that* URL - `/books/1`. Great!
-But... now we want more information about the author, so we make a request to
+But... now we want details about the author, so we make a request to
 `/authors/1`.
 
 So, to get *all* the book information and all the author information, we ultimately
@@ -94,7 +94,7 @@ that this will return *instantly* because the browser already has the data.
 
 I'm not going to get into all the specifics, but the `Preload` on the first example
 is even more impressive: `/member/*/author`. That tells the server to push all
-the data as if we had *also* requested all of the `member` keys - so all the books -
+the data as if we had *also* requested each of the `member` keys - so all the books -
 *and* their author URLs.
 
 The point is: if you use Vulcain, your API users can make *tiny* changes to enjoy
