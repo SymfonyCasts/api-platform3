@@ -55,8 +55,8 @@ be a good enough start for right now.
 
 Oh, and above `username`, let's also add `user:read` and `user:write`.
 
-Cool! Refresh the docs... and open up the collections endpoint to try it. The result...
-exactly what we wanted! Only `email` and `username` come back.
+Cool! Refresh the docs... and open up the collections endpoint to give it a go.
+The result... exactly what we wanted! Only `email` and `username` come back.
 
 And if we were to *create* a new user... yup! The writable fields are `email`,
 `username`, and `password`.

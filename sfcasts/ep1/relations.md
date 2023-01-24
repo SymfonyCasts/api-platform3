@@ -1,95 +1,156 @@
-# Relations
+# Relating Resources
 
-Coming soon...
+In our app, each `DragonTreasure` should be owned by a single dragon... or `User`
+in our system. To set this up, forget about the API for a moment and let's just model
+that in the database.
 
-In our app, each Dragon Treasure should be owned by a single dragon or user in our
-system. So let's forget about the API for a second and just model that in the
-database. So spin over it and run Bin Console, make entity. And let's add our modify
-our Dragon Treasure entity because our dragon treasure needs an owner. So we're gonna
-add an owner property and then this is gonna be a mini to one relation. Remember, if
-you, and if you're, we're not sure which relation you need, you can always type
-relation, they'll send you through a wizard to help you figure out which one. But we
-want a many-to-one, and this is going to be related to user. It then asks us if the
-Dragon treasure dot owner property is allowed to be null. Every dragon treasure must
-have an owner. So I'm gonna say no here. And then it asks us if we wanna map the
-other side of the relationship. So basically, do we want the ability to say, user
-arrow, get dragon treasures in our code? I'm gonna say yes to this. You would say yes
-to this for two reasons. One, this might be a useful thing to have in your code. And
-two, as we're gonna see it a little bit later, this is gonna allow us to actually
-show the Dr. Dragon Treasures for a user when we're using, when we're fetching our
-user resource. So say yes to that. And the field name inside of user Dragon treasures
-is just fine. Then finally, for orphan removal, say no, we're gonna talk about orphan
-removal. And
+## Adding the ManyToOne Relation
 
-Later, I think and done it, entered to exit that.
+Spin over to it and run:
 
-So
+```terminal
+php bin/console make:entity
+```
 
-This has nothing to do with APAP platform. It's very simple. Our dragon treasure now
-has a new, let's see, owner property with new get owner and set owner methods. And
-over in user we have a new Dragon Treasures property, which is a one Toman packed to
-TR Dragon treasure. And at the bottom of here we have get Dragon Treasures. Add
-Dragon Treasure and remove Dragon Treasure. Very standard stuff. All right, so let's
-make a migration for this symphony console. Make migration. We'll do our standard
-double check. Yep, looks good. And then run this with Symphony console doctrine.
-Migrations migrate and it explodes in our face. Okay, shouldn't be too surprising. We
-have a bunch of Dragon Treasures ERO database when we try to add the owner ID to the
-table where it's not Nu, our database has no idea what value to put for those
-existing Dragon treasures. If this were already on production, we'd have to do a
-little bit more of work. And we talk about that in our doctrine, doctrine tutorial.
-But since this is not on production yet, the easiest thing to do is just fully reset
-the database. So I'm gonna run Symphony console doctrine database,
+Let's modify the `DragonTreasure` entity to add an `owner` property... and then this
+will be a`ManyToOne` relation. If you're not sure which relation you need, you can
+always type `relation` and it'll ask you some questions to help.
 
-Drop dash dash force, then doctrine database, create, then Doctrine, migrations
-Migrate, which will now work now that our database has no rose inside of it. Finally
-run Symphony Console Doctrine Fixtures Load. So we get some new data in there. And
-oh, this fails for the same reason it's trying to create Dragon Treasures without an
-owner. So to fix that, there's actually two ways in that I kind of like doing 'em
-both in Dragon Treasure Factory and get defaults. We'll add a new owner field here
-and called User Factory Call on Calling. No, I'm not gonna go into the specifics of
-fa uh, founder has really good documentation on how to work with relationships, but
-this is gonna basically make sure that if we l but what this would do if we did
-nothing else, this would create a new user every time it created a Dragon Treasure
-and relate them. So that's nice to have as a default. But in our app fixtures, I'm
-gonna do something a little cooler. Let's move Dragon Treasure after User Factory and
-then pass a second argument here, which is a way for us to override the defaults for
-each time. So by passing a callback every time it, it's gonna should call this
-callback 40 times.
+This will be a relation to `User`... and then it asks if the new `owner` property
+is allowed to be null in the database. Every `DragonTreasure` *must* have an owner...
+so say "no". Next: do we we want to map the other side of the relationship? So
+basically, do we want the ability to say, `$user->getDragonTreasures()` in our code?
+I'm going to say yes to this. And you might answer "yes" to this for two reasons.
+First, if saying `$user->getDragonTreasures()` is a method you want to be able to
+call in your code. Or second, as we'll see a bit later, if you want to be able
+to fetch a `User` in your API and instantly see what treasures it has. We'll see
+that a bit later.
 
-And here we can return an array of data that should override those defaults. So I'm
-gonna say owner and we can say User factory call on, call on random. So that's cool.
-It'll find a random user object and set that as the owner. So we'll have 40 Dragon
-treasures each assigned to one, randomly assigned to one of these 10 users. All
-right, try Symphony Console doctrine fixtures load again. This time it's working. So
-on a very high level, all we basically just did was add a new owner property to
-Dragon Treasure and a new Dragon Treasures property, property over to user. So it
-shouldn't be too surprising if we go and make, use our Get collection endpoint for
-our treasures, the new property field does not show up in our api. That makes sense
-that property is not inside of our normalization group. So if we want to expose the
-owner property in the api, just like any other field, we need to add groups to it. So
-I'm actually gonna copy the groups from Cool Factor and paste them here. This means
-we'll be able to set the owner when we set the owner and also the owner should be
-returned to us.
+The property - `dragonTreasures` inside of `User` is fine.... and finally, for
+`orphanRemoval`, say no. We'll also talk about that later.
 
-And yes, later on we're gonna, we'll learn how to set the owner automatically so that
-you don't need to, so that the A API user doesn't need to actually send that. But for
-now, we'll let them set it manually. All right, let's try this. I won't even refresh,
-I'll just hit execute and beautiful. It's got owner and very interesting. It's set to
-a url. We're gonna talk more about this, but that's the default behavior. When you
-have relationships, it sets, it doesn't set it to the API platform. Could just set
-this to the, ID like owner one, but this is way more useful because this tells your
-API client what you were it could go to to get more information about that owner. All
-right, let's try writing that field. So let me close up this endpoint. Let's create a
-new dragon treasure. Just say Dragon treasure. Highly valuable. Super cool. Oh, you
-know what? Actually I don't see my owner ID yet owner here yet. I could add it
-manually. I wanna refresh. I'm gonna copy that and refresh real quick cuz I want you
-all to see that owner does show up there
+And... done! Hit enter to exit./
 
-Since we added it to our group. So lemme paste that and now I'll add owner. And for
-owner, let's just go find an ID down here on our, okay, cool. I have an owner whose
-ID is just one. So I'll just put one right there. Hit execute and let's see. Ah, 400
-status code. And check this out. Expected I r I or nested document for attribute
-owner integer given. So I passed it. The ID of the owner it, it doesn't like that.
-What should we put here? Well, it tells us in iri, of course, what the heck isn't I,
-I, let's find out next.
+So this has nothing to do with API Platform. Our `DragonTreasure` entity now has
+a new `owner` property with new `getOwner()` and `setOwner()` methods. And over in
+`user` we have a new `dragonTreasures` property, which is a `OneToMany` back to
+`DragonTreasure`. At the bottom, that generated `getDragonTreasures()`,
+`addDragonTreasure()`, and `removeDragonTreasure()`. Very standard stuff.
 
+Ok, let's create a migration for this:
+
+```terminal
+symfony console make:migration
+```
+
+We'll do our standard double-check to make sure the migration isn't trying to
+mind bitcoin - yep, looks good - then run it with:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Resetting the Database
+
+And it explodes in our face. Rude! But... it shouldn't be too surprising. We already
+have about 40 `DragonTreasure` records in our database. So when the migration tries
+to add the `owner_id` column to the table - which does *not* allow null - our
+database is stumped: it has no idea what value to put for those existing treasures.
+
+If our app were already on production, we'd have to do a bit more work to fix this.
+And we talk about that in our Doctrine tutorial. But since this isn't on production
+yet, the easiest thing fix is to turn the database off and on again. To do that run:
+
+```terminal
+symfony console doctrine:database:drop --force
+```
+
+Then:
+
+```terminal
+symfony console doctrine:database:create
+```
+
+And the migration, which *should* work now that our database is empty.
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Setting up the Fixtures
+
+Finally, re-add some nice data with:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+And oh, this fails for the same reason! It's trying to create Dragon Treasures
+without
+an owner. To fix that, there are two options. In `DragonTreasureFactory`, add a new
+`owner` field in `getDefaults()` set to `UserFactory::new()`.
+
+I'm not going to go into the specifics of Foundry - and Foundry has great docs
+on how to work with relationships - but this will create a *new* `User` each time
+it creates a new `DragonTreasure` - and will relate them. So that's nice to have
+as a default.
+
+But in `AppFixtures`, let's *override* that to do something cooler. Move the
+`DragonTreasureFactory` call after `UserFactory`...then pass a second argument,
+which is a way to override the defaults. By passing a callback, each time a
+`DragonTreasure` is created - so 40 times - it will call this method and we
+can return unique data to use for overriding the defaults. Return
+`owner` set to `User::factory()->random()`.
+
+That'll find a random `User` object and set it as the `owner`. So we'll have 40
+`DragonTreasure`s each randomly hoarded by one of these 10 `User`s.
+
+Let's try it! Run
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+This time... it's a success.
+
+## Exposing the "owner" in the API
+
+Ok, so now `DragonTreasure` has a new `owner` relation property... and `User`
+has a new `dragonTreasures` relation property.
+
+Will... that new `owner` property show up in the API? Try the GET collection endpoint
+for treasure. And... the new field does *not* show up! Amnd... that makes sense!
+The new `owner` property is *not* inside the normalization group.
+
+So *if* we want to expose the `owner` property in the API, just like any other field,
+we need to add groups to it. Copy the groups from `coolFactor`... and paste them
+here.
+
+This makes the property readable *and* writable. And yes, later, we'll learn how
+to set the `owner` property automatically so that the API user doesn't need to send
+that manually. But for now, having the API client send the owner manually will
+work great.
+
+Anyways, what does this new `owner` property look like? Hit "Execute" and... woh!
+The `owner` property is set to a URL. Well, really, the IRI of the `User`!
+
+I *love* this. When I first started working with API Platform, I thought relationship
+properties might just use the object's id. Like `owner: 1`. But this is *way* more
+useful... because it tells our API client exactly *how* they could get more information
+about this user: just follow the URL!
+
+## Writing a Relation Property
+
+Ok cool. So, by default, a relation is returned as an IRI. But what does it look
+like to *set* a relation field? Refresh the page, open the POST endpoint, try it,
+and I'll paste in all of the fields *except* for `owner`.
+
+What *do* we use for `owner`? I don't know! Let's try setting it to an id, like `1`.
+
+Moment of truth. Hit execute... let's see... a 400 status code! And check out
+the error:
+
+> Expected IRI or nested document for attribute `owner`, integer given.
+
+So I passed the `ID` of the owner... it doesn't like that. What should we put here?
+Well, the IRI of course! Let's find out more about that next.
