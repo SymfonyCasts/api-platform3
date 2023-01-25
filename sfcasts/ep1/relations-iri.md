@@ -46,7 +46,7 @@ same id, hit "Execute" and... oh, gorgeous It returns an array of IRI strings!
 I love that! And, of course, if we need more information about these, we can make
 a request to any of these URLs to get all the shiny details.
 
-And if you get *really* fancy and use something like Vulcaon, you could even "preload"
+And if you get *really* fancy and use something like Vulcain, you could even "preload"
 those relations so that the server pushes the data directly to the client.
 
 But as cool as this is, this *does* lead me to a question: what if needing the
