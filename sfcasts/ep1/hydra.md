@@ -54,7 +54,7 @@ correct. Both of them do the same thing: describe our API. In fact, if you go to
 `.json` with  `.jsonld`, this is the *JSON-LD Hydra* description of the *same* API.
 Why do we have both? Hydra is a bit more powerful: there are certain things it can
 describe that OpenAPI can't. But OpenAPI is a lot more common and has more tools
-built on top of it, like React Admin. API platform provides *both*... in case you need
+built on top of it. API platform provides *both*... in case you need
 them!
 
 Next: Let's add some serious debugging tools to our API Platform setup.
