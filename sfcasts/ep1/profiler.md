@@ -18,7 +18,7 @@ Spin over to the terminal and run:
 composer require debug
 ```
 
-This is another Symfony Flex pack that installs `symfony/debug-pack`. If you pop
+This is another Symfony Flex alias that installs `symfony/debug-pack`. If you pop
 over to your `composer.json` file, this installed a bunch of good stuff: a
 logger... then down in `require-dev`, it also added MakerBundle, DebugBundle,
 and WebProfilerBundle, which is the most important thing for what we'll talk about.
