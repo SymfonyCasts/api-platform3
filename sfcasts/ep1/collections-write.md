@@ -1,11 +1,11 @@
 # Adding Items to a Collection Property
 
-Let's fetch a single user in our API: I know one exists  with ID 2. And cool!
+Let's fetch a single user in our API: I know one exists with ID 2. And cool!
 
 As we learned earlier, exposing a *collection* relation property is just like any
-other field: just make sure that it's in the correct serialization group. And then
-you can go *further* with serialization groups to choose between making this return
-as an array of IRI strings or as an array of embedded objects like we have now.
+other field: simply make sure that it's in the correct serialization group. And then
+you can go *further* with serialization groups to choose between making it return
+as an array of IRI strings or as an array of embedded objects, like we have now.
 
 New question: could we also *modify* the `dragonTreasures` that a user owns from
 one of the user operations? The answer is, of course, yea! And we're going to do
@@ -22,34 +22,34 @@ Easy peasy! When we refresh the docs, and check that endpoint... there we go:
 array of IRI strings.
 
 Let's try crafting a new user. Fill in the `email` and `username`. Then, let's
-assign the new user two *existing* treasures. Let's sneak up to the GET collection
-endpoint for treasures... and awesome. We ids 2, 3 and 4.
+assign the new user to a few *existing* treasures. Let's sneak up to the GET collection
+endpoint for treasures... and awesome. We have ids 2, 3 and 4.
 
 Back down here, assign `owner` to an array with `/api/treasures/2`, `/api/treasures/3`
 and `/api/treasures/4`.
 
-Makes sense, right? If API can return `dragonTreasures` as an array of IRI strings,
+Makes sense, right? If the API can return `dragonTreasures` as an array of IRI strings,
 why can't we *send* an array of IRI strings? When we hit Execute... indeed! It
 worked perfectly!
 
 And since each treasure can have only one owner... it means that we kinda stole
-those treasures from someone else!
+those treasures from someone else! Sorry!
 
 ## The adder & remover Methods for Collections
 
 But... wait a second, how did that work? We know that when we send fields like
 `email`, `password`, and `username`, because those are private properties, the
-serializer calls the setter methods. So when we pass `username`, it calls
+serializer calls the setter methods. When we pass `username`, it calls
 `setUsername()`.
 
-And when we pass `dragonTreasures`, it must call it `setDragonTreasures`, right?
+So when we pass `dragonTreasures`, it must call `setDragonTreasures`, right?
 
 Well guess what? We don't *have* a `setDragonTreasures()` method! But we *do* have
-an `addDragonTreasure` method and a `removeDragonTreasure` method.
+an `addDragonTreasure()` method and a `removeDragonTreasure()` method.
 
 The serializer is really smart. It sees that the new `User` object has no
 `dragonTreasures`. So it recognizes that each of these three objects are *new*
-and so it calls `addDragonTreasure` one time for each.
+to this user and so it calls `addDragonTreasure()` once for each.
 
 And the way that MakerBundle generated these methods is *critical*. It takes the
 new `DragonTreasure` and sets the `owner` to be *this* object. That's important
@@ -59,8 +59,8 @@ save this change to the database.
 
 The takeaway is that, thanks to `addDragonTreasure()` and its magical powers,
 the `owner` of the `DragonTreasure` is changed from its old owner to the new `User`,
-which is perfect.
+and everything saves exactly like we want.
 
 Next, let's get more complex by allowing treasures to be *created* when we're creating
 a new `User`. We're also going to allow treasures to be *removed* from a `User`...
-like in the unlikely event that the dwarves take back the mountain. As if.
+for the unlikely event that the dwarves take back the mountain. As if.
