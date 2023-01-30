@@ -1,49 +1,66 @@
-# Collections Write
+# Adding Items to a Collection Property
 
-Coming soon...
+Let's fetch a single user in our API: I know one exists  with ID 2. And cool!
 
-Let's fetch a single user in our api. I know I have one I with ID three and cool. So
-as we learned earlier, exposing a collection relation properties, just like any other
-field, just make sure that it's in the correct serialization group. And then you can
-go further with serialization groups to change it to be from an array of i I strings
-or an array of embedded objects like we have now. But my question now is, could we
-also modify the dragon treasures from the user endpoints? The answer is of course,
-yes. And we're going to do this in increasingly crazy ways. So if we look at the post
-endpoint, you don't see dragon treasures in there right now because the field simply
-isn't writeable, it's not in the right group. So to make it writeable, we know what
-to do. We'll just add user on. Right? And now back over on our documentation. No
-surprise. There we go. Dragon treasures. And what's in expecting is an array of
-strings, an array of I R I strings. So let's try this. Let's create a new user, fill
-in the email and fill in the username. And then I'm gonna assign this two existing
-treasures that are in our system. So I'm actually gonna cheat up here real quick and
-use the get collection endpoint for treasures and Perfect. So I have ID two and ID
-three.
+As we learned earlier, exposing a *collection* relation property is just like any
+other field: just make sure that it's in the correct serialization group. And then
+you can go *further* with serialization groups to choose between making this return
+as an array of IRI strings or as an array of embedded objects like we have now.
 
-Cool. So let's take down here. So slash api slash treasures.
+New question: could we also *modify* the `dragonTreasures` that a user owns from
+one of the user operations? The answer is, of course, yea! And we're going to do
+this in increasingly crazy ways.
 
-Oops
+## Making the Collection Field Writable
 
-Slash two and slash api slash treasures slash three. Ah heck, let's get greedy API
-slash treasure slash four. So just like when we read it, it can be I an I I, there's
-no problems at all with us setting it so when you execute, that worked perfectly. So
-we kind of stole those treasures from someone else. But wait a second, how did that
-work? We know that when we send fields like email, password, and username, because
-those are private properties that you use as the setter. So when we pass username, it
-calls set username. But when we pass, so who pass dragon treasures, it must call it
-set dragon treasures.
+Look at the POST endpoint. We don't see a `dragonTreasures` field right now because...
+the field simply isn't writable: it's not in the correct group. To remedy that, we
+know what to do: add `user:write`.
 
-But guess what? We don't have a set dragon treasures, but we do have an ad dragon
-treasure method and a removed dragon treasure method. So the serializer is really
-smart. It sees that our user object has no dragon treasures. And so it recognizes
-that each of these three objects are new dragon treasures. And so it actually called
-add dragon treasure one time for each of those dragon treasures. And really
-importantly, the way that make SD generates these methods is it makes sure that it
-takes that dragon treasure and sets the owner to be this object. The reason that's
-important has to do with doctrine, relationships and the owning versus the inverse
-side. But the takeaway is that thanks to add dragon treasure being called, and the
-way this method is written, it gets our data, our data set up exactly like it needs
-to. And then when everything saves, it saves correctly. So sweet. Next, let's get
-more complex. By allowing treasures to be created when we're creating a new user,
-we're also going to remove treasures from a user. Like in the event that the dwarves
-take back the mountain as if.
+Easy peasy! When we refresh the docs, and check that endpoint... there we go:
+`dragonTreasures`. And it says that this field should be an array of strings: an
+array of IRI strings.
 
+Let's try crafting a new user. Fill in the `email` and `username`. Then, let's
+assign the new user two *existing* treasures. Let's sneak up to the GET collection
+endpoint for treasures... and awesome. We ids 2, 3 and 4.
+
+Back down here, assign `owner` to an array with `/api/treasures/2`, `/api/treasures/3`
+and `/api/treasures/4`.
+
+Makes sense, right? If API can return `dragonTreasures` as an array of IRI strings,
+why can't we *send* an array of IRI strings? When we hit Execute... indeed! It
+worked perfectly!
+
+And since each treasure can have only one owner... it means that we kinda stole
+those treasures from someone else!
+
+## The adder & remover Methods for Collections
+
+But... wait a second, how did that work? We know that when we send fields like
+`email`, `password`, and `username`, because those are private properties, the
+serializer calls the setter methods. So when we pass `username`, it calls
+`setUsername()`.
+
+And when we pass `dragonTreasures`, it must call it `setDragonTreasures`, right?
+
+Well guess what? We don't *have* a `setDragonTreasures()` method! But we *do* have
+an `addDragonTreasure` method and a `removeDragonTreasure` method.
+
+The serializer is really smart. It sees that the new `User` object has no
+`dragonTreasures`. So it recognizes that each of these three objects are *new*
+and so it calls `addDragonTreasure` one time for each.
+
+And the way that MakerBundle generated these methods is *critical*. It takes the
+new `DragonTreasure` and sets the `owner` to be *this* object. That's important
+because of how Doctrine handles relationships: setting the owner sets what's called
+the "owning" side of the relationship. Basically, without this, Doctrine wouldn't
+save this change to the database.
+
+The takeaway is that, thanks to `addDragonTreasure()` and its magical powers,
+the `owner` of the `DragonTreasure` is changed from its old owner to the new `User`,
+which is perfect.
+
+Next, let's get more complex by allowing treasures to be *created* when we're creating
+a new `User`. We're also going to allow treasures to be *removed* from a `User`...
+like in the unlikely event that the dwarves take back the mountain. As if.
