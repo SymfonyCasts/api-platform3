@@ -4,7 +4,7 @@ I'm going to try out the GET one treasure endpoint... using a real id I have
 in my database. Perfect. Because of the changes we just made, the `owner` field is
 *embedded*.
 
-What about *changing* the owner? That's easy enough - as long as the field is
+What about *changing* the owner? Piece of cake - as long as the field is
 writable, which ours is. So right, now the `owner` is id 1. Use the PUT endpoint
 to update update id 2. For the payload, set `owner` to `/api/users/3`.
 
@@ -13,7 +13,7 @@ and... yes! The `owner` comes back has the IRI `/api/user/3`.
 
 ## Sending Embedded Data to Update
 
-But *now* I want to do something crazier. This treasure is now owned by user 3.
+But *now* I want to do something wild! This treasure is now owned by user 3.
 Let's go get their details. Open the GET one user endpoint, try it out, enter 3
 and... there it is! The user's name is `burnout400`.
 
@@ -23,7 +23,7 @@ to change the existing owner's `username`. Something like this: instead of setti
 `owner` to the IRI string, set it to an object with `username` set to something
 new.
 
-Would that work? Let's find out. Hit Execute and it does *not*. It says:
+Would that work? Let's experiment! Hit Execute and it does *not*. It says:
 
 > nested documents for attribute `owner` are not allowed, use IRI instead.
 
@@ -46,7 +46,7 @@ allowed to send an *object* to the `owner` field.
 
 ## New vs Existing Objects in Embedded Data
 
-Watch: "Execute" again. It works! Well, *almost*. We et a 500 error:
+Watch: fire it up again. It works... almost. We et a 500 error:
 
 > A new entity was found through the relationship `DragonTreasure.owner`, but was
 > not configured to `cascade` persist.
