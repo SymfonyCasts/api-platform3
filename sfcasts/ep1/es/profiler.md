@@ -12,7 +12,9 @@ Ve al terminal y ejecuta:
 composer require debug
 ```
 
-Este es otro paquete Symfony Flex que instala `symfony/debug-pack`. Si te acercas a tu archivo `composer.json`, esto instaló un montón de cosas buenas: un logger... luego abajo, en `require-dev`, también añadió MakerBundle, DebugBundle y WebProfilerBundle, que es lo más importante para lo que vamos a hablar.
+Este es otro alias de Symfony Flex que instala `symfony/debug-pack`. Si te acercas a tu archivo `composer.json`, esto instaló un montón de cosas buenas: un logger... luego abajo en `require-dev`, también añadió DebugBundle y WebProfilerBundle, que es lo más importante para lo que vamos a hablar.
+
+[[[ code('21fbef5319') ]]]
 
 ## Peticiones AJAX en la Barra de Herramientas de Depuración Web
 
@@ -24,7 +26,11 @@ Lo que realmente queremos es toda esta información del perfilador para cualquie
 
 Y aquí hay muchas cosas interesantes. Obviamente, está la sección Rendimiento y todas las cosas normales. Pero una de mis partes favoritas es la pestaña "Excepción". Si tienes una ruta API y esa ruta API explota con un error -suele ocurrir-, puedes abrir esta parte del perfilador para ver la hermosa excepción HTML completa: incluido el seguimiento de pila en todo su esplendor. Muy práctico.
 
-Tengo otros dos puntos favoritos cuando trabajo en una API. El primero, no es ninguna sorpresa, es la pestaña "API Platform". Nos da información sobre la configuración de todos nuestros recursos API. Vamos a hablar más sobre esta configuración, pero esto te muestra las opciones actuales y posibles que podrías poner dentro de este atributo`ApiResource`. Está muy bien. Por ejemplo, esto muestra una opción `description`... ¡y ya la tenemos!
+Tengo otros dos puntos favoritos cuando trabajo en una API. El primero, no es ninguna sorpresa, es la pestaña "API Platform". Nos da información sobre la configuración de todos nuestros recursos API. Vamos a hablar más sobre esta configuración, pero esto te muestra las opciones actuales y posibles que podrías poner dentro de este atributo`ApiResource`. Está muy bien. Por ejemplo, esto muestra una opción `description`... 
+
+[[[ code('79ebe0e721') ]]]
+
+¡y ya la tenemos!
 
 La otra sección realmente útil del perfilador es relativamente nueva: es para el "Serializador". Vamos a hablar mucho del serializador de Symfony y esta herramienta nos ayudará a echar un vistazo a lo que ocurre internamente.
 
