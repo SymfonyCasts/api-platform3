@@ -23,6 +23,8 @@ over to your `composer.json` file, this installed a bunch of good stuff: a
 logger... then down in `require-dev`, it also added DebugBundle
 and WebProfilerBundle, which is the most important thing for what we'll talk about.
 
+[[[ code('21fbef5319') ]]]
+
 ## AJAX Requests in the Web Debug Toolbar
 
 Head back to our documentation homepage and refresh. Sweet! We get the Web
@@ -51,7 +53,11 @@ no surprise, is the "API Platform" tab. This gives us info about the configurati
 for all of our API resources. We're going to talk more about this config, but this
 shows you the *current* and possible options that you could put inside of this
 `ApiResource` attribute. That's pretty cool. For example, this shows a `description`
-option... and we already have that!
+option... 
+
+[[[ code('79ebe0e721') ]]]
+
+and we already have that!
 
 The other really useful section in the profiler is relatively new: it's for
 the "Serializer". We're going to be talking a *lot* about Symfony's serializer and
