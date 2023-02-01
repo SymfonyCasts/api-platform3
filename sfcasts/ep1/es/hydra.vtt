@@ -1,198 +1,195 @@
 WEBVTT
 
-00:00:00.996 --> 00:00:04.986 align:middle
-Así que estamos mirando la documentación
-JSON-LD que describe nuestra api.
+00:00:01.016 --> 00:00:04.986 align:middle
+Estamos consultando la documentación
+JSON-LD que describe nuestra API.
 
-00:00:04.986 --> 00:00:10.686 align:middle
-Y ahora mismo sabemos que sólo
-tenemos un recurso API Dragon Treasure.
+00:00:05.776 --> 00:00:10.686 align:middle
+Ahora mismo, sabemos que sólo tenemos
+un recurso API: DragonTreasure.
 
-00:00:11.386 --> 00:00:14.306 align:middle
-Pero si miras aquí abajo en
-esta parte de clases soportadas,
+00:00:11.386 --> 00:00:14.456 align:middle
+Pero si miras en la sección supportedClasses,
 
-00:00:14.776 --> 00:00:20.196 align:middle
-en realidad hay un montón Dragon
-Treasure, uno llamado Punto de entrada,
+00:00:14.776 --> 00:00:18.026 align:middle
+en realidad hay un montón
+de clases compatibles. Hay
 
-00:00:20.316 --> 00:00:22.726 align:middle
-otro llamado Violación de
+00:00:18.846 --> 00:00:22.256 align:middle
+una llamada Entrypoint, otra
+llamada ConstraintViolation,
 
-00:00:22.726 --> 00:00:25.296 align:middle
-restricciones y otro llamado Lista
-de violaciones de restricciones.
+00:00:22.446 --> 00:00:25.286 align:middle
+y otra llamada ConstraintViolationList.
 
 00:00:25.776 --> 00:00:29.956 align:middle
-Estos últimos iban a aparecer cuando habláramos
-de los errores de validación más adelante.
+Estas dos últimas aparecerán más adelante
+cuando hablemos de los errores de validación.
 
 00:00:30.616 --> 00:00:33.126 align:middle
-Pero este Entrypoint es realmente interesante.
+Pero este Entrypoint es
+realmente interesante. Se llama
 
 00:00:33.666 --> 00:00:35.956 align:middle
-Se llama Punto de Entrada API.
+"El punto de entrada de la API",
 
-00:00:36.286 --> 00:00:41.656 align:middle
-Y lo que en realidad está describiendo aquí es
-el aspecto de la página de inicio de nuestra API.
+00:00:36.286 --> 00:00:41.716 align:middle
+y en realidad describe el aspecto de
+la página de inicio de nuestra API.
 
-00:00:41.656 --> 00:00:47.646 align:middle
-No siempre piensas en que tu API tenga una
-página de inicio, pero puede y debe tenerla.
+00:00:42.376 --> 00:00:47.656 align:middle
+No siempre pensamos en que nuestras API tengan una
+página de inicio, pero pueden y deben tenerla.
 
-00:00:47.646 --> 00:00:51.316 align:middle
-Esta es la versión HTML de la
-página de inicio de nuestra API.
+00:00:48.406 --> 00:00:52.816 align:middle
+Y, ¡bienvenidos a nuestra página
+de inicio de la API - estilo HTML!
 
-00:00:51.596 --> 00:00:57.626 align:middle
-Y si te desplazas hasta la parte inferior,
-puedes ver otros formatos aquí abajo.
+00:00:53.576 --> 00:00:56.896 align:middle
+Si te desplazas hasta la parte
+inferior, podrás ver otros formatos.
 
-00:00:57.626 --> 00:01:02.926 align:middle
-Si haces clic en Jsun ld, saluda a tu
-página de inicio para tu formato JSON-LD.
+00:00:57.276 --> 00:00:59.456 align:middle
+Haz clic en "JSON-LD" y...
 
-00:01:02.926 --> 00:01:08.176 align:middle
-Y lo que estás viendo literalmente aquí es
-un recurso de la API llamado Punto de entrada,
+00:00:59.736 --> 00:01:04.066 align:middle
+¡di "hola" a la página principal
+de la API en formato JSON-LD!
 
-00:01:08.616 --> 00:01:15.446 align:middle
-cuyo trabajo consiste básicamente en decirte dónde
-puedes encontrar los demás recursos de la API.
+00:01:04.876 --> 00:01:11.146 align:middle
+Esto devuelve un recurso de la API llamado
+Entrypoint, cuya función es decirnos
 
-00:01:15.956 --> 00:01:20.206 align:middle
-Ahora mismo tenemos uno que se llama Tesoro
-del Dragón, pero es realmente genial,
+00:01:11.146 --> 00:01:15.446 align:middle
+dónde podemos encontrar información
+sobre los demás recursos de la API.
 
-00:01:20.206 --> 00:01:24.646 align:middle
-puedes descubrir toda la API yendo a este
-Entrypoint y obteniendo más información
+00:01:15.956 --> 00:01:18.416 align:middle
+¡Es como los enlaces de una página de inicio!
 
-00:01:24.646 --> 00:01:28.336 align:middle
-del contexto que apunta a
-este documento de aquí. De
+00:01:19.036 --> 00:01:25.156 align:middle
+Puedes descubrir la API yendo a este
+Entrypoint y siguiendo el enlace @context...
 
-00:01:28.336 --> 00:01:32.436 align:middle
-todos modos, el gran punto de JSON-LD es
-básicamente añadir esos tres campos extra
+00:01:25.346 --> 00:01:26.456 align:middle
+que apunta a esto. En
 
-00:01:32.436 --> 00:01:36.076 align:middle
-a tu tipo de ID de recursos API en contexto.
+00:01:27.446 --> 00:01:32.436 align:middle
+cualquier caso, el propósito de JSON-LD
+es añadir esos tres campos adicionales
 
-00:01:36.076 --> 00:01:42.666 align:middle
-Y utilizando ese sistema, puedes usar el
-contexto para apuntar a otra documentación para
+00:01:32.436 --> 00:01:37.086 align:middle
+a tus recursos API: @id, @type, y @context.
 
-00:01:42.666 --> 00:01:46.626 align:middle
-obtener más metadatos o más
-contexto sobre tus datos.
+00:01:37.816 --> 00:01:42.316 align:middle
+Entonces podemos aprovechar @context
+para apuntar a otra documentación
 
-00:01:46.626 --> 00:01:50.326 align:middle
-Pero en la parte superior de la
-documentación JSON-LD, puedes ver que, apunta
+00:01:42.516 --> 00:01:45.686 align:middle
+y obtener más metadatos o más contexto. Por
 
-00:01:50.326 --> 00:01:52.376 align:middle
-a varios otros documentos.
+00:01:46.206 --> 00:01:49.766 align:middle
+ejemplo, en la parte superior de la
+documentación de JSON-LD, apunta
 
-00:01:52.376 --> 00:01:55.596 align:middle
-Es una forma de añadir
-más significado a JSON-LD.
+00:01:50.066 --> 00:01:55.426 align:middle
+a varios otros documentos que
+añaden más significado a JSON-LD.
 
-00:01:56.216 --> 00:01:59.906 align:middle
-Aquí hay uno realmente
-importante llamado Hydra.
+00:01:55.426 --> 00:01:59.906 align:middle
+Y aquí hay uno realmente
+importante llamado hydra.
 
-00:02:00.516 --> 00:02:05.026 align:middle
-En pocas palabras, Hydra añade más a JSON-LD.
+00:02:00.516 --> 00:02:07.776 align:middle
+Hydra es, en pocas palabras, una extensión
+de JSON-LD : describe aún más campos
 
-00:02:05.026 --> 00:02:07.206 align:middle
-Está en extensión. Si lo
+00:02:07.776 --> 00:02:11.116 align:middle
+que puedes añadir a J
+SON-LD y lo que significan.
 
-00:02:07.206 --> 00:02:16.986 align:middle
-piensas, si queremos describir
-nuestra api, necesitamos poder
+00:02:11.946 --> 00:02:16.986 align:middle
+Piénsalo: si queremos describir
+totalmente nuestra API, necesitamos poder
 
-00:02:16.986 --> 00:02:21.706 align:middle
+00:02:16.986 --> 00:02:22.786 align:middle
 comunicar cosas como qué clases tenemos,
-qué propiedades tienen, dónde son,
+sus propiedades, si cada una es legible
 
-00:02:21.706 --> 00:02:26.086 align:middle
-son legibles o escribibles en
-qué operaciones tiene cada clase.
+00:02:22.786 --> 00:02:26.566 align:middle
+o escribible, y qué
+operaciones admite cada clase.
 
-00:02:26.086 --> 00:02:32.516 align:middle
-Esas son cosas que se hacen aquí abajo,
-y que en realidad forman parte de Hydra.
+00:02:27.186 --> 00:02:29.676 align:middle
+Esa comunicación se hace aquí abajo...
 
-00:02:32.516 --> 00:02:42.286 align:middle
-Hydra dice que debemos tener estas claves
-llamadas clases compatibles con Hydra con todas
+00:02:30.156 --> 00:02:32.576 align:middle
+y en realidad forma parte de Hydra.
 
-00:02:42.286 --> 00:02:48.966 align:middle
-estas subclaves debajo para describirlas.
+00:02:33.346 --> 00:02:36.826 align:middle
+Sí, si utilizas JSON-LD por sí mismo...
 
-00:02:49.096 --> 00:02:58.286 align:middle
-Por decirlo de un modo más sencillo, la
-plataforma APAP te permite obtener tus recursos
+00:02:37.246 --> 00:02:42.666 align:middle
+no tiene una forma predefinida de
+anunciar cómo son tus modelos.
 
-00:02:58.286 --> 00:03:00.906 align:middle
-como JSON-LD con campos Hydra adicionales.
+00:02:43.276 --> 00:02:48.346 align:middle
+Pero entonces Hydra dice ¿Y si permitimos
+que las clases de la API se describan
 
-00:03:00.906 --> 00:03:06.906 align:middle
-El resultado final de esto es que JSON-LD e
-Hydra describen completamente nuestra API.
+00:02:48.346 --> 00:02:51.896 align:middle
+con una clave llamada hydra:supportedClasses?
 
-00:03:07.846 --> 00:03:11.316 align:middle
+00:02:52.816 --> 00:02:59.556 align:middle
+Este es el panorama general: API Platform nos
+permite obtener documentación JSON-LD de la API
+
+00:02:59.906 --> 00:03:02.306 align:middle
+que contenga campos adicionales hydra.
+
+00:03:02.906 --> 00:03:06.906 align:middle
+El resultado final es un sistema que
+describe completamente nuestra API.
+
+00:03:07.846 --> 00:03:10.426 align:middle
 Describen los modelos que
-tenemos, las operaciones, todo.
+tenemos, las operaciones...
 
-00:03:12.046 --> 00:03:19.676 align:middle
-Y sí, si esto suena muy parecido
-a OpenAPI, tienes toda la razón.
+00:03:10.786 --> 00:03:11.316 align:middle
+todo.
 
-00:03:19.676 --> 00:03:21.726 align:middle
-Ambos hacen lo mismo.
+00:03:12.046 --> 00:03:19.766 align:middle
+Y sí, si esto suena muy parecido a lo que
+pretende OpenAPI, tienes toda la razón.
 
-00:03:22.056 --> 00:03:23.466 align:middle
-Describen nuestra api.
+00:03:20.176 --> 00:03:23.466 align:middle
+Ambas hacen lo mismo: describir nuestra API.
 
-00:03:24.446 --> 00:03:32.676 align:middle
-De hecho, si vas a /api /Jo docs.json, ésta
-es la descripción OpenAPI de nuestra api.
+00:03:24.446 --> 00:03:31.296 align:middle
+De hecho, si vas a /api/docs.json, ésta
+es la descripción OpenAPI de nuestra API.
 
-00:03:32.676 --> 00:03:35.816 align:middle
-Le añadimos JSON-LD al final.
-
-00:03:36.116 --> 00:03:41.196 align:middle
-Esta es nuestra descripción
-JSON-LD Hydra de la misma api.
+00:03:32.146 --> 00:03:41.196 align:middle
+Si sustituimos .json por .jsonld, ésta es la
+descripción JSON-LD Hydra de la misma API.
 
 00:03:42.206 --> 00:03:43.796 align:middle
-¿Por qué tenemos ambas?
+¿Por qué tenemos las dos?
 
-00:03:44.406 --> 00:03:46.126 align:middle
-Bueno, Hydra es un poco más potente.
+00:03:44.406 --> 00:03:50.126 align:middle
+Hydra es un poco más potente: puede
+describir ciertas cosas que OpenAPI no puede.
 
-00:03:46.546 --> 00:03:50.216 align:middle
-Puede describir ciertas cosas
-que OpenAPI no puede describir,
+00:03:50.816 --> 00:03:55.566 align:middle
+Pero OpenAPI es mucho más común y tiene
+más herramientas construidas sobre ella.
 
-00:03:50.816 --> 00:03:56.816 align:middle
-pero OpenAPI es mucho más común y tiene muchas
-herramientas incorporadas, como React admin.
+00:03:56.276 --> 00:03:58.006 align:middle
+API Platform proporciona ambas...
 
-00:03:56.816 --> 00:03:59.236 align:middle
-Así que API Platform te ofrece
-ambas en caso de que las necesites.
+00:03:58.396 --> 00:03:59.366 align:middle
+¡por si las necesitas!
 
-00:03:59.236 --> 00:03:59.396 align:middle
-De acuerdo.
-
-00:04:00.276 --> 00:04:04.336 align:middle
-A continuación, hablemos de algunas herramientas
-de depuración serias con API Platform
-
-00:04:04.336 --> 00:04:06.616 align:middle
-y luego volvamos a sumergirnos en
-la construcción de nuestra api.
+00:04:00.276 --> 00:04:05.676 align:middle
+A continuación: Vamos a añadir algunas herramientas de
+depuración serias a nuestra configuración de la API Platform.
