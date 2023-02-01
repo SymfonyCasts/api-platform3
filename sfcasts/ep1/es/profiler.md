@@ -14,6 +14,8 @@ composer require debug
 
 Este es otro paquete Symfony Flex que instala `symfony/debug-pack`. Si te acercas a tu archivo `composer.json`, esto instaló un montón de cosas buenas: un logger... luego abajo, en `require-dev`, también añadió MakerBundle, DebugBundle y WebProfilerBundle, que es lo más importante para lo que vamos a hablar.
 
+[[[ code('21fbef5319') ]]]
+
 ## Peticiones AJAX en la Barra de Herramientas de Depuración Web
 
 Vuelve a nuestra página principal de documentación y actualízala. ¡Qué bien! Tenemos la barra de herramientas de depuración web en la parte inferior Aunque... eso no nos ayuda realmente porque... toda esta información es literalmente para la propia página de documentación. No es especialmente útil.
