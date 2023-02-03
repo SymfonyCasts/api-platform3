@@ -76,7 +76,7 @@ instead? Yikes! Hit Execute. Okay: a `400` status code, that's good. Though, it'
 not a validation error, it has a different type. But it *does* tell the user what
 happened:
 
-> the type of the `value` attribute must be `int`, `string` given.
+> the type of the `coolFactor` attribute must be `int`, `string` given.
 
 Good enough! This is thanks to the `setCoolFactor()` method. The system sees
 the `int` type and so it rejects the string with this error.
