@@ -57,7 +57,7 @@ and the *next* page.
 So yes, API endpoints that return a collection need pagination... just like a
 website. And with API Platform, it just works.
 
-To play with this, let's go to `/api/treasures.json`. This is page 1... and then
+To play with this, let's go to `/api/treasures.jsonld`. This is page 1... and then
 we can add `?page=2` to see page 2. That's the easiest thing I'll do all day.
 
 ## Digging Into API Platform Configuration
