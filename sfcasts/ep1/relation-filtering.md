@@ -1,15 +1,64 @@
-# Relation Filtering
+# Filtering on Relations
 
-Earlier, we added a bunch of nice filters to our `DragonTreasure` resource. Let's also add some to `user` so we can show off some of the filtering *superpowers* of relations. The first thing we want to add, per usual, is  `ApiFilter` with `PropertyFilter::class`. This one isn't exactly a *filter*. It lets you select which fields you want to return in the response. All of this should look pretty familiar so far.
+Earlier, we added a bunch of nice filters to `DragonTreasure`. Let's add a few
+more - starting with `User` - so we can show off some filtering *superpowers* for
+relations.
 
-When we head over, refresh, and go to the `GET` collection endpoint... we see a new "properties[]" field here. If we wanted to, just as an example, we could say `username`... *or* we could return `username` *and* `dragonTreasures`. When we hit "Execute"... perfect! There they are - `username` and `dragonTreasures`. And because our `dragonTreasures` are *embedded*, we see the embedded objects. But it gets even *cooler*! We could have it return `username` and just the *name* of the `DragonTreasure`. Yep! To do that, copy this URL... and let's add a little `.jsonld` at the end. *Perfect*. And the syntax is a little complicated, but we can actually say `[dragonTreasures]`, followed by `[]=name`. And just like that, we're *just* returning the `name`. So right out of the box, this property filter allows us to reach across relationships.
+## Using PropertyFilter Across Relations
 
-Okay, let's do something *else*. Head back to `DragonTreasure.php`. Let's say that *sometimes* we want to be able to filter by the `$owner`. It would actually be really handy to see all of the `dragonTreasures` for a specific owner. To do that, above the `$owner` property, we'll once again add our `ApiFilter`, which is going to be a normal `SearchFilter::class`, followed by `strategy: 'exact'`. This will give us the exact user we're looking for.
+Start like normal: `ApiFilter` and let's first use `PropertyFilter::class`. Remember:
+this is kind of a fake filter that allows our API client to select which *fields*
+they want. And this is all pretty familiar so far.
 
-Back over on the docs, if we open up the `GET` collection endpoint for treasures and hit "Try it out"... let's see... here we go - "owner". We can say something like `/api/users/4`, assuming that's actually a real user we have in our database, and... perfect! Here are the *five* treasures owned by that user.
+When we head over, refresh, and go to the `GET` collection endpoint... we see a new
+`properties[]` field. We could choose to return just `username`... or `username`
+*and* `dragonTreasures`.
 
-But I want to take this a step further. I want to be able to find all of treasures that are owned by a user with a specific *username*. So instead of filtering on `owner`, we need to filter on `owner.username`. Check this out. When we want to filter an `owner`, we can put this a `ApiFilter` right above the `$owner` property. But since we want to filter on `owner.username`, we can't put that above a property because we don't have one for that. This is one of those cases where we need to put a filter above the class. And since we're not putting this above a property, we'll need to add a `properties` option set to an array. Inside, say `'owner.username'` and set that to the `partial` strategy.
+When we hit "Execute"... perfect! We see the two fields... where `dragonTreasures`
+is an array of objects, each containing the fields we chose to embedded.
 
-I'll head back over and refresh. We know we have an owner whose username is "maug", so let's go back to our `GET` collection, and here in `owner.username`, we can search for "maug`... hit "Execute", and... that works! We can see all of the treasures owned by "maug". Pretty cool!
+Again, this is super duper normal. So let's try something more interesting. In
+fact, what we're going to try isn't supported directly in the interactive docs.
 
-Next: We've reached our last topic - *Subresources* - which has seriously changed in API Platform 3.
+So, copy this URL... paste and add `.jsonld` to the end.
+
+Here's the goal: I want to return the `username` field and then *only* the `name`
+field of each dragon treasure. The syntax is a bit ugly: it's `[dragonTreasures]`,
+followed by `[]=name`.
+
+And just like that... it only shows `name`! So right out of the box,
+`PropertyFilter` allows us to reach across relationships.
+
+## Searching Relation Fields
+
+Let's do something *else*. Head back to `DragonTreasure`. It might be
+handy to filter by the `$owner`: we could quickly get a list of
+all treasures for a specific user.
+
+No sweat! Just add `ApiFilter` above the `$owner` property, passing in the trusty `SearchFilter::class` followed by `strategy: 'exact'`.
+
+Back over on the docs, if we open up the `GET` collection endpoint for treasures
+and give it a whirl... let's see... here we go - "owner". Enter something
+like `/api/users/4`... assuming that's actually a real user in our database,
+and... yes! Here are the *five* treasures owned by that user!
+
+But I want to get crazier: I want to find all treasures
+that are owned by a user matching a specific *username*. So instead of filtering on
+`owner`, we need to filter on `owner.username`.
+
+How? Well, when we want to filter simply by `owner`, we can put the `ApiFilter`
+right above that property. But since we want to filter on `owner.username`, we can't
+put that above a property... because `owner.username` *isn't* a property.
+This is one of the cases where we need to put the filter above the
+*class*. And... that also means we need to add a `properties` option set to an array.
+Inside, say `'owner.username'` and set that to the `partial` strategy.
+
+Ok! Head back over and refresh. We know we have an owner whose username is "Smaug"...
+so let's go back to the `GET` collection endpoint and... here in `owner.username`,
+search for "maug"... and hit "Execute".
+
+Let's see... That worked! This shows all treasures owned by any user whose username
+contains `maug`. Pretty cool!
+
+Ok squad: get ready for the grand finale - *Subresources*. These have *seriously*
+changed in API Platform 3. Let's dive into them next.
