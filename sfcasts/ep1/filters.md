@@ -76,7 +76,7 @@ Let's give it a shot! Refresh the docs page. And... now the collection endpoint 
 *another* filter box. Search for `rare` and hit Execute. Let's see, down here...
 yes! Apparently 15 of the results have `rare` somewhere in the `title`.
 
-And again, this works by adding a simple `?title=rare` to the URL.
+And again, this works by adding a simple `?name=rare` to the URL.
 
 Oh, let's also make the `description` field searchable. And now... that
 shows up in the API too!
