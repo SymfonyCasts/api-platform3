@@ -1,49 +1,15 @@
 # Relation Filtering
 
-Coming soon...
+Earlier, we added a bunch of nice filters to our `DragonTreasure` resource. Let's also add some to `user` so we can show off some of the filtering *superpowers* of relations. The first thing we want to add, per usual, is  `ApiFilter` with `PropertyFilter::class`. This one isn't exactly a *filter*. It lets you select which fields you want to return in the response. All of this should look pretty familiar so far.
 
-Earlier we added a bunch of nice filters to our Dragon Treasure resource. Well, let's
-add some to user to show off some of the filtering superpowers of relations. So the
-first, we're gonna start with, first thing I want we wanna talk about is add the add
-AP filter like always, and then add property filter. Now this's not really a filter,
-it lets you select which fields you want returned in the response. So there's nothing
-very new here. When we refresh and go to the get collection endpoint, there is a new
-properties thing and we could, for example, say username or we could return to
-username and dragon treasures. Wyoming mean execute perfect. There they are. Username
-and dragon treasures. And because our dragon treasures are embedded, we see the
-embedded objects, but this is where it's even cooler. Could we have it return
-username and just the name of the Dragon Treasure? Absolutely. To do that? No, I'm
-not exactly sure if the syntax supports it up here. What I'm gonna do is copy our URL
-over here. Let's add a little dot jsun n LD at the end. Perfect. And check this out.
-The syntax is a little complicated, but you can actually say it. Let screw bracket
-dragon treasures. Whoops.
+When we head over, refresh, and go to the `GET` collection endpoint... we see a new "properties[]" field here. If we wanted to, just as an example, we could say `username`... *or* we could return `username` *and* `dragonTreasures`. When we hit "Execute"... perfect! There they are - `username` and `dragonTreasures`. And because our `dragonTreasures` are *embedded*, we see the embedded objects. But it gets even *cooler*! We could have it return `username` and just the *name* of the `DragonTreasure`. Yep! To do that, copy this URL... and let's add a little `.jsonld` at the end. *Perfect*. And the syntax is a little complicated, but we can actually say `[dragonTreasures]`, followed by `[]=name`. And just like that, we're *just* returning the `name`. So right out of the box, this property filter allows us to reach across relationships.
 
-And then another set of screw brackets and then equals name. And just like that,
-you've got just the name returned. So just out of the box, that property filter does
-allow you to kind of reach across the relationships. All right, let's do something
-else. Back in Dragon Treasure. Let's say that sometimes we wanna be able to filter by
-the owner. That's actually actually really handy. Show me all dragon treasures for a
-specific owner. So to do that above the owner property, we'll add our normal API
-filter. And this is going to be the normal search filter. And then we'll have, and
-this guys do the strategy exact, so we'll say exactly which user we want. All right,
-now back over on the docks, we open up the get to collection endpoint for treasures
-and hit try it out. Let's see, here we go, owner. So we can say something like slash
-api slash users slash four, assuming that's actually a real user we have in our
-database. And perfect. There we go. There are the five treasures owned by that user.
-But I wanna go further. I wanna be able to, could I actually find all treasures that
-are owned by a user with a certain username? So instead of filtering on user, on
-owner, we kind of wanna filter on owner dot username.
+Okay, let's do something *else*. Head back to `DragonTreasure.php`. Let's say that *sometimes* we want to be able to filter by the `$owner`. It would actually be really handy to see all of the `dragonTreasures` for a specific owner. To do that, above the `$owner` property, we'll once again add our `ApiFilter`, which is going to be a normal `SearchFilter::class`, followed by `strategy: 'exact'`. This will give us the exact user we're looking for.
 
-So check this out. When we wanna filter an owner, we can put this a API filter right
-above the owner property. But now I wanna filter on owner username and that's not, we
-don't have a property, so we can't put that in above a property. So instead, this is
-one of those cases where we need to put a filter above the class. And then I
-configure this since we're not above a property, we'll add a properties options set
-to an array. And here we'll say owner username, and then set that to the strategy,
-which will use the partial strategy. All right, so let's refresh and try that. Uh,
-first I need to actually figure out what actually, I know we have smog. So let's go
-back to our get collection endpoint. Owner dot username. I'll put in MOG so we can
-see that at matches. Just the middle hit. Okay. Execute and that works. Pretty cool.
-All right, next it's our last topic. Sub resources. This is something that has
-totally changed in API platform three.
+Back over on the docs, if we open up the `GET` collection endpoint for treasures and hit "Try it out"... let's see... here we go - "owner". We can say something like `/api/users/4`, assuming that's actually a real user we have in our database, and... perfect! Here are the *five* treasures owned by that user.
 
+But I want to take this a step further. I want to be able to find all of treasures that are owned by a user with a specific *username*. So instead of filtering on `owner`, we need to filter on `owner.username`. Check this out. When we want to filter an `owner`, we can put this a `ApiFilter` right above the `$owner` property. But since we want to filter on `owner.username`, we can't put that above a property because we don't have one for that. This is one of those cases where we need to put a filter above the class. And since we're not putting this above a property, we'll need to add a `properties` option set to an array. Inside, say `'owner.username'` and set that to the `partial` strategy.
+
+I'll head back over and refresh. We know we have an owner whose username is "maug", so let's go back to our `GET` collection, and here in `owner.username`, we can search for "maug`... hit "Execute", and... that works! We can see all of the treasures owned by "maug". Pretty cool!
+
+Next: We've reached our last topic - *Subresources* - which has seriously changed in API Platform 3.
