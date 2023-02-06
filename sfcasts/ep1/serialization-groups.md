@@ -24,7 +24,9 @@ Check it out. Over on the `ApiResource` attribute, add a new option called
 from an object to an array, like when you're making a `GET` request to read a
 treasure. The `normalizationContext` is basically *options* that are passed to
 the serializer during that process. And the *one* option that's most important
-is `groups`. Set that to one group called `treasure:read`.
+is `groups`. Set that to one group called `treasure:read`:
+
+[[[ code('7093028e4d') ]]]
 
 We'll talk about what this does in a minute. But you can see the pattern I'm using
 for the group: the name of the class (it could be `dragon_treasure` if we wanted)
@@ -48,7 +50,9 @@ it returns *nothing*.
 How do we add groups? With *another* attribute! Above the `$name` property, say
 `#[Groups]`, hit "tab" to add its `use` statement and then `treasure:read`. Repeat
 this above the `$description` field... because we want *that* to be readable...
-and then the `$value` field... and finally `$coolFactor`.
+and then the `$value` field... and finally `$coolFactor`:
+
+[[[ code('d97dbaf7a2') ]]]
 
 Good start. Move over and refresh the endpoint. Now... got it! We see `name`,
 `description`, `value`, and `coolFactor`.
@@ -59,11 +63,15 @@ We now have control over which fields are *readable*... and we can do the same t
 to choose which fields should be *writeable* in the API. That's called
 "de-normalization", and I bet you can guess what we're going to do. Copy
 `normalizationContext`, paste, change it to `denormalizationContext`... and use
-`treasure:write`.
+`treasure:write`:
+
+[[[ code('6cd21e5fb1') ]]]
 
 Now head down to the `$name` property and add `treasure:write`. I'm going to skip
 `$description` (remember that we actually *deleted* our `setDescription()`
-method earlier on purpose)... but add this to `$value`... and `$coolFactor`.
+method earlier on purpose)... but add this to `$value`... and `$coolFactor`:
+
+[[[ code('50c5182dc1') ]]]
 
 Oh, it's *mad* at me! As soon as we pass *multiple* groups, we need to make this
 an *array*. Add some `[]` around those three properties. Much happier.
@@ -75,16 +83,24 @@ fields that are *writable* in our API.
 ## Adding Groups To Methods
 
 We *are* missing a few things, though. Earlier, we made a `getPlunderedAtAgo()`
-method... and we want this to be included when we *read* our resource. Right now,
+method... 
+
+[[[ code('d5521f7bac') ]]]
+
+and we want this to be included when we *read* our resource. Right now,
 if we we check the endpoint, it's *not* there.
 
 To fix this, we can *also* add groups above methods. Say
-`#[Groups(['treasure:read'])]`.
+`#[Groups(['treasure:read'])]`:
+
+[[[ code('71791d8a66') ]]]
 
 And when we go check... *voilà*, it pops up.
 
 Let's also find the `setTextDescription()` method... and do the same thing:
-`#[Groups([treasure:write])]`.
+`#[Groups([treasure:write])]`:
+
+[[[ code('18514dde07') ]]]
 
 Awesome! If we head back to the documentation, the field is not currently there...
 but when we refresh... and check out the `PUT` endpoint again... `textDescription`

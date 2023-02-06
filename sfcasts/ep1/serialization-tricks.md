@@ -6,6 +6,8 @@ This is made possible thanks to our `setTextDescription()` method, which runs
 that the user *sends* a `textDescription` field when editing or creating a
 treasure... but they *receive* a `description` field when reading.
 
+[[[ code('a7af4c4e40') ]]]
+
 And that's totally *fine*: you're allowed to have different input fields versus output
 fields. But it *would* be a bit cooler if, in this case, *both* were just called
 `description`.
@@ -14,7 +16,9 @@ fields. But it *would* be a bit cooler if, in this case, *both* were just called
 
 So... can we control the *name* of a field? *Absolutely*! We do this, as
 you may have predicted, via another wonderful attribute. This one is called
-`SerializedName`. Pass it `description`.
+`SerializedName`. Pass it `description`:
+
+[[[ code('a7af4c4e40') ]]]
 
 This won't change how the field is *read*, but if we refresh the docs... and look
 at the `PUT` endpoint... yep! We can now *send* a field called `description`.
@@ -26,6 +30,8 @@ example, we know it uses the setter methods to write the data onto the propertie
 
 Now try this: find `setName()` and remove it. Then go to the constructor and add a
 `string $name` argument there instead. Below, say `$this->name = $name`.
+
+[[[ code('2f2c83cd90') ]]]
 
 From an object-oriented perspective, the field can be passed when the object is
 *created*, but after that, it's read-only. Heck, if you wanted to get fancy, you
@@ -49,11 +55,16 @@ is that the serializer is smart enough to set constructor arguments... *if* the
 argument name matches the property name. Yup, the fact that the arg is called `name`
 and the property is *also* called `name` is what makes this work.
 
-Watch: change the argument to `treasureName` in both places. Now, spin over, refresh,
-and check out the POST endpoint. The field is *gone*. API Platform sees that we have
-a `treasureName` argument that *could* be sent, but since `treasureName` doesn't
-correspond to any property, that field doesn't have any serialization groups. So
-it's not used. I'll change that back to `name`.
+Watch: change the argument to `treasureName` in both places:
+
+[[[ code('2f2c83cd90') ]]]
+
+Now, spin over, refresh, and check out the POST endpoint. The field is *gone*. 
+API Platform sees that we have a `treasureName` argument that *could* be sent, 
+but since `treasureName` doesn't correspond to any property, that field doesn't 
+have any serialization groups. So it's not used. I'll change that back to `name`:
+
+[[[ code('2ed74f72ac') ]]]
 
 By using `name`, it looks at the `name` property, and reads *its* serialization
 groups.
@@ -73,7 +84,9 @@ error. It says:
 That's... actually *too* technical. What we *really* want is to allow *validation*
 to take care of this... and we'll talk about validation soon. But in order for
 validation to work, the serializer needs to be able to do its job: it needs to
-be able to *instantiate* the object.
+be able to *instantiate* the object:
+
+[[[ code('089e7c4dc2') ]]]
 
 Ok, try this now... better! Ok, it's *worse* - a 500 error - but we'll fix that
 with validation in a few minutes. The point is: the serializer *was* able to

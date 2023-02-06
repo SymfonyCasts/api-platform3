@@ -17,9 +17,12 @@ JSON, like we're sending JSON to our API, it first *decodes* it to an array and 
 For all of this to happen, internally, there are many different normalizer
 objects that know how to work with different data. For example, there's a
 `DateTimeNormalizer` that's really great at handling `DateTime` objects. Check it
-out: our entity has a `createdAt` field, which is a `DateTime` object. If you look
-at our API, when we try the `GET` endpoint, this is returned as a special date time
-*string*. The `DateTimeNormalizer` is responsible for doing that.
+out: our entity has a `createdAt` field, which is a `DateTime` object:
+
+[[[ code('d716c7b2e1') ]]]
+
+If you look at our API, when we try the `GET` endpoint, this is returned as a 
+special date time *string*. The `DateTimeNormalizer` is responsible for doing that.
 
 ## Figuring out Which Fields to Serialize
 
@@ -30,18 +33,28 @@ normalized. To do that, it uses another component called `property-access`.
 
 For example, looking at our API, when we make a GET request to the collection
 endpoint, one of the fields it returns is `name`. But if we look at the class,
-`name` is a *private* property. So how the heck is it reading that?
+`name` is a *private* property:
+
+[[[ code('7109160cd3') ]]]
+
+So how the heck is it reading that?
 
 *That's* where the `PropertyAccess` component comes in. It first looks to see if the
-`name` property is public. And if it's not, it then looks for a `getName()` method.
+`name` property is public. And if it's not, it then looks for a `getName()` method:
+
+[[[ code('dbfdaf13f2') ]]]
+
 So *that* is what's actually called when building the JSON.
 
 The same thing happens when we *send* JSON, like to create or update a `DragonTreasure`.
 PropertyAccess looks at each field in the JSON and, if that field is settable, like
-via a `setName()` method, it sets it. And, it's even a bit cooler than that: it
-will even look for getter or setter methods that don't correspond to *any* real
-property! You can use this to create "extra" fields in your API that don't exist
-as properties in your class.
+via a `setName()` method, it sets it:
+
+[[[ code('c34e8dc7af') ]]]
+
+And, it's even a bit cooler than that: it will even look for getter or setter methods 
+that don't correspond to *any* real property! You can use this to create "extra" 
+fields in your API that don't exist as properties in your class.
 
 ## Adding a Virtual "textDescription" Field
 
@@ -54,7 +67,9 @@ Let me show you what I mean. Copy the `setDescription()` method. Then, below,
 paste and call this new method `setTextDescription()`. It's basically going to set
 the `description` property... but call `nl2br()` on it first. That function
 literally transforms new lines into `<br>` tags. If you've been around as long as
-I have, you remember when `nl2br` was super cool.
+I have, you remember when `nl2br` was super cool:
+
+[[[ code('6c03aea9ba') ]]]
 
 Anyways, with *just* that change, refresh the documentation and open the POST or PUT
 endpoints. Woh! We have a new field called `textDescription`! Yup! The serializer
@@ -124,6 +139,8 @@ To do that, create a `public function __construct()` and, inside, say
 `this->plunderedAt = new DateTimeImmutable()`. And now we don't need the `= null`
 on the property.
 
+[[[ code('aa4f1718e5') ]]]
+
 And if we search for `setPlunderedAt`, we don't really need that method anymore!
 Remove it!
 
@@ -145,6 +162,8 @@ composer require nesbot/carbon
 Once this finishes... find the `getPlunderedAt()` method, copy it, paste below,
 it will return a `string` and call it `getPlunderedAtAgo()`. Inside, return
 `Carbon::instance($this->getPlunderedAt()))` then `->diffForHumans()`.
+
+[[[ code('4eeb57fbcf') ]]]
 
 So, as we now understand, there is *no* `plunderedAtAgo` property... but the
 `serializer` *should* see this as readable via its getter and expose it.
