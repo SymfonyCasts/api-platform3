@@ -1,0 +1,317 @@
+WEBVTT
+
+00:00:01.126 --> 00:00:04.966 align:middle
+¡La increíble documentación
+interactiva con la que nos hemos
+
+00:00:04.966 --> 00:00:08.416 align:middle
+topado no es algo de API Platform!
+
+00:00:08.816 --> 00:00:15.036 align:middle
+No, en realidad es una biblioteca de documentación
+de API de código abierto llamada Swagger UI.
+
+00:00:15.586 --> 00:00:21.176 align:middle
+Y lo realmente genial de Swagger UI
+es que, si alguien crea un archivo
+
+00:00:21.176 --> 00:00:27.686 align:middle
+que describa cualquier API, ¡esa
+API puede obtener todo esto gratis!
+
+00:00:28.196 --> 00:00:29.416 align:middle
+¡Me encantan las cosas gratis!
+
+00:00:30.006 --> 00:00:36.276 align:middle
+Tenemos Swagger UI porque API Platform proporciona
+ese archivo de descripción de forma inmediata.
+
+00:00:36.566 --> 00:00:38.406 align:middle
+Pero hablaremos de ello más adelante.
+
+00:00:38.966 --> 00:00:40.216 align:middle
+Vamos a jugar con esto.
+
+00:00:40.626 --> 00:00:43.856 align:middle
+Utiliza la ruta POST para
+crear un nuevo DragonTreasure.
+
+00:00:44.566 --> 00:00:47.386 align:middle
+Recientemente hemos saqueado
+algunas "Monedas de oro"...
+
+00:00:47.736 --> 00:00:50.036 align:middle
+que obtuvimos de "Rico McPato".
+
+00:00:50.346 --> 00:00:55.176 align:middle
+Está loco. Para nuestros propósitos,
+ninguno de los otros campos importa realmente.
+
+00:00:56.116 --> 00:00:58.596 align:middle
+Aquí abajo, pulsa "Ejecutar" y...
+
+00:00:58.856 --> 00:01:03.866 align:middle
+¡boom! Cuando te desplaces hacia abajo, podrás
+ver que se ha realizado una petición POST
+
+00:01:03.866 --> 00:01:09.586 align:middle
+a /api/dragon_treasures y se han
+enviado todos los datos como JSON
+
+00:01:10.326 --> 00:01:14.476 align:middle
+Entonces, nuestra API devolvió
+un código de estado "201".
+
+00:01:14.476 --> 00:01:21.236 align:middle
+Un estado 201 significa que la petición
+tuvo éxito y se creó un recurso.
+
+00:01:21.876 --> 00:01:25.956 align:middle
+Luego devolvió este JSON,
+que incluye un id de 1.
+
+00:01:26.476 --> 00:01:33.546 align:middle
+Así que, como he dicho, esto no es sólo
+documentación: ¡realmente tenemos una API que funciona!
+
+00:01:34.456 --> 00:01:42.296 align:middle
+Aquí también hay algunos campos adicionales:
+@context, @id, y @type De ellos hablaremos pronto.
+
+00:01:43.086 --> 00:01:47.126 align:middle
+Ahora que tenemos un DragonTreasure con
+el que trabajar, abre esta ruta "GET",
+
+00:01:47.246 --> 00:01:49.876 align:middle
+haz clic en "Probar" y luego en "Ejecutar".
+
+00:01:50.696 --> 00:01:52.336 align:middle
+Me encanta.
+
+00:01:52.736 --> 00:01:55.316 align:middle
+Swagger acaba de hacer una petición GET
+
+00:01:55.316 --> 00:02:01.656 align:middle
+a /api/dragon_treasures - este
+?page=1 es opcional. Nuestra API
+
+00:02:02.476 --> 00:02:07.976 align:middle
+devolvió información dentro
+de algo llamado hydra:member,
+
+00:02:08.116 --> 00:02:11.056 align:middle
+que aún no es especialmente importante.
+
+00:02:11.586 --> 00:02:15.426 align:middle
+Lo que importa es que nuestra API
+devolvió una lista de todos los
+
+00:02:15.426 --> 00:02:19.436 align:middle
+DragonTreasures que tenemos
+actualmente, que es justo éste.
+
+00:02:19.936 --> 00:02:26.416 align:middle
+Así que, en sólo unos minutos de trabajo, tenemos
+una API completa para nuestra entidad Doctrine.
+
+00:02:26.776 --> 00:02:28.456 align:middle
+Esto es genial.
+
+00:02:28.916 --> 00:02:33.566 align:middle
+Copia la URL de la ruta de la API,
+abre una nueva pestaña y pégala.
+
+00:02:34.676 --> 00:02:35.906 align:middle
+¡Guau! Esto...
+
+00:02:36.136 --> 00:02:38.026 align:middle
+¿ha devuelto HTML?
+
+00:02:38.586 --> 00:02:43.376 align:middle
+Pero hace un segundo, Swagger dijo que
+hizo una petición GET a esa URL...
+
+00:02:43.866 --> 00:02:46.196 align:middle
+y devolvía JSON.
+
+00:02:46.746 --> 00:02:47.666 align:middle
+¿Qué está pasando?
+
+00:02:48.476 --> 00:02:52.136 align:middle
+Una función de API Platform se
+llama "Negociación de contenido".
+
+00:02:52.766 --> 00:02:58.366 align:middle
+Significa que nuestra API puede devolver
+el mismo recurso -como DragonTreasure -
+
+00:02:58.766 --> 00:03:02.606 align:middle
+en varios formatos, como JSON, o HTML...
+
+00:03:03.156 --> 00:03:05.156 align:middle
+o incluso cosas como CSV.
+
+00:03:06.066 --> 00:03:08.936 align:middle
+Un formato ASCII sería genial.
+
+00:03:09.636 --> 00:03:16.816 align:middle
+En cualquier caso, le decimos a API Platform qué formato
+queremos pasando una cabecera Accept en la petición.
+
+00:03:17.666 --> 00:03:26.606 align:middle
+Cuando utilizamos los documentos interactivos, nos pasa
+esta cabecera Accept establecida en application/ld+json.
+
+00:03:27.326 --> 00:03:30.196 align:middle
+Pronto hablaremos de la parte ld+json...
+
+00:03:30.436 --> 00:03:33.906 align:middle
+pero, gracias a esto,
+¡nuestra API devuelve JSON!
+
+00:03:34.306 --> 00:03:38.666 align:middle
+Y aunque no lo veamos aquí, cuando
+vas a una página en tu navegador,
+
+00:03:38.916 --> 00:03:45.446 align:middle
+éste envía automáticamente una cabecera
+Accept que dice que queremos text/html.
+
+00:03:45.796 --> 00:03:50.836 align:middle
+Así que esto es API Platform
+mostrándonos la "representación HTML"
+
+00:03:51.006 --> 00:03:55.186 align:middle
+de nuestros tesoros dragón..., que
+no es más que la documentación.
+
+00:03:56.166 --> 00:04:01.586 align:middle
+Observa: cuando abro la ruta para la que está
+esta URL, la ejecuta automáticamente. La cuestión
+
+00:04:02.486 --> 00:04:07.776 align:middle
+es: si queremos ver la representación
+JSON de nuestros tesoros dragón,
+
+00:04:08.096 --> 00:04:10.466 align:middle
+tenemos que pasar esta cabecera Accept...
+
+00:04:10.876 --> 00:04:15.496 align:middle
+lo cual es superfácil, por ejemplo,
+si estás escribiendo JavaScript.
+
+00:04:15.886 --> 00:04:21.016 align:middle
+Pero pasar una cabecera personalizada
+Accept no es tan fácil en un navegador...
+
+00:04:21.226 --> 00:04:25.576 align:middle
+y estaría bien poder ver
+la versión JSON de esto.
+
+00:04:26.026 --> 00:04:29.486 align:middle
+Afortunadamente, API Platform nos
+da una forma de hacer trampas.
+
+00:04:30.346 --> 00:04:33.656 align:middle
+Elimina el ?page=1 para simplificar las cosas.
+
+00:04:34.026 --> 00:04:37.516 align:middle
+Luego, al final de cualquier
+ruta , puedes añadir .
+
+00:04:38.046 --> 00:04:43.756 align:middle
+seguido de la extensión del
+formato que quieras: como .jsonld.
+
+00:04:44.276 --> 00:04:47.986 align:middle
+Ahora vemos el recurso
+DragonTreasure en ese formato. API
+
+00:04:48.636 --> 00:04:52.436 align:middle
+Platform también admite
+JSON normal de fábrica,
+
+00:04:52.736 --> 00:04:56.696 align:middle
+así que podemos ver lo mismo,
+pero en JSON puro y estándar.
+
+00:04:57.676 --> 00:05:00.286 align:middle
+El hecho de que todo esto
+funcione significa que...
+
+00:05:00.536 --> 00:05:07.116 align:middle
+aparentemente tenemos una nueva ruta para /api,
+así como un montón de otras rutas nuevas
+
+00:05:07.116 --> 00:05:12.696 align:middle
+para cada operación, como
+GET /api/dragon_treasures.
+
+00:05:13.426 --> 00:05:15.396 align:middle
+Pero... ¿de dónde han salido?
+
+00:05:15.896 --> 00:05:18.806 align:middle
+¿Cómo se añaden dinámicamente
+a nuestra aplicación?
+
+00:05:19.696 --> 00:05:22.476 align:middle
+Para responder a esto, ve a tu
+terminal y ejecuta: ./bin/console
+
+00:05:22.476 --> 00:05:28.766 align:middle
+debug:router Haré esto un poco más
+pequeño para que podamos verlo todo. ¡Sí!
+
+00:05:29.586 --> 00:05:34.546 align:middle
+Cada ruta está representada por una
+ruta normal, tradicional. ¿Cómo se
+
+00:05:35.346 --> 00:05:37.396 align:middle
+añaden? Cuando
+
+00:05:38.066 --> 00:05:45.506 align:middle
+instalamos API Platform, su receta añadió un
+archivo config/routes/api_platform.yaml. Esto
+
+00:05:46.076 --> 00:05:48.396 align:middle
+es en realidad una importación de rutas.
+
+00:05:48.836 --> 00:05:55.406 align:middle
+Parece un poco raro, pero activa API Platform cuando se
+carga el sistema de rutas. A continuación, API Platform
+
+00:05:56.356 --> 00:06:00.946 align:middle
+encuentra todos los recursos
+API de nuestra aplicación y
+
+00:06:01.466 --> 00:06:04.206 align:middle
+genera una ruta para cada ruta. La cuestión es
+
+00:06:05.166 --> 00:06:10.846 align:middle
+que lo único en lo que tenemos que centrarnos
+es en crear estas bonitas clases PHP y
+
+00:06:11.026 --> 00:06:13.596 align:middle
+decorarlas con ApiResource. API
+
+00:06:14.006 --> 00:06:19.116 align:middle
+Platform se encarga de todo el trabajo
+pesado de conectar esas rutas. Por
+
+00:06:19.726 --> 00:06:25.866 align:middle
+supuesto, tendremos que ajustar la configuración
+y hablar de cosas más avanzadas, pero ¡eh! Ese es
+
+00:06:25.866 --> 00:06:27.566 align:middle
+el objetivo de este tutorial. Y
+
+00:06:27.726 --> 00:06:30.246 align:middle
+ya hemos tenido un comienzo
+épico. Lo siguiente:
+
+00:06:31.216 --> 00:06:37.446 align:middle
+Quiero hablar del secreto que hay detrás de
+cómo se genera esta documentación Swagger UI. Se
+
+00:06:38.016 --> 00:06:39.756 align:middle
+llama OpenAPI.
