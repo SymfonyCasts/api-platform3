@@ -1,71 +1,90 @@
-# Collections Create
+# Creating Embedded Objects
 
-Coming soon...
+Is it possible to create a totally *new* `DragonTreasure` when we create a user?
+Like... instead of sending the IRI of an *existing* treasure, we send an object?
 
-I wonder if we could create a totally new dragon treasure when creating a user. Like
-instead of sending the i r I of an existing treasure, we'll send an object. So let's
-try this first, let me get uh, a unique email and username and then here for Dragon
-Treasure I'll clear out those Iris and instead we'll do an object and we'll pass the
-fields that we know are required on every piece of treasure. So we'll top this new
-user found golden eye from N 64. Add a description and a value. So in theory, that's
-a con request that makes sense, like that we could make that work. So let's try it.
-Hit execute and okay, no big surprise, it doesn't work. Out of the box, it says
-nested documents for attribute. Dragon treasures are not allowed. Use Iris instead.
-That's a familiar error.
+Let's try it! First, I'll change this to a unique email and username. Then, for
+`dragonTreasures`, clear those IRIs and, instead, pass a JSON object with the
+fields that we know are required. Our new dragon user just scored a copy of
+GoldenEye for N64! *Legendary*. Add a `description`... and a `value`.
 
-<affirmative>
+In theory, this JSON body makes *sense*! But does it work? Hit "Execute" and...
+nope! Well, not yet. But we know this error!
 
-Inside user. If we scroll way up, the dragon treasures field is writeable because it
-has user colon, right? But we can't send in an embedded object because we haven't
-added user colon right to any of the fields inside of Dragon Treasure. So let's do
-that. We wanna be able to send name. So let user colon right there. Uh, description,
-actually not description. Wait on that one for a second. Value. And then search for
-set Text description. This is our actual description. Field slide, user colon right
-there. Now in theory we should be able to send an embedded object. Let's give it a
-drive. This time we upgraded to a 500 air. Also a familiar error. A new entity was
-found through the relationship user. Dragon treasures. So this is good. It means that
-we learned earlier when you send it an embedded object,
+> Nested documents for attribute `dragonTreasures` are not allowed. Use IRIs instead.
 
-If you include an ad id, it's going to fetch that object first and then update it.
-But if you don't have an ad id, it's going to create a brand new object. So it is
-creating a brand new object, but nobody ever told the entity manager to persist this
-new object, which is why we have the error down here. If you wanna solve this, we
-need to allow ca, we need to add ca, we need to cascade persist this. So what that
-means is in user, on the drag, on the one to many for Dragon treasures, we need to
-add a cascade option set to an array with persist on it. So this means if we're
-saving this user object automatically persist any dragon treasures inside of here and
-now it works. That's awesome. Now apparently our new ID is slash is 43. That's
-actually, I'll open up a new, a new browser. Go to that U URL dot json. Actually
-let's do do Jason LD and beautiful. And you can see the owner is set to our new owner
-that was just created over here. But wait a second. We didn't send, send the owner
-field inside of our dragon treasure. And it makes sense that we didn't send it. We
-don't even have the ID yet and we shouldn't need to send it. But who did set that?
-Well remember
+## Making dragonTreasures Accept JSON Objects
 
-Because this is a behind the scenes, the serializers first going to create a new user
-object. It's then gonna create a new dragon treasure object. It's gonna see that this
-dragon treasure doesn't exist on that user yet. And so it's gonna call add dragon
-treasure and we call add dragon treasure. With that new dragon treasure. This code
-down here sets the owner. So again, just our code being written well is taking care
-of all those details for us. Awesome. So let me change the, make the email unique one
-more time.
+Inside `User`, if we scroll *way* up, the `$dragonTreasures` property *is* writable
+because it has `user:write`. But we can't send an *object* for this property because
+we haven't added `user:write` to any of the fields *inside* of `DragonTreasure`.
+Let's fix that.
 
-But then I'm going to send an empty name and actually I'm gonna save myself to
-trouble. I'm not even gonna send this. If I sent this, that would work. It would
-create a dragon treasure with an empty name. Even though over here, if we scroll up
-to the name property, the name is required. Why? It's the same thing we saw on the
-other side of the relationship. When we validate when this isn't validates the user
-object, it's gonna stop at this dragon treasures. It's not gonna validate those. If
-you wanna validate them, we need that same valid on there. So now that I have this to
-prove it's working, I'll hit execute and awesome 4 22 status code. Failing that, that
-it is empty and I guess I could probably change this validation error to awesome. I'm
-gonna go put that back. So pretty simply, you can send an I r I strings or you can
-send embedded objects now to create objects. You can even mix them. So let's say that
-we wanna create this new dragon treasure object, but we also are going to steal. I
-think that's an id. Another treasure from someone else
+We want to be able to send `$name`, so add `user:write`... I'll skip `$description`
+but do the same for `$value`. Now search for `setTextDescription()` which is
+the *actual* description. Add `user:write` here too.
 
-That's totally allowed. Watch. We hit execute 2 0 1 status code. We have ID 44,
-that's the new one. And we have ID seven, the one we just stole from another dragon.
-Pretty sweet. Okay, we have just one more chapter about handling relationships. Let's
-see how we can remove a treasure from a user to delete that treasure.
+Okay, *in theory*, we should *now* be able to send an embedded object. If we head
+over and try it again... we upgraded to a 500 error!
 
+> A new entity was found through the relationship `User#dragonTreasures`
+
+## Cascading an Entity Relation Persist
+
+This is great! We already know that when you send an embedded object, if you include
+`@id`, the serializer will fetch that object first and *then* update it.
+But if you *don't* have an `@id`, it will create a brand *new* object. Right now,
+it *is* creating a new object,... but nothing told the entity manager to
+*persist* it. *That's* why we're getting this error.
+
+To solve this, we need to *cascade* persist this property. In `User`, on the
+`OneToMany` for `$dragonTreasures`, add a `cascade` option set to `['persist']`.
+
+This means that if we're saving a `User` object, it should magically persist
+any `$dragonTreasures` inside. And if we try it now... it works! That's awesome!
+And apparently, our new treasure `id` is `43`.
+
+Let's open up a new browser tab and navigate to that URL... plus `.json`... actually,
+let's do `.jsonld`. Beautiful! We see that the `owner` is set to the new user that
+we just created.
+
+## How was owner Set? Again: The Smart Methods
+
+But... hold your horses! We didn't *send* the `owner` field in the treasure
+data... so how did that field get set? Well, first, it *does* make sense that we didn't
+send an `owner` field for the new `DragonTreasure`... since the user that will
+own it didn't even exist yet! Ok, then, but who *did* set the `owner`?
+
+Behind the scenes, the serializer creates a new `User` object *first*. *Then*,
+it creates a new `DragonTreasure` object. Finally, it sees that the new `DragonTreasure`
+is *not* assigned to the `User` yet, and it calls `addDragonTreasure()`. When it
+does that, the code down here sets the `owner`: just like we saw before. So our
+well-written code is taking care of all of those details *for* us.
+
+## Adding the Valid Constraint
+
+Anyways, you might remember from before that as soon as we allow a relation field
+to send embedded data... we need to add *one* tiny thing. I won't do it, but if
+we sent an empty `name` field, it *would* create a `DragonTreasure`... with an empty
+`name`, even though, over here, if we scroll up to the `name` property, it's required!
+Remember: when the system validates the `User` object, it will stop at
+`$dragonTreasures`. It won't *also* validate those objects. If you *do* want to
+validate them, add `#[Assert\Valid]`.
+
+Now that I have this, to prove that it's working, hit "Execute" and... awesome!
+We get a 422 status code telling us that `name` shouldn't be empty. I'll
+go put that back.
+
+## Sending Embedded Objects and IRI Strings at the Same Time
+
+We now know that we can send IRI strings *or* embedded objects for a relation
+property - assuming we've setup the serialization groups to allow that. *And*, we
+can even *mix* them.
+
+Let's say that we want to create a new `DragonTreasure` object, but we're also going
+to steal, *borrow*, a treasure from another dragon. This is *totally* allowed.
+Watch! When we hit "Execute"... we get a 201 status code. This returns treasure
+ids `44` (that's the new one) *and* `7`, which is the one we just stole.
+
+Okay, we only have one more chapter about handling relationships. Let's see how we
+can *remove* a treasure from a user to *delete* that treasure. That's *next*.

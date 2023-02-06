@@ -60,17 +60,27 @@ for `isPublished` in here... yep! *There's* the model describing `isPublished` a
 `type` `boolean`. The best part is that API Platform is generating this by... just
 looking at our code!
 
-For example, it sees that `coolFactor` has an integer type, so it *advertises* it
-as an integer in OpenAPI. But it gets even *better*. Check out the `id`. It's set
-as `readOnly`. How does it know that? Well, `id` is a *private* property and there's
-*no* `setId()` method. And so, it correctly inferred that `id` must be `readOnly`.
+For example, it sees that `coolFactor` has an integer type:
+
+[[[ code('b6ad349c37') ]]]
+
+so it *advertises* it as an integer in OpenAPI. But it gets even *better*. 
+Check out the `id`. It's set as `readOnly`. How does it know that? Well, `id` is a 
+*private* property and there's *no* `setId()` method:
+
+[[[ code('4b1daaab89') ]]]
+
+And so, it correctly inferred that `id` must be `readOnly`.
 
 We can also help API Platform. Find the `$value` property... there it is... and add
 a little documentation above this so people know that `This is the estimated value
-of this treasure, in gold coins.` Head over, refresh... and check out the
-model down here. For `value`... it shows up! The point is: if you do a good job writing
-your PHP code and documenting it, you're going to get rich API documentation thanks
-to OpenAPI, with zero extra work.
+of this treasure, in gold coins.` 
+
+[[[ code('1b433f924f') ]]]
+
+Head over, refresh... and check out the model down here. For `value`... it shows up! 
+The point is: if you do a good job writing your PHP code and documenting it, you're 
+going to get rich API documentation thanks to OpenAPI, with zero extra work.
 
 Next: Let's talk about these weird `@` fields, like `@id`, `@type`, and `@context`.
 These come from something called JSON-LD: a powerful addition to JSON that API Platform

@@ -1,0 +1,378 @@
+WEBVTT
+
+00:00:03.026 --> 00:00:09.186 align:middle
+Hola y bienvenidos, hermosas personas,
+a un tutorial que me es muy querido:
+
+00:00:09.696 --> 00:00:13.426 align:middle
+cómo construir magníficos
+castillos con Legos.
+
+00:00:13.786 --> 00:00:15.846 align:middle
+Sería increíble, ¿verdad?
+
+00:00:16.416 --> 00:00:19.976 align:middle
+Pero en realidad, estamos aquí para
+hablar de la versión 3 de la API Platform,
+
+00:00:20.416 --> 00:00:24.096 align:middle
+que prometo que es tan
+divertida como jugar con Legos.
+
+00:00:24.336 --> 00:00:26.016 align:middle
+Pero no le digas a mi
+hijo que he dicho eso. API
+
+00:00:26.836 --> 00:00:31.946 align:middle
+Platform es, sencillamente, una
+herramienta sobre Symfony que nos
+
+00:00:31.946 --> 00:00:36.046 align:middle
+permite crear API potentes
+y disfrutar del proceso
+
+00:00:36.756 --> 00:00:40.866 align:middle
+Existe desde hace años y, sinceramente,
+lo está petando. Tienen su
+
+00:00:41.516 --> 00:00:44.356 align:middle
+propia conferencia dedicada y,
+
+00:00:44.476 --> 00:00:48.256 align:middle
+realmente, se han superado a sí
+mismos con la última versión 3.
+
+00:00:48.906 --> 00:00:54.486 align:middle
+Si eres nuevo en API Platform, no te
+culparía si dijeras: Vamos Ryan...
+
+00:00:54.756 --> 00:00:57.566 align:middle
+crear una API no es tan difícil.
+
+00:00:57.876 --> 00:01:02.126 align:middle
+Es sólo devolver JSON: ¡un
+montón de garabatos y corchetes!
+
+00:01:02.786 --> 00:01:07.036 align:middle
+Vale, es cierto (al menos
+para las primeras rutas).
+
+00:01:07.576 --> 00:01:11.256 align:middle
+Pero hay un montón de pequeños
+detalles a los que prestar atención.
+
+00:01:11.996 --> 00:01:17.766 align:middle
+Por ejemplo, si tienes una API que devuelve datos
+de productos, querrás que ese JSON del producto
+
+00:01:17.766 --> 00:01:23.246 align:middle
+se devuelva de la misma forma, con
+los mismos campos, en todas las rutas.
+
+00:01:23.806 --> 00:01:26.286 align:middle
+Ese proceso se llama serialización.
+
+00:01:27.016 --> 00:01:33.216 align:middle
+Además, muchas API devuelven ahora campos
+adicionales que describen el significado de los datos.
+
+00:01:33.866 --> 00:01:39.496 align:middle
+Vamos a ver y hablar de algo llamado
+"JSON-LD", que hace exactamente eso.
+
+00:01:40.316 --> 00:01:40.826 align:middle
+¿Qué más?
+
+00:01:41.146 --> 00:01:42.686 align:middle
+¿Qué hay de la documentación?
+
+00:01:43.076 --> 00:01:48.056 align:middle
+Idealmente documentación interactiva
+que se genere automáticamente...
+
+00:01:48.446 --> 00:01:52.516 align:middle
+porque no queremos construirla
+y mantenerla a mano.
+
+00:01:53.256 --> 00:01:58.786 align:middle
+Incluso si estás construyendo una API sólo
+para ti, tener documentación es genial.
+
+00:01:59.416 --> 00:02:04.816 align:middle
+Paginar colecciones también es superimportante,
+filtrar y buscar colecciones, validación
+
+00:02:04.946 --> 00:02:07.786 align:middle
+y negociación del tipo de contenido, que es
+
+00:02:07.786 --> 00:02:13.666 align:middle
+cuando ese mismo producto podría
+devolverse como JSON, CSV u otro formato.
+
+00:02:14.236 --> 00:02:18.456 align:middle
+Así que sí, crear una ruta API es fácil.
+
+00:02:18.886 --> 00:02:22.916 align:middle
+Pero crear una API rica es
+algo totalmente distinto.
+
+00:02:23.346 --> 00:02:25.756 align:middle
+Y ése es el objetivo de API Platform.
+
+00:02:26.436 --> 00:02:32.486 align:middle
+Ah, y si estás familiarizado con la versión 2 de API
+Platform, la versión 3 te resultará muy familiar.
+
+00:02:32.876 --> 00:02:36.026 align:middle
+Simplemente es más limpia,
+más moderna y más potente.
+
+00:02:36.326 --> 00:02:39.536 align:middle
+Así que saca tus Legos, ¡y hagámoslo!
+
+00:02:40.286 --> 00:02:43.116 align:middle
+Hay dos formas de instalar API Platform.
+
+00:02:43.716 --> 00:02:47.896 align:middle
+Si encuentras su sitio web y haces
+clic en la documentación, verás que
+
+00:02:47.896 --> 00:02:51.016 align:middle
+hablan de la "Distribución"
+de la API Platform.
+
+00:02:51.576 --> 00:02:53.086 align:middle
+¡Esto está muy bien! Es
+
+00:02:53.646 --> 00:02:59.136 align:middle
+un proyecto completamente prefabricado con Docker
+que te ofrece un lugar para construir tu API
+
+00:02:59.136 --> 00:03:05.596 align:middle
+con Symfony, un área de administración React,
+andamiaje para crear un frontend Next.js y mucho más.
+
+00:03:06.206 --> 00:03:11.226 align:middle
+Incluso te proporciona un servidor web listo
+para producción con herramientas adicionales
+
+00:03:11.226 --> 00:03:13.616 align:middle
+como Mercure para
+actualizaciones en tiempo real.
+
+00:03:14.116 --> 00:03:17.406 align:middle
+Es la forma más potente
+de utilizar API Platform.
+
+00:03:18.046 --> 00:03:21.916 align:middle
+Pero... en este tutorial,
+no vamos a utilizarla.
+
+00:03:22.316 --> 00:03:23.736 align:middle
+¡Odio las cosas bonitas!
+
+00:03:24.166 --> 00:03:30.566 align:middle
+No, empezaremos nuestro proyecto Lego desde cero: con
+una aplicación Symfony perfectamente normal y aburrida.
+
+00:03:31.306 --> 00:03:36.456 align:middle
+¿Por qué? Porque quiero que veas
+exactamente cómo funciona todo bajo el capó.
+
+00:03:36.876 --> 00:03:41.716 align:middle
+Así, si más adelante quieres utilizar
+esta Distribución, podrás hacerlo.
+
+00:03:42.616 --> 00:03:49.586 align:middle
+De acuerdo, para ser un verdadero "Campeón del Retorno
+JSON de la API Platform", ¡deberías codificar conmigo!
+
+00:03:50.286 --> 00:03:52.286 align:middle
+Descarga el código fuente de esta página.
+
+00:03:52.946 --> 00:03:57.736 align:middle
+Y después de descomprimirlo, encontrarás un
+directorio start/ con el mismo código que ves aquí.
+
+00:03:58.406 --> 00:04:01.946 align:middle
+Se trata de un nuevo
+proyecto Symfony 6.2 con...
+
+00:04:02.396 --> 00:04:04.606 align:middle
+absolutamente nada.
+
+00:04:05.276 --> 00:04:09.396 align:middle
+Abre este archivo README.md para ver
+todas las instrucciones de configuración.
+
+00:04:10.126 --> 00:04:16.046 align:middle
+El último paso será abrir el proyecto en un terminal
+y utilizar el binario de Symfony para ejecutarlo:
+
+00:04:16.306 --> 00:04:23.526 align:middle
+symfony serve -d Esto inicia un
+servidor web local en 127.0.0.1:8000.
+
+00:04:24.196 --> 00:04:26.426 align:middle
+Haré trampas y haré clic
+en ese enlace para abrir...
+
+00:04:26.896 --> 00:04:30.716 align:middle
+un proyecto Symfony 6.2 completamente vacío.
+
+00:04:31.146 --> 00:04:34.676 align:middle
+Aquí no hay literalmente nada,
+excepto esta página de demostración.
+
+00:04:35.246 --> 00:04:37.196 align:middle
+¿Qué vamos a construir?
+
+00:04:37.816 --> 00:04:42.886 align:middle
+Como todos sabemos, en Internet
+falta algo terriblemente importante:
+
+00:04:43.446 --> 00:04:47.896 align:middle
+¡una aplicación para que los dragones
+presuman de sus tesoros robados!
+
+00:04:48.346 --> 00:04:54.126 align:middle
+Porque si hay algo que le guste más a un
+dragón que un tesoro, es presumir de él.
+
+00:04:54.126 --> 00:05:00.166 align:middle
+Sí, crearemos una rica API que permita a los dragones
+expertos en tecnología publicar nuevos tesoros,
+
+00:05:00.446 --> 00:05:05.296 align:middle
+buscar tesoros, buscar tesoros
+de otros dragones, etc. Y sí,
+
+00:05:05.536 --> 00:05:07.866 align:middle
+acabo de terminar de leer El Hobbit.
+
+00:05:08.546 --> 00:05:11.686 align:middle
+Así que, ¡vamos a instalar API Platform!
+
+00:05:12.176 --> 00:05:14.086 align:middle
+Vuelve a tu terminal y ejecuta:
+
+00:05:14.256 --> 00:05:19.376 align:middle
+composer require api Este
+es un alias de Symfony Flex.
+
+00:05:19.866 --> 00:05:26.446 align:middle
+Aquí arriba, puedes ver que en realidad está
+instalando algo llamado api-platform/api-pack.
+
+00:05:27.066 --> 00:05:32.286 align:middle
+Si no estás familiarizado, un "paquete"
+en Symfony es una especie de paquete falso,
+
+00:05:32.616 --> 00:05:36.346 align:middle
+que te permite instalar fácilmente
+un conjunto de paquetes.
+
+00:05:36.976 --> 00:05:41.986 align:middle
+Si te desplazas hacia abajo, instaló
+el propio api-platform, Doctrine,
+
+00:05:42.146 --> 00:05:45.706 align:middle
+puesto que aún no lo tenía,
+y algunos otros paquetes.
+
+00:05:46.316 --> 00:05:47.086 align:middle
+En la parte inferior...
+
+00:05:47.666 --> 00:05:48.426 align:middle
+veamos...
+
+00:05:48.716 --> 00:05:54.886 align:middle
+la receta doctrine-bundle nos pregunta si
+queremos incluir un archivo docker-compose.yml
+
+00:05:55.186 --> 00:05:57.576 align:middle
+para ayudarnos a añadir una
+base de datos a nuestro proyecto.
+
+00:05:58.036 --> 00:05:58.786 align:middle
+¡Qué bien!
+
+00:05:59.306 --> 00:06:03.586 align:middle
+Esto es opcional, pero voy a decir
+"p" por "Sí permanentemente".
+
+00:06:04.406 --> 00:06:05.656 align:middle
+Y... ¡listo!
+
+00:06:06.486 --> 00:06:09.656 align:middle
+Lo primero que hay que ver está
+en el archivo composer.json:
+
+00:06:10.226 --> 00:06:15.866 align:middle
+Como prometí, ese paquete API Platform añadió
+un montón de paquetes a nuestro proyecto.
+
+00:06:16.656 --> 00:06:19.136 align:middle
+Técnicamente, no todos son necesarios,
+
+00:06:19.486 --> 00:06:23.566 align:middle
+pero esto nos va a dar una experiencia
+realmente rica construyendo nuestra API.
+
+00:06:23.566 --> 00:06:25.976 align:middle
+Y si ejecutas git status...
+
+00:06:27.246 --> 00:06:29.656 align:middle
+¡sí! Ha actualizado los
+archivos habituales...
+
+00:06:30.076 --> 00:06:34.276 align:middle
+y también ha añadido un montón de archivos
+de configuración para los nuevos paquetes.
+
+00:06:34.926 --> 00:06:36.736 align:middle
+Parece que hay muchos...
+
+00:06:37.136 --> 00:06:38.856 align:middle
+pero las apariencias engañan.
+
+00:06:39.456 --> 00:06:41.336 align:middle
+Todos estos directorios están vacíos...
+
+00:06:41.906 --> 00:06:44.716 align:middle
+y los archivos de configuración
+son pequeños y sencillos.
+
+00:06:45.446 --> 00:06:50.636 align:middle
+También tenemos algunos archivos docker-compose que
+utilizaremos en un minuto para poner en marcha una base de datos.
+
+00:06:51.386 --> 00:06:55.626 align:middle
+Así que... ahora que la API
+Platform está instalada...
+
+00:06:55.946 --> 00:06:58.226 align:middle
+¿ya nos ha aportado algo?
+
+00:06:58.936 --> 00:07:00.796 align:middle
+¡Pues sí! ¡Y es genial!
+
+00:07:01.516 --> 00:07:04.396 align:middle
+Vuelve al navegador y dirígete a /api.
+
+00:07:05.376 --> 00:07:08.886 align:middle
+¡Guau! ¡Tenemos una página de
+documentación de la API! Está
+
+00:07:09.606 --> 00:07:14.816 align:middle
+vacía porque todavía no tenemos una API,
+
+00:07:15.236 --> 00:07:18.046 align:middle
+pero pronto cobrará vida.
+
+00:07:18.976 --> 00:07:26.036 align:middle
+A continuación: Vamos a crear nuestra primera
+entidad Doctrine y a "exponerla" como Recurso API.
+
+00:07:26.516 --> 00:07:28.276 align:middle
+Es hora de hacer algo de magia.
