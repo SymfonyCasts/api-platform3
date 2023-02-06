@@ -1,0 +1,308 @@
+WEBVTT
+
+00:00:01.016 --> 00:00:04.726 align:middle
+Estamos a punto de construir una
+API para la importantísima tarea
+
+00:00:04.846 --> 00:00:07.876 align:middle
+de permitir que los
+dragones muestren su tesoro.
+
+00:00:08.316 --> 00:00:12.656 align:middle
+Ahora mismo, nuestro proyecto no tiene
+ni una sola entidad de base de datos...
+
+00:00:13.166 --> 00:00:16.226 align:middle
+pero vamos a necesitar una
+para almacenar todo ese tesoro.
+
+00:00:16.876 --> 00:00:23.256 align:middle
+Busca tu terminal y ejecuta primero composer
+require maker --dev para instalar Maker Bundle.
+
+00:00:24.216 --> 00:00:29.456 align:middle
+Después, ejecuta: php bin/console
+make:entity ¡Perfecto!
+
+00:00:30.066 --> 00:00:32.326 align:middle
+Llamemos a nuestra entidad DragonTreasure.
+
+00:00:33.116 --> 00:00:37.326 align:middle
+Entonces nos hace una pregunta
+que quizá no hayas visto antes:
+
+00:00:37.816 --> 00:00:41.046 align:middle
+Mark this class as an API platform resource ?
+
+00:00:41.676 --> 00:00:44.586 align:middle
+Pregunta porque la Plataforma
+API está instalada.
+
+00:00:45.056 --> 00:00:49.166 align:middle
+Di no porque vamos a hacer este paso
+manualmente dentro de un momento.
+
+00:00:50.116 --> 00:00:52.136 align:middle
+Bien, empecemos a añadir propiedades.
+
+00:00:52.506 --> 00:00:58.496 align:middle
+Empieza con name como cadena, con una Longitud
+por defecto de 255, y haz que no sea anulable.
+
+00:00:59.046 --> 00:01:04.326 align:middle
+Después, añade description con un
+tipo text, y haz que no sea anulable.
+
+00:01:05.046 --> 00:01:07.086 align:middle
+También necesitamos un value, como...
+
+00:01:07.216 --> 00:01:09.496 align:middle
+cuánto vale el tesoro.
+
+00:01:09.986 --> 00:01:12.316 align:middle
+Eso será un integer no anulable.
+
+00:01:13.046 --> 00:01:15.856 align:middle
+Y simplemente debemos tener un coolFactor:
+
+00:01:16.516 --> 00:01:20.736 align:middle
+los dragones necesitan especificar
+lo impresionante que es este tesoro.
+
+00:01:21.276 --> 00:01:25.726 align:middle
+Eso será un número del 1 al 10, así
+que que sea un integer no anulable.
+
+00:01:26.276 --> 00:01:30.916 align:middle
+Luego, createdAt datetime_immutable
+que no sea anulable...
+
+00:01:31.456 --> 00:01:38.386 align:middle
+y por último, añade una propiedad isPublished,
+que será de tipo boolean, también no anulable.
+
+00:01:38.976 --> 00:01:40.306 align:middle
+Pulsa "intro" para terminar.
+
+00:01:40.936 --> 00:01:44.486 align:middle
+¡Uf! Hasta ahora no hay nada muy especial.
+
+00:01:45.116 --> 00:01:49.826 align:middle
+Esto ha creado dos clases:
+DragonTreasureRepository ( de la que no nos vamos a
+
+00:01:49.826 --> 00:01:56.506 align:middle
+preocupar), y la propia entidad DragonTreasure
+con $id, $name, $description, $value,
+
+00:01:56.506 --> 00:01:59.236 align:middle
+etc junto con los métodos getter y setter.
+
+00:01:59.616 --> 00:02:00.926 align:middle
+Maravillosamente aburrido.
+
+00:02:01.706 --> 00:02:04.846 align:middle
+Sin embargo, hay un pequeño error
+en esta versión de MakerBundle.
+
+00:02:05.326 --> 00:02:08.256 align:middle
+Ha generado un método isIsPublished().
+
+00:02:08.956 --> 00:02:11.106 align:middle
+Cambiémoslo por getIsPublished().
+
+00:02:12.046 --> 00:02:14.096 align:middle
+Muy bien, ya tenemos nuestra entidad.
+
+00:02:14.616 --> 00:02:16.856 align:middle
+Ahora necesitamos una
+migración para su tabla...
+
+00:02:17.356 --> 00:02:21.856 align:middle
+pero eso puede ser un poco difícil, ¡ya que
+aún no tenemos configurada nuestra base de datos!
+
+00:02:22.486 --> 00:02:24.466 align:middle
+Voy a utilizar Docker para esto.
+
+00:02:25.006 --> 00:02:28.696 align:middle
+La receta DoctrineBundle nos dio un
+bonito archivo docker-compose.yml
+
+00:02:28.696 --> 00:02:31.356 align:middle
+que arranca Postgres, así que...
+
+00:02:31.546 --> 00:02:32.416 align:middle
+¡utilicémoslo!
+
+00:02:32.946 --> 00:02:38.216 align:middle
+Ve a tu terminal y ejecuta:
+docker-compose up -d Si no quieres
+
+00:02:38.216 --> 00:02:42.586 align:middle
+utilizar Docker, siéntete libre de arrancar
+tu propio motor de base de datos y luego,
+
+00:02:42.876 --> 00:02:47.966 align:middle
+en .env o .env.local, configura DATABASE_URL.
+
+00:02:48.706 --> 00:02:54.346 align:middle
+Como estoy utilizando Docker además del
+binario symfony, no necesito configurar nada.
+
+00:02:54.766 --> 00:02:58.536 align:middle
+El servidor web Symfony verá
+automáticamente la base de datos de Docker
+
+00:02:58.676 --> 00:03:02.196 align:middle
+y configurará la variable de
+entorno DATABASE_URL por mí.
+
+00:03:03.106 --> 00:03:05.406 align:middle
+Bien, para hacer la migración, ejecuta:
+
+00:03:05.406 --> 00:03:09.856 align:middle
+symfony console make:migration Este
+symfony console es igual que ./bin/console
+
+00:03:09.856 --> 00:03:16.116 align:middle
+excepto que inyecta la variable
+de entorno DATABASE_URL para que
+
+00:03:16.426 --> 00:03:18.896 align:middle
+el comando pueda hablar con la
+base de datos Docker. ¡Perfecto!
+
+00:03:19.306 --> 00:03:23.036 align:middle
+Gira y comprueba el nuevo
+archivo de migración... sólo
+
+00:03:23.206 --> 00:03:26.226 align:middle
+para asegurarte de que no contiene
+ninguna sorpresa extraña. ¡Tiene
+
+00:03:27.156 --> 00:03:28.146 align:middle
+buena pinta! Así que
+
+00:03:28.576 --> 00:03:36.886 align:middle
+vuelve a girar y ejecuta esto con: symfony
+console doctrine:migrations:migrate ¡Listo!
+
+00:03:37.156 --> 00:03:39.566 align:middle
+Ahora tenemos una entidad y una
+tabla de base de datos. Pero
+
+00:03:39.836 --> 00:03:42.116 align:middle
+si vas y actualizas la documentación...
+
+00:03:42.266 --> 00:03:43.836 align:middle
+todavía no hay nada. Lo que
+
+00:03:44.506 --> 00:03:47.476 align:middle
+tenemos que hacer es decirle
+a la API Platform que
+
+00:03:47.476 --> 00:03:52.606 align:middle
+exponga nuestra entidad DragonTreasure
+como un recurso API. Para ello
+
+00:03:53.306 --> 00:03:58.496 align:middle
+, ve encima de la clase y añade un
+nuevo atributo llamado ApiResource. Pulsa
+
+00:03:59.296 --> 00:04:01.376 align:middle
+"tab" para añadir la
+declaración use. ¡Listo! En
+
+00:04:02.016 --> 00:04:04.466 align:middle
+cuanto hagamos eso... y
+
+00:04:04.656 --> 00:04:05.926 align:middle
+actualicemos... ¡guau!
+
+00:04:06.386 --> 00:04:09.526 align:middle
+¡La documentación está viva!
+
+00:04:09.776 --> 00:04:14.616 align:middle
+Ahora muestra que tenemos seis rutas
+diferentes: Uno para recuperar todos los
+
+00:04:14.616 --> 00:04:18.946 align:middle
+recursos DragonTreasure, uno para
+recuperar un DragonTreasure individual, uno
+
+00:04:19.236 --> 00:04:25.806 align:middle
+para crear un DragonTreasure, dos que editan
+un DragonTreasure y uno para eliminarlo. Y
+
+00:04:25.806 --> 00:04:28.406 align:middle
+esto es algo más que
+documentación. Estas rutas
+
+00:04:28.566 --> 00:04:30.656 align:middle
+funcionan. Ve
+
+00:04:31.056 --> 00:04:33.956 align:middle
+y haz clic en "Probar", y luego en "Ejecutar".
+
+00:04:34.646 --> 00:04:38.646 align:middle
+En realidad no devuelve nada porque
+nuestra base de datos está vacía, pero
+
+00:04:38.806 --> 00:04:43.536 align:middle
+nos da un código de estado
+200 con algo de JSON vacío. En
+
+00:04:44.046 --> 00:04:48.266 align:middle
+breve hablaremos de todas las demás
+claves extravagantes de la respuesta.
+
+00:04:48.806 --> 00:04:51.316 align:middle
+Pero quiero mencionar una cosa. Como
+
+00:04:51.916 --> 00:04:56.676 align:middle
+acabamos de ver, la forma más sencilla
+de crear un conjunto de rutas API es
+
+00:04:56.676 --> 00:05:01.276 align:middle
+añadir este atributo ApiResource
+sobre tu clase de entidad. Pero
+
+00:05:01.896 --> 00:05:07.336 align:middle
+en realidad puedes añadir este atributo
+sobre cualquier clase: no sólo entidades. Es
+
+00:05:07.836 --> 00:05:12.376 align:middle
+algo de lo que hablaremos en un futuro
+tutorial: puede ser una buena forma de
+
+00:05:12.376 --> 00:05:17.346 align:middle
+separar el aspecto de tu API
+del de tu entidad, especialmente
+
+00:05:17.626 --> 00:05:19.786 align:middle
+en las API más grandes. Pero
+
+00:05:20.236 --> 00:05:22.516 align:middle
+, de nuevo, eso es para más adelante.
+
+00:05:23.116 --> 00:05:28.306 align:middle
+Ahora mismo, utilizar ApiResource sobre
+nuestra entidad va a funcionar de maravilla.
+
+00:05:29.166 --> 00:05:32.646 align:middle
+Descubramos un poco más esta
+genial documentación interactiva.
+
+00:05:33.116 --> 00:05:34.586 align:middle
+¿De dónde ha salido esto? ¿Cómo
+
+00:05:34.706 --> 00:05:37.986 align:middle
+es que nuestra aplicación tiene por arte
+de magia un montón de rutas nuevas? ¿Y de
+
+00:05:38.416 --> 00:05:40.946 align:middle
+verdad les gustan los tacos a los dragones? ¡
+
+00:05:41.526 --> 00:05:42.896 align:middle
+Averigüémoslo a continuación!
