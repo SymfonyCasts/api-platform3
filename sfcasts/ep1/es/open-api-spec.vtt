@@ -1,0 +1,260 @@
+WEBVTT
+
+00:00:01.106 --> 00:00:06.736 align:middle
+Antes he dicho que estos documentos interactivos proceden
+de una biblioteca de código abierto llamada Swagger UI.
+
+00:00:07.306 --> 00:00:14.366 align:middle
+Y siempre que tengas alguna configuración
+que describa tu API, como qué rutas tiene
+
+00:00:14.366 --> 00:00:16.566 align:middle
+y qué campos se utilizan en cada ruta,
+
+00:00:16.666 --> 00:00:20.346 align:middle
+puedes generar automáticamente estos
+documentos Swagger enriquecidos.
+
+00:00:21.396 --> 00:00:24.306 align:middle
+Dirígete a https://petstore3.swagger.io.
+
+00:00:24.876 --> 00:00:31.106 align:middle
+Esto está muy bien: es un proyecto de demostración en el que se
+utiliza la interfaz de usuario Swagger en una API de demostración.
+
+00:00:31.556 --> 00:00:36.696 align:middle
+Además, ¡tiene un enlace al archivo de
+configuración de la API que lo hace posible!
+
+00:00:37.416 --> 00:00:39.336 align:middle
+Vamos... ¡a ver qué aspecto tiene!
+
+00:00:41.806 --> 00:00:48.156 align:middle
+¡Woh! Sí, este archivo JSON describe
+completamente la API, desde la información básica
+
+00:00:48.156 --> 00:00:54.836 align:middle
+sobre la propia API, hasta las diferentes
+URL, como actualizar una mascota existente,
+
+00:00:54.836 --> 00:00:57.596 align:middle
+añadir una nueva mascota a
+la tienda, las respuestas...
+
+00:00:57.906 --> 00:00:58.576 align:middle
+todo.
+
+00:00:59.606 --> 00:01:03.946 align:middle
+Si tienes uno de estos archivos,
+puedes obtener Swagger al instante.
+
+00:01:04.686 --> 00:01:09.646 align:middle
+El formato de este archivo se llama
+OpenAPI, que no es más que un estándar
+
+00:01:09.726 --> 00:01:12.656 align:middle
+sobre cómo deben describirse las API.
+
+00:01:13.686 --> 00:01:19.466 align:middle
+Volviendo a nuestros documentos, debemos tener el
+mismo tipo de archivo de configuración, ¿verdad?
+
+00:01:20.006 --> 00:01:26.916 align:middle
+¡Lo tenemos! Visita /api/docs.json
+para ver nuestra versión.
+
+00:01:27.576 --> 00:01:29.806 align:middle
+Sí, se parece mucho.
+
+00:01:30.236 --> 00:01:33.406 align:middle
+Tiene rutas, describe las
+distintas operaciones...
+
+00:01:33.676 --> 00:01:34.346 align:middle
+todo.
+
+00:01:35.246 --> 00:01:42.156 align:middle
+Lo mejor es que API Platform lee nuestro
+código y nos genera este archivo gigante.
+
+00:01:42.616 --> 00:01:46.496 align:middle
+Entonces, como tenemos este archivo
+gigante, obtenemos Swagger UI. De
+
+00:01:47.586 --> 00:01:52.516 align:middle
+hecho, si haces clic en "Ver fuente de la
+página", puedes ver que esta página funciona
+
+00:01:52.686 --> 00:01:56.966 align:middle
+incrustando el documento JSON
+real directamente en el HTML.
+
+00:01:57.636 --> 00:02:01.466 align:middle
+Luego, hay algo de JavaScript Swagger
+que lee eso y arranca las cosas.
+
+00:02:02.776 --> 00:02:08.606 align:middle
+Esta idea de tener una especificación
+OpenAPI que describa tu API es poderosa...
+
+00:02:08.866 --> 00:02:12.596 align:middle
+porque cada vez hay más
+herramientas que pueden utilizarla.
+
+00:02:13.256 --> 00:02:18.586 align:middle
+Por ejemplo, vuelve a la documentación de API
+Platform y haz clic en "Generador de esquemas".
+
+00:02:19.716 --> 00:02:25.406 align:middle
+Esto es bastante salvaje: puedes utilizar un
+servicio llamado "Stoplight" para diseñar tu API.
+
+00:02:26.046 --> 00:02:29.546 align:middle
+Eso te dará un documento de
+especificación OpenAPI...
+
+00:02:29.546 --> 00:02:34.536 align:middle
+y luego puedes utilizar el Generador de Esquemas
+para generar tus clases PHP a partir de él.
+
+00:02:35.076 --> 00:02:37.666 align:middle
+No vamos a utilizarlo, pero es una idea genial.
+
+00:02:38.296 --> 00:02:42.956 align:middle
+También hay un generador de admin integrado
+en React -jugaremos con él más adelante-
+
+00:02:43.286 --> 00:02:47.166 align:middle
+e incluso formas de ayudar a generar
+JavaScript que hable con tu API.
+
+00:02:47.396 --> 00:02:53.116 align:middle
+Por ejemplo, puedes generar un
+frontend Next.js haciendo que lea
+
+00:02:53.116 --> 00:02:59.216 align:middle
+de tu especificación OpenAPI. La cuestión
+es que la interfaz Swagger es impresionante.
+
+00:02:59.556 --> 00:03:04.866 align:middle
+Pero aún más impresionante es el documento
+de especificaciones OpenAPI que hay detrás...
+
+00:03:05.066 --> 00:03:07.896 align:middle
+que puede utilizarse para otras cosas.
+
+00:03:08.096 --> 00:03:12.516 align:middle
+Además de las rutas en Swagger,
+también tiene algo llamado "Esquemas".
+
+00:03:12.916 --> 00:03:14.846 align:middle
+Éstos son tus modelos...
+
+00:03:14.926 --> 00:03:19.196 align:middle
+y hay dos: uno para JSON-LD y otro normal.
+
+00:03:19.196 --> 00:03:24.626 align:middle
+Hablaremos de JSON-LD en un minuto,
+pero son básicamente lo mismo.
+
+00:03:24.746 --> 00:03:28.776 align:middle
+Si abres uno, vaya, esto es inteligente.
+
+00:03:29.476 --> 00:03:33.166 align:middle
+Sabe que nuestro id es un
+entero, name es una cadena,
+
+00:03:33.406 --> 00:03:37.276 align:middle
+coolFactor es un entero y
+isPublished es un booleano.
+
+00:03:38.326 --> 00:03:43.116 align:middle
+Toda esta información procede, una vez
+más, de este documento de especificaciones.
+
+00:03:44.546 --> 00:03:46.916 align:middle
+Si buscamos isPublished aquí...
+
+00:03:47.366 --> 00:03:52.166 align:middle
+¡sí! Ahí está el modelo que
+describe isPublished como type boolean .
+
+00:03:53.106 --> 00:03:56.936 align:middle
+Lo mejor es que API Platform genera esto...
+
+00:03:57.276 --> 00:03:59.176 align:middle
+¡simplemente mirando nuestro código!
+
+00:03:59.266 --> 00:04:03.686 align:middle
+Por ejemplo, ve que coolFactor
+tiene un tipo entero:
+
+00:04:03.946 --> 00:04:07.626 align:middle
+así que lo anuncia como un entero en OpenAPI.
+
+00:04:08.676 --> 00:04:10.916 align:middle
+Pero la cosa se pone aún mejor.
+
+00:04:11.326 --> 00:04:12.786 align:middle
+Echa un vistazo a id.
+
+00:04:13.316 --> 00:04:15.736 align:middle
+Está configurado como readOnly.
+
+00:04:16.306 --> 00:04:17.386 align:middle
+¿Cómo lo sabe?
+
+00:04:18.196 --> 00:04:24.356 align:middle
+Bueno, id es una propiedad privada
+y no existe el método setId():
+
+00:04:24.816 --> 00:04:30.106 align:middle
+Por tanto, deduce correctamente
+que id debe ser readOnly.
+
+00:04:31.186 --> 00:04:32.996 align:middle
+También podemos ayudar a API Platform.
+
+00:04:33.576 --> 00:04:34.986 align:middle
+Encuentra la propiedad $value...
+
+00:04:35.776 --> 00:04:36.526 align:middle
+ahí está...
+
+00:04:36.766 --> 00:04:40.056 align:middle
+y añade un poco de documentación
+encima para que la gente sepa
+
+00:04:40.056 --> 00:04:44.876 align:middle
+que This is the estimated value
+of this treasure, in gold coins.
+
+00:04:46.706 --> 00:04:48.096 align:middle
+Dirígete, actualiza...
+
+00:04:48.726 --> 00:04:50.696 align:middle
+y comprueba el modelo aquí abajo.
+
+00:04:50.696 --> 00:04:52.296 align:middle
+Para value...
+
+00:04:52.766 --> 00:04:54.136 align:middle
+¡aparece! La
+
+00:04:54.816 --> 00:04:59.766 align:middle
+cuestión es: si haces un buen trabajo escribiendo
+tu código PHP y documentándolo, vas a
+
+00:04:59.766 --> 00:05:06.266 align:middle
+obtener una rica documentación de la API
+gracias a OpenAPI, con cero trabajo extra.
+
+00:05:07.676 --> 00:05:15.166 align:middle
+A continuación: Hablemos de estos extraños
+campos @, como @id, @type, y @context. Provienen
+
+00:05:15.216 --> 00:05:20.066 align:middle
+de algo llamado JSON-LD: una potente adición
+
+00:05:20.066 --> 00:05:23.306 align:middle
+a JSON que API Platform aprovecha.
