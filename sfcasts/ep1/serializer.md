@@ -1,107 +1,161 @@
 # The Serializer
 
-The key behind how AAP platform turns our objects into J S O and also how it
-transforms our JSON back into objects is Symfonys, serializer Symfony Serializer
-is a standalone component that you can use outside of the API platform and it's
-awesome. You give it any input like an object or something else and then it can
-transform it into any format like J S O, XML or CSV to do that. As you can see in
-this fancy diagram, it goes through two steps. First, it takes your thing like your
-object and it normalizes that into an array and then it encodes it into the final
-format. And the same thing happens in reverse. If we're starting with JSON, like
-we're sending J S O to our api, it first decodes it to an array and then de
-normalizes it back into an object.
+The key behind how API platform turns our objects into JSON... and also how it
+transforms JSON back into objects is Symfony's Serializer. `symfony/serializer`
+is a standalone component that you can use outside of API platform and it's
+*awesome*. You give it any input - like an object or something else - and it
+transform that into any format, like `JSON`, `XML` or `CSV`.
 
-Now in order to do this internally, there are many different normalizer objects that
-work in different data. For example, there's a DATETIME normalizer that's really good
-at handling datetime objects. For example, on our entity we have a created at field,
-which is a DATETIME object. And you can see in our API if we, when we try our GET
-endpoint, this is returned as a fancy DATETIME stream. The datetime normalizer is
-what's responsible for doing that. There's also another really important normalizer
-inside of API platform called the Object Normalizer. Its job is to read properties
-off of an object so that tho then those properties can be normalized. To do that
-internally it uses something, another component called the property accessor
-components. And what's cool about the property accessor component is it's smart. So
-for example,
+## The Internals of the Serializer
 
-If we look at our API here, you can see that when we make a get request to our
-collections endpoint, one of the fields returns is name. But if we look at our SD
-name is a private property, so how the heck is it reading our private property? The
-answer is that the property accessor is smart. It first looks to see if the name
-property is public and if it's not, it then looks for a GI name method. So this is
-what's actually called when it's building the jsun from this object. The same thing
-happens when we send Jsun N. The serializer looks at each field in the JSON and if
-that field is settable like VA set name method, then it sets it and actually it even
-a bit cooler than that. The serializer will even look for getter or setter methods
-that don't correspond to any field. You can use this to create extra fields in your
-API that don't even exist on your class. Check this out. Let's pretend that when we
-are creating or editing a treasure, instead of sending a description field, we want
-to be able to send a text description field
+As you can see in this fancy diagram, it goes through two steps. First, it takes
+your data and *normalizes* it into an array. Second, it *encodes* that into the
+final format. It can also do the same thing in reverse. If we're starting with
+JSON, like we're sending JSON to our API, it first *decodes* it to an array and then
+*denormalizes* it back into an object.
 
-That contains line breaks and then we transform those line breaks into HTML break
-text. Lemme show you what I mean below the set description method. Let's, let me
-actually copy this, paste it, let's call it set text description. And it's basically
-going to set the text description, but we're also going to call NL two BR on it. So
-if you're not familiar, that just literally looks at any new lines and trans them,
-forms them into line breaks. So when you refresh the documentation and open the post
-or put end points immediately you can see we have a new field called text
-description. The serializer saw the set text description method and so it now knows
-that this is a settable property. You don't see it on the get end point. It's not
-going to be returned though cause it doesn't have a getter. So it's a new field
-that's only settable but not gettable or readable. All right, so let's actually try
-this. Let me try my collection endpoint real quick so I can remember what IDs I have.
-Perfect. I have treasure with ID one close this up. So let's try the put endpoint
-two, do our first update. And when you do put endpoint, you don't have to send every
-field, you can just send one in the field. So,
+For all of this to happen, internally, there are many different normalizer
+objects that know how to work with different data. For example, there's a
+`DateTimeNormalizer` that's really great at handling `DateTime` objects. Check it
+out: our entity has a `createdAt` field, which is a `DateTime` object. If you look
+at our API, when we try the `GET` endpoint, this is returned as a special date time
+*string*. The `DateTimeNormalizer` is responsible for doing that.
 
-So I'll put well description there, actually include the /ins for that, represent new
-lines and when we try it, perfect 200 status code and check this out. Description
-field that has those HTML line breaks, those BR tAJAX in there. But I was expected no
-text description method is returned. It's just a settable field. All right, so now
-that we have this set text description, maybe that's the O, we want to make that the
-only way that you can set that field. So let's just remove the set description
-method. Now when we refresh and you look at the put endpoint, we still have text
-description, but the description property is gone. The sea analyzer realizes that
-that's no longer settable and so it removes it from our api. It would still be
-returned cuz it's something that we can read but it's no longer writeable. So we just
-worry about writing our class the way we want it. An API platform builds our API
-accordingly. All right, let's see what else? Um, it's a little weird that we can set
-the created that directly. That's usually kind of an internal field. So let's handle
-that. So first up, let's finally created that field. And you know what I meant to
-call this plundered at? I'm actually going to refactor that plundered at, it's going
-to refactor the getter and setter for me. That's cool. And that's actually going to
-change the column in my database. So I'm going to spin over here real quick.
+## Figuring out Which Fields to Serialize
 
-Run Symfony console, make migration, and I'm going to look dangerously and just
-execute that doctor and migrations migrate. What's bravery? Cool. And just by
-renaming that if we refresh over here for exam, cool. Now it's called plunder dat in
-our api. All right, so forget about the a p for a second. Let's just do a little
-cleanup. The purpose of this plunder dat feel is for it to be set automatically
-whenever we create a new dragon treasure. So let's create a construct method inside.
-We'll say this->plundered at = new date time immutable. And now we don't need the =
-nu. And if we search for a set plundered at, we don't really need that field either,
-so I'm going to remove it. This now means that the plundered at property is readable
-but not writeable. So no surprise when we open up our put endpoint or our post
-endpoint plundered at is gone. But if we look at what our model would look like if we
-Reddit plundered at is still there. All right, one more goal, I'm going to add a one
-more fake field called plundered at a go. When we read our resource that returns a
-human readable version of the of the date like two months ago. So to do this, we're
-going to install a library called SBOT /Carbon.
+There's also another really important normalizer called the `ObjectNormalizer`. Its
+job is to read properties off of an object so that *those* properties can be
+normalized. To do that, it uses another component called `property-access`.
+*That* component is smart.
 
-It's a handy library for working with dates and times. Cool. And then finally get
-plundered at method. I'll copy that, duplicate it below, but now it's going to be
-returning a string and we'll call it get plundered at a go. And now we're actually
-going to return carbon instance. This->plundered at->if for humans, super cool
-method. So there is no plundered at a go property, but the serializer should see this
-as a readable getter and expose it as a property. But while we're here, I'm also
-going to add a little documentation above this that describes its its meaning. All
-right, let's try this. So as soon as we refresh and open up, for example, I get
-endpoint, we see it there under the example configuration. Um, by the way, one other
-way to see the fields that you have is down here in these schema. So you can see we
-have PL at, and if we open that up, you can see it's there and you can see it's read
-only true. Same thing down here for the other one. And up here, if we try it, I'll
-try to get end point with ID one. We got it six days ago, how cool is that? All
-right. Next,
+For example, looking at our API, when we make a GET request to the collection
+endpoint, one of the fields it returns is `name`. But if we look at the class,
+`name` is a *private* property. So how the heck is it reading that?
 
-What if we do want to have a certain getter or setter method in our class, like set
-text description, but we do not want that to be part of our api. The answer is
-serialization groups.
+*That's* where the `PropertyAccess` component comes in. It first looks to see if the
+`name` property is public. And if it's not, it then looks for a `getName()` method.
+So *that* is what's actually called when building the JSON.
+
+The same thing happens when we *send* JSON, like to create or update a `DragonTreasure`.
+PropertyAccess looks at each field in the JSON and, if that field is settable, like
+via a `setName()` method, it sets it. And, it's even a bit cooler than that: it
+will even look for getter or setter methods that don't correspond to *any* real
+property! You can use this to create "extra" fields in your API that don't exist
+as properties in your class.
+
+## Adding a Virtual "textDescription" Field
+
+Let's try that! Pretend that, when we're creating or editing a treasure, instead
+of sending a `description` field, we want to be able to send a `textDescription`
+field that contains plaintext... but with line breaks. Then, in our code, we'll
+transform those lines breaks into HTML `<br>` tags.
+
+Let me show you what I mean. Copy the `setDescription()` method. Then, below,
+paste and call this new method `setTextDescription()`. It's basically going to set
+the `description` property... but call `nl2br()` on it first. That function
+literally transforms new lines into `<br>` tags. If you've been around as long as
+I have, you remember when `nl2br` was super cool.
+
+Anyways, with *just* that change, refresh the documentation and open the POST or PUT
+endpoints. Woh! We have a new field called `textDescription`! Yup! The serializer
+*saw* the `setTextDescription()` method and determined that `textDescription` is
+a "settable" virtual property!
+
+However, we *don't* see this on the GET endpoint. And that's perfect! There is
+no `getTextDescription()` method, so there will *not* be a new field here. The
+new field is *writable*, but not readable.
+
+Let's take this endpoint for a spin! First... I need to execute the GET
+collection endpoint so I can see what ids we have in the database. Perfect: I
+have a Treasure with ID 1. Close this up. Let's try the PUT endpoint to do our
+first update. When you use the PUT endpoint, you *don't* need send every field:
+only the fields you want to change.
+
+Pass `textDescription`... and I'll include `\n` to represent some new lines in
+JSON.
+
+When we try it, yes! 200 status code. And check it out: the `description` field
+has those `<br>` tags!
+
+## Removing Fields
+
+Ok, so now that we have `setTextDescription()`... maybe that's the *only* way that
+we want to allow that field to be set. To enforce that, eradicate the `setDescription()`
+method.
+
+Now when we refresh... and look at the PUT endpoint, we still have `textDescription`,
+but the `description` field is gone! The serializer realizes that it's no longer
+settable and removed it from our API. It would still be *returned* because it's
+something that we can read, but it's no longer writeable.
+
+This is all *really* awesome. *We* simply worry about writing our class the way we
+want then API Platform builds our API accordingly.
+
+## Making the plunderedAt Field Readonly
+
+Ok, what else? Well, it *is* a little weird that we can set the `createdAt` field:
+that's usually set internally and automatically. Let's fix that.
+
+Oh, but, ya know what? I meant to call this field `plunderedAt`. I'll refactor
+and rename that property... then let PhpStorm also rename my getter and setter
+methods.
+
+Cool! This will *also* cause the column in my database to change... so spin
+over to your console and run:
+
+```terminal
+symfony console make:migration
+```
+
+I'll live dangerously and run that immediately:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+Done! Thanks to that rename... over in the API, excellent: the field is now
+`plunderedAt`.
+
+Ok, so forget about the API for a moment: let's just do a little cleanup. The purpose
+of this `plunderedAt` field is for it to be set automatically whenever we create
+a new `DragonTreasure`.
+
+To do that, create a `public function __construct()` and, inside, say
+`this->plunderedAt = new DateTimeImmutable()`. And now we don't need the `= null`
+on the property.
+
+And if we search for `setPlunderedAt`, we don't really need that method anymore!
+Remove it!
+
+This now means that the `plunderedAt` property is readable but not writeable. So,
+no shocker, when we refresh and open up the `PUT` or `POST` endpoint, `plunderedAt`
+is absent. But if we look at what the model would look like if we *fetched* a
+treasure, `plunderedAt` is still there.
+
+## Adding a Fake "Date Ago" Field
+
+All right, one more goal! Let's add a virtual field called `plunderedAtAgo` that
+returns a human-readable version of the date, like "two months ago". To do
+this, we need to install a new package:
+
+```terminal
+composer require nesbot/carbon
+```
+
+Once this finishes... find the `getPlunderedAt()` method, copy it, paste below,
+it will return a `string` and call it `getPlunderedAtAgo()`. Inside, return
+`Carbon::instance($this->getPlunderedAt()))` then `->diffForHumans()`.
+
+So, as we now understand, there is *no* `plunderedAtAgo` property... but the
+`serializer` *should* see this as readable via its getter and expose it.
+Oh, and while I'm here, I'll add a little documentation above to
+describe the field's meaning.
+
+Ok, let's try this. As soon as we refresh and open a `GET` endpoint, we see the
+new field under the example! We can also see the fields we'll receive down in the
+Schemas section. Back up, let's try the `GET` endpoint with ID `one`. And...
+how cool is that?
+
+Next: what if we *do* want to have certain getter or setter methods in our class,
+like `setDescription()`, but we do *not* want that to be part of our API? The
+answer: serialization groups.
