@@ -1,0 +1,327 @@
+WEBVTT
+
+00:00:01.016 --> 00:00:06.716 align:middle
+API Platform funciona tomando una clase
+como DragonTreasure y diciendo que quieres
+
+00:00:06.716 --> 00:00:10.236 align:middle
+exponerla como recurso en tu API.
+
+00:00:11.276 --> 00:00:14.166 align:middle
+Lo hacemos añadiendo el
+atributo ApiResource. En este
+
+00:00:14.746 --> 00:00:19.766 align:middle
+momento, lo estamos colocando sobre una entidad
+Doctrine, aunque, en un futuro tutorial,
+
+00:00:20.106 --> 00:00:24.176 align:middle
+aprenderemos que, en realidad, puedes
+colocar ApiResource sobre cualquier clase.
+
+00:00:24.886 --> 00:00:32.386 align:middle
+Por defecto, cada ApiResource incluye 6 rutas,
+que la API Platform denomina operaciones.
+
+00:00:32.916 --> 00:00:35.226 align:middle
+Puedes verlas en el perfilador.
+
+00:00:35.846 --> 00:00:40.586 align:middle
+Este es el perfilador de GET
+/api/dragon_treasures.json.
+
+00:00:40.996 --> 00:00:42.996 align:middle
+Haz clic en la sección "API Platform".
+
+00:00:43.536 --> 00:00:47.446 align:middle
+En la parte superior, vemos los
+metadatos de este recurso API.
+
+00:00:48.066 --> 00:00:51.146 align:middle
+Debajo, vemos las operaciones. Esto..
+
+00:00:51.706 --> 00:00:56.846 align:middle
+. es más información de la que necesitamos
+ahora, pero hay Get, GetCollection,
+
+00:00:57.376 --> 00:01:01.486 align:middle
+Post, Put, Patch y finalmente Delete.
+
+00:01:02.186 --> 00:01:05.986 align:middle
+Estas son las mismas cosas que vemos
+en la documentación de Swagger.
+
+00:01:06.736 --> 00:01:08.276 align:middle
+Echémosles un vistazo rápido.
+
+00:01:08.896 --> 00:01:12.146 align:middle
+En primer lugar, ¿qué
+operaciones devuelven datos?
+
+00:01:12.946 --> 00:01:15.916 align:middle
+En realidad, todas, excepto Delete.
+
+00:01:16.776 --> 00:01:24.226 align:middle
+Tanto Get como las rutas Post, Put y Patch devuelven
+un único recurso, es decir, un único tesoro.
+
+00:01:24.946 --> 00:01:29.856 align:middle
+Y GET /api/dragon_treasures
+devuelve una colección.
+
+00:01:30.646 --> 00:01:34.116 align:middle
+¿A qué rutas enviamos
+datos cuando las utilizamos?
+
+00:01:34.626 --> 00:01:38.206 align:middle
+A POST para crear, y a PUT
+y PATCH para actualizar.
+
+00:01:38.886 --> 00:01:42.616 align:middle
+No enviamos ningún dato para DELETE ni para
+ninguna de las dos operaciones de GET. La
+
+00:01:43.446 --> 00:01:48.466 align:middle
+mayoría de las rutas se explican por sí
+mismas: obtener una colección de tesoros,
+
+00:01:48.646 --> 00:01:52.446 align:middle
+un solo tesoro, crear un
+tesoro y eliminar un tesoro.
+
+00:01:53.186 --> 00:01:56.316 align:middle
+Los únicos confusos son
+poner frente a parchear.
+
+00:01:56.936 --> 00:02:01.336 align:middle
+PUT dice "sustituye" y PATCH dice "actualiza".
+
+00:02:01.936 --> 00:02:06.026 align:middle
+Eso... ¡parecen dos formas de decir lo mismo!
+
+00:02:06.746 --> 00:02:11.026 align:middle
+El tema de PUT frente a PATCH en
+las API puede ponerse picante.
+
+00:02:11.686 --> 00:02:16.086 align:middle
+Pero en API Platform, al menos
+hoy, PUT y PATCH funcionan igual:
+
+00:02:16.516 --> 00:02:18.636 align:middle
+ambos se utilizan para actualizar un recurso.
+
+00:02:18.976 --> 00:02:21.386 align:middle
+Y los veremos en acción a lo largo del curso.
+
+00:02:22.236 --> 00:02:27.546 align:middle
+Una de las cosas que quizá quieras hacer es
+personalizar o eliminar algunas de estas operaciones...
+
+00:02:27.846 --> 00:02:30.126 align:middle
+o incluso añadir más operaciones.
+
+00:02:30.746 --> 00:02:31.806 align:middle
+¿Cómo podríamos hacerlo?
+
+00:02:32.706 --> 00:02:37.366 align:middle
+Como vimos en el perfilador, cada
+operación está respaldada por una clase.
+
+00:02:38.286 --> 00:02:44.516 align:middle
+De vuelta sobre la clase DragonTreasure, después
+de description, añade una clave operations.
+
+00:02:45.116 --> 00:02:50.786 align:middle
+Fíjate en que estoy obteniendo autocompletado
+para las opciones porque son argumentos con nombre
+
+00:02:50.896 --> 00:02:54.676 align:middle
+para el constructor de la clase ApiResource.
+
+00:02:55.016 --> 00:02:56.366 align:middle
+Te lo mostraré dentro de un momento.
+
+00:02:57.256 --> 00:03:01.706 align:middle
+Establece esto como una matriz y luego repite
+todas las operaciones que tenemos actualmente.
+
+00:03:02.056 --> 00:03:11.536 align:middle
+Así que, new Get(), pulsa tabulador para autocompletar
+eso, GetCollection, Post, Put, Patch y Delete.
+
+00:03:12.396 --> 00:03:17.146 align:middle
+Ahora, si vamos a la documentación
+de Swagger y la actualizamos...
+
+00:03:17.776 --> 00:03:20.196 align:middle
+¡no cambia absolutamente nada!
+
+00:03:20.696 --> 00:03:21.916 align:middle
+Eso es lo que queríamos.
+
+00:03:22.446 --> 00:03:27.016 align:middle
+Acabamos de repetir exactamente
+la configuración por defecto.
+
+00:03:27.526 --> 00:03:29.956 align:middle
+Pero ahora somos libres
+de personalizar las cosas.
+
+00:03:30.676 --> 00:03:34.786 align:middle
+Por ejemplo, supongamos que no
+queremos que se borren los tesoros...
+
+00:03:35.176 --> 00:03:38.786 align:middle
+porque un dragón nunca permitiría
+que le robaran su tesoro.
+
+00:03:39.346 --> 00:03:40.136 align:middle
+Elimina Delete..
+
+00:03:40.746 --> 00:03:42.656 align:middle
+e incluso eliminaré la declaración use.
+
+00:03:43.436 --> 00:03:47.646 align:middle
+Ahora, cuando actualicemos, la
+operación DELETE habrá desaparecido.
+
+00:03:48.516 --> 00:03:52.996 align:middle
+Vale, así que cada atributo que
+utilizamos es en realidad una clase.
+
+00:03:53.356 --> 00:03:55.336 align:middle
+Y saber eso es poderoso.
+
+00:03:56.046 --> 00:03:59.786 align:middle
+Mantén pulsado comando o control y
+haz clic en ApiResource para abrirlo.
+
+00:04:00.506 --> 00:04:01.716 align:middle
+Esto es realmente genial.
+
+00:04:02.176 --> 00:04:07.216 align:middle
+Cada argumento del constructor es una
+opción que podemos pasar al atributo.
+
+00:04:08.216 --> 00:04:12.566 align:middle
+Y casi todos ellos tienen un enlace a la
+documentación donde puedes leer más.
+
+00:04:13.316 --> 00:04:17.736 align:middle
+Hablaremos de los elementos más importantes,
+pero es un gran recurso que debes conocer.
+
+00:04:18.446 --> 00:04:20.686 align:middle
+Un argumento se llama shortName.
+
+00:04:21.306 --> 00:04:27.046 align:middle
+Si miras en Swagger, nuestro "modelo" se
+conoce actualmente como DragonTreasure,
+
+00:04:27.516 --> 00:04:29.776 align:middle
+que obviamente coincide con la clase.
+
+00:04:30.346 --> 00:04:32.316 align:middle
+Esto se llama "nombre corto".
+
+00:04:32.806 --> 00:04:39.496 align:middle
+Y por defecto, las URL - /api/dragon_treasures
+- se generan a partir de eso.
+
+00:04:40.316 --> 00:04:45.026 align:middle
+Supongamos que queremos
+acortar todo esto a "tesoro".
+
+00:04:45.776 --> 00:04:49.586 align:middle
+No hay problema: establece
+shortName en Treasure.
+
+00:04:50.926 --> 00:04:54.516 align:middle
+En cuanto lo hagamos,
+observa el nombre y las URL.
+
+00:04:55.846 --> 00:05:02.466 align:middle
+Muy bien. Este recurso se conoce ahora como "Tesoro"
+y las URL se han actualizado para reflejarlo.
+
+00:05:03.176 --> 00:05:06.736 align:middle
+Aunque esa no es la única
+forma de configurar las URL.
+
+00:05:07.286 --> 00:05:12.646 align:middle
+Al igual que con ApiResource, cada
+operación es también una clase.
+
+00:05:13.346 --> 00:05:17.146 align:middle
+Mantén pulsada la tecla Comando (o
+Ctrl) y haz clic para abrir la clase Get.
+
+00:05:17.876 --> 00:05:21.416 align:middle
+Una vez más, estos argumentos
+del constructor son opciones...
+
+00:05:21.616 --> 00:05:23.746 align:middle
+y la mayoría tienen documentación.
+
+00:05:24.346 --> 00:05:28.236 align:middle
+Un argumento importante es uriTemplate.
+
+00:05:28.966 --> 00:05:35.436 align:middle
+Sí, podemos controlar el aspecto
+de la URL operación por operación.
+
+00:05:36.106 --> 00:05:36.536 align:middle
+Compruébalo.
+
+00:05:37.096 --> 00:05:40.626 align:middle
+Recuerda que Get es la forma
+de obtener un único recurso.
+
+00:05:41.216 --> 00:05:46.526 align:middle
+Añade uriTemplate ajustado
+a /dragon-plunder/{id}
+
+00:05:46.886 --> 00:05:51.086 align:middle
+donde esa última parte será el marcador
+de posición para el id dinámico.
+
+00:05:51.996 --> 00:05:57.086 align:middle
+Para GetCollection, pasemos también
+uriTemplate ajustado a /dragon-plunder.
+
+00:05:58.146 --> 00:06:00.256 align:middle
+De acuerdo ¡Vamos a
+consultar la documentación!
+
+00:06:01.146 --> 00:06:02.016 align:middle
+¡Estupendo!
+
+00:06:02.486 --> 00:06:07.916 align:middle
+Las demás operaciones mantienen la antigua
+URL, pero éstas utilizan el nuevo estilo.
+
+00:06:08.666 --> 00:06:13.816 align:middle
+Más adelante, cuando hablemos de los
+subrecursos, profundizaremos en uriTemplate
+
+00:06:14.146 --> 00:06:17.436 align:middle
+y su opción hermana uriVariables.
+
+00:06:18.306 --> 00:06:22.026 align:middle
+Vale... como es un poco
+tonto tener dos operaciones
+
+00:06:22.026 --> 00:06:25.416 align:middle
+con URL raras, vamos a
+eliminar esa personalización.
+
+00:06:26.336 --> 00:06:30.246 align:middle
+Ahora que sabemos un montón sobre
+ApiResource y estas operaciones, es
+
+00:06:30.616 --> 00:06:36.116 align:middle
+hora de hablar del corazón de API
+Platform: El serializador de Symfony.
+
+00:06:36.546 --> 00:06:37.466 align:middle
+Eso a continuación.
