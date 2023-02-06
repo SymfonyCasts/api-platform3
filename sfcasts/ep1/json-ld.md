@@ -100,6 +100,8 @@ We *could* do this via PHP documentation like normal, but `ApiResource` also
 has some options we can pass. One is `description`. Let's *describe* this
 as `A rare and valuable treasure.`
 
+[[[ code('da2a8477b5') ]]]
+
 Now, when we refresh the page... and search for "rare" (I'll close a few things
 here...), yup! It added the description to the `DragonTreasure` type. And, not
 surprisingly, this data also shows up over here inside Swagger, because it was

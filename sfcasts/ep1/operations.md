@@ -2,7 +2,11 @@
 
 API Platform works by taking a class like `DragonTreasure` and saying that you want
 to expose it as a *resource* in your API. We do that by adding the `ApiResource`
-attribute. Right now, we're putting this above a Doctrine entity, though, in a future
+attribute:
+
+[[[ code('79ebe0e721') ]]]
+
+Right now, we're putting this above a Doctrine entity, though, in a future
 tutorial, we'll learn that you can really put `ApiResource` above *any* class.
 
 ## Hello Operations
@@ -50,11 +54,15 @@ Set this to an array and then repeat *every* operation we currently have. So,
 `new Get()`, hit tab to auto-complete that, `GetCollection`, `Post`, `Put`, `Patch`
 and `Delete`.
 
+[[[ code('aded800265') ]]]
+
 Now, if we move over to the Swagger documentation and refresh... absolutely nothing
 changes! That's what we wanted. We've just repeated *exactly* the *default*
 configuration. But *now* we're free to customize things. For example, suppose we
 don't want treasures to be deleted... because a dragon would never allow their
 treasure to be stolen. Remove `Delete`.. and I'll even remove the `use` statement.
+
+[[[ code('b63ac57c0a') ]]]
 
 Now when we refresh, the `DELETE` operation is gone.
 
@@ -76,6 +84,8 @@ class. This is called the "short name". And by default, the URLs -
 Let's say that we instead want to shorten all of this to just "treasure". No
 problem: set `shortName` to `Treasure`.
 
+[[[ code('d27e8de4f7') ]]]
+
 As soon as we do that, watch the name and URLs. Nice. This resource is now known
 as "Treasure" and the URLs updated to reflect that.
 
@@ -94,12 +104,16 @@ Check it out. Remember, `Get` is how you fetch a *single* resource. Add
 for the dynamic id. For `GetCollection`, let's *also* pass `uriTemplate`
 set to `/dragon-plunder`.
 
+[[[ code('7653e2ba56') ]]]
+
 Ok! Let's go check the docs! Beautiful! The other operations keep the old URL,
 but those use the *new* style. Later, when we talk about subresources, we'll go
 deeper into `uriTemplate` and its sister option `uriVariables`.
 
 Ok... since it's a bit silly to have two operations with weird URLs, let's remove
 that customization.
+
+[[[ code('be95536724') ]]]
 
 Now that we know a bunch about `ApiResource` and these operations, it's time
 to talk about the *heart* of API Platform: Symfony's serializer. That's next.
