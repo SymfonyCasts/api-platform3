@@ -1,0 +1,366 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:05.526 align:middle
+Acabo de utilizar la ruta de recolección
+GET para obtener todos mis recursos...
+
+00:00:05.826 --> 00:00:08.506 align:middle
+lo que demuestra que
+tenemos un tesoro con id=1.
+
+00:00:09.386 --> 00:00:11.286 align:middle
+Cerraré esta operación...
+
+00:00:11.336 --> 00:00:13.546 align:middle
+y utilizaré esta otra ruta GET.
+
+00:00:14.076 --> 00:00:18.186 align:middle
+Haz clic en "Probar", pon "1"
+como ID y haz clic en "Ejecutar".
+
+00:00:19.086 --> 00:00:19.926 align:middle
+¡Estupendo!
+
+00:00:20.156 --> 00:00:22.746 align:middle
+Pero... Tengo algunas preguntas.
+
+00:00:22.996 --> 00:00:27.246 align:middle
+Concretamente: ¿qué significan estos campos?
+
+00:00:27.566 --> 00:00:32.726 align:middle
+¿Qué significan realmente
+name o description o value?
+
+00:00:33.066 --> 00:00:35.096 align:middle
+¿La descripción es texto sin formato?
+
+00:00:35.256 --> 00:00:39.926 align:middle
+¿HTML? ¿Es name un nombre corto
+del artículo o un nombre propio?
+
+00:00:40.036 --> 00:00:41.696 align:middle
+¿El valor está en dólares?
+
+00:00:41.776 --> 00:00:43.466 align:middle
+¿en euros? ¿en patatas fritas?
+
+00:00:43.886 --> 00:00:45.416 align:middle
+¿Qué demonios es coolFactor?
+
+00:00:45.526 --> 00:00:48.846 align:middle
+¿Y por qué te hago todas
+estas preguntas injustas?
+
+00:00:49.426 --> 00:00:51.586 align:middle
+Si eres humano (lo eres...
+
+00:00:51.706 --> 00:00:56.726 align:middle
+¿verdad?), probablemente puedas averiguar gran
+parte del "significado" de estos campos por ti mismo.
+
+00:00:57.236 --> 00:01:03.606 align:middle
+Pero las máquinas -vale, quizá menos las
+IA futuristas- bueno, no pueden descifrarlo.
+
+00:01:04.116 --> 00:01:06.356 align:middle
+No saben lo que significan estas claves.
+
+00:01:06.816 --> 00:01:11.306 align:middle
+Así que... ¿cómo podemos dar contexto
+y significado a nuestros datos? En
+
+00:01:12.176 --> 00:01:17.256 align:middle
+primer lugar, existe una cosa llamada "RDF"
+o "Marco de Descripción de Recursos",
+
+00:01:17.496 --> 00:01:21.826 align:middle
+que es un conjunto de reglas sobre cómo
+describimos el significado de los datos
+
+00:01:22.046 --> 00:01:24.126 align:middle
+para que los ordenadores
+puedan entenderlo. Es..
+
+00:01:24.706 --> 00:01:31.966 align:middle
+. aburrido y abstracto, pero básicamente es
+una guía sobre cómo puedes definir que un dato
+
+00:01:31.966 --> 00:01:38.766 align:middle
+tiene un tipo determinado, o que un recurso
+es una subclase de algún otro tipo.
+
+00:01:39.576 --> 00:01:45.456 align:middle
+En HTML, puedes añadir atributos a tus
+elementos para añadir estos metadatos RDF.
+
+00:01:46.126 --> 00:01:51.376 align:middle
+Podrías decir que este <div> describe a una
+"persona", y que el nombre y el teléfono de esta persona
+
+00:01:51.376 --> 00:01:54.146 align:middle
+son estos otros datos.
+
+00:01:54.816 --> 00:01:59.736 align:middle
+Esto hace que el HTML aleatorio de tu sitio
+sea comprensible para las máquinas. Es
+
+00:02:00.356 --> 00:02:05.986 align:middle
+aún mejor si dos sitios diferentes utilizan
+exactamente la misma definición de "persona", que es
+
+00:02:06.146 --> 00:02:08.356 align:middle
+por lo que los tipos son URLs...
+
+00:02:08.516 --> 00:02:13.256 align:middle
+y los sitios intentan reutilizar los tipos
+existentes en lugar de inventar otros nuevos.
+
+00:02:13.886 --> 00:02:16.056 align:middle
+¿Por qué hablamos de esto?
+
+00:02:16.676 --> 00:02:21.206 align:middle
+Porque JSON-LD intenta hacer
+lo mismo con nuestra API.
+
+00:02:22.126 --> 00:02:24.526 align:middle
+Nuestras rutas API devuelven JSON.
+
+00:02:25.016 --> 00:02:32.586 align:middle
+Pero la cabecera content-type de la respuesta
+dice que se trata de application/ld+json.
+
+00:02:33.626 --> 00:02:39.356 align:middle
+Cuando ves application/ld+json,
+significa que los datos son JSON...
+
+00:02:39.566 --> 00:02:47.446 align:middle
+pero con campos adicionales que tienen un significado especial
+según un gigantesco documento de especificaciones JSON-LD.
+
+00:02:47.936 --> 00:02:51.436 align:middle
+Así que, literalmente, JSON-LD es JSON...
+
+00:02:51.676 --> 00:02:53.296 align:middle
+con extras.
+
+00:02:53.936 --> 00:02:59.666 align:middle
+Por ejemplo, cada recurso, como
+DragonTreasure, tiene tres campos @.
+
+00:03:00.306 --> 00:03:03.006 align:middle
+El más importante es probablemente @id.
+
+00:03:03.696 --> 00:03:07.066 align:middle
+Es el identificador único del recurso.
+
+00:03:07.696 --> 00:03:13.886 align:middle
+Es básicamente lo mismo que id,
+pero es aún mejor porque es una URL.
+
+00:03:14.376 --> 00:03:22.026 align:middle
+Así que en lugar de decir simplemente "id":
+1, tienes @id /api/dragon_treasures/1 .
+
+00:03:22.846 --> 00:03:27.336 align:middle
+Esto significa que, en primer lugar,
+la cadena será única en todas
+
+00:03:27.336 --> 00:03:32.476 align:middle
+nuestras clases de recursos API y, en
+segundo lugar, ¡esta URL es práctica!
+
+00:03:33.006 --> 00:03:35.596 align:middle
+Puedes introducirla en tu navegador y,
+
+00:03:35.596 --> 00:03:39.666 align:middle
+si tienes la cabecera accept
+o añades .jsonld al final...
+
+00:03:40.176 --> 00:03:42.816 align:middle
+whoops... déjame deshacerme de mi / extra ...
+
+00:03:43.446 --> 00:03:46.256 align:middle
+¡sí! Podrás ver ese recurso.
+
+00:03:46.706 --> 00:03:48.886 align:middle
+Así que @id es igual que id...
+
+00:03:49.126 --> 00:03:50.126 align:middle
+pero mejor.
+
+00:03:50.796 --> 00:03:52.806 align:middle
+Otro campo especial es @type.
+
+00:03:53.316 --> 00:03:58.056 align:middle
+Describe el tipo de recurso,
+como los campos que tiene.
+
+00:03:58.406 --> 00:04:03.936 align:middle
+Y si vemos dos recursos diferentes que
+tienen ambos @type DragonTreasure ,
+
+00:04:04.106 --> 00:04:07.276 align:middle
+sabremos que representan lo mismo.
+
+00:04:08.006 --> 00:04:12.616 align:middle
+Puedes pensar en @type casi como una
+clase, que podemos utilizar para averiguar
+
+00:04:12.616 --> 00:04:16.256 align:middle
+qué campos tiene y el tipo de cada campo.
+
+00:04:16.796 --> 00:04:19.886 align:middle
+Pero... ¿dónde podemos ver
+realmente esa información?
+
+00:04:20.576 --> 00:04:23.426 align:middle
+Aquí es donde @context resulta útil.
+
+00:04:24.376 --> 00:04:29.266 align:middle
+Copia la URL del contexto,
+pégala en tu navegador y...
+
+00:04:29.656 --> 00:04:30.406 align:middle
+¡precioso!
+
+00:04:30.776 --> 00:04:37.356 align:middle
+Obtenemos este documento tan sencillo que dice que
+DragonTreasure tiene los campos name, description, value,
+
+00:04:37.406 --> 00:04:41.026 align:middle
+coolFactor, createdAt, y isPublished.
+
+00:04:41.926 --> 00:04:48.086 align:middle
+Si queremos aún más información sobre lo que
+significan, podemos seguir el enlace @vocab...
+
+00:04:48.226 --> 00:04:50.936 align:middle
+para llegar a otra página de información.
+
+00:04:51.646 --> 00:04:56.266 align:middle
+Aquí podemos ver todas las clases
+de nuestra API -como DragonTreasure -
+
+00:04:56.706 --> 00:04:59.556 align:middle
+y todas sus propiedades, como name.
+
+00:05:00.656 --> 00:05:04.696 align:middle
+También podemos ver cosas como required:
+false, readable: true, escribible:
+
+00:05:04.696 --> 00:05:07.126 align:middle
+true y también que es un string.
+
+00:05:07.656 --> 00:05:09.996 align:middle
+Y tenemos esta información para cada campo.
+
+00:05:10.486 --> 00:05:11.676 align:middle
+Mira: abajo en value.
+
+00:05:12.856 --> 00:05:14.786 align:middle
+Podemos ver que se trata de u n integer.
+
+00:05:15.236 --> 00:05:23.556 align:middle
+Este xmls:integer remite a otro documento,
+arriba, que, si lo siguiéramos,
+
+00:05:23.646 --> 00:05:26.996 align:middle
+describiría xmls:integer con más detalle.
+
+00:05:27.986 --> 00:05:30.926 align:middle
+Llegados a este punto, puede
+que estés diciendo ¡Eh!
+
+00:05:31.206 --> 00:05:34.936 align:middle
+¡Esto se parece mucho al documento
+de especificaciones OpenAPI!
+
+00:05:35.496 --> 00:05:37.156 align:middle
+Y tienes razón.
+
+00:05:37.716 --> 00:05:39.936 align:middle
+Hablaremos más de ello dentro de unos minutos.
+
+00:05:40.466 --> 00:05:42.616 align:middle
+También puedes estar pensando: Um...
+
+00:05:42.686 --> 00:05:44.816 align:middle
+Entiendo un poco lo que dices...
+
+00:05:44.816 --> 00:05:47.076 align:middle
+pero esto es confuso.
+
+00:05:47.536 --> 00:05:49.356 align:middle
+¡Y también tendrías razón!
+
+00:05:49.736 --> 00:05:56.336 align:middle
+Es difícil, como simple humano, seguir todos estos
+enlaces para encontrar los campos y sus tipos.
+
+00:05:56.846 --> 00:06:00.146 align:middle
+Pero imagínate lo que le
+parecería esto a una máquina.
+
+00:06:00.406 --> 00:06:02.696 align:middle
+¡Es una mina de oro de información!
+
+00:06:03.546 --> 00:06:06.736 align:middle
+Ah, y quiero mencionar
+que, si miras en value...
+
+00:06:06.956 --> 00:06:08.236 align:middle
+hydra:description...
+
+00:06:08.516 --> 00:06:13.156 align:middle
+recoge la documentación PHP
+que añadimos antes a ese campo.
+
+00:06:13.356 --> 00:06:18.396 align:middle
+También podemos añadir información extra
+encima de la clase para describir este modelo.
+
+00:06:18.996 --> 00:06:22.326 align:middle
+Podríamos hacerlo a través de la
+documentación PHP como es habitual,
+
+00:06:22.486 --> 00:06:26.126 align:middle
+pero ApiResource también tiene
+algunas opciones que podemos pasar.
+
+00:06:26.746 --> 00:06:28.096 align:middle
+Una es description.
+
+00:06:28.696 --> 00:06:33.336 align:middle
+Describamos esto como A
+rare and valuable treasure.
+
+00:06:34.826 --> 00:06:37.186 align:middle
+Ahora, cuando actualicemos la página...
+
+00:06:37.626 --> 00:06:44.186 align:middle
+y buscamos "raro" (cerraré
+algunas cosas aquí...), ¡sí!
+
+00:06:44.536 --> 00:06:47.736 align:middle
+Se ha añadido la descripción
+al tipo DragonTreasure.
+
+00:06:48.056 --> 00:06:53.936 align:middle
+Y, como es lógico, estos datos también
+aparecen aquí dentro de Swagger,
+
+00:06:54.116 --> 00:06:58.476 align:middle
+porque también se añadieron al
+documento de especificaciones OpenAPI. La
+
+00:06:59.226 --> 00:07:04.906 align:middle
+cuestión es que, gracias a JSON-LD,
+tenemos campos adicionales en cada respuesta
+
+00:07:05.046 --> 00:07:12.856 align:middle
+que dan a cada recurso un id único y una forma
+de descubrir exactamente cómo es ese "tipo".
+
+00:07:13.776 --> 00:07:20.656 align:middle
+A continuación: tenemos que discutir una última parte
+de la teoría: qué significan estas cosas de hydra.
