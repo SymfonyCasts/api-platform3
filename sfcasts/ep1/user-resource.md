@@ -1,70 +1,92 @@
-# User Resource
+# User API Resource
 
-Coming soon...
+We have a `User` entity... but it is not *yet* part of our API. How *do* we make
+it part of the API? Ah, we already know! Go above the class and add the `ApiResource`
+attribute.
 
-We have our new user en entity, but it is not yet part of our api. How do we make it
-part of our api? Ah, we already know it's super simple. Go above the class and add
-API resource attribute. Refresh the docs. Look at that. Six fresh new endpoints for
-our user entity. Thanks to our fixtures, we should be able to see data immediately.
-Lemme try to get collection endpoint and look at that. It's alive. Nope. It is a
-little weird that things like rolls and passwords show up inside of here. We'll worry
-about that in a second. Quickly, I want to have say one quick thing about UU IDs. As
-you can see, we're using auto increment IDs inside of our api, but you can totally
-use a UU ID instead. And that's something that we'll talk about in a future tutorial.
-Why would you use UU IDs? Well, sometimes it can make your life easier in JavaScript.
-In JavaScript you, you can actually generate the UU i d in JavaScript and then send
-it to your api. Sometimes that makes life easier in JavaScript because you know what
-the ID of that resource is immediately, instead of needing to make the age X request,
-wait for it to finish and then get the new auto increment ID back anyways. API
-platform does supply, does support UU UIDs. There's a way for you to add a new U I UU
-ID column here and tell API platform that that is your identifier.
+Refresh the docs. Look at that! Six fresh new endpoints for the `User` class! And
+thanks to our fixtures, we *should* be able to see data immediately. Let's try the
+collection endpoint. Execute and... it's alive.
 
-If you do that one word of warning in some database engines, UU IDs are not a great
-primary key for performance. So you might still want to keep the id but then have a
-second UU i d, which is actually what you use an APAP platform, but that depends on
-what your database engine is. Anyways, back to our user entity, it's returning way
-too many fields and we know that problem. We know how to fix that problem up on API
-resource, we're gonna add a normalization context key with groups. Set two user colon
-read to follow that same pattern that we used over in Dragon Treasure and then DN
-normalization contact set two user colon. Right now we can just decorate the fields
-that we actually want to return. So we don't need to return ID because we always have
-the at id, which is more useful anyways, but we do wanna return the email, so I'll
-add a group's attribute on there, hit tab and get that use statement pass and right,
-and we'll have user calling read. And this is also write also user call and Wright.
+Though... it *is* a little weird that fields like `roles` and `password` show up.
+Ah, we'll worry about that in a minute.
 
-Now copy that. Let's go down here. Password, we do need the password to be writeable
-but not readable. So I'm just gonna use user colon right on this. Now this still
-isn't quite correct. The password field is meant to be the hashed password and we
-don't actually want our users to send us a hashed password. We want them to send us a
-plain password and then we hash it. That's something we're gonna solve in a future
-tutorial when we talk more about the user object. But this will be a good enough
-start for right now. Uh, above username. Let's also add user read and user write on
-that. Cool, so let's refresh and beautiful and try our end points and beautiful email
-and username come back. And if we were to create a new user, we do passing email,
-username, and password. All right, so what else are we missing? How about validation
-constraints? If we try out our endpoint right now empty, we get that nasty 500 air.
-So let's fix that back over in a class. I'm actually gonna start above the class by
-making sure that the email and the username are unique so we can pass the unique
-entity
+## API Platform & UUIDs
 
-Above that pass fields and we'll do email first. And if you want to, you can pass a
-message to this. Beautiful. And then let's repeat that same thing for the username
-field. So update the field and also update the message. All right, then down here for
-email, we're gonna want that as not blank. Let me put the assert in front of that and
-I'll just tweak the you statement like last time. Nice. And then one more, we can
-also PA may pass this, the email constraints, so the valid email address. And then
-the only thing that we need right now is just above username. We'll add anot blank.
-I'm not too worried about the password right now because that's a little weird.
-Anyways. All right, so now if we try things, let me actually, let's pass just
-password and beautiful 4 22 status code and we see the validation errors. All right,
-so let's try a valid thing. Set an email address the username and the username. No, I
-don't think this guy's actually a dragon. I think he, I think he might be somebody
-else after the dragon's treasure hit execute. Got it. 2 0 1 status code. You see the
-email and the username returned. So this is great.
+Before we keep rolling forward, I want to mention one quick thing about UUIDs. As
+you can see, we're using auto-increment IDs for of our API - it's always
+`/api/users/` then the entity id. But you can *totally* use a `UUID` instead. And
+that's something we'll do in a future tutorial.
 
-We've got our new user resource in the api. It's got these six operations. We've got
-validation Page Nation, if we wanted to, we can add filtering to it. We are crushing
-it. Now we get to the really interesting part. We need to relate our two resources so
-that each treasure is owned by a user. What does that look like in a API platform?
-It's super interesting and it's next.
+But... why *would* you use UUIDs? Well, sometimes it can make life easier in
+JavaScript when working with frontend frameworks. You can actually *generate* the
+`UUID` in JavaScript and then send that to your API when creating a new resource.
+This can help because your JavaScript knows the ID of the resource immediately
+and can update the state... instead of waiting for the Ajax request to finish
+to get the new auto-increment id.
 
+Anyways, my point is: API Platform *does* support `UUIDs`. You could add a new
+UUID column, then tell API Platform that it should be your *identifier*. Oh, but
+keep in mind that some database engines - like MySQL - can have poor performance
+if you make the UUID the primary key. In that case, just keep `id` as the primary
+key, and add an *extra* UUID column.
+
+## Adding the Serialization Groups
+
+Anyways, back to our `User` resource! Right now, it's returning *way* too many fields.
+Fortunately, we know how to fix that. Up on `ApiResource`, add a
+`normalizationContext` key with `groups` set to `user:read` to follow the same
+pattern that we used in `DragonTreasure`. Also add `denormalizationContext`
+set to `user:write`.
+
+Now we can just decorate the fields that we want in the API. We don't
+need `id`... since we always have `@id`, which is more useful. But we
+*do* want `email`. So add the `#Groups()` attribute, hit tab to add
+that `use` statement and pass both `user:read` and `user:write`.
+
+Copy that... and go down to `password`. We *do* need the password to be writeable
+but not readable. So add `user:write`.
+
+Now this still isn't quite correct. The `password` field should hold the *hashed*
+password. But our users will, of course, send the plaintext passwords via the API
+when creating a user or updating their password. Then *we* will hash it. That's
+something we're going to solve in a future tutorial when we talk more about security.
+But this will be good enough for now.
+
+Oh, and above `username`, also add `user:read` and `user:write`.
+
+Cool! Refresh the docs... and open up the collections endpoint to give it a go.
+The result... exactly what we wanted! Only `email` and `username` come back.
+
+And if we were to *create* a new user... yup! The writable fields are `email`,
+`username`, and `password`.
+
+## Adding Validation
+
+Ok, what else are we missing? How about validation? If we try the
+POST endpoint with empty data... we get that nasty 500 error. Fixing time!
+
+Back over in the file, start *above* the class to make sure that both `email` and
+`username` are `unique`. Add `UniqueEntity` passing `fields` set to `email`...
+and we can even include a message. Repeat that *same* thing... but change `email`
+to `username`.
+
+Next, down in `email`, add `NotBlank`... then I'll add the `Assert` in front...
+and tweak the `use` statement so it works just like last time.
+
+Nice. email needs one more - `Assert\Email` - and above `username`, add `NotBlank`.
+
+I'm not too worried about `password` right now... because it's already a bit weird.
+
+Let's try this! Scroll up and *just* send a `password` field. And... yes! The
+nice 422 status code with validation errors. Try valid data now: pass an `email` and `username`... though I'm not sure this guy's actually a dragon... we might need
+a captcha.
+
+Hit Execute. That's it! 201 status code with `email` and `username` returned!
+
+Our resource has validation, pagination and contains great *information*!
+And we could even easily add filtering. In other words, we're crushing it!
+
+And *now* we get to the *really* interesting part. We need to "relate" our two
+resources so that each treasure is *owned* by a user. What does that look like in
+API Platform? It's super interesting, and it's next.
