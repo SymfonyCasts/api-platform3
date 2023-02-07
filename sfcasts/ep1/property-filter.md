@@ -3,7 +3,9 @@
 Since dragons *love* expensive treasure, let's add a way for them to filter based
 on the *value*, like within a range. There's a built-in filter for that called
 `RangeFilter`. Find the `$value` property and, like we did before, use
-`#[ApiFilter()]` and inside `RangeFilter` (the one from ORM) `::class`.
+`#[ApiFilter()]` and inside `RangeFilter` (the one from ORM) `::class`:
+
+[[[ code('94173682b5') ]]]
 
 This one doesn't need any other options, so... we're done! Dang... that was easy.
 When we refresh... open it up, and hit "Try it out".... look at that! We have
@@ -21,16 +23,23 @@ our API clients to choose which *fields* they want returned... instead of which
 
 To show this off, find the `getDescription()` method. Pretend that we want to return
 a shorter, truncated version of the description. To do this, copy the
-`getDescription()` method, paste it below, and rename it to `getShortDescription()`.
+`getDescription()` method, paste it below, and rename it to `getShortDescription()`:
+
+[[[ code('b23723799d') ]]]
+
 To *truncate* this, we can use the `u()` function from Symfony. Type `u` and make
 sure to hit "tab" to autocomplete that. This is a rare *function* that Symfony
-gives us... and hitting "tab" *did* add a `use` statement for it.
+gives us... and hitting "tab" *did* add a `use` statement for it:
+
+[[[ code('b36939414f') ]]]
 
 This creates an object with all sorts of string-related goodies on it, including
 `truncate()`. Pass 40 to truncate at `40` characters followed by `...`.
 
 Method done! To expose this to our API, above, add the `Groups` attribute with
-`treasure:read`.
+`treasure:read`:
+
+[[[ code('dd0b92e22a') ]]]
 
 Beautiful! Okay, head back to the documentation and refresh. Open the `GET` endpoint,
 hit "Try it out", "Execute" and... *nice*. Here's our truncated description!
@@ -43,7 +52,9 @@ What can we do? Introducing: the `PropertyFilter`! Head back to `DragonTreasure`
 Unlike the others, this filter *must* go above the class. So right here, say
 `ApiFilter`, and then `PropertyFilter` (in this case, there's only *one* of them)
 `::class`. There *are* some options you can pass to this - which you can find in
-the docs - but we don't need any of them.
+the docs - but we don't need any of them:
+
+[[[ code('29aa3955b8') ]]]
 
 So... what does that *do*? Head back, refresh the documentation, open up the
 GET collection endpoint, and hit "Try it out". Woh! We now see a `properties[]`

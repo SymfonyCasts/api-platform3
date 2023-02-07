@@ -21,7 +21,10 @@ If you haven't used Foundry before, for each entity, you create a *factory* clas
 that's really good at *creating* that entity. I'll hit zero to generate the one for
 `DragonTreasure`.
 
-The end result is a new `src/Factory/DragonTreasureFactory.php` file.
+The end result is a new `src/Factory/DragonTreasureFactory.php` file:
+
+[[[ code('eedeb52468') ]]]
+
 This class is just really good at creating `DragonTreasure` objects. It even
 has a bunch of nice random data ready to be used!
 
@@ -29,10 +32,14 @@ To make this *even* fancier, I'm going to paste over with some code that I've
 dragon-ized. Oh, and we also need a `TREASURE_NAMES` constant... which I'll also
 paste on top. You can grab all of this from the code block on this page.
 
+[[[ code('2a817a6662') ]]]
+
 Ok, so this class is done. Step two: to actually *create* some fixtures, open
 `src/DataFixtures/AppFixtures.php`. I'll clear out the `load()` method. All we need
 is: `DragonTreasureFactory::createMany(40)` to create a healthy trove of 40
-treasures.
+treasures:
+
+[[[ code('7c677fd71a') ]]]
 
 Let's try this thing! Back at your terminal, run:
 
@@ -103,7 +110,9 @@ do it above the class.
 
 ## Customizing Max Items Per Page
 
-Find the `ApiResource` attribute and add `paginationItemsPerPage` set to 10.
+Find the `ApiResource` attribute and add `paginationItemsPerPage` set to 10:
+
+[[[ code('f13c0bab76') ]]]
 
 Again, you can see that the options we already have... are included in the `defaults`
 config.

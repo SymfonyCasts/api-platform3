@@ -26,7 +26,9 @@ Pass this `BooleanFilter` - the one from `ORM`, since we're using the Doctrine O
 because we want to allow the user to filter on a boolean field.
 
 The second thing you need top pass is `properties` set to an array of which fields
-or properties you want to use this filter on. Set this to `isPublished`.
+or properties you want to use this filter on. Set this to `isPublished`:
+
+[[[ code('75f2466630') ]]]
 
 ## Using the Filter in the Request
 
@@ -54,7 +56,9 @@ filter above the *property* it relates to.
 
 Watch: copy the `ApiFilter` line, remove it, and go down to `$isPublished`. Paste
 this above. And now, we don't need the `properties` option anymore... API Platform
-figures that out on its own.
+figures that out on its own:
+
+[[[ code('3bd0cf4bce') ]]]
 
 The result? The same as before. I won't try it, but if you peek at the collection
 endpoint, it still has the `isPublished` filter field.
@@ -67,7 +71,9 @@ above `$title`, add `ApiFilter`. In this case we want `SearchFilter`: again, get
 the one for the ORM. This filter *also* accepts an option. You can see here that,
 in addition to `properties`, `ApiFilter` has an argument called `strategy`. That
 doesn't apply to all filters, but it *does* apply to this one. Set `strategy`
-to `partial`.
+to `partial`:
+
+[[[ code('bf1c077bbd') ]]]
 
 This will allow us to search on the `title` property for a *partial* match. It's
 a "fuzzy" search. Other strategies include `exact`, `start` and more.
@@ -78,8 +84,11 @@ yes! Apparently 15 of the results have `rare` somewhere in the `title`.
 
 And again, this works by adding a simple `?name=rare` to the URL.
 
-Oh, let's also make the `description` field searchable. And now... that
-shows up in the API too!
+Oh, let's also make the `description` field searchable:
+
+[[[ code('f9800671f7') ]]]
+
+And now... that shows up in the API too!
 
 The `SearchFilter` is easy to set up... but it's a fairly simple fuzzy search.
 If you want something more complex - like ElasticSearch - API Platform *does*

@@ -30,11 +30,15 @@ is exactly like adding validation *anywhere* in Symfony. For example, find the
 `name` property. We need `name` to be required. So, add the `NotBlank` constraint,
 and hit tab. Oh, but I'm going to go find the `NotBlank` `use` statement... and change
 this to `Assert`. That's optional... but it's the way the cool kids tend do it in
-Symfony. Now say `Assert\NotBlank`.
+Symfony. Now say `Assert\NotBlank`:
+
+[[[ code('b05489e9e8') ]]]
 
 Below, add one more: `Length`. Let's say that the name should be at least two
 characters, `max` 50 characters... and add a `maxMessage`:
-`Describe your loot in 50 chars or less`.
+`Describe your loot in 50 chars or less`:
+
+[[[ code('5f18649857') ]]]
 
 ## How Errors Look in the Response
 
@@ -58,11 +62,15 @@ and then the `message` below.
 Ok! Let's sneak in a few more constraints. Add `NotBlank` above `description`...
 and `GreaterThanOrEqual` to `0` above `value` to avoid negatives. Finally, for
 `coolFactor` use `GreaterThanOrEqual` to 0 and also `LessThanOrEqual` to 10.
-So something between 0 and 10.
+So something between 0 and 10:
+
+[[[ code('edb7d7cf25') ]]]
 
 And while we're here, we don't need to do this, but I'm going to initialize
 `$value` to 0 and `$coolFactor` to 0. This makes both of those *not* required
-in the API: if the user doesn't send them, they'll default to 0.
+in the API: if the user doesn't send them, they'll default to 0:
+
+[[[ code('343088fb55') ]]]
 
 Ok, go back and try that same endpoint. Look at that beautiful validation! Also
 try setting `coolFactor` to `11`. Yup! No treasure is *that* cool... well, unless

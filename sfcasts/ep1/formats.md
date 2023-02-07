@@ -33,7 +33,9 @@ new item to this config... but without completely *replacing* the existing forma
 Copy these, then open the `/config/packages/` directory. We don't have an
 `api_platform.yaml` file yet, so let's create one. Inside that, say `api_platform`
 and paste those below. And while we don't *have* to, I'm going to change this to
-use a shorter, more attractive version of this config.
+use a shorter, more attractive version of this config:
+
+[[[ code('d89758fd53') ]]]
 
 Done!
 
@@ -47,7 +49,9 @@ come out with standards that *extend* JSON. JSON-LD is one example and HAL is
 a *competing* standard. I don't often use HAL... so we're mostly doing this to
 see an example of what adding a format looks like.
 
-Oh, and the `Content-Type` for HAL is supposed to be `application/hal+json`.
+Oh, and the `Content-Type` for HAL is supposed to be `application/hal+json`:
+
+[[[ code('f970655b10') ]]]
 
 As soon as we do that, when we refresh... it shows *nothing*? I'm pretty sure
 Symfony didn't see my new config file. Hop over here and clear the cache with:
@@ -89,6 +93,8 @@ To do this right, we need to list all of them: `jsonld`, `json`, `html`, and
 `jsonhal`. Each of these will read the configuration to know which content type to
 use. At the end, add `csv`. But because `csv` doesn't exist in the config, we
 need to tell it which content type will activate this. So set it to `text/csv`.
+
+[[[ code('5583ab3b8a') ]]]
 
 Oh, but my editor is mad! It says:
 
