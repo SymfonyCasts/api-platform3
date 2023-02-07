@@ -1,0 +1,379 @@
+WEBVTT
+
+00:00:00.106 --> 00:00:01.096 align:middle
+Próximamente...
+
+00:00:01.096 --> 00:00:04.576 align:middle
+API Platform admite varios formatos
+de entrada y también de salida.
+
+00:00:04.656 --> 00:00:09.786 align:middle
+Así que sabemos que podemos
+ir a la barra api tesoros jsun
+
+00:00:09.886 --> 00:00:15.726 align:middle
+para ver el formato jsun o jsun LD o html.
+
+00:00:15.726 --> 00:00:20.796 align:middle
+Pero añadir esta extensión al final
+de la URL es sólo un pequeño truco
+
+00:00:20.796 --> 00:00:23.376 align:middle
+que API Platform nos permite hacer.
+
+00:00:23.376 --> 00:00:26.336 align:middle
+Para elegir el formato que
+quieres que te devuelva la API,
+
+00:00:26.506 --> 00:00:29.146 align:middle
+se supone que debes enviar una cabecera accept.
+
+00:00:29.416 --> 00:00:32.966 align:middle
+Y esto es algo que vemos cuando
+probamos la documentación.
+
+00:00:32.966 --> 00:00:35.616 align:middle
+Uc hace una petición con la
+cabecera accept configurada
+
+00:00:35.616 --> 00:00:42.546 align:middle
+como barra de aplicación LD más jsun I Configurar esta
+cabecera es fácil de hacer en JavaScript y, de hecho,
+
+00:00:42.546 --> 00:00:46.696 align:middle
+si no la configuras, la barra de aplicación LD más
+jsun es la que aparece por defecto de todos modos.
+
+00:00:46.696 --> 00:00:49.526 align:middle
+Un formulario de factura utiliza
+tres formatos por defecto.
+
+00:00:49.526 --> 00:00:53.826 align:middle
+De hecho, puedes verlos aquí abajo, en la
+parte inferior de la página de documentación.
+
+00:00:54.036 --> 00:01:02.756 align:middle
+¿Por qué admite esos tres
+formatos outta the box head?
+
+00:01:02.756 --> 00:01:07.286 align:middle
+Tu terminal ejecuta bin console,
+debug config API platform.
+
+00:01:07.286 --> 00:01:16.686 align:middle
+Y si miras aquí al lado, puedes ver una
+clave de formatos que dice esos tres formatos.
+
+00:01:16.686 --> 00:01:23.126 align:middle
+Así que esto básicamente dice que si la cabecera
+de aceptación es application slash LD más jsun,
+
+00:01:23.416 --> 00:01:25.506 align:middle
+utiliza el formato Jsun LD.
+
+00:01:26.116 --> 00:01:30.416 align:middle
+E internamente esto significa que cuando
+esté serializando nuestros datos,
+
+00:01:30.416 --> 00:01:36.316 align:middle
+le dirá al serializador que serialice a Jsun
+LD o que serialice a Jsun. Así que voy a
+
+00:01:36.316 --> 00:01:40.696 align:middle
+añadir otro formato sólo para ver si podemos, así
+que para hacerlo, básicamente sólo tenemos que
+
+00:01:40.696 --> 00:01:43.436 align:middle
+añadir un nuevo elemento a esta
+configuración, pero para asegur arnos
+
+00:01:43.436 --> 00:01:46.666 align:middle
+de que no reemplazamos completamente
+esta configuración, copia esos formatos
+
+00:01:47.326 --> 00:01:51.226 align:middle
+y luego abre el directorio de
+paquetes de configuración.
+
+00:01:52.806 --> 00:01:57.886 align:middle
+Aún no tenemos un archivo API platform punto
+yaml, así que vamos a crear una plataforma API
+
+00:01:57.886 --> 00:02:00.176 align:middle
+guión bajo, yamal, y luego
+una plataforma API guión bajo.
+
+00:02:00.346 --> 00:02:02.306 align:middle
+Y luego los pegaré.
+
+00:02:02.306 --> 00:02:05.936 align:middle
+Y no tengo por qué hacerlo,
+pero voy a ponerme elegante. Hay
+
+00:02:05.936 --> 00:02:12.286 align:middle
+una forma alternativa más corta
+de hacer esta configuración
+
+00:02:12.286 --> 00:02:17.236 align:middle
+que queda un poco mejor, así que voy a acortar
+rápidamente mi código para usar ese formato más corto.
+
+00:02:17.236 --> 00:02:22.596 align:middle
+Genial. Ahora si vamos y actualizamos,
+todo parece funcionar igual.
+
+00:02:22.596 --> 00:02:25.166 align:middle
+Tenemos los mismos formatos abajo.
+
+00:02:25.166 --> 00:02:29.976 align:middle
+Eso es perfecto porque acabamos de
+repetir la configuración por defecto.
+
+00:02:30.066 --> 00:02:35.066 align:middle
+Así que el nuevo formato que vamos a
+añadir es otro tipo de jsun llamado Jsun.
+
+00:02:35.066 --> 00:02:40.126 align:middle
+¿Cómo? Así que existe el J S O estándar,
+y luego el J S O LD toma el J S O estándar
+
+00:02:40.126 --> 00:02:42.626 align:middle
+y le añade más claves y estructuras.
+
+00:02:42.626 --> 00:02:46.666 align:middle
+Un estándar que compite con
+el J S O LD se llama Jsun.
+
+00:02:46.666 --> 00:02:49.566 align:middle
+Yo particularmente no utilizo
+J S o Hal tan a menudo.
+
+00:02:49.566 --> 00:02:50.426 align:middle
+Principalmente escucho.
+
+00:02:50.426 --> 00:02:51.596 align:middle
+Sobre todo hacemos esto.
+
+00:02:51.596 --> 00:02:56.376 align:middle
+Así podemos ver un ejemplo de cómo
+queda añadir un formato. Así que
+
+00:02:56.376 --> 00:02:58.856 align:middle
+el, si buscas el tipo de
+contenido para Jsun hal, se
+
+00:02:58.856 --> 00:03:01.926 align:middle
+supone que es barra de
+aplicación cómo más J Sig.
+
+00:03:01.926 --> 00:03:05.226 align:middle
+Así que en cuanto hacemos eso,
+al actualizar no aparece nada.
+
+00:03:05.226 --> 00:03:08.656 align:middle
+Estoy bastante seguro de que esto se debe a que Symphony
+no está viendo mi nuevo archivo de configuración.
+
+00:03:09.116 --> 00:03:17.206 align:middle
+Vamos a correr por aquí y hacer un bin, lanzar bin
+consola, efectivo claro refrescar de nuevo, ahí vamos.
+
+00:03:17.206 --> 00:03:25.356 align:middle
+JSON hal. Y si hacemos clic en esto, en realidad vamos
+a la versión JSON how de nuestra documentación.
+
+00:03:25.356 --> 00:03:30.626 align:middle
+Pero lo que quiero hacer aquí es en realidad
+hacer mi petición get, get collection tryouts.
+
+00:03:30.996 --> 00:03:35.626 align:middle
+Y aquí abajo puedes seleccionar
+realmente cuál de los tipos quieres.
+
+00:03:36.406 --> 00:03:40.056 align:middle
+Así que escribiré aplicación
+barra cómo más JSON Hit ejecutar.
+
+00:03:40.396 --> 00:03:42.486 align:middle
+Y ahí está.
+
+00:03:42.486 --> 00:03:46.906 align:middle
+Así que puedes ver que es json,
+tiene nuestros mismos resultados.
+
+00:03:46.906 --> 00:03:48.806 align:middle
+Sólo que tiene un aspecto un poco diferente.
+
+00:03:49.236 --> 00:03:52.446 align:middle
+Tiene cosas como un guión bajo
+incrustado y enlaces con guión bajo.
+
+00:03:52.446 --> 00:03:56.516 align:middle
+No vamos a hablar mucho de
+que no es tan importante.
+
+00:03:56.516 --> 00:04:02.236 align:middle
+Sólo quería ver, mostrarte qué aspecto
+tendría añadir un nuevo formato al sistema.
+
+00:04:02.236 --> 00:04:05.516 align:middle
+Y la razón por la que esto funciona
+fuera de la caja es muy simple,
+
+00:04:05.516 --> 00:04:08.956 align:middle
+porque el serializador
+entiende el formato cómo Jsun.
+
+00:04:08.956 --> 00:04:14.036 align:middle
+Y éste es uno de los formatos
+jsun how incorporados.
+
+00:04:14.036 --> 00:04:18.956 align:middle
+En realidad, esto se debe a que API
+Platform lo añade al serializador.
+
+00:04:18.956 --> 00:04:23.436 align:middle
+Muy bien, hagamos algo que quizá
+sea un poco más práctico.
+
+00:04:23.436 --> 00:04:28.796 align:middle
+¿Y si queremos que nuestros usuarios
+puedan devolver los tesoros en formato CSV?
+
+00:04:29.136 --> 00:04:37.606 align:middle
+CSV es un formato que el serializador
+Symphony entiende de inmediato.
+
+00:04:37.806 --> 00:04:46.426 align:middle
+Así que obviamente podríamos añadir CSV aquí mismo,
+pero como reto adicional, en lugar de habilitar CSV
+
+00:04:46.426 --> 00:04:52.046 align:middle
+para cada recurso API de nuestro sistema,
+añadámoslo sólo para el Tesoro Dragón. Así que la
+
+00:04:52.096 --> 00:04:56.536 align:middle
+forma de hacerlo es dentro de la
+clave del recurso API, eh, atributo,
+
+00:04:56.536 --> 00:04:59.136 align:middle
+Añadir un nuevo formato, configurar.
+
+00:04:59.136 --> 00:05:03.166 align:middle
+Y al igual que con la configuración,
+si sólo pones aquí CSV,
+
+00:05:03.416 --> 00:05:05.536 align:middle
+eso eliminará todos los demás formatos.
+
+00:05:05.536 --> 00:05:08.166 align:middle
+Así que en realidad
+tenemos que listarlos todos.
+
+00:05:08.166 --> 00:05:12.256 align:middle
+Jason ld, queremos Jason ld, queremos
+json, queremos html, queremos json, hal, y,
+
+00:05:12.456 --> 00:05:17.856 align:middle
+Y los cuatro leerán la configuración
+para saber qué tipo de contenido utilizar.
+
+00:05:17.856 --> 00:05:21.506 align:middle
+Y para el último, haremos csv.
+
+00:05:21.506 --> 00:05:23.996 align:middle
+Pero en este caso, como no
+existe en nuestra configuración,
+
+00:05:24.266 --> 00:05:27.626 align:middle
+tenemos que decirle qué tipo de
+contenido debe activar este formato.
+
+00:05:27.626 --> 00:05:30.246 align:middle
+Así que lo estableceremos en texto barra csv.
+
+00:05:30.246 --> 00:05:33.716 align:middle
+Ahora observa que mi editor
+está enfadado conmigo aquí.
+
+00:05:33.716 --> 00:05:37.446 align:middle
+Dice, el nombre a los argumentos ordenados
+no coincide con el orden de los parámetros.
+
+00:05:38.306 --> 00:05:43.206 align:middle
+Recuerda que cuando utilizas atributos,
+cuando pasas argumentos a atributos,
+
+00:05:43.206 --> 00:05:45.366 align:middle
+este atributo es en realidad su propia clase.
+
+00:05:45.366 --> 00:05:50.956 align:middle
+Y lo que estamos haciendo es simplemente rellenar los argumentos
+del structor mediante arcos con nombre. En realidad no
+
+00:05:51.106 --> 00:05:55.796 align:middle
+, el orden no importa, y
+en realidad no creo que
+
+00:05:55.796 --> 00:05:58.686 align:middle
+Peach three Storm deba
+señalar esto como un problema.
+
+00:05:58.986 --> 00:06:07.956 align:middle
+Pero si quieres, podemos hacer clic en ordenar
+argumentos y ahí mover los formatos un poco más arriba
+
+00:06:07.956 --> 00:06:12.656 align:middle
+y ahora estará contento y no me volveré
+loco por ese subrayado amarillo. En
+
+00:06:12.656 --> 00:06:18.396 align:middle
+cualquier caso, cuando actualicemos y nos
+dirijamos a nuestra ruta de recopilación,
+
+00:06:18.396 --> 00:06:24.136 align:middle
+pulsa probar y aquí abajo
+haremos texto barra csv.
+
+00:06:24.136 --> 00:06:28.256 align:middle
+Pulsa ejecutar y Hola csv.
+
+00:06:28.256 --> 00:06:30.426 align:middle
+Vaya, ha sido fácil.
+
+00:06:31.016 --> 00:06:35.136 align:middle
+Y de nuevo, esto funciona porque
+Symphony CER entiende el formato CSV
+
+00:06:35.136 --> 00:06:38.516 align:middle
+y todo esto lo maneja el utilizador Sea. De
+
+00:06:39.066 --> 00:06:41.696 align:middle
+hecho, si abro el perfilador de esa petición,
+
+00:06:41.946 --> 00:06:44.436 align:middle
+podemos bajar hasta la
+configuración del fertilizante.
+
+00:06:45.986 --> 00:06:49.386 align:middle
+Y sí, puedes ver que está tomando nuestro,
+está formateando a través del formato CSV.
+
+00:06:49.386 --> 00:06:50.876 align:middle
+Está utilizando el codificador CSV.
+
+00:06:50.876 --> 00:06:55.336 align:middle
+Es un codificador incorporado para hacerlo, y por
+eso obtenemos nuestros buenos resultados. Si quieres
+
+00:06:56.046 --> 00:07:01.506 align:middle
+, también puedes añadir más
+formatos personalizados al sistema
+
+00:07:01.646 --> 00:07:06.256 align:middle
+si quieres devolver las
+cosas de alguna otra manera.
+
+00:07:06.316 --> 00:07:09.996 align:middle
+Muy bien, a continuación,
+hablemos de la validación.
