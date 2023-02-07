@@ -1,0 +1,326 @@
+WEBVTT
+
+00:00:01.016 --> 00:00:02.116 align:middle
+Próximamente...
+
+00:00:02.116 --> 00:00:05.096 align:middle
+Vamos a empezar a hacer más
+cosas con nuestros datos.
+
+00:00:05.096 --> 00:00:07.596 align:middle
+Así que vamos a añadir algunos
+fixtures ricos a nuestro sitio.
+
+00:00:07.596 --> 00:00:13.276 align:middle
+Para los fixtures, me gusta usar foundry,
+así que voy a componer el coro foundry
+
+00:00:13.276 --> 00:00:16.246 align:middle
+y también la biblioteca
+de fixtures de doctrine.
+
+00:00:16.246 --> 00:00:20.186 align:middle
+Así que ORM fixtures e instalar
+ambos como dev dependencies.
+
+00:00:20.186 --> 00:00:23.516 align:middle
+Perfecto. Una vez que termine, vamos a
+ejecutar la consola Bin. Make factory
+
+00:00:23.516 --> 00:00:27.186 align:middle
+, si no has usado foundry antes, la
+
+00:00:27.546 --> 00:00:31.646 align:middle
+idea es que tengas una clase
+de fábrica para cada entidad
+
+00:00:31.646 --> 00:00:33.656 align:middle
+que te ayude a crearlas realmente rápido.
+
+00:00:34.226 --> 00:00:37.746 align:middle
+Así que le daré a cero para generar la
+de nuestra única entidad tesoro dragón.
+
+00:00:38.386 --> 00:00:42.066 align:middle
+Así que el resultado final es que ahora tenemos un objeto
+de fábrica Tesoro del dragón de fábrica de origen.
+
+00:00:42.066 --> 00:00:45.236 align:middle
+Se trata de un objeto que es realmente bueno
+
+00:00:45.236 --> 00:00:47.576 align:middle
+para crear un tesoro dragón ficticio
+y luego obtener valores por defecto.
+
+00:00:47.956 --> 00:00:50.976 align:middle
+Incluso tiene un montón de datos aleatorios
+agradables tipo de pre-llenado pulg
+
+00:00:50.976 --> 00:00:56.416 align:middle
+En realidad voy a pegar sobre eso
+algo de código que he actualizado. Lo
+
+00:00:56.416 --> 00:01:00.716 align:middle
+he modificado un poco y lo único que
+necesitamos aquí es que el nombre lo elija
+
+00:01:01.066 --> 00:01:03.046 align:middle
+de una nueva constante de nombre de tesoro.
+
+00:01:03.686 --> 00:01:08.296 align:middle
+Y también voy a pegar eso que
+puedes coger de esta página.
+
+00:01:08.296 --> 00:01:13.356 align:middle
+Sólo nos da algo interesante
+con lo que trabajar.
+
+00:01:13.356 --> 00:01:15.036 align:middle
+Muy bien, así que esta clase está hecha.
+
+00:01:15.036 --> 00:01:21.276 align:middle
+Paso dos, para cargarla como data
+fixtures y app fixtures. Voy a
+
+00:01:21.276 --> 00:01:24.216 align:middle
+borrar el método de carga y todo lo que necesitamos
+es la fábrica de Tesoros Dragón , dos puntos,
+
+00:01:24.626 --> 00:01:28.056 align:middle
+dos puntos crear muchos, y vamos
+a crear 40 tesoros dragón. Muy
+
+00:01:28.806 --> 00:01:30.716 align:middle
+bien, carguemos esto
+
+00:01:30.716 --> 00:01:34.646 align:middle
+en la Terminal Ejecuta la Consola
+Sinfónica Doctrine, fixtures Carga.
+
+00:01:36.036 --> 00:01:37.906 align:middle
+Di que sí y guay.
+
+00:01:37.976 --> 00:01:40.496 align:middle
+Veamos si funciona Volvemos a nuestra api.
+
+00:01:40.496 --> 00:01:42.126 align:middle
+Actualizaré.
+
+00:01:42.566 --> 00:01:45.176 align:middle
+Probemos con la ruta get collection.
+
+00:01:47.066 --> 00:01:50.576 align:middle
+Pulsa ejecutar y precioso.
+
+00:01:50.806 --> 00:01:53.256 align:middle
+Mira todos esos impresionantes ocho tesoros.
+
+00:01:53.256 --> 00:01:59.956 align:middle
+Así que recuerda que añadimos 40, pero si miras
+aquí, aunque los ID no se quedaron, perdón,
+
+00:01:59.956 --> 00:02:04.896 align:middle
+uno, definitivamente no hay 40 aquí.
+
+00:02:04.896 --> 00:02:09.676 align:middle
+Dice Total de objetos 40, pero
+sólo muestra 25 de ellos.
+
+00:02:10.396 --> 00:02:13.576 align:middle
+Y aquí abajo está esta vista Hydra,
+
+00:02:13.576 --> 00:02:18.286 align:middle
+que más o menos explica por qué
+hay naciones de páginas Builtin.
+
+00:02:18.746 --> 00:02:22.826 align:middle
+Así que ahora mismo estamos viendo
+la página uno y también podemos ir
+
+00:02:22.826 --> 00:02:26.276 align:middle
+a ver cuál es la última
+página y cuál es la siguiente.
+
+00:02:26.276 --> 00:02:28.746 align:middle
+Así que sí, estamos hablando
+de AP de culto como retorno.
+
+00:02:28.816 --> 00:02:32.176 align:middle
+Sin embargo, una colección de rutas
+de artículos necesita Page Nation
+
+00:02:32.176 --> 00:02:35.126 align:middle
+con API Platform , eso lo consigues gratis.
+
+00:02:35.126 --> 00:02:40.996 align:middle
+Así que una manera fácil de ver esto es
+vamos a slash api slash tesoros que Jason ld.
+
+00:02:42.316 --> 00:02:46.246 align:middle
+Así que aquí está la página uno y luego
+podemos añadir pregunta Marca Página igual a dos.
+
+00:02:46.246 --> 00:02:47.546 align:middle
+Y ahora tenemos la página dos.
+
+00:02:48.146 --> 00:02:51.646 align:middle
+Es increíble no tener que preocuparse por eso.
+
+00:02:51.646 --> 00:02:55.276 align:middle
+Ahora, si lo necesitas, puedes cambiar
+algunas opciones de Page Nation.
+
+00:02:55.276 --> 00:03:03.066 align:middle
+Así que para una especificación a tu terminal
+ejecuta bin console, debug config API platform.
+
+00:03:03.396 --> 00:03:12.686 align:middle
+Así que en general, hay un montón de
+cosas que puedes configurar en API Platform.
+
+00:03:12.946 --> 00:03:16.896 align:middle
+Y este comando nos va a mostrar la
+configuración actual para API Platform.
+
+00:03:16.896 --> 00:03:21.136 align:middle
+Así, por ejemplo, puedes añadir un
+título y una descripción a tu api.
+
+00:03:21.846 --> 00:03:27.226 align:middle
+Esto pasa a formar parte de la especificación
+API abierta y aparece en tu documentación.
+
+00:03:28.356 --> 00:03:31.346 align:middle
+Y hay muchas otras cosas que
+puedes hacer dentro de Fear.
+
+00:03:31.346 --> 00:03:33.606 align:middle
+Si buscas Page Nation, no queremos
+la que está bajo Graph ql.
+
+00:03:33.606 --> 00:03:33.836 align:middle
+Allá vamos.
+
+00:03:33.836 --> 00:03:35.596 align:middle
+Queremos el que está bajo Colección.
+
+00:03:35.596 --> 00:03:36.566 align:middle
+Colección Page Nation.
+
+00:03:36.566 --> 00:03:38.376 align:middle
+Aquí puedes modificar algunas cosas.
+
+00:03:38.376 --> 00:03:41.686 align:middle
+Una de ellas, de nuevo, te muestra
+la configuración actual , por
+
+00:03:41.956 --> 00:03:46.446 align:middle
+lo que no te muestra todas
+las claves posibles. De
+
+00:03:46.446 --> 00:03:50.536 align:middle
+hecho, hay una clave llamada Elementos
+por página que puedes configurar
+
+00:03:50.626 --> 00:03:54.616 align:middle
+para cambiar globalmente el número
+predeterminado de elementos por página.
+
+00:03:54.616 --> 00:03:57.356 align:middle
+Así que, como recordatorio, acabamos
+de ejecutar depurar config. El
+
+00:03:57.536 --> 00:04:01.256 align:middle
+otro comando que siempre debes
+recordar es config, dump config, debug
+
+00:04:01.936 --> 00:04:09.176 align:middle
+config te muestra la configuración actual
+config dump te muestra un árbol completo
+
+00:04:09.176 --> 00:04:11.266 align:middle
+de posibles configuraciones.
+
+00:04:11.266 --> 00:04:16.786 align:middle
+Así que ahí está, página Nación Máximos elementos por página bajo,
+en realidad está bajo una clave de valores predeterminados. Esto está muy
+
+00:04:16.786 --> 00:04:20.526 align:middle
+bien porque te muestra un montón
+
+00:04:20.526 --> 00:04:24.766 align:middle
+de valores por defecto que puedes especificar.
+
+00:04:24.766 --> 00:04:32.516 align:middle
+En realidad son las mismas opciones que
+encontrarás en tu atributo de recurso a API.
+
+00:04:32.996 --> 00:04:38.636 align:middle
+Así que puedes especificar globalmente el
+máximo de elementos por página de Page Nation,
+
+00:04:38.816 --> 00:04:45.606 align:middle
+o puedes tomar esa misma
+opción e ir a Dragon Treasure,
+
+00:04:45.606 --> 00:04:52.356 align:middle
+buscar tu atributo de recurso API y añadir
+aquí elementos por página de Page Nation.
+
+00:04:52.496 --> 00:04:56.166 align:middle
+Y probemos esto.
+
+00:04:56.166 --> 00:04:58.846 align:middle
+Lo fijaremos en 10. De
+
+00:04:58.846 --> 00:05:08.546 align:middle
+nuevo, puedes ver que las
+claves que vemos aquí son las
+
+00:05:08.546 --> 00:05:11.656 align:middle
+mismas que las que ves dentro de esta
+configuración predeterminada. Así que
+
+00:05:11.656 --> 00:05:15.736 align:middle
+es bueno que tengas en
+cuenta que puedes dar a todos
+
+00:05:15.736 --> 00:05:20.696 align:middle
+tus atributos de recursos API
+algunas opciones por defecto.
+
+00:05:20.696 --> 00:05:28.056 align:middle
+Antes de que probemos esto de aquí, volvamos a la
+página uno y hermosa, una lista mucho más corta.
+
+00:05:28.056 --> 00:05:33.066 align:middle
+Y ahora puedes ver que tenemos cuatro
+páginas en lugar de sólo dos.
+
+00:05:33.066 --> 00:05:34.636 align:middle
+También hay otras cosas que puedes configurar.
+
+00:05:34.636 --> 00:05:36.646 align:middle
+Por ejemplo, puedes permitir que tu cliente
+API diga cuántas quiere por página.
+
+00:05:36.676 --> 00:05:37.306 align:middle
+Así podrías dejarles elegir.
+
+00:05:37.336 --> 00:05:38.536 align:middle
+Consulta la documentación
+para saber cómo hacerlo.
+
+00:05:38.566 --> 00:05:40.876 align:middle
+Muy bien, ahora que tenemos un montón de datos, vamos a
+dar a nuestros usuarios de la API Dragón la posibilidad
+
+00:05:40.906 --> 00:05:41.806 align:middle
+de buscar y filtrar entre los tesoros.
+
+00:05:41.836 --> 00:05:43.756 align:middle
+Por ejemplo, quizá un dragón esté buscando un
+tesoro de caramelos envueltos individualmente.
+
+00:05:43.786 --> 00:05:44.176 align:middle
+Eso a continuación.
