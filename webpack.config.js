@@ -64,6 +64,11 @@ Encore
 
     // uncomment if you use React
     .enableReactPreset()
+    .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
+    .configureDefinePlugin((options) => {
+        options.__VUE_OPTIONS_API__ = false;
+        options.__VUE_PROD_DEVTOOLS__ = false;
+    })
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher

@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Hi!
+    <div {{ vue_component('TreasureConnectApp', {
+        entrypoint: path('api_entrypoint')
+    }) }}></div>
 {% endblock %}
