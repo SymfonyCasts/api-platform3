@@ -53,6 +53,10 @@ use Docker for this. The DoctrineBundle recipe gave us a nice `docker-compose.ym
 file that boots up Postgres, so... let's use that! Spin over to your terminal and
 run:
 
+***TIP
+In modern versions of Docker, run `docker compose up -d` instead of `docker-compose`.
+***
+
 ```terminal
 docker-compose up -d
 ```
