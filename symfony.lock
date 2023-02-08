@@ -271,6 +271,9 @@
     "symfony/ux-react": {
         "version": "v2.6.1"
     },
+    "symfony/ux-vue": {
+        "version": "v2.7.1"
+    },
     "symfony/validator": {
         "version": "6.2",
         "recipe": {
