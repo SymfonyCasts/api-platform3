@@ -1,41 +1,51 @@
 <template>
-    <div class="wrapper">
-        <div style="position:relative;">
-            <div class="row no-gutters" style="box-shadow: 0 3px 7px 1px rgba(0,0,0,0.06);">
-                <div class="col py-5">
-                    <h1 class="text-center">CheeseWhiz</h1>
-                    <h6 class="text-center">Because someone wants your left-over cheese.</h6>
-                </div>
-            </div>
-            <div class="row no-gutters">
-                <div class="col-xs-12 col-md-6 px-5" style="background-color: #659dbd; padding-bottom: 150px;">
-                    <h2 class="text-center mb-5 pt-5 text-white">API</h2>
-                    <p class="text-white">
-                        You are currently
-                        <span v-if="user">
-                            authenticated as {{ user.username }}
-
-                            <a href="/logout" class="btn btn-warning btn-sm">Log out</a>
-                        </span>
-                        <span v-else>not authenticated</span>
-                    </p>
-                    <p class="text-white">
-                        Check out the API Docs: <a v-bind:href="entrypoint" class="text-white"><u>{{ entrypoint }}</u></a>
-                    </p>
-                </div>
-                <div class="col-xs-12 col-md-6 px-5" style="background-color: #7FB7D7; padding-bottom: 150px;">
-                    <h2 class="text-center mb-5 pt-5 text-white">Or, login!</h2>
-                    <loginForm
-                        v-on:user-authenticated="onUserAuthenticated"
-                    ></loginForm>
-                </div>
-            </div>
-            <footer class="footer">
-
-                    <p class="text-muted my-5 text-center">Made with ❤️ by the <a style="text-decoration: underline; color: #6c757d; font-weight: bold;" href="http://www.symfonycasts.com">SymfonyCasts</a> Team</p>
-
-            </footer>
+    <div class="purple flex flex-col min-h-screen">
+        <div class="px-8 py-8">
+            <img class="h-16 w-auto" src="/img/coinLogo.png">
         </div>
+        <div class="flex-auto flex flex-col sm:flex-row justify-center px-8">
+            <form
+                class="book shadow-md rounded px-8 pt-6 pb-8 mb-4 sm:w-1/2 md:w-1/3">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2"
+                           for="username">
+                        Username
+                    </label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="username" type="text" placeholder="Username">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2"
+                           for="password">
+                        Password
+                    </label>
+                    <input
+                        class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password" type="password"
+                        placeholder="******************">
+                    <p class="text-red-500 text-xs italic">Please choose a
+                        password.</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button
+                        class="bg-indigo-700 hover:bg-indigo-900 shadow-lg text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline text-sm"
+                        type="button">
+                        Log In
+                    </button>
+                    <a class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-blue-800"
+                       href="#">
+                        Forgot Password?
+                    </a>
+                </div>
+            </form>
+            <div
+                class="book shadow-md rounded sm:ml-3 px-8 pt-8 pb-8 mb-4 sm:w-1/2 md:w-1/3 text-center">
+                <p>You are not currently authenticated</p>
+                <p>Check out the <a href="#">API Docs</a></p>
+            </div>
+        </div>
+        <img src="/img/GoldPile.png">
     </div>
 </template>
 
