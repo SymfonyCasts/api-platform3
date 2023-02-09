@@ -10,17 +10,18 @@ en objetos es el Serializador de Symfony.
 
 00:00:13.346 --> 00:00:17.466 align:middle
 symfony/serializer es un componente
-independiente que puedes utilizar fuera de la API
+independiente que puedes utilizar fuera
 
 00:00:17.466 --> 00:00:20.246 align:middle
-Platform y es impresionante.
+de API Platform y es increíble.
 
-00:00:20.876 --> 00:00:26.316 align:middle
-Le das cualquier entrada -como un objeto o
-cualquier otra cosa- y luego lo transforma
+00:00:20.876 --> 00:00:24.366 align:middle
+Le das cualquier entrada
+-como un objeto u otra cosa-
 
-00:00:26.316 --> 00:00:29.656 align:middle
-en cualquier formato, como JSON, XML o CSV.
+00:00:24.656 --> 00:00:29.656 align:middle
+y lo transforma en cualquier
+formato, como JSON, XML o CSV.
 
 00:00:29.656 --> 00:00:34.726 align:middle
 Como puedes ver en este elegante
@@ -41,24 +42,23 @@ También puede hacer lo mismo a la inversa.
 Si partimos de JSON, como si enviáramos JSON a
 nuestra API, primero lo descodifica en una matriz
 
-00:00:53.346 --> 00:00:56.246 align:middle
-y luego lo desnormaliza de
-nuevo en un objeto. Para
+00:00:53.346 --> 00:00:57.006 align:middle
+y luego lo desnormaliza de nuevo en un objeto.
 
-00:00:56.246 --> 00:01:03.226 align:middle
-que todo esto ocurra, internamente hay
-muchos objetos normalizadores distintos
+00:00:57.006 --> 00:01:03.226 align:middle
+Para que todo esto ocurra, internamente
+hay muchos objetos normalizadores distintos
 
 00:01:03.316 --> 00:01:05.356 align:middle
 que saben cómo trabajar con datos diferentes.
 
 00:01:05.436 --> 00:01:12.456 align:middle
-Por ejemplo, hay un DateTimeNormalizer que
-es muy bueno manejando objetos DateTime.
+Por ejemplo, hay un DateTimeNormalizer que es
+realmente bueno manejando objetos DateTime.
 
 00:01:12.926 --> 00:01:18.266 align:middle
-Por ejemplo, nuestra entidad tiene un campo
-createdAt, que es un objeto DateTime. Si te fijas
+Compruébalo: nuestra entidad tiene un campo
+createdAt, que es un objeto DateTime: Si te fijas
 
 00:01:18.766 --> 00:01:22.546 align:middle
 en nuestra API, cuando probamos la ruta GET,
@@ -68,8 +68,7 @@ en nuestra API, cuando probamos la ruta GET,
 cadena especial de fecha y hora.
 
 00:01:26.966 --> 00:01:30.836 align:middle
-El DateTimeNormalizer es
-el responsable de hacerlo.
+El DateTimeNormalizer se encarga de hacer eso.
 
 00:01:31.566 --> 00:01:35.556 align:middle
 También hay otro normalizador realmente
@@ -88,17 +87,14 @@ Ese componente es inteligente.
 
 00:01:49.326 --> 00:01:55.576 align:middle
 Por ejemplo, si miramos nuestra API, cuando
-hacemos una petición GET a la ruta de colecciones,
+hacemos una petición GET a la ruta de recogida,
 
 00:01:56.116 --> 00:01:58.506 align:middle
 uno de los campos que devuelve es name.
 
-00:01:59.226 --> 00:02:03.846 align:middle
-Pero si miramos la clase,
-name es una propiedad privada.
-
-00:02:04.246 --> 00:02:06.386 align:middle
-Entonces, ¿cómo demonios se lee eso?
+00:01:59.226 --> 00:02:06.386 align:middle
+Pero si miramos la clase, name es una propiedad
+privada: Entonces, ¿cómo demonios se lee eso?
 
 00:02:07.106 --> 00:02:09.906 align:middle
 Ahí es donde entra en juego
@@ -108,11 +104,11 @@ el componente PropertyAccess.
 Primero mira si la propiedad name es pública.
 
 00:02:14.536 --> 00:02:18.626 align:middle
-Y si no lo es, busca un método getName().
+Y si no lo es, busca un método getName():
 
 00:02:18.986 --> 00:02:22.356 align:middle
-Esto es lo que se llama
-cuando se construye el JSON.
+Así que eso es lo que se llama
+realmente cuando se construye el JSON.
 
 00:02:23.046 --> 00:02:28.576 align:middle
 Lo mismo ocurre cuando enviamos JSON, como
@@ -122,16 +118,13 @@ para crear o actualizar un DragonTreasure.
 PropertyAccess examina cada campo
 del JSON y, si se puede establecer,
 
-00:02:35.686 --> 00:02:39.396 align:middle
-por ejemplo mediante un método
-setName(), lo establece.
+00:02:35.686 --> 00:02:42.326 align:middle
+por ejemplo mediante un método setName(), lo
+establece: Y, es incluso un poco más genial que eso:
 
-00:02:40.016 --> 00:02:45.706 align:middle
-Y es incluso un poco más genial que
-eso: buscará métodos getter o setter
-
-00:02:45.706 --> 00:02:49.436 align:middle
-que no correspondan a ninguna propiedad real.
+00:02:43.036 --> 00:02:49.436 align:middle
+¡Incluso buscará métodos getter o setter que
+no se correspondan con ninguna propiedad real!
 
 00:02:49.886 --> 00:02:52.976 align:middle
 Puedes utilizar esto para
@@ -147,54 +140,61 @@ que no existan como propiedades en tu clase.
 Imagina que, cuando estamos
 creando o editando un tesoro,
 
-00:03:01.386 --> 00:03:06.956 align:middle
-en lugar de enviar un campo description,
-queremos poder enviar un campo textDescription
+00:03:01.386 --> 00:03:04.636 align:middle
+en lugar de enviar un campo
+description, queremos poder
 
-00:03:07.296 --> 00:03:10.376 align:middle
-que contenga texto sin formato
+00:03:04.636 --> 00:03:08.786 align:middle
+enviar un campo textDescription
+que contenga texto sin formato...
+
+00:03:08.966 --> 00:03:10.376 align:middle
 pero con saltos de línea.
 
 00:03:10.746 --> 00:03:16.596 align:middle
-Entonces, en nuestro código, transformaremos esos
+Luego, en nuestro código, transformaremos esos
 saltos de línea en etiquetas HTML <br>.
 
 00:03:17.186 --> 00:03:18.196 align:middle
-Deja que te muestre lo que quiero decir.
+Te mostraré lo que quiero decir.
 
 00:03:18.656 --> 00:03:20.486 align:middle
 Copia el método setDescription().
 
 00:03:20.886 --> 00:03:25.616 align:middle
-A continuación, pega y llama a este
+Luego, debajo, pega y llama a este
 nuevo método setTextDescription().
 
 00:03:26.256 --> 00:03:28.786 align:middle
 Básicamente va a establecer
 la propiedad description...
 
-00:03:28.986 --> 00:03:31.616 align:middle
-pero también vamos a llamar a nl2br().
+00:03:28.986 --> 00:03:32.226 align:middle
+pero antes llama a nl2br().
 
-00:03:31.616 --> 00:03:36.886 align:middle
+00:03:32.846 --> 00:03:36.886 align:middle
 Esa función transforma literalmente las
 nuevas líneas en etiquetas <br>.
 
-00:03:37.246 --> 00:03:49.266 align:middle
-Con sólo ese cambio, actualiza la
+00:03:37.266 --> 00:03:43.696 align:middle
+Si llevas por aquí tanto tiempo como yo, recordarás
+cuando nl2br era superguay: De todos modos,
+
+00:03:43.806 --> 00:03:49.266 align:middle
+sólo con ese cambio, actualiza la
 documentación y abre las rutas POST o PUT.
 
 00:03:49.796 --> 00:03:53.316 align:middle
-¡Vaya! ¡Tenemos un nuevo
-campo llamado textDescription !
+Y.. ¡Tenemos un nuevo campo
+llamado textDescription !
 
 00:03:53.756 --> 00:03:58.996 align:middle
-¡Yup! El serializador vio el método
-setTextDescription() y determinó
+¡Sí! El serializador ha visto el método
+setTextDescription() y ha determinado
 
 00:03:58.996 --> 00:04:02.496 align:middle
 que textDescription es una
-propiedad virtual "configurable".
+propiedad virtual "definible "
 
 00:04:03.316 --> 00:04:06.606 align:middle
 Sin embargo, no lo vemos en la ruta GET.
@@ -204,13 +204,13 @@ Sin embargo, no lo vemos en la ruta GET.
 
 00:04:09.226 --> 00:04:14.116 align:middle
 No existe el método getTextDescription(),
-por lo que aquí no habrá un nuevo campo.
+por lo que aquí no habrá un nuevo c ampo.
 
 00:04:14.436 --> 00:04:17.216 align:middle
 El nuevo campo es escribible, pero no legible.
 
-00:04:17.976 --> 00:04:19.586 align:middle
-¡Vamos a probarlo!
+00:04:17.976 --> 00:04:19.556 align:middle
+Vamos a probar esta ruta
 
 00:04:19.666 --> 00:04:23.746 align:middle
 Primero... Tengo que ejecutar
@@ -238,7 +238,7 @@ necesitas enviar todos los campos:
 sólo los campos que quieras cambiar.
 
 00:04:42.676 --> 00:04:44.056 align:middle
-Pasa un textDescription...
+Pasa textDescription...
 
 00:04:44.416 --> 00:04:49.076 align:middle
 e incluiré \n para representar
@@ -252,7 +252,7 @@ código de estado 200.
 
 00:04:56.206 --> 00:05:00.336 align:middle
 Y fíjate: ¡el campo description
-tiene esos saltos de línea HTML!
+tiene esas etiquetas <br>!
 
 00:05:01.066 --> 00:05:04.146 align:middle
 Vale, ahora que tenemos setTextDescription()...
@@ -276,8 +276,8 @@ tenemos textDescription,
 pero el campo description ha desaparecido!
 
 00:05:22.926 --> 00:05:28.186 align:middle
-El serializador se ha dado cuenta de que ya no se
-puede establecer y lo ha eliminado de nuestra API.
+El serializador se ha dado cuenta de que ya no
+es configurable y lo ha eliminado de nuestra API.
 
 00:05:29.006 --> 00:05:31.516 align:middle
 Seguiría siendo devuelto porque es algo que
@@ -286,7 +286,7 @@ Seguiría siendo devuelto porque es algo que
 podemos leer, pero ya no es escribible.
 
 00:05:35.106 --> 00:05:37.086 align:middle
-Todo esto es realmente increíble.
+Todo esto es realmente genial.
 
 00:05:37.446 --> 00:05:43.826 align:middle
 Simplemente nos preocupamos de escribir nuestra clase
@@ -300,7 +300,7 @@ Vale, ¿qué más?
 
 00:05:47.636 --> 00:05:51.366 align:middle
 Bueno, es un poco raro que podamos
-establecer el campo createdAt...
+establecer el campo createdAt:
 
 00:05:51.846 --> 00:05:55.066 align:middle
 que normalmente se establece
@@ -316,8 +316,8 @@ Pero, ¿sabes qué?
 Quería llamar a este campo plunderedAt.
 
 00:06:00.886 --> 00:06:03.286 align:middle
-Reaccionaré y cambiaré el
-nombre de esa propiedad...
+Refactorizaré y cambiaré
+el nombre de esa propiedad...
 
 00:06:03.686 --> 00:06:07.626 align:middle
 y dejaré que PhpStorm renombre
@@ -369,18 +369,18 @@ Y ahora no necesitamos el
 Y si buscamos setPlunderedAt,
 ¡ya no necesitamos ese método!
 
-00:07:06.426 --> 00:07:07.676 align:middle
-Así que elimínalo.
+00:07:07.006 --> 00:07:07.676 align:middle
+¡Elimínalo!
 
 00:07:09.276 --> 00:07:13.736 align:middle
 Esto significa ahora que la propiedad
 plunderedAt es legible pero no escribible.
 
-00:07:14.156 --> 00:07:21.076 align:middle
+00:07:14.156 --> 00:07:21.626 align:middle
 Así que, no te sorprendas, cuando actualizamos y
-abrimos la ruta PUT o POST, plunderedAt ha desaparecido.
+abrimos la ruta PUT o POST, plunderedAt está ausente.
 
-00:07:21.106 --> 00:07:24.136 align:middle
+00:07:22.396 --> 00:07:24.136 align:middle
 Pero si miramos el aspecto
 que tendría el modelo
 
@@ -391,11 +391,11 @@ plunderedAt sigue ahí.
 00:07:29.446 --> 00:07:31.226 align:middle
 Muy bien, ¡un objetivo más! Vamos a
 
-00:07:31.516 --> 00:07:37.606 align:middle
+00:07:31.516 --> 00:07:37.566 align:middle
 añadir un campo virtual llamado plunderedAtAgo
-que devuelva una versión legible por humanos de la
+que devuelva una versión legible por humanos
 
-00:07:37.606 --> 00:07:40.326 align:middle
+00:07:37.566 --> 00:07:40.326 align:middle
 de la fecha, como "hace dos meses".
 
 00:07:41.286 --> 00:07:43.516 align:middle
@@ -404,7 +404,7 @@ instalar un nuevo paquete:
 
 00:07:43.876 --> 00:07:50.016 align:middle
 composer require nesbot/carbon
-Una vez finalizado esto...
+Una vez que esto termine...
 
 00:07:50.426 --> 00:07:56.816 align:middle
 encuentra el método getPlunderedAt(),
@@ -417,19 +417,21 @@ getPlunderedAtAgo(). Dentro,
 00:08:03.336 --> 00:08:03.956 align:middle
 devuelve
 
-00:08:04.166 --> 00:08:11.086 align:middle
-Carbon::instance($this->getPlunderedAt))
+00:08:04.166 --> 00:08:08.226 align:middle
+Carbon::instance($this->getPlunderedAt()))
+
+00:08:08.516 --> 00:08:11.086 align:middle
 y luego ->diffForHumans().
 
 00:08:11.176 --> 00:08:17.096 align:middle
 Así que, como ahora entendemos, no
 existe la propiedad plunderedAtAgo...
 
-00:08:17.436 --> 00:08:23.006 align:middle
-pero el serializer debería verlo como un legible a
-través de su getter y exponerlo como un nuevo campo.
+00:08:17.436 --> 00:08:22.536 align:middle
+pero el serializer debería ver esto como
+legible a través de su getter y exponerlo.
 
-00:08:23.006 --> 00:08:25.796 align:middle
+00:08:22.956 --> 00:08:25.796 align:middle
 Ah, y ya que estoy aquí,
 añadiré un poco de documentación
 
@@ -440,30 +442,27 @@ arriba para describir el significado del campo.
 Bien, probemos esto.
 
 00:08:32.966 --> 00:08:39.176 align:middle
-En cuanto actualizamos y abrimos la ruta
+En cuanto actualizamos y abrimos una ruta
 GET, ¡vemos el nuevo campo en el ejemplo!
 
 00:08:40.676 --> 00:08:44.966 align:middle
-También podemos ver los campos que obtendremos
-más abajo, en la sección Esquemas.
+También podemos ver los campos que
+recibiremos abajo, en la sección Esquemas.
 
 00:08:46.636 --> 00:08:50.736 align:middle
 Volvamos atrás, probemos
 la ruta GET con el ID one.
 
-00:08:51.136 --> 00:08:52.486 align:middle
-Y... ¡genial!
-
-00:08:53.146 --> 00:08:54.936 align:middle
-¿A que mola?
+00:08:51.816 --> 00:08:54.936 align:middle
+Y... ¿a que mola? A
 
 00:08:55.876 --> 00:09:00.116 align:middle
-Siguiente: ¿qué pasa si queremos tener ciertos
-métodos getter o setter en nuestra clase,
+continuación: ¿qué pasa si queremos tener
+ciertos métodos getter o setter en nuestra clase,
 
 00:09:00.386 --> 00:09:04.466 align:middle
-como setTextDescription(), pero no
-queremos que formen parte de nuestra API?
+como setDescription(), pero no queremos
+que formen parte de nuestra API?
 
 00:09:05.236 --> 00:09:07.916 align:middle
 La respuesta: grupos de serialización.
