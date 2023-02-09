@@ -8,15 +8,12 @@
                 v-on:user-authenticated="onUserAuthenticated"></LoginForm>
             <div
                 class="book shadow-md rounded sm:ml-3 px-8 pt-8 pb-8 mb-4 sm:w-1/2 md:w-1/3 text-center">
-                You are currently
-                <span v-if="user">
-                    authenticated as: <strong>{{ user.username }}</strong>
+                <div v-if="user">
+                    Authenticated as: <strong>{{ user.username }}</strong>
 
-                    <br>
-                    <a href="/logout" class="underline">Log out</a>
-                    | <a href="/api-tokens" class="underline">Access tokens</a>
-                </span>
-                <span v-else>not authenticated</span>
+                    | <a href="/logout" class="underline">Log out</a>
+                </div>
+                <div v-else>Not authenticated</div>
 
                 <hr class="my-10 mx-auto" style="border-top: 1px solid #ccc; width: 70%;" />
 
