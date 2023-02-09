@@ -1,0 +1,24 @@
+diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
+index d5c1435..d515b0c 100644
+--- a/src/DataFixtures/AppFixtures.php
++++ b/src/DataFixtures/AppFixtures.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\DataFixtures;
+ 
++use App\Factory\ApiTokenFactory;
+ use App\Factory\DragonTreasureFactory;
+ use App\Factory\UserFactory;
+ use Doctrine\Bundle\FixturesBundle\Fixture;
+@@ -22,5 +23,11 @@ class AppFixtures extends Fixture
+                 'owner' => UserFactory::random(),
+             ];
+         });
++
++        ApiTokenFactory::createMany(30, function () {
++            return [
++                'ownedBy' => UserFactory::random(),
++            ];
++        });
+     }
+ }

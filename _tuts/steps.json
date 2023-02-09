@@ -124,7 +124,62 @@
             "id": "userinjs-remove-the-console-log",
             "name": "UserInJS: Remove the console.log()",
             "description": null
+        },
+        {
+            "id": "apitoken-make-entity",
+            "name": "ApiToken: make:entity",
+            "description": null
+        },
+        {
+            "id": "apitoken-generate-token-in-constructor",
+            "name": "ApiToken: Generate token in constructor",
+            "description": null
+        },
+        {
+            "id": "apitoken-generate-migration",
+            "name": "ApiToken: generate migration",
+            "description": null
+        },
+        {
+            "id": "apitoken-make-factory",
+            "name": "ApiToken: make:factory",
+            "description": null
+        },
+        {
+            "id": "apitoken-tweak-factory",
+            "name": "ApiToken: Tweak factory",
+            "description": null
+        },
+        {
+            "id": "apitoken-add-fixtures",
+            "name": "ApiToken: Add fixtures",
+            "description": null
+        },
+        {
+            "id": "apitoken-send-tokens-to-frontend",
+            "name": "ApiToken: Send tokens to frontend",
+            "description": null
+        },
+        {
+            "id": "tokenauth-add-api-token-to-firewall",
+            "name": "TokenAuth: Add api_token to firewall",
+            "description": null
+        },
+        {
+            "id": "tokenauth-create-token-handler-class",
+            "name": "TokenAuth: Create token handler class",
+            "description": null
+        },
+        {
+            "id": "tokenauth-fill-in-handler-logic",
+            "name": "TokenAuth: Fill in handler logic",
+            "description": null
+        },
+        {
+            "id": "tokenauth-add-authorization-to-swagger",
+            "name": "TokenAuth: Add authorization to swagger",
+            "description": null
         }
     ],
-    "sha": "e6aa8c1c6ac50f46e77fb62d9c55340d4b76bdc5"
+    "sha": "f87becbe1f6f9104db1b65214ca09319657bf18b"
 }

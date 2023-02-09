@@ -1,0 +1,12 @@
+diff --git a/src/Factory/ApiTokenFactory.php b/src/Factory/ApiTokenFactory.php
+index 490d37a..19509e7 100644
+--- a/src/Factory/ApiTokenFactory.php
++++ b/src/Factory/ApiTokenFactory.php
+@@ -49,7 +49,6 @@ final class ApiTokenFactory extends ModelFactory
+         return [
+             'ownedBy' => UserFactory::new(),
+             'scopes' => [],
+-            'token' => self::faker()->text(64),
+         ];
+     }
+ 

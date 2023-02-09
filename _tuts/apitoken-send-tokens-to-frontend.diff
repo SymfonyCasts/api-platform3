@@ -1,0 +1,73 @@
+diff --git a/assets/vue/controllers/TreasureConnectApp.vue b/assets/vue/controllers/TreasureConnectApp.vue
+index 97a492f..9063605 100644
+--- a/assets/vue/controllers/TreasureConnectApp.vue
++++ b/assets/vue/controllers/TreasureConnectApp.vue
+@@ -12,6 +12,13 @@
+                     Authenticated as: <strong>{{ user.username }}</strong>
+ 
+                     | <a href="/logout" class="underline">Log out</a>
++                    <br>
++                    <h3 class="text-left font-semibold mt-2">Tokens</h3>
++                    <dl class="text-left max-w-md text-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
++                        <div class="flex flex-col py-3" v-for="token in tokens" :key="token">
++                            <dd class="text-xs whitespace-normal break-words">{{ token }}</dd>
++                        </div>
++                    </dl>
+                 </div>
+                 <div v-else>Not authenticated</div>
+ 
+@@ -30,7 +37,7 @@ import LoginForm from '../LoginForm';
+ import coinLogoPath from '../../images/coinLogo.png';
+ import goldPilePath from '../../images/GoldPile.png';
+ 
+-const props = defineProps(['entrypoint', 'user'])
++const props = defineProps(['entrypoint', 'user', 'tokens'])
+ const user = ref(props.user);
+ 
+ const onUserAuthenticated = async (userUri) => {
+diff --git a/src/Entity/ApiToken.php b/src/Entity/ApiToken.php
+index 65fb949..bccdf75 100644
+--- a/src/Entity/ApiToken.php
++++ b/src/Entity/ApiToken.php
+@@ -85,4 +85,9 @@ class ApiToken
+ 
+         return $this;
+     }
++
++    public function isValid(): bool
++    {
++        return $this->expiresAt === null || $this->expiresAt > new \DateTimeImmutable();
++    }
+ }
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 70dce9d..2c348c9 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -219,4 +219,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+         return $this;
+     }
++
++    /**
++     * @return string[]
++     */
++    public function getValidTokenStrings(): array
++    {
++        return $this->getApiTokens()
++            ->filter(fn (ApiToken $token) => $token->isValid())
++            ->map(fn (ApiToken $token) => $token->getToken())
++            ->toArray()
++        ;
++    }
+ }
+diff --git a/templates/main/homepage.html.twig b/templates/main/homepage.html.twig
+index 3a6648e..f345108 100644
+--- a/templates/main/homepage.html.twig
++++ b/templates/main/homepage.html.twig
+@@ -4,5 +4,6 @@
+     <div {{ vue_component('TreasureConnectApp', {
+         entrypoint: path('api_entrypoint'),
+         user: userData,
++        tokens: app.user ? app.user.validTokenStrings : []
+     }) }}></div>
+ {% endblock %}

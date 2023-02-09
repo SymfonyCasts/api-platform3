@@ -1,0 +1,212 @@
+diff --git a/src/Entity/ApiToken.php b/src/Entity/ApiToken.php
+new file mode 100644
+index 0000000..2fbd7c3
+--- /dev/null
++++ b/src/Entity/ApiToken.php
+@@ -0,0 +1,81 @@
++<?php
++
++namespace App\Entity;
++
++use App\Repository\ApiTokenRepository;
++use Doctrine\ORM\Mapping as ORM;
++
++#[ORM\Entity(repositoryClass: ApiTokenRepository::class)]
++class ApiToken
++{
++    #[ORM\Id]
++    #[ORM\GeneratedValue]
++    #[ORM\Column]
++    private ?int $id = null;
++
++    #[ORM\ManyToOne(inversedBy: 'apiTokens')]
++    #[ORM\JoinColumn(nullable: false)]
++    private ?User $ownedBy = null;
++
++    #[ORM\Column(nullable: true)]
++    private ?\DateTimeImmutable $expiresAt = null;
++
++    #[ORM\Column(length: 68)]
++    private string $token = null;
++
++    #[ORM\Column]
++    private array $scopes = [];
++
++    public function getId(): ?int
++    {
++        return $this->id;
++    }
++
++    public function getOwnedBy(): ?User
++    {
++        return $this->ownedBy;
++    }
++
++    public function setOwnedBy(?User $ownedBy): self
++    {
++        $this->ownedBy = $ownedBy;
++
++        return $this;
++    }
++
++    public function getExpiresAt(): ?\DateTimeImmutable
++    {
++        return $this->expiresAt;
++    }
++
++    public function setExpiresAt(?\DateTimeImmutable $expiresAt): self
++    {
++        $this->expiresAt = $expiresAt;
++
++        return $this;
++    }
++
++    public function getToken(): ?string
++    {
++        return $this->token;
++    }
++
++    public function setToken(string $token): self
++    {
++        $this->token = $token;
++
++        return $this;
++    }
++
++    public function getScopes(): array
++    {
++        return $this->scopes;
++    }
++
++    public function setScopes(array $scopes): self
++    {
++        $this->scopes = $scopes;
++
++        return $this;
++    }
++}
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index f6eedd5..70dce9d 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -69,9 +69,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     #[Assert\Valid]
+     private Collection $dragonTreasures;
+ 
++    #[ORM\OneToMany(mappedBy: 'ownedBy', targetEntity: ApiToken::class)]
++    private Collection $apiTokens;
++
+     public function __construct()
+     {
+         $this->dragonTreasures = new ArrayCollection();
++        $this->apiTokens = new ArrayCollection();
+     }
+ 
+     public function getId(): ?int
+@@ -185,4 +189,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+         return $this;
+     }
++
++    /**
++     * @return Collection<int, ApiToken>
++     */
++    public function getApiTokens(): Collection
++    {
++        return $this->apiTokens;
++    }
++
++    public function addApiToken(ApiToken $apiToken): self
++    {
++        if (!$this->apiTokens->contains($apiToken)) {
++            $this->apiTokens->add($apiToken);
++            $apiToken->setOwnedBy($this);
++        }
++
++        return $this;
++    }
++
++    public function removeApiToken(ApiToken $apiToken): self
++    {
++        if ($this->apiTokens->removeElement($apiToken)) {
++            // set the owning side to null (unless already changed)
++            if ($apiToken->getOwnedBy() === $this) {
++                $apiToken->setOwnedBy(null);
++            }
++        }
++
++        return $this;
++    }
+ }
+diff --git a/src/Repository/ApiTokenRepository.php b/src/Repository/ApiTokenRepository.php
+new file mode 100644
+index 0000000..9cd4e1c
+--- /dev/null
++++ b/src/Repository/ApiTokenRepository.php
+@@ -0,0 +1,66 @@
++<?php
++
++namespace App\Repository;
++
++use App\Entity\ApiToken;
++use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
++use Doctrine\Persistence\ManagerRegistry;
++
++/**
++ * @extends ServiceEntityRepository<ApiToken>
++ *
++ * @method ApiToken|null find($id, $lockMode = null, $lockVersion = null)
++ * @method ApiToken|null findOneBy(array $criteria, array $orderBy = null)
++ * @method ApiToken[]    findAll()
++ * @method ApiToken[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
++ */
++class ApiTokenRepository extends ServiceEntityRepository
++{
++    public function __construct(ManagerRegistry $registry)
++    {
++        parent::__construct($registry, ApiToken::class);
++    }
++
++    public function save(ApiToken $entity, bool $flush = false): void
++    {
++        $this->getEntityManager()->persist($entity);
++
++        if ($flush) {
++            $this->getEntityManager()->flush();
++        }
++    }
++
++    public function remove(ApiToken $entity, bool $flush = false): void
++    {
++        $this->getEntityManager()->remove($entity);
++
++        if ($flush) {
++            $this->getEntityManager()->flush();
++        }
++    }
++
++//    /**
++//     * @return ApiToken[] Returns an array of ApiToken objects
++//     */
++//    public function findByExampleField($value): array
++//    {
++//        return $this->createQueryBuilder('a')
++//            ->andWhere('a.exampleField = :val')
++//            ->setParameter('val', $value)
++//            ->orderBy('a.id', 'ASC')
++//            ->setMaxResults(10)
++//            ->getQuery()
++//            ->getResult()
++//        ;
++//    }
++
++//    public function findOneBySomeField($value): ?ApiToken
++//    {
++//        return $this->createQueryBuilder('a')
++//            ->andWhere('a.exampleField = :val')
++//            ->setParameter('val', $value)
++//            ->getQuery()
++//            ->getOneOrNullResult()
++//        ;
++//    }
++}

@@ -1,17 +1,36 @@
 diff --git a/assets/vue/controllers/TreasureConnectApp.vue b/assets/vue/controllers/TreasureConnectApp.vue
-index 5d2c66f..b537331 100644
+index 78ab9de..abcabe9 100644
 --- a/assets/vue/controllers/TreasureConnectApp.vue
 +++ b/assets/vue/controllers/TreasureConnectApp.vue
-@@ -31,7 +31,8 @@ import LoginForm from '../LoginForm';
+@@ -30,8 +30,9 @@ import LoginForm from '../LoginForm';
  import coinLogoPath from '../../images/coinLogo.png';
  import goldPilePath from '../../images/GoldPile.png';
  
 -defineProps(['entrypoint']);
+-const user = ref(window.user);
 +const props = defineProps(['entrypoint', 'user'])
 +console.log(props.user);
- const user = ref(window.user);
++const user = ref(props.user);
  
  const onUserAuthenticated = async (userUri) => {
+     const response = await fetch(userUri);
+diff --git a/templates/base.html.twig b/templates/base.html.twig
+index eeee4b1..d4f83f7 100644
+--- a/templates/base.html.twig
++++ b/templates/base.html.twig
+@@ -14,12 +14,6 @@
+         {% endblock %}
+     </head>
+     <body>
+-        <script>
+-            window.user = {{ app.user|serialize('jsonld', {
+-                'groups': ['user:read']
+-            })|raw }};
+-        </script>
+-
+         {% block body %}{% endblock %}
+     </body>
+ </html>
 diff --git a/templates/main/homepage.html.twig b/templates/main/homepage.html.twig
 index 03a92ae..933c1b6 100644
 --- a/templates/main/homepage.html.twig
