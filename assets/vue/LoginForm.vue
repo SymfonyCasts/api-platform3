@@ -70,11 +70,10 @@ const handleSubmit = async () => {
     });
 
     isLoading.value = false;
-    const data = await response.json();
-    console.log(data);
-    return;
 
     if (!response.ok) {
+        const data = await response.json();
+        console.log(data);
         // TODO: set error
 
         return;
