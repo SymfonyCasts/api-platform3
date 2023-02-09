@@ -55,9 +55,6 @@ const handleSubmit = async () => {
     isLoading.value = true;
     error.value = '';
 
-    // TODO: uncomment and implement
-    return;
-
     try {
         const response = await fetch('/login', {
             method: 'POST',
