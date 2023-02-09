@@ -1,335 +1,291 @@
 WEBVTT
 
-00:00:00.106 --> 00:00:01.146 align:middle
-Próximamente... Hay muchas
+00:00:01.016 --> 00:00:06.096 align:middle
+Los usuarios de nuestra API pueden
+estropear las cosas de muchas maneras,
 
-00:00:01.146 --> 00:00:05.666 align:middle
-formas de que los usuarios de
-nuestra API estropeen las cosas
+00:00:06.446 --> 00:00:12.966 align:middle
+por ejemplo con un JSON incorrecto o haciendo tonterías
+como introducir un número negativo en el campo value.
 
-00:00:05.666 --> 00:00:12.966 align:middle
-, como una J O incorrecta o datos incorrectos, como
-pasar un número negativo por el campo de valor.
+00:00:13.366 --> 00:00:15.956 align:middle
+¡Esto es oro de dragón, no deuda de dragón!
 
-00:00:13.056 --> 00:00:17.086 align:middle
-Así que vamos a comprobar cómo funcionan
-las API con algunas de ellas en este momento.
+00:00:16.616 --> 00:00:20.766 align:middle
+Este capítulo trata sobre cómo manejar
+estas cosas malas de forma elegante.
 
-00:00:17.086 --> 00:00:22.826 align:middle
-Así que voy a darle a probar en la
-ruta post y vamos a añadir invalid.
+00:00:21.706 --> 00:00:23.106 align:middle
+Prueba la ruta POST.
 
-00:00:22.826 --> 00:00:27.356 align:middle
-Vamos a enviar algunos mal js o,
-voy a quitar esa coma allí mismo.
+00:00:23.546 --> 00:00:25.336 align:middle
+Enviemos algo de JSON no válido.
 
-00:00:27.436 --> 00:00:32.716 align:middle
-Ejecutar e impresionante 400 errores.
+00:00:27.036 --> 00:00:28.076 align:middle
+Pulsa Ejecutar.
 
-00:00:32.796 --> 00:00:35.136 align:middle
-Así que eso es lo que queremos.
+00:00:30.456 --> 00:00:32.686 align:middle
+¡Fantástico! ¡Un error en 400!
 
-00:00:35.136 --> 00:00:39.686 align:middle
-Un cuatro. Cualquier error que empiece
-por cuatro significa que el cliente,
+00:00:32.946 --> 00:00:34.076 align:middle
+Eso es lo que queremos. 400
+
+00:00:34.136 --> 00:00:39.686 align:middle
+-o cualquier código de estado que
+empiece por 4- significa que el cliente
 
 00:00:39.846 --> 00:00:42.466 align:middle
-el usuario de su API ha cometido un error.
+-el usuario de la API- ha cometido un error.
 
-00:00:42.896 --> 00:00:45.446 align:middle
-Así que 400 significa petición errónea.
+00:00:42.526 --> 00:00:45.446 align:middle
+en concreto, 400 significa
+"petición errónea".
 
-00:00:46.116 --> 00:00:48.966 align:middle
-Y puedes ver aquí abajo
-que el tipo es error hidroco
+00:00:46.166 --> 00:00:52.236 align:middle
+En la respuesta, el tipo es hydra:error
+y dice: An error occurred y Syntax Error.
 
-00:00:49.216 --> 00:00:52.236 align:middle
-y que tiene un error
-ocurrido y un error syntex.
+00:00:52.616 --> 00:00:57.866 align:middle
+Ah, y este trace sólo se muestra en el entorno
+de depuración: no se mostrará en producción.
 
-00:00:52.616 --> 00:00:56.276 align:middle
-Y esta traza sólo se muestra
-en el entorno de depuración.
+00:00:58.426 --> 00:01:00.076 align:middle
+¡Así que esto es muy bonito!
 
-00:00:56.276 --> 00:00:57.866 align:middle
-Así que esto no se mostraría en producción.
+00:01:00.346 --> 00:01:03.026 align:middle
+El JSON no válido se
+gestiona de forma automática.
 
-00:00:58.426 --> 00:01:00.626 align:middle
-Así que eso es bastante impresionante.
+00:01:03.506 --> 00:01:07.126 align:middle
+Probemos algo diferente,
+como enviar JSON vacío.
 
-00:01:00.626 --> 00:01:03.016 align:middle
-Eso ya se maneja fuera de la caja.
+00:01:08.506 --> 00:01:11.656 align:middle
+Esto nos da el temido error 500.
 
-00:01:03.046 --> 00:01:04.806 align:middle
-Vamos a probar algo diferente.
+00:01:11.926 --> 00:01:17.076 align:middle
+Boo. Internamente, la API Platform
+crea un objeto DragonTreasure...
 
-00:01:04.916 --> 00:01:09.876 align:middle
-Intentemos enviar un json vacío como si hubiéramos
-olvidado enviar alguno de nuestros campos.
+00:01:17.216 --> 00:01:19.786 align:middle
+pero no establece ningún dato en él.
 
-00:01:09.876 --> 00:01:17.076 align:middle
-Eso es un aire 500 no tan genial internamente
-API Platform crea nuestro objeto tesoro dragón
+00:01:19.786 --> 00:01:24.546 align:middle
+Y luego explota cuando llega a la base de
+datos porque algunas de las columnas son null.
 
-00:01:17.216 --> 00:01:23.196 align:middle
-pero no establece ningún dato en él y como que
-explota cuando llega a la base de datos porque algunas
+00:01:24.976 --> 00:01:26.856 align:middle
+Y, ¡nos lo esperábamos!
 
-00:01:23.196 --> 00:01:26.856 align:middle
-de las columnas son nu Y, por
-supuesto, esperábamos esto.
+00:01:27.126 --> 00:01:29.006 align:middle
+Nos falta la validación.
 
-00:01:26.966 --> 00:01:31.846 align:middle
-Lo que nos falta es validación y
-añadir validación a nuestra API
+00:01:29.626 --> 00:01:34.886 align:middle
+Añadir validación a nuestra API es exactamente igual
+que añadir validación en cualquier parte de Symfony.
 
-00:01:31.846 --> 00:01:34.886 align:middle
-es como añadir validación en
-cualquier parte de Symphony.
+00:01:34.996 --> 00:01:37.616 align:middle
+Por ejemplo, busca la propiedad name.
 
-00:01:34.966 --> 00:01:36.096 align:middle
-Es muy sencillo.
+00:01:38.456 --> 00:01:40.186 align:middle
+Necesitamos que name sea obligatoria.
 
-00:01:36.166 --> 00:01:40.186 align:middle
-Así, por ejemplo, encontramos la propiedad
-nombre, queremos que nombre sea obligatorio.
+00:01:40.446 --> 00:01:43.706 align:middle
+Así que añade la restricción
+NotBlank y pulsa tabulador.
 
-00:01:40.446 --> 00:01:47.686 align:middle
-Así que voy a añadir el no en blanco decir no en blanco
-y pulsa tabulador para añadir que usted declaración.
+00:01:44.586 --> 00:01:47.686 align:middle
+Pero voy a buscar la
+declaración NotBlank use ...
 
-00:01:48.056 --> 00:01:49.076 align:middle
-¿Y sabes qué? Vamos a
+00:01:48.056 --> 00:01:50.016 align:middle
+y cambiarla por Assert.
 
-00:01:49.076 --> 00:01:52.436 align:middle
-hacer también un oh y en realidad está bien,
+00:01:51.056 --> 00:01:52.086 align:middle
+Eso es opcional...
 
-00:01:52.436 --> 00:02:00.736 align:middle
-pero voy a buscar ese not blank aquí arriba.
+00:01:52.426 --> 00:01:55.376 align:middle
+pero es la forma en que los chicos
+guays suelen hacerlo en Symfony.
 
-00:02:00.906 --> 00:02:04.436 align:middle
-Y cambiar esto a asert.
+00:01:55.746 --> 00:02:02.616 align:middle
+Ahora di Assert\NotBlank: A
+continuación, añade una más: Length.
 
-00:02:04.436 --> 00:02:07.696 align:middle
-Así es como se suelen hacer
-las cosas dentro de Symphony.
+00:02:02.616 --> 00:02:06.776 align:middle
+Digamos que el nombre debe tener al menos
+dos caracteres, max 50 caracteres...
 
-00:02:07.696 --> 00:02:10.466 align:middle
-Y diré assert barra no en blanco.
+00:02:07.316 --> 00:02:13.616 align:middle
+y añade un maxMessage: Describe your
+loot in 50 chars or less: ¡Buen comienzo!
 
-00:02:10.466 --> 00:02:14.426 align:middle
-Y luego mi abajo, vamos a
-añadir uno más. Voy a decir
+00:02:14.056 --> 00:02:14.796 align:middle
+Intentémoslo de nuevo.
 
-00:02:14.426 --> 00:02:20.556 align:middle
-longitud y diremos que el nombre debe tener
+00:02:15.646 --> 00:02:20.056 align:middle
+Coge ese mismo JSON vacío,
+pulsa Ejecutar, ¡y sí!
 
-00:02:20.636 --> 00:02:28.766 align:middle
-al menos dos caracteres a lo largo
-de un máximo, eh, de 50 caracteres.
+00:02:20.326 --> 00:02:22.616 align:middle
+¡Una respuesta 422!
 
-00:02:29.186 --> 00:02:31.076 align:middle
-Y aquí está el mensaje máximo.
+00:02:23.016 --> 00:02:28.726 align:middle
+Se trata de un código de respuesta muy común que suele
+significar que se ha producido un error de validación.
 
-00:02:31.076 --> 00:02:34.046 align:middle
-Describe tu botín en 50 caracteres o menos.
+00:02:29.186 --> 00:02:30.466 align:middle
+Y ¡he aquí!
 
-00:02:34.566 --> 00:02:41.456 align:middle
-Genial. Así que probemos ahora cogeré ese mismo json
-vacío, le daré a ejecutar y genial Una respuesta 4 22, que
+00:02:30.816 --> 00:02:34.086 align:middle
+El @type es ConstraintViolationList.
 
-00:02:41.456 --> 00:02:47.046 align:middle
-es un código de respuesta muy común que
-básicamente significa error de validación.
+00:02:34.566 --> 00:02:38.766 align:middle
+Se trata de un tipo JSON-LD
+especial añadido por API Platform.
 
-00:02:47.046 --> 00:02:51.016 align:middle
-Y fíjate en este tipo, es una lista
-de violación de restricciones.
+00:02:39.806 --> 00:02:43.766 align:middle
+Anteriormente, lo vimos documentado
+en la documentación de JSON-LD.
 
-00:02:51.086 --> 00:02:53.556 align:middle
-Se trata de un formato especial J S O N L D.
+00:02:44.246 --> 00:02:50.726 align:middle
+Observa: ve a /api/docs.jsonld
+y busca un ConstraintViolation.
 
-00:02:53.556 --> 00:02:59.286 align:middle
-Puede que no lo recuerdes,
-pero antes lo vimos documentado
+00:02:51.086 --> 00:02:51.656 align:middle
+¡Ahí lo tienes! API Platform
 
-00:02:59.286 --> 00:03:01.476 align:middle
-en la documentación de JSUN LD. Así que voy a
+00:02:52.196 --> 00:02:57.336 align:middle
+añade dos clases: ConstraintViolation
+y ConstraintViolationList
 
-00:03:01.476 --> 00:03:06.426 align:middle
-ir a esa barra api barra do barra
-api barra docs punto jsun LD
+00:02:57.486 --> 00:03:00.326 align:middle
+para describir el aspecto que
+tendrán los errores de validación.
 
-00:03:06.776 --> 00:03:09.626 align:middle
-y a ti para buscar una
-violación de restricción.
+00:03:00.326 --> 00:03:06.566 align:middle
+Un ConstraintViolationList es básicamente
+una colección de ConstraintViolations...
 
-00:03:09.626 --> 00:03:10.226 align:middle
-Ahí lo tienes.
+00:03:06.776 --> 00:03:10.636 align:middle
+y describe cuáles son las
+propiedades de ConstraintViolation.
 
-00:03:10.226 --> 00:03:15.906 align:middle
-Así que en realidad hay clases integradas
-como violación de restricciones
+00:03:12.806 --> 00:03:16.456 align:middle
+Podemos verlas por aquí:
+tenemos una propiedad violations
 
-00:03:15.906 --> 00:03:20.416 align:middle
-y lista de violaciones de restricciones integradas en
-nuestra A P I junto con nuestro recurso de tesorería.
+00:03:16.696 --> 00:03:19.526 align:middle
+con propertyPath y luego la message debajo.
 
-00:03:20.416 --> 00:03:23.866 align:middle
-Y puedes ver cuál es su estructura.
+00:03:20.476 --> 00:03:23.186 align:middle
+¡Vale! Vamos a colar unas
+cuantas restricciones más.
 
-00:03:23.866 --> 00:03:30.096 align:middle
-Una lista de violaciones de restricciones es, básicamente,
-una colección de violaciones de restricciones
+00:03:23.876 --> 00:03:25.796 align:middle
+Añade NotBlank por encima de description...
 
-00:03:30.096 --> 00:03:36.956 align:middle
-y describe las propiedades de
-las violaciones de restricciones.
+00:03:26.126 --> 00:03:30.606 align:middle
+y GreaterThanOrEqual a 0 por encima
+de value para evitar los negativos.
 
-00:03:36.956 --> 00:03:40.016 align:middle
-Y podemos verlas aquí.
+00:03:30.666 --> 00:03:37.926 align:middle
+Por último, para coolFactor utiliza
+GreaterThanOrEqual a 0 y también LessThanOrEqual a 10.
 
-00:03:40.016 --> 00:03:43.066 align:middle
-Es bastante impresionante. Y hay
+00:03:38.406 --> 00:03:44.076 align:middle
+Así que algo entre 0 y 10: Y ya que
+estamos aquí, no necesitamos hacer esto,
 
-00:03:43.066 --> 00:03:47.706 align:middle
-una propiedad de violaciones y
-muestra la ruta de la propiedad
+00:03:44.356 --> 00:03:48.136 align:middle
+pero voy a inicializar
+$value a 0 y $coolFactor a 0.
 
-00:03:47.706 --> 00:03:50.866 align:middle
-y luego tiene el mensaje debajo.
+00:03:48.866 --> 00:03:53.956 align:middle
+Esto hace que ambos no sean necesarios
+en la API: si el usuario no los envía,
 
-00:03:50.866 --> 00:03:53.376 align:middle
-Muy bien, vamos a añadir algunas cosas más.
+00:03:54.176 --> 00:03:59.316 align:middle
+serán 0 por defecto: Vale, vuelve
+atrás y prueba esa misma ruta.
 
-00:03:53.376 --> 00:03:55.536 align:middle
-Así que vamos a, vamos a añadir por
-encima de la propiedad descripción.
+00:04:00.866 --> 00:04:03.346 align:middle
+¡Mira qué validación más bonita!
 
-00:03:56.386 --> 00:04:03.326 align:middle
-Añadiremos no en blanco y encima del
-valor añadiremos mayor o igual que cero.
+00:04:04.096 --> 00:04:06.806 align:middle
+Prueba también a poner coolFactor en 11.
 
-00:04:03.926 --> 00:04:06.546 align:middle
-Así que tiene que ser, no puede ser negativo.
+00:04:09.796 --> 00:04:12.556 align:middle
+¡Sí! Ningún tesoro es tan guay...
 
-00:04:06.546 --> 00:04:13.596 align:middle
-Y por último, factor guay
-utilizaremos mayor o igual que cero.
+00:04:13.016 --> 00:04:15.116 align:middle
+bueno, a menos que sea un
+plato gigante de nachos.
 
-00:04:13.596 --> 00:04:17.306 align:middle
-Y luego añadiremos un segundo de esos.
+00:04:15.766 --> 00:04:21.276 align:middle
+Vale, hay una última forma de que un usuario
+envíe cosas malas: pasando un tipo incorrecto.
 
-00:04:17.306 --> 00:04:18.656 align:middle
-Cámbialo a menor o igual que 10.
+00:04:21.726 --> 00:04:25.576 align:middle
+Así que coolFactor: 11 fallará
+nuestras reglas de validación.
 
-00:04:18.656 --> 00:04:21.276 align:middle
-Así que algo entre cero y 10.
+00:04:25.666 --> 00:04:28.626 align:middle
+Pero, ¿y si en su lugar pasamos un string?
 
-00:04:21.706 --> 00:04:26.556 align:middle
-Y ya que estamos aquí, no necesitamos
-hacer esto, pero voy a inicializar el valor
+00:04:29.036 --> 00:04:31.346 align:middle
+¡Qué asco! Pulsa Ejecutar.
 
-00:04:26.556 --> 00:04:29.166 align:middle
-a cero y el factor de enfriamiento a cero.
+00:04:32.836 --> 00:04:36.096 align:middle
+Vale: un código de estado 400, eso es bueno.
 
-00:04:29.166 --> 00:04:35.516 align:middle
-Así que si no estaba establecido, podemos simplemente,
-hace que esos campos no sean necesarios en la api.
+00:04:36.446 --> 00:04:39.706 align:middle
+Aunque, no es un error de
+validación, tiene un tipo diferente.
 
-00:04:35.516 --> 00:04:39.336 align:middle
-Se inicializarán a cero
-si no están configurados.
+00:04:39.976 --> 00:04:42.066 align:middle
+Pero indica al usuario lo que ha ocurrido:
 
-00:04:39.336 --> 00:04:45.896 align:middle
-Ahora voy a volver a probar esa misma
-ruta , ver esa bonita validación
+00:04:42.506 --> 00:04:46.416 align:middle
+el tipo del atributo coolFactor
+debe ser int, string dado.
 
-00:04:45.896 --> 00:04:51.866 align:middle
-e incluso podemos activar un poco más
-añadiendo un factor de enfriamiento de 11.
+00:04:46.966 --> 00:04:48.056 align:middle
+¡Ya está bien!
 
-00:04:51.996 --> 00:04:55.396 align:middle
-Sí, a nuestro sistema
-definitivamente no le gusta eso.
+00:04:48.056 --> 00:04:50.816 align:middle
+Esto es gracias al método setCoolFactor().
 
-00:04:55.396 --> 00:04:59.236 align:middle
-Muy bien, hay una última forma
-de que falle la validación.
+00:04:51.376 --> 00:04:56.186 align:middle
+El sistema ve el tipo int y por eso
+rechaza la cadena con este error.
 
-00:04:59.236 --> 00:05:00.786 align:middle
-Es pasando el tipo incorrecto.
-
-00:05:00.786 --> 00:05:02.496 align:middle
-Así que el factor de enfriamiento 11
-fallará nuestras reglas de validación,
-
-00:05:02.526 --> 00:05:03.966 align:middle
-pero ¿y si en lugar de
-eso le pasamos una cadena?
-
-00:05:03.996 --> 00:05:05.406 align:middle
-Una que hubiéramos ejecutado,
-vale, 400 códigos de estado.
-
-00:05:05.436 --> 00:05:05.676 align:middle
-Eso está bien.
-
-00:05:05.706 --> 00:05:06.966 align:middle
-Falla con un código de estado de nivel 400.
-
-00:05:06.996 --> 00:05:08.376 align:middle
-No es un error de validación,
-tiene un tipo diferente,
-
-00:05:08.406 --> 00:05:09.396 align:middle
-pero le dice al usuario lo que ha pasado.
-
-00:05:09.426 --> 00:05:10.806 align:middle
-El tipo de factor guay debe
-ser una cadena INT dada.
-
-00:05:10.836 --> 00:05:11.466 align:middle
-Así que el punto no es válido.
-
-00:05:11.496 --> 00:05:12.126 align:middle
-Jason se encarga. Los
-
-00:05:12.156 --> 00:05:14.496 align:middle
-tipos malos se solucionan En los tipos malos se solucionan
-porque en el factor de enfriamiento establecido,
-
-00:05:14.526 --> 00:05:15.666 align:middle
-el sistema ve realmente este tipo INT aquí.
-
-00:05:15.696 --> 00:05:16.896 align:middle
-Y lo rechaza con este error de aquí.
-
-00:05:16.926 --> 00:05:19.086 align:middle
+00:04:56.296 --> 00:05:01.166 align:middle
 Así que de lo único que tenemos que preocuparnos
 en nuestra aplicación es de escribir un buen código
 
-00:05:19.116 --> 00:05:20.646 align:middle
-que utilice correctamente los pines de tipo y
-B, añadiendo nuestra validación. Añadiendo
+00:05:01.166 --> 00:05:04.866 align:middle
+que utilice correctamente type y de
+añadir restricciones de validación:
 
-00:05:20.676 --> 00:05:22.446 align:middle
-validación para nuestras reglas de
-negocio, como que el valor debe ser mayor
+00:05:04.866 --> 00:05:08.416 align:middle
+la red de seguridad que atrapa las
+violaciones de las reglas de negocio...
 
-00:05:22.476 --> 00:05:23.556 align:middle
-que cero o que la descripción es obligatoria.
+00:05:08.766 --> 00:05:12.296 align:middle
+como value debe ser mayor que
+0 o description es obligatorio.
 
-00:05:23.586 --> 00:05:24.906 align:middle
-La API Platform se encargará del resto.
+00:05:12.756 --> 00:05:14.816 align:middle
+API Platform se encarga del resto.
 
-00:05:24.936 --> 00:05:26.886 align:middle
-Muy bien, a continuación, nuestra API sólo tiene un
-recurso en este momento es nuestro tesoro dragón. Vamos a
+00:05:15.656 --> 00:05:20.136 align:middle
+A continuación: nuestra API sólo
+tiene un recurso: DragonTreasure.
 
-00:05:26.916 --> 00:05:28.596 align:middle
-añadir un segundo recurso, un recurso
-de usuario, para que podamos vincular
+00:05:20.506 --> 00:05:25.676 align:middle
+Añadamos un segundo recurso -un
+recurso User - para que podamos vincular
 
-00:05:28.626 --> 00:05:29.586 align:middle
-qué usuario posee qué tesoro en la api.
+00:05:25.676 --> 00:05:28.446 align:middle
+qué usuario posee qué tesoro en la API.
