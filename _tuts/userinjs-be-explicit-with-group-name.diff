@@ -1,0 +1,15 @@
+diff --git a/templates/base.html.twig b/templates/base.html.twig
+index 977faf9..eeee4b1 100644
+--- a/templates/base.html.twig
++++ b/templates/base.html.twig
+@@ -15,7 +15,9 @@
+     </head>
+     <body>
+         <script>
+-            window.user = {{ app.user|serialize('jsonld')|raw }};
++            window.user = {{ app.user|serialize('jsonld', {
++                'groups': ['user:read']
++            })|raw }};
+         </script>
+ 
+         {% block body %}{% endblock %}

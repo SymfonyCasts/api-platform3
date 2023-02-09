@@ -1,0 +1,31 @@
+diff --git a/config/packages/api_platform.yaml b/config/packages/api_platform.yaml
+index 94fd275..374fb52 100644
+--- a/config/packages/api_platform.yaml
++++ b/config/packages/api_platform.yaml
+@@ -2,9 +2,10 @@ api_platform:
+     formats:
+         jsonld: [ 'application/ld+json' ]
+         json: [ 'application/json' ]
++        html: [ 'text/html' ]
+         jsonhal: [ 'application/hal+json' ]
+ 
+-    enable_docs: false
+-    enable_entrypoint: false
+-    enable_swagger: false
+-    enable_swagger_ui: false
++#    enable_docs: false
++#    enable_entrypoint: false
++#    enable_swagger: false
++#    enable_swagger_ui: false
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 689ede9..0c60f2c 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -41,6 +41,7 @@ use function Symfony\Component\String\u;
+     formats: [
+         'jsonld',
+         'json',
++        'html',
+         'jsonhal',
+         'csv' => 'text/csv',
+     ],

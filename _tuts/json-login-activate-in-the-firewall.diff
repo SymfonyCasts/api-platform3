@@ -1,0 +1,13 @@
+diff --git a/config/packages/security.yaml b/config/packages/security.yaml
+index fbfb8ed..2c538b7 100644
+--- a/config/packages/security.yaml
++++ b/config/packages/security.yaml
+@@ -16,6 +16,8 @@ security:
+         main:
+             lazy: true
+             provider: app_user_provider
++            json_login:
++                check_path: app_login
+ 
+             # activate different ways to authenticate
+             # https://symfony.com/doc/current/security.html#the-firewall

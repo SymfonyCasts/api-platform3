@@ -1,0 +1,130 @@
+{
+    "steps": [
+        {
+            "id": "start",
+            "name": "start",
+            "description": null
+        },
+        {
+            "id": "docs-enable-docs-false",
+            "name": "Docs: enable_docs: false",
+            "description": null
+        },
+        {
+            "id": "docs-enable-entrypoint-false",
+            "name": "Docs: enable_entrypoint: false",
+            "description": null
+        },
+        {
+            "id": "docs-enable-swagger-false",
+            "name": "Docs: enable_swagger: false",
+            "description": null
+        },
+        {
+            "id": "docs-enable-swagger-ui-false",
+            "name": "Docs: enable_swagger_ui: false",
+            "description": null
+        },
+        {
+            "id": "docs-disable-html-format",
+            "name": "Docs: disable html format",
+            "description": null
+        },
+        {
+            "id": "docs-reenable-everything",
+            "name": "Docs: Reenable everything",
+            "description": null
+        },
+        {
+            "id": "json-login-securitycontroller-with-login-route",
+            "name": "json_login: SecurityController with login route",
+            "description": null
+        },
+        {
+            "id": "json-login-return-user-id",
+            "name": "json_login: return user id",
+            "description": null
+        },
+        {
+            "id": "json-login-activate-in-the-firewall",
+            "name": "json_login: Activate in the firewall",
+            "description": null
+        },
+        {
+            "id": "json-login-add-username-and-password-paths",
+            "name": "json_login: Add username and password paths",
+            "description": null
+        },
+        {
+            "id": "auth-error-set-error-var-in-vue",
+            "name": "Auth Error: set error var in Vue",
+            "description": null
+        },
+        {
+            "id": "auth-error-comment-out-content-type",
+            "name": "Auth Error: Comment-out Content-Type",
+            "description": null
+        },
+        {
+            "id": "auth-error-return-401-is-header-is-missing",
+            "name": "Auth Error: return 401 is header is missing",
+            "description": null
+        },
+        {
+            "id": "auth-error-put-header-back",
+            "name": "Auth Error: Put header back",
+            "description": null
+        },
+        {
+            "id": "auth-success-return-iri-from-login",
+            "name": "Auth Success: Return IRI from login",
+            "description": null
+        },
+        {
+            "id": "auth-success-emit-event-in-vue",
+            "name": "Auth Success: emit event in Vue",
+            "description": null
+        },
+        {
+            "id": "logout-adding-logout-route",
+            "name": "Logout: Adding logout route",
+            "description": null
+        },
+        {
+            "id": "logout-add-logout-to-firewall",
+            "name": "Logout: Add logout to firewall",
+            "description": null
+        },
+        {
+            "id": "userinjs-set-global-user-variable",
+            "name": "UserInJS: Set global user variable",
+            "description": null
+        },
+        {
+            "id": "userinjs-be-explicit-with-group-name",
+            "name": "UserInJS: Be explicit with group name",
+            "description": null
+        },
+        {
+            "id": "userinjs-use-window-user",
+            "name": "UserInJS: Use window.user",
+            "description": null
+        },
+        {
+            "id": "userinjs-try-to-pass-user-into-vue",
+            "name": "UserInJS: Try to pass User into Vue",
+            "description": null
+        },
+        {
+            "id": "userinjs-normalize-in-controller",
+            "name": "UserInJS: Normalize in controller",
+            "description": null
+        },
+        {
+            "id": "userinjs-remove-the-console-log",
+            "name": "UserInJS: Remove the console.log()",
+            "description": null
+        }
+    ],
+    "sha": "e6aa8c1c6ac50f46e77fb62d9c55340d4b76bdc5"
+}

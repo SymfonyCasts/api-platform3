@@ -1,0 +1,27 @@
+diff --git a/assets/vue/controllers/TreasureConnectApp.vue b/assets/vue/controllers/TreasureConnectApp.vue
+index 5d2c66f..b537331 100644
+--- a/assets/vue/controllers/TreasureConnectApp.vue
++++ b/assets/vue/controllers/TreasureConnectApp.vue
+@@ -31,7 +31,8 @@ import LoginForm from '../LoginForm';
+ import coinLogoPath from '../../images/coinLogo.png';
+ import goldPilePath from '../../images/GoldPile.png';
+ 
+-defineProps(['entrypoint']);
++const props = defineProps(['entrypoint', 'user'])
++console.log(props.user);
+ const user = ref(window.user);
+ 
+ const onUserAuthenticated = async (userUri) => {
+diff --git a/templates/main/homepage.html.twig b/templates/main/homepage.html.twig
+index 03a92ae..933c1b6 100644
+--- a/templates/main/homepage.html.twig
++++ b/templates/main/homepage.html.twig
+@@ -2,6 +2,7 @@
+ 
+ {% block body %}
+     <div {{ vue_component('TreasureConnectApp', {
+-        entrypoint: path('api_entrypoint')
++        entrypoint: path('api_entrypoint'),
++        user: app.user
+     }) }}></div>
+ {% endblock %}

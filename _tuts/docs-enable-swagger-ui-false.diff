@@ -1,0 +1,9 @@
+diff --git a/config/packages/api_platform.yaml b/config/packages/api_platform.yaml
+index d48e670..3713348 100644
+--- a/config/packages/api_platform.yaml
++++ b/config/packages/api_platform.yaml
+@@ -8,3 +8,4 @@ api_platform:
+     enable_docs: false
+     enable_entrypoint: false
+     enable_swagger: false
++    enable_swagger_ui: false

@@ -1,0 +1,14 @@
+diff --git a/assets/vue/LoginForm.vue b/assets/vue/LoginForm.vue
+index 628ac02..05a1398 100644
+--- a/assets/vue/LoginForm.vue
++++ b/assets/vue/LoginForm.vue
+@@ -89,7 +89,8 @@ const handleSubmit = async () => {
+ 
+     email.value = '';
+     password.value = '';
+-    //emit('user-authenticated', userIri);
++    const userIri = response.headers.get('Location');
++    emit('user-authenticated', userIri);
+ }
+ 
+ </script>
