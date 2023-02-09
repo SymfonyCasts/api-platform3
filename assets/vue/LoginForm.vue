@@ -50,33 +50,37 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
+const emit = defineEmits['user-authenticated'];
 
 const handleSubmit = async () => {
     isLoading.value = true;
     error.value = '';
 
-    try {
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value
-            })
-        });
-        const data = await response.json();
-        console.log(data);
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email.value,
+            password: password.value
+        })
+    });
 
-        //this.$emit('user-authenticated', userUri);
-        //email.value = '';
-        //password.value = '';
-    } catch (e) {
-        error.value = e.message;
-    } finally {
-        isLoading.value = false;
+    isLoading.value = false;
+    const data = await response.json();
+    console.log(data);
+    return;
+
+    if (!response.ok) {
+        error.value = data.message;
+
+        return;
     }
+
+    emit('user-authenticated', userUri);
+    email.value = '';
+    password.value = '';
 }
 
 </script>
