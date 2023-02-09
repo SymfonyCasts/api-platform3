@@ -73,8 +73,8 @@ const handleSubmit = async () => {
         console.log(data);
 
         //this.$emit('user-authenticated', userUri);
-        //this.email = '';
-        //this.password = '';
+        //email.value = '';
+        //password.value = '';
     } catch (e) {
         error.value = e.message;
     } finally {
