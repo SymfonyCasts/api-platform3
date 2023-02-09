@@ -1,17 +1,62 @@
-# Filtro de propiedades
+# FiltroPropiedades: Conjuntos de campos dispersos
 
-Próximamente...
+Como a los dragones les encantan los tesoros caros, añadamos una forma de filtrar en función del valor, como dentro de un rango. Hay un filtro incorporado para eso llamado`RangeFilter`. Busca la propiedad `$value` y, como hicimos antes, utiliza`#[ApiFilter()]` y dentro `RangeFilter` (la del ORM) `::class`:
 
-Añadimos un filtro más. Podemos, ahora mismo tenemos tres, pero tal vez queramos filtrar realmente sobre el valor, tal vez como entre un rango. Para eso hay otro filtro incorporado llamado filtro de rango. Así que buscaré la propiedad valor y, como antes, usaremos el filtro API y luego el filtro de rango, el de la clase O rm, dos puntos, dos puntos. Y éste no necesita ninguna otra opción. Vaya, qué fácil. Ahora cuando refresquemos y lo abramos, pruébalo. Fíjate. Un montón de nuevas. Valor entre valor mayor que, mayor que o igual. Así que vamos a hacer valor mayor que, no sé, no recuerdo cómo, cuáles son mis valores al ejecutar. Puedes verlo un poco en la URL. La codificación de la URL se ve fea porque la codificación de la URL, pero funciona si miro aquí abajo. Genial. Parece que sólo devuelve 18 resultados. Bien, el último filtro que quiero mostrarte no es un filtro en absoluto. Es una forma de permitir que nuestros clientes de la API elijan qué campos quieren que se les devuelvan. Para mostrarlo, busca tu método get description y supongamos que queremos devolver una versión corta de la descripción, como una versión truncada. Para ello, voy a copiar el método get description, crear algo nuevo llamado get short description,
+[[[ code('94173682b5') ]]]
 
-Y luego voy a, y luego vamos a truncar esto. Vamos a utilizar la función tú de Symphony. Así que teclea tú y asegúrate de que le doy al tabulador para completarlo. Esta es una función rara que tenemos en Symphony. Y al pulsar tabulador añadimos una declaración U para ella. Así que di U. Y luego tenemos un montón de buenos métodos para esto. Uno de ellos se llama Truncar y truncaremos a los 40 caracteres con un pequeño punto, punto, punto. Genial. Así que ahora mismo, este es un método PHP normal perfectamente funcional para exponer esto a nuestra API por encima de esto, sólo tenemos que añadir la anotación del grupo eh, atributo con dos puntos Tesoro Reed. Precioso. Así que para comprobar esto, en realidad voy a hacer trampas y volver a nuestro slash api slash tra tra. En realidad vuelve a tu documentación y refresca. Y si abres el get open, el get end point hit pruébalo. Ya está. Ejecuta y aparecerá una bonita descripción corta. Ahora lo único un poco raro aquí es que tenemos dos combustibles. Estamos mostrando la descripción corta y también la descripción. Si nuestro cliente de la API quiere la descripción corta, puede que no quiera que mostremos también la descripción para ahorrar ancho de banda o algo así. Así que eso es un poco derrochador. Así que para ayudar con esto, una cosa que podemos hacer es utilizar el filtro de propiedades. Así que vuelve a Tesoro Dragón. Se trata de un filtro que tiene que ir por encima de la clase.
+Éste no necesita ninguna otra opción, así que... ¡hemos terminado! Joder... ha sido fácil. Cuando actualicemos... ábrelo, y dale a "Probar".... ¡mira qué bien! Tenemos un montón de filtros nuevos: `value[between]`, `value[gt]` (o "mayor que"),`value[gte]`, etc. Probemos `value[gt]`... con un número aleatorio... tal vez `500000`. Cuando pulsemos "Ejecutar"... ¡sí! Aquí se actualizó la URL. No es... la URL más bonita del mundo -debido a la codificación-, pero funciona a las mil maravillas. Y abajo en los resultados... ¡aparentemente hay 18 tesoros que valen más que eso!
 
-Escribe filtro API y luego filtro de propiedades. En este caso sólo hay uno, dos puntos, dos puntos clase. Y hay algunas opciones que puedes pasar a esto. Puedes consultar la documentación, pero no necesitas ninguna opción. Entonces, ¿qué hace eso? Bueno, si vas a refrescar la documentación y miras la ruta de la colección, y vamos a probarla, aquí hay una nueva cosa de propiedades y puedes añadirle un elemento de cadena. Así que vamos a añadir uno nuevo llamado nombre y otro llamado descripción. Genial. Aquí abajo tendré que ejecutar y podrás ver que nos salta a la url U como de costumbre. Pero mira la respuesta. Sólo contiene los campos nombre y descripción, ¿vale? Contiene los campos Jsun LD. Siempre los contendrá. Pero los datos reales son sólo esos dos campos. Sigue devolviendo si miramos los 40 elementos, pero sólo esos dos campos. Si los elimináramos para que no hubiera ninguno de ellos, obtendríamos la respuesta normal con todos ellos. Así que, por defecto, obtienes todos los campos, pero si quieres controlar qué campos obtienes, puedes hacerlo. Ahora bien, si echas un vistazo a la documentación de la API Platform sobre el filtro de propiedades, en realidad
+## FiltroPropiedad
 
-Recomiendan que siga funcionando, pero te recomiendan que busques una solución diferente. Y es algo llamado Vulcan. Se trata de un protocolo para tu servidor web que en realidad añade funciones a tu servidor web y que ha sido creado por el equipo de la API Platform.
+El último filtro que quiero mostrarte... en realidad no es un filtro en absoluto. Es una forma de que nuestros clientes de la API elijan qué campos quieren que se les devuelvan... en lugar de qué resultados.
 
-En realidad tienen un ejemplo muy bueno de cómo funciona. Veámoslo un poco más abajo. Imaginemos que tenemos la siguiente api. Si haces una petición a slash books, obtendrás de vuelta estos dos libros. ¿Vale? Entonces quizá hagas una petición para obtener más información sobre el primer libro. Haces una petición al respecto. Y esto es lo que parece. ¿Vale? Ahora para obtener más peticiones para el, para el autor, haces una petición a esta url y esto es, esto es lo que parece. Así puedes ver en todos,
+Para mostrarlo, busca el método `getDescription()`. Imagina que queremos devolver una versión más corta y truncada de la descripción. Para ello, copia el método`getDescription()`, pégalo a continuación y cámbiale el nombre a `getShortDescription()`:
 
-Si haces una petición a slash books para obtener toda la información que podríamos necesitar, en realidad necesitas hacer cuatro peticiones, la petición original, y luego haces esta petición y esta petición y luego la petición para el autor. Así que fueron cuatro peticiones. Lo que Vulcan Set te permite hacer es realizar esta primera petición, pero luego decirle al servidor que te envíe los datos de las otras peticiones. La mejor forma de verlo es en JavaScript. Aquí tienes un pequeño ejemplo en JavaScript. Es muy fácil. Todo lo que tienes que hacer es, cuando utilices tu JavaScript, utilizar la función fetch. Dices: "Quiero recuperar los libros de barra uno", y luego añades esta cabecera especial de precarga. Y en realidad un mejor ejemplo de la precarga PR está aquí arriba, esta precarga barra miembro barra estrella barra autor. Lo que básicamente le dirá a tu servidor es que busque cualquier URL que coincida con ese patrón y la siga. No voy a entrar en detalles sobre esto, pero barra miembro barra estrella va a coincidir con barra miembro barra todas estas. Y la barra autor también va a seguir la clave autor una vez que obtenga esos libros. El resultado final de pasar esa cabecera de precarga es que nuestra API va a devolver la respuesta normal para los libros de barra oblicua,
+[[[ code('b23723799d') ]]]
 
-Pero también te enviará las otras URL. Como puedes ver aquí, te va a enviar los datos de la barra "libros" barra "uno" barra "libro" barra "dos" y barra "autor" barra "uno". Así que aquí abajo, este es un ejemplo ligeramente diferente en el que sólo estás obteniendo barra libro barra uno con precarga barra autor. Cuando hagas esto, las respuestas de tu libro serán completamente normales. Lo importante es que un segundo después, si intentas utilizar fetch de nuevo en books js o.author, va a devolver inmediatamente. En realidad no va a hacer una segunda petición de edad X porque ya tienes esos datos. Así que escribe tu guión de trabajo básicamente como de costumbre. Todo lo que tienes que hacer es añadir una nueva cabecera de precarga y te beneficiarás del rendimiento extra. Así que no voy a profundizar más en esto. Quería que lo tuvieras en cuenta. Puede ser una característica muy potente en tu api. Muy bien, a continuación, hablemos de, quiero añadir, quiero hablar de formatos. Sabemos que nuestra API puede devolver representaciones jsun, ld, json e incluso HTML de nuestras representaciones. Vamos a añadir nuevos formatos, incluido un formato CSV, que va a ser la representación CSV más rápida que jamás hayas construido.
+Para truncarlo, podemos utilizar la función `u()` de Symfony. Escribe `u` y asegúrate de pulsar "tab" para que se autocomplete. Esta es una función rara que nos da Symfony... y al darle a "tab" se añadió una declaración `use` para ella:
+
+[[[ code('b36939414f') ]]]
+
+Esto crea un objeto con todo tipo de cosas relacionadas con las cadenas, incluyendo`truncate()`. Pasa 40 para truncar en `40` caracteres seguidos de `...`.
+
+¡Método terminado! Para exponer esto a nuestra API, arriba, añade el atributo `Groups` con`treasure:read`:
+
+[[[ code('dd0b92e22a') ]]]
+
+¡Precioso! Bien, vuelve a la documentación y actualízala. Abre la ruta `GET`, pulsa "Probar", "Ejecutar" y... bonito. ¡Aquí está nuestra descripción truncada!
+
+Aunque... es raro que ahora devolvamos dos descripciones: una corta y la normal. Si nuestro cliente de la API quiere la descripción corta, puede que no quiera que le devolvamos también la descripción completa... por el bien del ancho de banda.
+
+¿Qué podemos hacer? Presentamos: ¡el `PropertyFilter`! Vuelve a `DragonTreasure`. A diferencia de los demás, este filtro debe ir por encima de la clase. Así que aquí, digamos`ApiFilter`, y luego `PropertyFilter` (en este caso, sólo hay uno)`::class`. Hay algunas opciones que puedes pasar a esto - que puedes encontrar en los docs - pero no necesitamos ninguna de ellas:
+
+[[[ code('29aa3955b8') ]]]
+
+Entonces... ¿qué hace eso? Vuelve atrás, actualiza la documentación, abre la ruta de recolección GET y pulsa "Probar". ¡Woh! Ahora vemos una caja `properties[]`y podemos añadirle elementos. ¡Vamos a probarlo! Añade una nueva cadena llamada `name`y otra llamada `description`.
+
+Momento de la verdad. Pulsa "Ejecutar", y... ¡ahí está! Las ha añadido a la URL de forma normal. Pero mira la respuesta: sólo contiene los campos `name` y `description`. Bueno... también contiene los campos JSON-LD, pero los datos reales son sólo esos dos campos.
+
+Si elimináramos las cadenas `properties`, obtendríamos la respuesta normal y completa. Así que, por defecto, obtienes todos los campos. Pero ahora los usuarios pueden elegir menos campos si lo desean.
+
+## ¿Qué pasa con Vulcain?
+
+Todo esto funciona bastante bien. Pero si echas un vistazo a la documentación de la API Platform para `PropertyFilter`, en realidad recomiendan una solución diferente: algo llamado "Vulcain". No, no es el planeta natal de Spock. Estamos hablando de un protocolo que añade funciones a tu servidor web. Fue creado por el equipo de API Platform, y si nos desplazamos un poco hacia abajo, tienen un ejemplo realmente bueno.
+
+Imagina que tenemos la siguiente API. Si hacemos una petición a `/books`, obtendremos de vuelta estos dos libros. Bastante sencillo. Entonces, si queremos obtener más información sobre el primer libro, hacemos una petición a esa URL: `/books/1`. Pero... ahora queremos información sobre el autor, así que hacemos una petición a`/authors/1`.
+
+Así que, para obtener toda la información sobre el libro y sobre el autor, al final tuvimos que hacer cuatro peticiones: la original y 3 más. Eso no es bueno para el rendimiento.
+
+Lo que Vulcain te permite es hacer sólo esta primera petición... pero decirle al servidor que te envíe los datos de las otras peticiones.
+
+Podemos ver esto mejor en JavaScript, y hay un pequeño ejemplo aquí abajo. En este caso, imagina que estamos haciendo una petición a `/books/1` pero sabemos que también necesitamos la información del autor. Así que, cuando hacemos la petición, incluimos una cabecera especial `Preload`. Esto le dice al servidor:
+
+> Después de devolver los datos del libro, utiliza un push del servidor para enviarme la información
+> encontrada siguiendo el IRI `author`.
+
+Lo realmente genial es que tu JavaScript no cambia realmente. Sigues utilizando `fetch()` para hacer una segunda petición a la URL `bookJSON.author`... sólo que ésta volverá instantáneamente porque el navegador ya tiene los datos.
+
+No voy a entrar en todos los detalles, pero el `Preload` del primer ejemplo es aún más impresionante: `/member/*/author`. Eso le dice al servidor que envíe todos los datos como si también hubiéramos solicitado cada una de las claves `member` -por tanto, todos los libros- y las URL de sus autores.
+
+La cuestión es: si utilizas Vulcain, los usuarios de tu API pueden hacer cambios minúsculos para disfrutar de enormes ventajas de rendimiento... sin que nosotros tengamos que añadir mucha fantasía a nuestra API.
+
+A continuación: Hablemos de formatos. Sabemos que nuestra API puede devolver representaciones JSON-LD, JSON e incluso HTML de nuestros recursos. Vamos a añadir dos nuevos formatos, incluido un formato CSV, que será la función de exportación CSV más rápida que jamás hayas creado.
