@@ -1,17 +1,69 @@
-# Formatos
+# Más formatos: HAL Y CSV
 
-Próximamente...
+API Platform admite múltiples formatos de entrada y salida. Podemos ir a`/api/treasures.json` para ver JSON, a `.jsonld` para ver JSON-LD o incluso a `.html` para ver el formato de salida HTML.
 
-API Platform admite varios formatos de entrada y también de salida. Así que sabemos que podemos ir a slash api slash treasures jsun para ver el formato jsun o jsun LD o html. Pero añadir esta extensión al final de la URL es sólo un pequeño truco que la API Platform nos permite hacer. Para elegir el formato que quieres que te devuelva la API, se supone que debes enviar una cabecera accept. Y esto es algo que vemos cuando probamos la documentación. Uc hace una petición con la cabecera accept configurada como barra de aplicación LD más jsun I Configurar esta cabecera es fácil de hacer en JavaScript y, de hecho, si no la configuras, la barra de aplicación LD más jsun es la que aparece por defecto de todos modos. Un formulario de factura utiliza tres formatos por defecto. De hecho, puedes verlos aquí abajo, en la parte inferior de la página de documentación. ¿Por qué admite esos tres formatos outta the box head? Tu terminal ejecuta bin/console, debug config API Platform. Y si miras aquí al lado, podrás ver una clave de formatos que dice esos tres formatos. Así que esto básicamente dice que si la cabecera de aceptación es application slash LD más jsun, utiliza el formato Jsun LD.
+## Aceptar cabecera y negociación de contenido
 
-E internamente esto significa que cuando esté serializando nuestros datos, le dirá al serializador que serialice a Jsun LD o que serialice a Jsun. Así que voy a añadir otro formato sólo para ver si podemos, así que para hacerlo, básicamente sólo tenemos que añadir un nuevo elemento a esta configuración, pero para asegurarnos de que no reemplazamos completamente esta configuración, copia esos formatos y luego abre el directorio de paquetes de configuración. Aún no tenemos un archivo API Platform punto yaml, así que vamos a crear una plataforma API guión bajo, yamal, y luego una plataforma API guión bajo. Y luego los pegaré. Y no tengo por qué hacerlo, pero voy a ponerme elegante. Hay una forma alternativa más corta de hacer esta configuración que queda un poco mejor, así que voy a acortar rápidamente mi código para usar ese formato más corto. Genial.
+Pero añadir esta extensión al final de la URL es sólo un truco que permite API Platform. Para elegir el formato que queremos que devuelva la API, se supone que debemos enviar una cabecera`Accept`. Y podemos verlo cuando utilizamos los documentos interactivos. Esto hace una petición con una cabecera `Accept` establecida en `application/ld+json`. Establecer esta cabecera es fácil de hacer en JavaScript, y si no la estableces, JSON-LD es el formato por defecto.
 
-Ahora si vamos y actualizamos, todo parece funcionar igual. Tenemos los mismos formatos abajo. Eso es perfecto porque acabamos de repetir la configuración por defecto. Así que el nuevo formato que vamos a añadir es otro tipo de jsun llamado Jsun. ¿Cómo? Así que existe el J S O estándar, y luego el J S O LD toma el J S O estándar y le añade más claves y estructuras. Un estándar que compite con el J S O LD se llama Jsun. Yo particularmente no utilizo J S o Hal tan a menudo. Principalmente escucho. Sobre todo hacemos esto. Así podemos ver un ejemplo de cómo queda añadir un formato. Así, si buscas el tipo de contenido para Jsun hal, se supone que es la barra de aplicación cómo más J Sig. Así que cuando hacemos eso, al actualizar no aparece nada. Estoy bastante seguro de que esto se debe a que Symphony no está viendo mi nuevo archivo de configuración. Vamos a correr por aquí y hacer un bin, lanzar bin consola, efectivo claro refrescar de nuevo, ahí vamos. JSON hal. Y si hacemos clic en esto, en realidad vamos a la versión JSON how de nuestra documentación. Pero lo que quiero hacer aquí es en realidad hacer mi petición get, get collection tryouts. Y
+API Platform utiliza tres formatos por defecto. Puedes verlos aquí abajo, en la parte inferior de la página de documentación. Pero, ¿qué dice en nuestra aplicación que queremos utilizar específicamente estos tres formatos? Para responder a eso, dirígete a tu terminal y ejecuta:
 
-Aquí abajo puedes seleccionar cuál de los tipos quieres. Así que escribiré aplicación barra cómo más JSON Hit ejecutar. Y ahí está. Así que puedes ver que es json, tiene nuestros mismos resultados. Sólo que tiene un aspecto un poco diferente. Tiene cosas como un guión bajo incrustado y enlaces con guión bajo. No vamos a hablar mucho de que no es tan importante. Sólo quería ver, mostrarte qué aspecto tendría añadir un nuevo formato al sistema. Y la razón por la que esto funciona fuera de la caja es muy sencilla, porque el serializador entiende el formato como Jsun. Y éste es uno de los formatos jsun cómo incorporados. En realidad, esto se debe a que API Platform lo añade al serializador. Muy bien, entonces hagamos algo que quizá sea un poco más práctico. ¿Y si queremos que nuestros usuarios puedan devolver los tesoros en formato CSV? CSV es un formato que el serializador Symphony entiende de inmediato. Así que obviamente podríamos añadir CSV aquí mismo, pero como reto adicional, en lugar de habilitar CSV para cada recurso API de nuestro sistema, añadámoslo sólo para el Tesoro Dragón. Así que la forma de hacerlo es dentro de la clave del recurso API, eh, atributo,
+```terminal
+./bin/console debug:config api_platform
+```
 
-Añade un nuevo formato, configurar. Y al igual que con la configuración, si sólo pones aquí CSV, eso eliminará todos los demás formatos. Así que en realidad tenemos que listarlos todos. Jason ld, queremos Jason ld, queremos json, queremos html, queremos json, hal, y,
+Dentro de la configuración, comprueba esta clave `formats`... que, por defecto, está configurada para esos tres formatos. Esto básicamente dice que si la cabecera `Accept` es`application/ld+json`, utiliza el formato JSON-LD. Internamente, significa que cuando Symfony serialice nuestros datos, lo hará en JSON-LD o JSON.
 
-Y los cuatro leerán la configuración para saber qué tipo de contenido utilizar. Y para el último, haremos csv. Pero en este caso, como no existe en nuestra configuración, tenemos que decirle qué tipo de contenido debe activar este formato. Así que lo estableceremos en texto barra csv. Ahora fíjate en que mi editor está enfadado conmigo aquí. Dice, el nombre a los argumentos ordenados no coincide con el orden de los parámetros. Recuerda que cuando utilizas atributos, cuando pasas argumentos a atributos, este atributo es en realidad su propia clase. Y lo que estamos haciendo es simplemente rellenar los argumentos del estructurador mediante arcos con nombre. En realidad no, el orden no importa, y en realidad no creo que Peach three Storm deba señalar esto como un problema. Pero si quieres, podemos hacer clic en ordenar argumentos y ahí mover los formatos un poco más arriba y ahora estará contento y no me volveré loco por ese subrayado amarillo. En cualquier caso, cuando actualicemos y nos dirijamos a nuestra ruta de recopilación, pulsa probar y aquí abajo haremos texto barra csv. Pulsa ejecutar y Hola csv. Vaya, ha sido fácil.
+## Añadir un nuevo formato
 
-Y de nuevo, esto funciona porque Symphony CER entiende el formato CSV y todo esto lo maneja el utilizador Sea. De hecho, si abro el perfilador de esa petición, podemos bajar hasta la configuración del fertilizante. Y sí, puedes ver que está tomando nuestro, está formateando a través del formato CSV. Está utilizando el codificador CSV. Es un codificador incorporado para hacerlo, y por eso obtenemos nuestros buenos resultados. Si quieres, también puedes añadir más formatos personalizados al sistema si quieres devolver las cosas de alguna otra manera. Muy bien, a continuación, hablemos de la validación.
+Como reto, vamos a añadir un cuarto formato. Para ello, sólo tenemos que añadir un nuevo elemento a esta configuración... pero sin reemplazar completamente los formatos existentes. Copia estos, y luego abre el directorio `/config/packages/`. Aún no tenemos un archivo`api_platform.yaml`, así que vamos a crear uno. Dentro de él, di `api_platform`y pega los de abajo. Y aunque no es necesario, voy a cambiar esto para utilizar una versión más corta y atractiva de esta configuración:
+
+[[[ code('d89758fd53') ]]]
+
+¡Listo!
+
+Si ahora vamos y actualizamos, todo funciona igual. Tenemos los mismos formatos abajo... porque simplemente hemos repetido la configuración por defecto.
+
+El nuevo formato que vamos a añadir es otro tipo de JSON llamado HAL. Esto es lo que ocurre. Todos entendemos el formato JSON. Pero luego, para añadir más significado a JSON -como ciertas claves que debe tener tu JSON y su significado-, algunas personas sacan estándares que amplían JSON. JSON-LD es un ejemplo y HAL es un estándar competidor. No suelo utilizar HAL... así que hacemos esto sobre todo para ver un ejemplo de cómo es añadir un formato.
+
+Ah, y se supone que el `Content-Type` de HAL es `application/hal+json`:
+
+[[[ code('f970655b10') ]]]
+
+En cuanto lo hacemos, al actualizar... ¿no aparece nada? Estoy bastante seguro de que Symfony no ha visto mi nuevo archivo de configuración. Salta aquí y limpia la caché con:
+
+```terminal
+./bin/console cache:clear
+```
+
+Actualizar de nuevo y... ¡ya está! ¡Ahora vemos `jsonhal`! Y si hacemos clic, ¡nos lleva a la versión `jsonhal` de nuestra página de inicio de la API!
+
+Probemos una ruta con este formato. Haz clic en la petición `GET`, "Pruébalo", y, aquí abajo, podemos seleccionar qué "tipo de medio" solicitar. Selecciona`application/hal+json`, pulsa "Ejecutar", y... ¡ahí está!
+
+Puedes ver que es JSON... y tiene los mismos resultados, pero parece un poco diferente. Tiene cosas como `_embedded` y `_links`... que forman parte del estándar HAL... y de las que no merece la pena hablar ahora.
+
+Por cierto, la razón por la que este nuevo formato funcionó simplemente añadiendo un poquito de configuración es que el serializador ya entiende el formato `jsonhal`. Así que cuando hacemos una petición con esta cabecera `Accept`, API Platform pide al serializador que serialice en el formato `jsonhal`... y sabe cómo hacerlo.
+
+## Añadir un formato CSV
+
+Bien, hagamos algo que sea un poco más práctico. ¿Y si nuestros usuarios dragón necesitan devolver los tesoros en formato CSV... para poder importarlos a Quickbooks con fines fiscales?
+
+Bueno, CSV es un formato que el Serializador de Symfony entiende sin más. Sabemos que podríamos añadir CSV directamente en este archivo de configuración. Pero como reto añadido, en lugar de habilitar el CSV para cada recurso API de nuestro sistema, vamos a añadirlo sólo a `DragonTreasure`.
+
+Busca el atributo `ApiResource` y, en la parte inferior, añade `formats`. Al igual que con la configuración, si simplemente ponemos `csv` aquí, eso eliminará los demás formatos. Para hacerlo bien, tenemos que enumerarlos todos: `jsonld`, `json`, `html`, y`jsonhal`. Cada uno de ellos leerá la configuración para saber qué tipo de contenido debe utilizar. Al final, añade `csv`. Pero como `csv` no existe en la configuración, tenemos que decirle qué tipo de contenido lo activará. Así que ponlo en `text/csv`.
+
+[[[ code('5583ab3b8a') ]]]
+
+Oh, ¡pero mi editor está loco! Dice:
+
+> El orden de los argumentos con nombre no coincide con el orden de los parámetros
+
+Sabemos que cada atributo PHP es una clase... y cuando pasamos argumentos al atributo, en realidad estamos pasando argumentos con nombre al constructor de esa clase. Y, con argumentos con nombre, el orden de los argumentos no importa. En realidad no creo que PhpStorm deba señalar esto como un problema... pero si te molesta como a mí, puedes darle a "Ordenar argumentos" y... ya está. Ha movido `formats` un poco más arriba, está contento, y no tendremos que mirar ese subrayado amarillo.
+
+Muy bien, dirígete, actualiza, abre nuestra ruta de recolección y pulsa "Probar". Esta vez, aquí abajo, selecciona `text/csv` y luego... ¡"Activar"! Hola CSV. ¡Demasiado fácil!
+
+Una vez más, esto funciona porque el serializador de Symfony entiende el formato CSV, así que hace todo el trabajo.
+
+De hecho, abre el perfilador de esa petición... y baja a la sección del serializador. ¡Sí! Podemos ver que está utilizando el formato `csv`... que activa un `CsvEncoder`. Por eso obtenemos nuestros bonitos resultados. Si necesitaras devolver tus resultados en un formato personalizado no admitido por el serializador, podrías añadir tu propio codificador al sistema para gestionarlo. Es superflexible
+
+Siguiente: ¡Hablemos de validación!
