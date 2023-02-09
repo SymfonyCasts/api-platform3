@@ -75,7 +75,7 @@ const handleSubmit = async () => {
     return;
 
     if (!response.ok) {
-        error.value = data.message;
+        // TODO: set error
 
         return;
     }
