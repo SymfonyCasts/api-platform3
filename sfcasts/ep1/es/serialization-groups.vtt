@@ -1,410 +1,398 @@
 WEBVTT
 
-00:00:02.126 --> 00:00:09.226 align:middle
-Ahora mismo, que un campo sea legible en
-nuestra API o escribible en nuestra API
+00:00:02.126 --> 00:00:06.336 align:middle
+Ahora mismo, que un campo de
+nuestra clase sea legible o no
 
-00:00:09.226 --> 00:00:13.736 align:middle
-depende totalmente de si es
-accesible o no en nuestra clase.
+00:00:06.376 --> 00:00:12.196 align:middle
+en la API está totalmente determinado
+por si esa propiedad es legible o no
 
-00:00:13.736 --> 00:00:17.416 align:middle
-Básicamente, si tiene o no
-un método getter o setter.
+00:00:12.226 --> 00:00:17.416 align:middle
+en nuestra clase (básicamente, si
+tiene o no un método getter o setter).
 
-00:00:17.686 --> 00:00:23.366 align:middle
-¿Pero qué pasa si necesitas un getter o setter pero
-no quieres que ese campo esté expuesto en la api?
+00:00:17.686 --> 00:00:19.916 align:middle
+Pero, ¿y si necesitas un getter o setter...
 
-00:00:24.336 --> 00:00:26.896 align:middle
-Bueno, tienes dos opciones.
+00:00:20.216 --> 00:00:23.366 align:middle
+pero no quieres que ese campo
+esté expuesto en la API?
+
+00:00:23.666 --> 00:00:26.896 align:middle
+Para eso, tenemos dos opciones.
 
 00:00:27.426 --> 00:00:32.306 align:middle
-La opción número uno es crear una
-clase A DTO para tu recurso API.
+Opción número uno: crear una
+clase DTO para el recurso API.
 
-00:00:32.776 --> 00:00:36.386 align:middle
-De esto hablaremos en un
-futuro tutorial. Se trata de
+00:00:32.776 --> 00:00:34.946 align:middle
+Esto lo dejaremos para otro día...
 
-00:00:36.676 --> 00:00:42.726 align:middle
-crear una clase dedicada para
-tu API del Tesoro del Dragón
+00:00:35.206 --> 00:00:36.386 align:middle
+en un futuro tutorial.
 
-00:00:43.256 --> 00:00:48.906 align:middle
-, que probablemente tenga muchos
-de los mismos campos que ésta.
+00:00:36.746 --> 00:00:42.726 align:middle
+Pero, en pocas palabras, consiste en crear una
+clase dedicada para tu API DragonTreasure...
 
-00:00:48.906 --> 00:00:53.186 align:middle
-Y luego pasas el recurso API a eso.
+00:00:42.816 --> 00:00:46.706 align:middle
+y luego le pasas el atributo ApiResource.
 
-00:00:53.806 --> 00:01:02.116 align:middle
-Crea un poco más de trabajo configurando
-las cosas, pero la ventaja es
+00:00:47.626 --> 00:00:53.196 align:middle
+La clave es que diseñes la nueva clase
+para que se parezca exactamente a tu API...
+
+00:00:53.796 --> 00:00:57.496 align:middle
+porque modelar tu API será su único trabajo.
+
+00:00:58.046 --> 00:01:02.116 align:middle
+Lleva un poco más de trabajo
+configurar las cosas, pero la ventaja es
 
 00:01:02.116 --> 00:01:05.446 align:middle
-que tienes una clase dedicada para tu api.
+que entonces tendrás una
+clase dedicada a tu API.
 
-00:01:05.696 --> 00:01:11.836 align:middle
-Así que, literalmente, siempre haces, haces que
-tu clase se vea exactamente como quieres que se vea
+00:01:06.236 --> 00:01:13.196 align:middle
+¡Listo! La segunda solución, y la que vamos
+a utilizar, son los grupos de serialización.
 
-00:01:11.836 --> 00:01:16.516 align:middle
-en la API y no tienes que
-preocuparte de y luego, y ya está.
+00:01:13.196 --> 00:01:13.706 align:middle
+Compruébalo.
 
-00:01:16.516 --> 00:01:22.026 align:middle
-La segunda solución y la que vamos a
-utilizar son los grupos de serialización.
+00:01:13.916 --> 00:01:19.066 align:middle
+Sobre el atributo ApiResource, añade una
+nueva opción llamada normalizationContext.
 
-00:01:22.026 --> 00:01:23.136 align:middle
-Así que echa un vistazo a esto.
+00:01:19.966 --> 00:01:26.336 align:middle
+Si recuerdas, la "normalización" es el
+proceso de pasar de un objeto a una matriz,
 
-00:01:23.136 --> 00:01:24.256 align:middle
-Sube a nuestro recurso API.
+00:01:26.706 --> 00:01:30.356 align:middle
+como cuando haces una petición
+a GET para leer un tesoro.
 
-00:01:24.256 --> 00:01:28.976 align:middle
-Voy a añadir una nueva opción aquí
-llamada contexto de normalización.
+00:01:30.946 --> 00:01:34.706 align:middle
+El normalizationContext son
+básicamente opciones que se pasan
 
-00:01:28.976 --> 00:01:34.556 align:middle
-Ahora recuerda, la normalización es el
-proceso de pasar de un objeto a un array.
+00:01:34.706 --> 00:01:37.146 align:middle
+al serializador durante ese proceso.
 
-00:01:34.556 --> 00:01:39.136 align:middle
-Es como cuando haces una
-petición get para leer un tesoro.
+00:01:37.476 --> 00:01:40.816 align:middle
+Y la opción más importante es groups.
 
-00:01:39.136 --> 00:01:45.416 align:middle
-El contexto de normalización son básicamente
-opciones que se pasan durante ese proceso.
+00:01:41.116 --> 00:01:45.906 align:middle
+Establécela en un grupo llamado treasure:read:
+Hablaremos de lo que hace esto en un minuto.
 
-00:01:45.416 --> 00:01:48.306 align:middle
-Y la opción más importante
-con diferencia son los grupos.
+00:01:46.116 --> 00:01:48.266 align:middle
+Pero puedes ver el patrón que
+estoy utilizando para el grupo:
 
-00:01:48.526 --> 00:01:52.006 align:middle
-Así que voy a pasar aquí un
-nuevo grupo llamado Tesoro:Reid.
+00:01:48.546 --> 00:01:54.446 align:middle
+el nombre de la clase (podría ser
+dragon_treasure si quisiéramos) luego :read...
 
-00:01:52.006 --> 00:01:56.886 align:middle
-Hablaremos de lo que hace esto dentro de
-un minuto, pero puedes ver que el patrón
+00:01:54.896 --> 00:01:58.436 align:middle
+porque la normalización significa
+que estamos leyendo esta clase.
 
-00:01:56.886 --> 00:02:02.626 align:middle
-para el nombre que estoy utilizando aquí es básicamente
-el nombre de mi clase que va a ser Tesoro Dragón
+00:01:59.186 --> 00:02:02.696 align:middle
+Puedes nombrar estos grupos como
+quieras: éste es mi patrón.
 
-00:02:03.246 --> 00:02:09.576 align:middle
-si quisiera, y luego:Reid, porque esto
-es la normalización significa que
+00:02:03.276 --> 00:02:05.456 align:middle
+Entonces... ¿qué hace eso?
 
-00:02:09.616 --> 00:02:10.776 align:middle
-estamos leyendo esta clase.
+00:02:05.946 --> 00:02:06.586 align:middle
+¡Averigüémoslo!
 
-00:02:10.976 --> 00:02:11.616 align:middle
-¿Y eso qué hace?
+00:02:07.126 --> 00:02:08.576 align:middle
+Actualiza la documentación...
 
-00:02:11.616 --> 00:02:13.246 align:middle
-Vamos a averiguarlo.
+00:02:09.196 --> 00:02:15.556 align:middle
+y, para hacerte la vida más fácil, ve
+a la URL: /api/dragon_treasures.jsonld.
 
-00:02:13.246 --> 00:02:16.526 align:middle
-Voy a refrescar la documentación y, en
-realidad, nos va a facilitar la vida.
+00:02:16.516 --> 00:02:19.406 align:middle
+¡Vaya! Ahora sólo está treasures.jsonld.
 
-00:02:16.526 --> 00:02:19.186 align:middle
-Vayamos directamente a la URL.
-
-00:02:19.186 --> 00:02:22.286 align:middle
-Ya no se llama Tesoros del Dragón.
-
-00:02:22.556 --> 00:02:24.266 align:middle
-Se llama Tesoros.
-
-00:02:24.266 --> 00:02:25.526 align:middle
+00:02:20.616 --> 00:02:21.186 align:middle
 Ya está.
 
-00:02:25.526 --> 00:02:27.286 align:middle
-Y ya no se devuelve absolutamente nada.
+00:02:21.916 --> 00:02:24.736 align:middle
+Y... ¡no se devuelve absolutamente nada!
 
-00:02:27.286 --> 00:02:28.986 align:middle
-Así que mira esto, Hydra.
+00:02:25.426 --> 00:02:31.306 align:middle
+Vale, tenemos los campos hidra, pero este
+hydra:member contiene la matriz de tesoros.
 
-00:02:28.986 --> 00:02:31.346 align:middle
-Recuerda que nosotros, este es
-nuestro conjunto de recursos.
+00:02:31.686 --> 00:02:33.696 align:middle
+Nos devuelve un tesoro...
 
-00:02:31.406 --> 00:02:37.046 align:middle
-Así que devuelve un tesoro, pero aparte
-de estos extraños campos at ID y at type,
+00:02:34.066 --> 00:02:36.596 align:middle
+pero aparte de @id y @type...
 
-00:02:37.046 --> 00:02:41.056 align:middle
-no se devuelve ningún campo
-real de nuestro recurso.
+00:02:36.916 --> 00:02:39.276 align:middle
+¡no hay campos reales!
 
-00:02:41.056 --> 00:02:41.896 align:middle
-Así es como funciona.
+00:02:39.946 --> 00:02:41.036 align:middle
+Esto es lo que pasa. En cuanto
 
-00:02:41.896 --> 00:02:45.336 align:middle
-Ahora que tenemos este
-contexto de normalización,
+00:02:41.496 --> 00:02:47.076 align:middle
+añadamos un normalizationContext con un
+grupo, cuando se normalice nuestro objeto,
 
-00:02:45.336 --> 00:02:48.516 align:middle
-cuando se normalice nuestro objeto, sólo
-
-00:02:48.516 --> 00:02:52.106 align:middle
-incluirá las propiedades
-que tengan este grupo.
+00:02:47.356 --> 00:02:52.106 align:middle
+el serializador sólo incluirá las
+propiedades que tengan ese grupo.
 
 00:02:52.616 --> 00:02:57.846 align:middle
-Y como no hemos añadido grupos a ninguna
-de nuestras propiedades, no devuelve nada.
+Y como no hemos añadido ningún grupo a
+nuestras propiedades, no devuelve nada.
 
 00:02:58.476 --> 00:02:59.746 align:middle
 ¿Cómo añadimos grupos?
 
-00:02:59.996 --> 00:03:01.836 align:middle
-Con otro atributo.
+00:03:00.146 --> 00:03:01.836 align:middle
+¡Con otro atributo! Encima de
 
-00:03:01.836 --> 00:03:05.266 align:middle
-Así que encima del campo indio, haré grupos.
+00:03:02.616 --> 00:03:05.266 align:middle
+la propiedad $name, digamos #[Groups],
 
-00:03:05.426 --> 00:03:09.916 align:middle
-Le daré al tabulador para añadir una
-declaración de uso y dirán Treasure coin read.
+00:03:05.476 --> 00:03:09.316 align:middle
+pulsa "tab" para añadir su
+declaración use y luego treasure:read.
 
-00:03:09.916 --> 00:03:13.136 align:middle
-Y luego hagamos esto encima
-del campo descripción.
+00:03:09.316 --> 00:03:13.136 align:middle
+Repite esto encima del campo $description...
 
 00:03:13.486 --> 00:03:15.196 align:middle
-¿Queremos que sea legible?
+porque queremos que sea legible...
 
-00:03:15.746 --> 00:03:20.406 align:middle
-El campo de valor y el factor
-cool, empezaremos sólo con esos.
+00:03:15.756 --> 00:03:17.506 align:middle
+y luego el campo $value...
 
-00:03:20.406 --> 00:03:23.706 align:middle
-Ahora voy a refrescar tu ruta.
+00:03:17.756 --> 00:03:21.716 align:middle
+y finalmente $coolFactor: Buen comienzo.
 
-00:03:24.136 --> 00:03:29.446 align:middle
-Ya está. Nombre, descripción,
-valor, factor cool.
+00:03:21.716 --> 00:03:23.706 align:middle
+Muévete y actualiza la ruta.
 
-00:03:29.446 --> 00:03:33.156 align:middle
-Así tenemos control sobre
-qué campos se devuelven.
+00:03:24.116 --> 00:03:25.836 align:middle
+Ahora... ¡ya está!
 
-00:03:33.156 --> 00:03:37.866 align:middle
-Podemos hacer lo mismo con los
-campos que se pueden escribir.
+00:03:26.176 --> 00:03:29.466 align:middle
+Vemos name, description, value, y coolFactor.
 
-00:03:37.866 --> 00:03:41.016 align:middle
-Esto se llama normalización de DN.
+00:03:29.976 --> 00:03:33.446 align:middle
+Ahora tenemos control sobre
+qué campos son legibles...
 
-00:03:41.276 --> 00:03:45.456 align:middle
-Seguro que adivinas lo que vamos a hacer aquí.
+00:03:33.856 --> 00:03:38.376 align:middle
+y podemos hacer lo mismo para elegir
+qué campos se pueden escribir en la API.
 
-00:03:45.456 --> 00:03:51.606 align:middle
-Lo copiamos, lo pegamos, lo llamamos contexto de
-normalización D y lo llamaremos tesoro dos puntos, ¿vale?
+00:03:38.846 --> 00:03:44.236 align:middle
+Eso se llama "desnormalización", y apuesto
+a que adivinas lo que vamos a hacer.
 
-00:03:52.386 --> 00:03:54.166 align:middle
-E inmediatamente después iremos aquí abajo
+00:03:44.656 --> 00:03:49.746 align:middle
+Copia normalizationContext, pégalo,
+cámbialo por denormalizationContext...
 
-00:03:54.166 --> 00:03:57.956 align:middle
-y añadiremos tesorero
-qu justo al campo nombre.
+00:03:49.906 --> 00:03:56.346 align:middle
+y utiliza treasure:write: Ahora dirígete a la
+propiedad $name y añade treasure:write. Voy a
 
-00:03:57.956 --> 00:03:59.796 align:middle
-Por ahora voy a saltarme el de descripción.
+00:03:57.866 --> 00:03:59.906 align:middle
+saltarme $description (recuerda
 
-00:03:59.796 --> 00:04:03.646 align:middle
-Recuerda que antes hemos eliminado
-el método establecer descripción.
+00:03:59.906 --> 00:04:03.826 align:middle
+que antes borramos nuestro método
+setDescription() a propósito)...
 
-00:04:04.186 --> 00:04:08.436 align:middle
-Lo añadiremos al campo
-valor y al campo factor cool.
+00:04:04.146 --> 00:04:05.496 align:middle
+pero añade esto a $value...
 
-00:04:08.436 --> 00:04:09.956 align:middle
-Y puedes ver que está enfadado
-conmigo porque lo olvidé.
+00:04:05.836 --> 00:04:09.646 align:middle
+y $coolFactor: ¡Oh, está enfadado conmigo!
 
-00:04:10.156 --> 00:04:13.986 align:middle
-En cuanto pases varios grupos aquí,
-tenemos que hacer de esto un array.
+00:04:10.156 --> 00:04:14.006 align:middle
+En cuanto pasemos varios grupos,
+tenemos que convertirlo en un array.
 
-00:04:13.986 --> 00:04:16.726 align:middle
-Así que añadiré un array
-alrededor de esas tres propiedades.
+00:04:14.636 --> 00:04:19.206 align:middle
+Añade algo de [] alrededor
+de esas tres propiedades.
 
-00:04:16.726 --> 00:04:17.696 align:middle
-Ya está.
+00:04:20.926 --> 00:04:22.186 align:middle
+Mucho más contento.
 
-00:04:17.696 --> 00:04:25.206 align:middle
-Así que ahora esta propiedad está en
-estos dos grupos para ver si funciona.
+00:04:23.646 --> 00:04:27.566 align:middle
+Para comprobar si esto es A-OK,
+refresca la documentación...
 
-00:04:25.206 --> 00:04:32.556 align:middle
-Actualizaré la documentación y abriré la ruta
-put y nos mostrará que sí, que el nombre, el
+00:04:27.766 --> 00:04:29.986 align:middle
+abre la ruta PUT y...
 
-00:04:32.696 --> 00:04:38.096 align:middle
-valor y el factor cool son ahora los únicos
-campos que se pueden establecer en nuestra API.
+00:04:30.456 --> 00:04:34.256 align:middle
+¡genial! Vemos name, value, y coolFactor,
 
-00:04:38.096 --> 00:04:44.036 align:middle
-Ahora nos faltan un par de cosas porque si recuerdas
-la última vez hicimos un método get saqueado
+00:04:34.546 --> 00:04:38.176 align:middle
+que son actualmente los únicos campos
+que se pueden escribir en nuestra API.
 
-00:04:44.036 --> 00:04:48.966 align:middle
-a go y queremos que esto se incluya
+00:04:39.166 --> 00:04:41.036 align:middle
+Sin embargo, nos faltan algunas cosas.
+
+00:04:41.606 --> 00:04:45.236 align:middle
+Antes hicimos un método getPlunderedAtAgo()...
+
+00:04:45.516 --> 00:04:48.966 align:middle
+y queremos que se incluya
 cuando leamos nuestro recurso.
 
-00:04:49.426 --> 00:04:54.396 align:middle
+00:04:49.426 --> 00:04:52.876 align:middle
 Ahora mismo, si comprobamos
-nuestra ruta, no se incluye.
+la ruta, no está ahí.
 
-00:04:54.396 --> 00:04:57.416 align:middle
-Así que también podemos añadir el
-mismo grupo por encima de los métodos.
+00:04:53.726 --> 00:04:57.416 align:middle
+Para solucionarlo, también podemos
+añadir grupos a los métodos anteriores.
 
-00:04:57.896 --> 00:05:06.016 align:middle
-Así que grupos Y voy a hacer
-tesoro:leer y ahora aparece.
+00:04:57.896 --> 00:05:03.596 align:middle
+Digamos #[Groups(['treasure:read'])]:
+Y cuando vayamos a c omprobarlo...
 
-00:05:06.016 --> 00:05:09.716 align:middle
-Y luego busquemos el método
-establecer descripción de texto.
+00:05:04.056 --> 00:05:06.066 align:middle
+voilà, aparece.
 
-00:05:10.096 --> 00:05:11.576 align:middle
-Ahí haremos lo mismo.
+00:05:06.896 --> 00:05:09.716 align:middle
+Busquemos también el método
+setTextDescription()...
 
-00:05:11.806 --> 00:05:14.246 align:middle
-Grupos, columna tesoro, ¿verdad?
+00:05:10.096 --> 00:05:14.896 align:middle
+y hagamos lo mismo:
+#[Groups([treasure:write])]: ¡Genial!
 
-00:05:14.386 --> 00:05:19.916 align:middle
-Estupendo. Y si vamos a la documentación,
-puedes ver que no estaba ahí hace un segundo.
+00:05:15.396 --> 00:05:19.016 align:middle
+Si volvemos a la documentación,
+el campo no aparece...
 
-00:05:19.916 --> 00:05:25.946 align:middle
-Ahora si refrescamos y comprobamos la
-descripción de texto de la ruta put ha vuelto.
+00:05:19.466 --> 00:05:20.856 align:middle
+pero cuando actualizamos...
 
-00:05:26.056 --> 00:05:29.706 align:middle
-Y esto significa que si queremos,
-podemos volver a poner algunos
+00:05:21.196 --> 00:05:23.666 align:middle
+y comprobamos de nuevo la ruta PUT...
 
-00:05:29.706 --> 00:05:32.796 align:middle
-de los métodos setter que
-quitamos hace un segundo.
+00:05:24.086 --> 00:05:26.346 align:middle
+textDescription ¡ha vuelto!
 
-00:05:32.796 --> 00:05:36.826 align:middle
-Así que puede que sí necesite un método set description
-como en mi código para poder hacer cosas. Así que voy a
+00:05:26.946 --> 00:05:32.176 align:middle
+Oye, ¡ahora podemos volver a añadir cualquiera de
+los métodos getter o setter que eliminamos antes!
 
-00:05:36.826 --> 00:05:40.696 align:middle
-copiar set nombre para ser perezoso
-y renombrar descripción nombre, eh,
+00:05:32.506 --> 00:05:36.566 align:middle
+Por ejemplo, quizá sí necesite un método
+setDescription() en mi código para algo.
 
-00:05:40.696 --> 00:05:42.896 align:middle
-renombrar nombre a descripción,
-en un par de sitios.
+00:05:37.206 --> 00:05:42.896 align:middle
+Copia setName() para dar pereza, pega y cambia
+"nombre" por "descripción" en algunos sitios.
 
-00:05:43.046 --> 00:05:49.096 align:middle
-Entendido. Y, por supuesto, lo bueno es que, aunque
-ahora tengo de nuevo ese definidor, cuando miro
+00:05:45.316 --> 00:05:48.506 align:middle
+¡Ya está! Y aunque hemos
+recuperado ese definidor,
 
-00:05:49.096 --> 00:05:53.496 align:middle
-mi ruta put, no aparece automáticamente
-porque hemos tomado el control
+00:05:48.626 --> 00:05:52.326 align:middle
+cuando mir amos la ruta
+PUT, description no aparece.
 
-00:05:53.496 --> 00:05:57.246 align:middle
-gracias a nuestros campos
-de normalización de DN.
+00:05:52.846 --> 00:05:57.856 align:middle
+Tenemos un control total sobre nuestros campos
+gracias a los grupos de desnormalización.
 
-00:05:57.246 --> 00:06:03.046 align:middle
-También voy a añadir lo mismo para
-"expoliado en", a veces es útil,
+00:05:58.256 --> 00:06:00.676 align:middle
+Haz lo mismo para setPlunderedAt()...
 
-00:06:03.306 --> 00:06:07.026 align:middle
-como en tus accesorios de datos, especialmente
-para poder establecer el "expoliado en".
+00:06:00.936 --> 00:06:07.676 align:middle
+porque a veces es útil -especialmente en las
+fijaciones de datos- poder establecer esto manualmente.
 
-00:06:07.026 --> 00:06:11.216 align:middle
-Así que también lo añadiré rápidamente.
+00:06:10.676 --> 00:06:11.916 align:middle
+Y... ¡listo!
 
-00:06:11.586 --> 00:06:16.026 align:middle
-Probablemente debería haber sido más perezoso
-y haber generado el definidor, pero ya está.
+00:06:12.636 --> 00:06:15.086 align:middle
+Ya sabemos que obtener un recurso funciona.
 
-00:06:16.026 --> 00:06:18.866 align:middle
-Vale, ya sabemos que la obtención y la
-API de obtención de un recurso funcionan.
+00:06:15.496 --> 00:06:18.126 align:middle
+Ahora veamos si podemos crear un nuevo recurso.
 
-00:06:18.866 --> 00:06:22.706 align:middle
-Veamos ahora si podemos crear un nuevo recurso.
+00:06:18.806 --> 00:06:22.186 align:middle
+Haz clic en la ruta POST,
+pulsa "Probar", y... vamos a
 
-00:06:22.706 --> 00:06:24.446 align:middle
-Así que por la ruta post, le daré a probar.
+00:06:22.186 --> 00:06:29.096 align:middle
+rellenar algo de información sobre nuestro nuevo
+tesoro, que es, por supuesto, un Giant jar of pickles.
 
-00:06:24.446 --> 00:06:29.096 align:middle
-Y vamos a rellenar nuestro nuevo tesoro, que es,
-por supuesto, nuestro tarro gigante de pepinillos.
+00:06:29.846 --> 00:06:34.096 align:middle
+Éste es muy valioso y
+tiene un coolFactor de 10.
 
-00:06:29.846 --> 00:06:31.596 align:middle
-Esto es muy valioso.
+00:06:34.726 --> 00:06:36.386 align:middle
+También añadiré una descripción...
 
-00:06:32.326 --> 00:06:36.386 align:middle
-Factor guay de 10.
+00:06:36.576 --> 00:06:40.266 align:middle
+aunque este tarro de
+pepinillos habla por sí solo.
 
-00:06:36.586 --> 00:06:39.076 align:middle
-Y añadiré una descripción.
+00:06:40.366 --> 00:06:41.556 align:middle
+Cuando probemos esto...
 
-00:06:39.076 --> 00:06:40.556 align:middle
-De acuerdo.
+00:06:42.216 --> 00:06:42.826 align:middle
+vaya...
 
-00:06:40.556 --> 00:06:46.306 align:middle
-Y cuando probamos esto, oh 500
-aire se produjo una excepción.
+00:06:43.106 --> 00:06:49.426 align:middle
+obtenemos un error 500: Se ha producido una excepción
+al ejecutar una consulta: Violación no nula,
 
-00:06:46.306 --> 00:06:52.116 align:middle
-Se publica la columna no no violación,
-viola la restricción no no.
+00:06:49.626 --> 00:06:52.116 align:middle
+valornull en la columna isPublished.
 
-00:06:52.166 --> 00:06:57.286 align:middle
-Así que hemos reducido nuestra API a sólo
-los campos que queremos que sean escribibles,
+00:06:52.776 --> 00:06:57.286 align:middle
+Hemos reducido nuestra API a sólo los
+campos que queremos que se puedan escribir...
 
-00:06:57.496 --> 00:07:00.576 align:middle
-pero aún nos falta un campo que debe
-establecerse en la base de datos.
+00:06:57.496 --> 00:07:00.636 align:middle
+pero aún queda una propiedad que
+debe establecerse en la base de datos.
 
-00:07:00.576 --> 00:07:06.986 align:middle
-Si te desplazas hacia arriba y encuentras
-que está publicado, vale, es = nulo.
+00:07:01.116 --> 00:07:03.016 align:middle
+Desplázate hacia arriba y busca isPublished.
 
-00:07:07.296 --> 00:07:11.486 align:middle
-Cambiémoslo a = false por defecto, entonces
-en realidad no necesitamos ese toro.
+00:07:04.426 --> 00:07:06.986 align:middle
+Sí, actualmente está por defecto en null.
 
-00:07:11.486 --> 00:07:13.676 align:middle
-La propiedad ya no es nula de más.
+00:07:07.476 --> 00:07:09.416 align:middle
+Cámbialo a = false...
 
-00:07:13.676 --> 00:07:15.436 align:middle
-Y ahora lo probamos.
+00:07:09.756 --> 00:07:12.366 align:middle
+y ahora la propiedad nunca será null.
 
-00:07:15.436 --> 00:07:18.896 align:middle
-El tarro gigante de pepinillos
-se carga en la base de datos.
+00:07:12.366 --> 00:07:15.346 align:middle
+Si lo intentamos...
 
-00:07:19.226 --> 00:07:26.196 align:middle
-Funciona. Muy bien, a continuación quiero mostrar unos cuantos
-trucos más de serialización geniales que harán que tu
+00:07:15.346 --> 00:07:18.896 align:middle
+¡el Giant jar of pickles se
+almacena en la base de datos!
 
-00:07:26.196 --> 00:07:27.326 align:middle
-clase sea impresionante y tu api.
+00:07:19.226 --> 00:07:25.196 align:middle
+¡Funciona! A continuación: vamos a explorar
+algunos trucos más de serialización
 
-00:07:27.356 --> 00:07:28.086 align:middle
-Impresionante.
+00:07:25.286 --> 00:07:27.256 align:middle
+para tener aún más control.
