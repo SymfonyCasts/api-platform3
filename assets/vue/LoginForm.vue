@@ -80,9 +80,9 @@ const handleSubmit = async () => {
         return;
     }
 
-    emit('user-authenticated', userUri);
     email.value = '';
     password.value = '';
+    //emit('user-authenticated', userUri);
 }
 
 </script>
