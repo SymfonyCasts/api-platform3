@@ -18,7 +18,7 @@ Entonces... ¿qué hace eso? ¡Vamos a averiguarlo! Actualiza la documentación.
 
 ## Cómo funcionan los grupos de serialización
 
-Esto es lo que pasa. En cuanto añadamos un `normalizationContext` con un grupo, cuando se normalice nuestro objeto, el serializador sólo incluirá las propiedades que tengan ese grupo. Y como no hemos añadido ningún grupo a nuestras propiedades, no devuelve nada.
+Esto es lo que ocurre. En cuanto añadamos un `normalizationContext` con un grupo, cuando se normalice nuestro objeto, el serializador sólo incluirá las propiedades que tengan ese grupo. Y como no hemos añadido ningún grupo a nuestras propiedades, no devuelve nada.
 
 ¿Cómo añadimos grupos? ¡Con otro atributo! Encima de la propiedad `$name`, digamos`#[Groups]`, pulsa "tab" para añadir su declaración `use` y luego `treasure:read`. Repite esto encima del campo `$description`... porque queremos que sea legible... y luego el campo `$value`... y finalmente `$coolFactor`:
 
@@ -26,7 +26,7 @@ Esto es lo que pasa. En cuanto añadamos un `normalizationContext` con un grupo,
 
 Buen comienzo. Muévete y actualiza la ruta. Ahora... ¡ya está! Vemos `name`,`description`, `value`, y `coolFactor`.
 
-## DenormlizationContext: Control de los grupos escribibles
+## DenormlizaciónContexto: Control de los grupos escribibles
 
 Ahora tenemos control sobre qué campos son legibles... y podemos hacer lo mismo para elegir qué campos deben ser escribibles en la API. Eso se llama "desnormalización", y apuesto a que adivinas lo que vamos a hacer. Copia`normalizationContext`, pégalo, cámbialo por `denormalizationContext`... y utiliza`treasure:write`:
 
@@ -69,7 +69,7 @@ Oye, ¡ahora podemos volver a añadir cualquiera de los métodos getter o setter
 
 Y... ¡listo!
 
-## Añadir valores predeterminados de campo
+## Añadir valores de campo predeterminados
 
 Ya sabemos que obtener un recurso funciona. Ahora vamos a ver si podemos crear un nuevo recurso. Haz clic en la ruta `POST`, pulsa "Probar", y... rellenemos algunos datos sobre nuestro nuevo tesoro, que es, por supuesto, un `Giant jar of pickles`. Es muy valioso y tiene un `coolFactor` de `10`. También añadiré una descripción... aunque este tarro de pepinillos habla por sí solo.
 
