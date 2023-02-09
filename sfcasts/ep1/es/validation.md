@@ -4,7 +4,7 @@ Los usuarios de nuestra API pueden estropear las cosas de muchas maneras, por ej
 
 ## JSON no válido
 
-Este capítulo trata sobre cómo manejar estas cosas malas con elegancia. Prueba con la ruta POST. Enviemos algo de JSON no válido. Pulsa Ejecutar. ¡Impresionante! Un error `400`! Eso es lo que queremos. 400 -o cualquier código de estado que empiece por 4- significa que el cliente -el usuario de la API- ha cometido un error. en concreto, 400 significa "petición errónea".
+Este capítulo trata sobre cómo manejar estas cosas malas con elegancia. Prueba con la ruta POST. Enviemos algo de JSON no válido. Pulsa Ejecutar. ¡Impresionante! ¡Un error `400`! Eso es lo que queremos. 400 -o cualquier código de estado que empiece por 4- significa que el cliente -el usuario de la API- ha cometido un error. en concreto, 400 significa "petición errónea".
 
 En la respuesta, el tipo es `hydra:error` y dice: `An error occurred`
 y `Syntax Error`. Ah, y este `trace` sólo se muestra en el entorno de depuración: no se mostrará en producción.
@@ -25,7 +25,7 @@ A continuación, añade una más: `Length`. Digamos que el nombre debe tener al 
 
 ## Cómo se ven los errores en la respuesta
 
-¡Buen comienzo! Intentémoslo de nuevo. Coge ese mismo JSON vacío, pulsa Ejecutar, y ¡sí! ¡Una respuesta 422! Se trata de un código de respuesta muy común que suele significar que se ha producido un error de validación. Y ¡he aquí! El `@type` es `ConstraintViolationList`. Se trata de un tipo especial de JSON-LD añadido por API Platform. Anteriormente, lo vimos documentado en la documentación de `JSON-LD`.
+¡Buen comienzo! Inténtalo de nuevo. Coge ese mismo JSON vacío, pulsa Ejecutar, y ¡sí! ¡Una respuesta 422! Se trata de un código de respuesta muy común que suele significar que se ha producido un error de validación. Y ¡he aquí! El `@type` es `ConstraintViolationList`. Se trata de un tipo especial de JSON-LD añadido por API Platform. Anteriormente, lo vimos documentado en la documentación de `JSON-LD`.
 
 Observa: ve a `/api/docs.jsonld` y busca un `ConstraintViolation`. ¡Ahí está! API Platform añade dos clases: `ConstraintViolation` y`ConstraintViolationList` para describir el aspecto que tendrán los errores de validación. Un`ConstraintViolationList` es básicamente una colección de `ConstraintViolations`... y luego describe cuáles son las propiedades de `ConstraintViolation`.
 
@@ -53,4 +53,4 @@ Vale, hay una última forma de que un usuario envíe cosas malas: pasando un tip
 
 Así que de lo único que tenemos que preocuparnos en nuestra aplicación es de escribir un buen código que utilice correctamente `type` y de añadir restricciones de validación: la red de seguridad que atrapa las violaciones de las reglas de negocio... como que `value` debe ser mayor que 0 o que `description`es obligatorio. API Platform se encarga del resto.
 
-A continuación: nuestra API sólo tiene un recurso: `DragonTreasure`. Añadamos un segundo recurso -un recurso `User` - para que podamos vincular qué usuario posee qué tesoro en la API.
+A continuación: nuestra API sólo tiene un recurso: `DragonTreasure`. Añadimos un segundo recurso -un recurso `User` - para que podamos vincular qué usuario posee qué tesoro en la API.
