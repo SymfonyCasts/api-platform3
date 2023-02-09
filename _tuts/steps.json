@@ -176,10 +176,45 @@
             "description": null
         },
         {
+            "id": "tokenauth-also-check-expired",
+            "name": "TokenAuth: Also check expired",
+            "description": null
+        },
+        {
             "id": "tokenauth-add-authorization-to-swagger",
             "name": "TokenAuth: Add authorization to swagger",
             "description": null
+        },
+        {
+            "id": "bearer-creating-openapifactory-decorator",
+            "name": "Bearer: creating OpenApiFactory decorator",
+            "description": null
+        },
+        {
+            "id": "bearer-complete-decoration",
+            "name": "Bearer: complete decoration",
+            "description": null
+        },
+        {
+            "id": "bearer-add-bearer-security-scheme",
+            "name": "Bearer: add Bearer security scheme",
+            "description": null
+        },
+        {
+            "id": "bearer-remove-old-one-in-config",
+            "name": "Bearer: remove old one in config",
+            "description": null
+        },
+        {
+            "id": "scopes-add-code-to-user-for-scopes",
+            "name": "Scopes: Add code to User for scopes",
+            "description": null
+        },
+        {
+            "id": "scopes-call-user-markastokenauthenticated-in-handler",
+            "name": "Scopes: Call $user->markAsTokenAuthenticated() in handler",
+            "description": null
         }
     ],
-    "sha": "f87becbe1f6f9104db1b65214ca09319657bf18b"
+    "sha": "4d25c55dddab2668ce9d43d1ea60a070769e6c2d"
 }

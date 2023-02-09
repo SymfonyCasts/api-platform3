@@ -1,0 +1,27 @@
+diff --git a/src/ApiPlatform/OpenApiFactoryDecorator.php b/src/ApiPlatform/OpenApiFactoryDecorator.php
+index 90166f4..d55e20e 100644
+--- a/src/ApiPlatform/OpenApiFactoryDecorator.php
++++ b/src/ApiPlatform/OpenApiFactoryDecorator.php
+@@ -4,11 +4,21 @@ namespace App\ApiPlatform;
+ 
+ use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+ use ApiPlatform\OpenApi\OpenApi;
++use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+ 
++#[AsDecorator('api_platform.openapi.factory')]
+ class OpenApiFactoryDecorator implements OpenApiFactoryInterface
+ {
++    public function __construct(private OpenApiFactoryInterface $decorated)
++    {
++    }
++
+     public function __invoke(array $context = []): OpenApi
+     {
+-        // TODO: Implement __invoke() method.
++        $openApi = $this->decorated->__invoke($context);
++
++        dump($openApi);
++
++        return $openApi;
+     }
+ }

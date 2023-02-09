@@ -1,0 +1,39 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 2c348c9..f06ea66 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     #[ORM\Column]
+     private array $roles = [];
+ 
++    /* Scopes given during API authentication */
++    private ?array $accessTokenScopes = null;
++
+     /**
+      * @var string The hashed password
+      */
+@@ -114,6 +117,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         // guarantee every user at least has ROLE_USER
+         $roles[] = 'ROLE_USER';
+ 
++        if (null === $this->accessTokenScopes) {
++            // logged in via the full user mechanism
++            $roles[] = 'ROLE_FULL_USER';
++            return $roles;
++        }
++
++        $roles = array_merge($roles, $this->accessTokenScopes);
++
+         return array_unique($roles);
+     }
+ 
+@@ -231,4 +242,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+             ->toArray()
+         ;
+     }
++
++    public function markAsTokenAuthenticated(array $scopes)
++    {
++        $this->accessTokenScopes = $scopes;
++    }
+ }

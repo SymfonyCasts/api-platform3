@@ -1,0 +1,13 @@
+diff --git a/src/Security/ApiTokenHandler.php b/src/Security/ApiTokenHandler.php
+index 660eae2..09dc9e4 100644
+--- a/src/Security/ApiTokenHandler.php
++++ b/src/Security/ApiTokenHandler.php
+@@ -26,6 +26,8 @@ class ApiTokenHandler implements AccessTokenHandlerInterface
+             throw new CustomUserMessageAuthenticationException('Token expired');
+         }
+ 
++        $token->getOwnedBy()->markAsTokenAuthenticated($token->getScopes());
++
+         return new UserBadge($token->getOwnedBy()->getUserIdentifier());
+     }
+ }

@@ -1,0 +1,23 @@
+diff --git a/src/Security/ApiTokenHandler.php b/src/Security/ApiTokenHandler.php
+index 82edd0e..660eae2 100644
+--- a/src/Security/ApiTokenHandler.php
++++ b/src/Security/ApiTokenHandler.php
+@@ -4,6 +4,7 @@ namespace App\Security;
+ 
+ use App\Repository\ApiTokenRepository;
+ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
++use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+ use Symfony\Component\Security\Http\AccessToken\AccessTokenHandlerInterface;
+ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+ 
+@@ -21,6 +22,10 @@ class ApiTokenHandler implements AccessTokenHandlerInterface
+             throw new BadCredentialsException();
+         }
+ 
++        if (!$token->isValid()) {
++            throw new CustomUserMessageAuthenticationException('Token expired');
++        }
++
+         return new UserBadge($token->getOwnedBy()->getUserIdentifier());
+     }
+ }
