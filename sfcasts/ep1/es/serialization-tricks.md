@@ -1,59 +1,21 @@
 # Trucos de serialización
 
-En cierto modo, hemos engañado al sistema para que permita un campo `textDescription` cuando enviamos datos. Esto es posible gracias a nuestro método `setTextDescription()`, que ejecuta`nl2br()` en la descripción que se envía a nuestra API. Esto significa que el usuario envía un campo `textDescription` cuando edita o crea un tesoro... pero recibe un campo `description` cuando lo lee.
+Próximamente...
 
-[[[ code('a7af4c4e40') ]]]
+Hemos engañado un poco al sistema para que permita un campo de descripción de texto cuando enviamos datos. Esto, por supuesto, es posible gracias a nuestro método establecer descripción de texto, que añadimos para poder ejecutar NL dos b r en cualquier descripción que se envíe a nuestra api. Esto significa que el usuario envía un campo de descripción de texto cuando está editando o creando un tesoro, pero luego, cuando está leyendo, le devolvemos un campo llamado descripción y eso es totalmente legal. Está permitido tener diferentes campos de entrada frente a campos de salida, pero en este caso sería un poco más guay que ambos se llamaran descripción. Así que la pregunta es, ¿podemos controlar cuál es el nombre de un campo en el serializador? La respuesta es, sin ninguna sorpresa, mediante otro atributo. Éste se llama nombre serializado. Y podemos pasarle la descripción. Esto no cambiará cómo se lee el campo, pero ahora si actualizamos esta página y miramos la ruta put, sí, ahora podemos enviar la descripción. Muy bien, ¿qué pasa con los argumentos del structor en nuestra entidad N? Porque uno, por ejemplo, cuando hacemos una petición post, sabemos que está utilizando nuestros métodos
 
-Y eso está totalmente bien: está permitido tener diferentes campos de entrada frente a campos de salida. Pero sería un poco más guay si, en este caso, ambos se llamaran simplemente`description`.
+Métodos Setr para establecer todas estas propiedades. Así que veamos qué ocurre si eliminamos el método set. Así que busca set nombre y eliminemos esto y en su lugar busca el constructor y añadiremos un argumento de cadena nombre allí. Y entonces esta flecha nombre es igual a nombre. Si lo piensas desde una perspectiva orientada a objetos, este campo no se puede establecer cuando se crea el objeto, pero después sólo es de lectura. Diablos, si quisieras ponerte realmente extravagante, podrías incluso añadir sólo lectura a la propiedad ahora mismo. Así que es de sólo lectura dentro de php. Y
 
-## SerializedName: Controlar el nombre del campo
+Veamos
 
-Entonces... ¿podemos controlar el nombre de un campo? Por supuesto que sí Lo hacemos, como ya habrás previsto, mediante otro maravilloso atributo. Éste se llama`SerializedName`. Pásale `description`:
+A ver cómo se ve en nuestra documentación. Si abres la petición de publicación, parece que aún podemos enviar un campo de nombre. Así que vamos a probarlo. Vamos a probarlo.
 
-[[[ code('a7af4c4e40') ]]]
+Vamos
 
-Esto no cambiará cómo se lee el campo, pero si actualizamos los documentos... y miramos la ruta `PUT`... ¡sí! Ahora podemos enviar un campo llamado `description`.
+Hablar de ese slinky gigante. Tenemos factor cool 8 y veamos que pasa. Dale a ejecutar y funcionó. Y puedes ver en la respuesta que se ha establecido el nombre, ¿cómo es posible? Si bajas y miras el punto final put, verás que aquí sí anuncia nombre, pero veamos que mi ID era cuatro. Así que vamos a probar esto. Digamos ID cuatro. Y cuando se ejecuta aquí, no cambia. Así que es sólo lectura en nuestro código y también es sólo lectura en nuestra api. Pero, ¿cómo ha funcionado en absoluto la petición de publicación? Si no tenemos un setter, la respuesta es que el serializador es lo suficientemente inteligente como para establecer argumentos constructores, pero la coincidencia se hace por nombre. Así que el hecho de que este argumento se llame nombre y la propiedad se llame nombre es lo que hace que esto funcione como mira, mira esto. Cambiemos este argumento por nombre de tesoro en ambos puntos. Anuncia sobre actualizar y comprueba nuestra ruta de post. El campo ha desaparecido. La plataforma APM ve que tenemos un campo nombre de tesoro que podría ser, que podría enviarse, pero como nombre de tesoro no corresponde a ninguna propiedad, ese campo no tiene ningún grupo de serialización. Y por eso no se utiliza realmente. Así que voy a volver a cambiarlo por nombre. Así, al utilizar nombre, va y mira la propiedad nombre y lee y utiliza los grupos de serialización de ella para averiguar si debe establecerse.
 
-## Argumentos del constructor
+Ahora todavía hay otro problema con los argumentos del Estructor que quiero que tengas en cuenta. Así que vuelve a probarlo en la ruta post.
 
-¿Qué pasa con los argumentos del constructor en nuestra entidad? Cuando hacemos una petición a `POST`, por ejemplo, sabemos que utiliza los métodos setter para escribir los datos en las propiedades.
+En realidad déjame refrescar para asegurarme de que tenemos la documentación fresca. Así que vamos a suponer que nosotros, ¿qué pasa si el U, nuestro usuario en realidad no pasa un nombre en absoluto y se ejecuta? Puedes ver que se emite con un código de estado 400, pero no es un error muy bueno. Dice que no se puede crear una instancia de tesoro dragón a partir de datos serializados porque su construcción requiere un parámetro de nombre. Así que no es un gran error el que quieren mostrarte para que lo utilices. O lo que realmente quieres es permitir que la validación se encargue de eso. Hablaremos de la validación dentro de un rato, pero para que la validación funcione, el serializador tiene que ser capaz de hacer realmente su trabajo. Así que en este caso, lo que voy a hacer es permitir que el argumento nombre sea opcional y luego, dentro de unos minutos, hablaremos de la validación y añadiremos validación para asegurarnos de que se establece.
 
-Ahora prueba esto: busca `setName()` y elimínalo. Luego ve al constructor y añade allí un argumento`string $name` en su lugar. A continuación, di `$this->name = $name`.
-
-[[[ code('2f2c83cd90') ]]]
-
-Desde una perspectiva orientada a objetos, el campo puede pasarse cuando se crea el objeto, pero después es de sólo lectura. Diablos, si quisieras ponerte elegante, podrías añadir `readonly` a la propiedad.
-
-Veamos qué aspecto tiene esto en nuestra documentación. Abre la ruta `POST`. ¡Parece que aún podemos enviar un campo `name`! Haz la prueba pulsando "Probar"... y añadamos un `Giant slinky` que ganamos a un gigante de la vida real en... una partida de póquer bastante tensa. Es bastante valioso, tiene un `coolFactor` de `8`, y dale un`description`. Veamos qué ocurre. Pulsa "Ejecutar" y... ¡ha funcionado! Y podemos ver en la respuesta que se ha fijado el `name`. ¿Cómo es posible?
-
-Bueno, si bajas y miras la ruta `PUT`, verás que aquí también se anuncia `name`. Pero... sube a buscar el id del tesoro que acabamos de crear - para mí es el 4, pon el 4 aquí para editarlo... y luego envía sólo el campo nombre para cambiarlo. Y... ¡no cambió! Sí, igual que con nuestro código, una vez creado un `DragonTreasure`, el nombre no se puede cambiar.
-
-Pero... ¿cómo hizo la petición a `POST` para establecer el nombre... si no hay ningún establecedor? La respuesta es que el serializador es lo suficientemente inteligente como para establecer los argumentos del constructor... si el nombre del argumento coincide con el nombre de la propiedad. Sí, el hecho de que el argumento se llame `name`y la propiedad también se llame `name` es lo que hace que esto funcione.
-
-Observa: cambia el argumento a `treasureName` en ambos lugares:
-
-[[[ code('2f2c83cd90') ]]]
-
-Ahora, gira, actualiza y comprueba la ruta POST. El campo ha desaparecido. 
-API Platform ve que tenemos un argumento `treasureName` que podría enviarse, pero como `treasureName` no corresponde a ninguna propiedad, ese campo no tiene ningún grupo de serialización. Así que no se utiliza. Lo cambiaré de nuevo a `name`:
-
-[[[ code('2ed74f72ac') ]]]
-
-Al utilizar `name`, mira la propiedad `name`, y lee sus grupos de serialización.
-
-## Args del constructor opcionales frente a obligatorios
-
-Sin embargo, sigue habiendo un problema con los argumentos del constructor que debes tener en cuenta. Actualiza la documentación.
-
-¿Qué pasaría si nuestro usuario no pasara ningún `name`? Pulsa "Ejecutar" para averiguarlo. De acuerdo Obtenemos un error con un código de estado 400... pero no es un error muy bueno. Dice
-
-> No se puede crear una instancia de `App\Entity\DragonTreasure` a partir de datos serializados
-> porque su constructor requiere que el parámetro `name` esté presente.
-
-Eso es... en realidad demasiado técnico. Lo que realmente queremos es permitir que la validación se encargue de esto... y hablaremos de la validación en breve. Pero para que la validación funcione, el serializador tiene que poder hacer su trabajo: tiene que poder instanciar el objeto:
-
-[[[ code('089e7c4dc2') ]]]
-
-Vale, inténtalo ahora... ¡mejor! Vale, es peor -un error 500-, pero lo arreglaremos con la validación dentro de unos minutos. El caso es que el serializador ha sido capaz de crear nuestro objeto.
-
-A continuación: Para ayudarnos mientras desarrollamos, vamos a añadir un rico conjunto de accesorios de datos. Luego jugaremos con una gran función que API Platform nos ofrece gratuitamente: la paginación
+Pero eso nos dará un error de validación mucho mejor que este error de aquí. Así que si lo intentamos de nuevo, ahora mismo es un error peor. Es un error 500 porque falla en la base de datos. Pero la cuestión es que ha permitido crear nuestro objeto. Y en unos minutos, una vez que añadamos reglas de validación, verás el aire tan bonito que conseguimos aquí. Muy bien, a continuación, para ayudarnos mientras desarrollamos, vamos a añadir un rico conjunto de accesorios de datos, luego vamos a disfrutar y jugar con una gran característica que la API Platform nos da de forma gratuita Page Nation.
