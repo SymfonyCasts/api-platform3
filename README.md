@@ -1,7 +1,7 @@
-# API Platform 3 Tutorial! 🐉
+# API Platform 3 Security Tutorial! 🐉
 
 Well howdy! This repository holds the code and script
-for the [API Platform 3](https://symfonycasts.com/screencast/api-platform) on SymfonyCasts.
+for the [API Platform 3](https://symfonycasts.com/screencast/api-platform-security) on SymfonyCasts.
 
 ## Setup
 
@@ -48,6 +48,18 @@ symfony console doctrine:fixtures:load
 If you do *not* want to use Docker, just make sure to start your own
 database server and update the `DATABASE_URL` environment variable in
 `.env` or `.env.local` before running the commands above.
+
+### Webpack Encore Assets
+
+This app uses Webpack Encore for the CSS, JS and image files, which we use
+a bit near the beginning to test out our login flow.
+
+First, make sure you have `npm` installed (`npm` comes with Node) and then run:
+
+```
+npm install
+npm run watch
+```
 
 ### Start the Symfony web server
 
