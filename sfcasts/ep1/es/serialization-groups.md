@@ -1,15 +1,85 @@
-# Grupos de serialización
+# Grupos de serialización: Elección de campos
 
-Ahora mismo, que un campo sea legible en nuestra API o escribible en nuestra API depende totalmente de si es accesible o no en nuestra clase. Básicamente, si tiene o no un método getter o setter. ¿Pero qué pasa si necesitas un getter o setter pero no quieres que ese campo esté expuesto en la api? Bueno, tienes dos opciones. La opción número uno es crear una
+Ahora mismo, que un campo de nuestra clase sea legible o escribible en la API está totalmente determinado por si esa propiedad es legible o escribible en nuestra clase (básicamente, si tiene o no un método getter o setter). Pero, ¿y si necesitas un getter o setter... pero no quieres que ese campo esté expuesto en la API? Para eso, tenemos dos opciones.
 
-Clase DTO para tu recurso API. De esto hablaremos en un futuro tutorial. Se trata de crear una clase dedicada para tu API del Tesoro del Dragón, que probablemente tenga muchos de los mismos campos que ésta. Y luego pasas el recurso API a eso. Crea un poco más de trabajo configurando las cosas, pero la ventaja es que tienes una clase dedicada para tu api. Así que, literalmente, siempre haces, haces que tu clase se vea exactamente como quieres que se vea en la API y no tienes que preocuparte de y luego, y ya está. La segunda solución y la que vamos a utilizar son los grupos de serialización. Así que echa un vistazo a esto. Sube a nuestro recurso API. Voy a añadir una nueva opción aquí llamada contexto de normalización. Ahora recuerda, la normalización es el proceso de pasar de un objeto a un array. Es como cuando haces una petición get para leer un tesoro. El contexto de normalización son básicamente opciones que se pasan durante ese proceso. Y la opción más importante con diferencia son los grupos. Así que voy a pasar aquí un nuevo grupo llamado Tesoro:Reid. Vamos a hablar de lo que hace esto dentro de un minuto, pero puedes ver que el patrón del nombre que estoy utilizando aquí es básicamente el nombre de mi clase que va a ser Tesoro Dragón si quisiera, y luego:Reid, porque esto es la normalización significa que estamos leyendo esta clase.
+## ¿Una clase DTO?
 
-¿Y eso qué hace? Vamos a averiguarlo. Voy a refrescar la documentación y, en realidad, nos va a facilitar la vida. Vayamos directamente a la URL. Ya no se llama Tesoros del Dragón. Se llama Tesoros. Ya está. Y ya no se devuelve absolutamente nada. Así que mira esto, Hydra. Recuerda que nosotros, este es nuestro conjunto de recursos. Así que devuelve un tesoro, pero aparte de estos extraños campos at ID y at type, no se devuelve ningún campo real de nuestro recurso. Así es como funciona. Ahora que tenemos este contexto de normalización, cuando se normalice nuestro objeto, sólo incluirá las propiedades que tengan este grupo. Y como no hemos añadido grupos a ninguna de nuestras propiedades, no devuelve nada. ¿Cómo añadimos grupos? Con otro atributo. Así que encima del campo indio, haré grupos. Le daré al tabulador para añadir una declaración de uso y dirán Treasure coin read. Y luego hagamos esto encima del campo descripción. ¿Queremos que sea legible? El campo de valor y el factor cool, empezaremos sólo con esos. Ahora voy a refrescar tu ruta. Ya está. Nombre, descripción, valor, factor cool. Así que tenemos control sobre qué campos se devuelven. Así que podemos hacer lo mismo para qué campos son escribibles. Esto se llama normalización de DN. Apuesto a que adivinas lo que vamos a hacer aquí. Copiar eso
+Opción número uno: crear una clase DTO para el recurso API. Esto lo dejaremos para otro día... en un futuro tutorial. Pero, en pocas palabras, consiste en crear una clase dedicada para tu API `DragonTreasure`... y luego trasladar a ella el atributo`ApiResource`. La clave es que diseñes la nueva clase para que se parezca exactamente a tu API... porque modelar tu API será su único trabajo. Lleva un poco más de trabajo configurar las cosas, pero la ventaja es que entonces tendrás una clase dedicada a tu API. ¡Listo!
 
-Pega, llámalo contexto de normalización D y lo llamaremos tesoro dos puntos, ¿vale? E inmediatamente después iremos aquí abajo y añadiremos tesorero qu justo al campo nombre. Por ahora voy a saltarme el de descripción. Recuerda que antes hemos eliminado el método establecer descripción. Lo añadiremos al campo valor y al campo factor cool. Y puedes ver que está enfadado conmigo porque lo olvidé. En cuanto pases varios grupos aquí, tenemos que hacer de esto un array. Así que añadiré un array alrededor de esas tres propiedades. Ya está. Así que ahora esta propiedad está en estos dos grupos para ver si funciona. Actualizaré la documentación y abriré la ruta put y nos mostrará que sí, que el nombre, el valor y el factor cool son ahora los únicos campos que se pueden establecer en nuestra API. Ahora nos faltan un par de cosas porque si recuerdas la última vez hicimos un método get saqueado a go y queremos que esto se incluya cuando leamos nuestro recurso. Ahora mismo, si comprobamos nuestra ruta, no se incluye. Así que también podemos añadir el mismo grupo por encima de los métodos. Así que grupos
+## Hola Grupos de Serialización
 
-Y haré treasure:read y ahora aparecerá. Y luego busquemos el método establecer descripción de texto. Ahí haremos lo mismo. Grupos, columna tesoro, ¿verdad? Genial. Y si vamos a la documentación, puedes ver que no estaba ahí hace un segundo. Ahora si refrescamos y comprobamos la descripción de texto de la ruta put ha vuelto. Y esto significa que si queremos, podemos volver a poner algunos de los métodos setter que quitamos hace un segundo. Así que puede que sí necesite un método set description como en mi código para poder hacer cosas. Así que voy a copiar set nombre para ser perezoso y renombrar descripción nombre, eh, renombrar nombre a descripción, en un par de sitios. Entendido. Y, por supuesto, lo bueno es que, aunque ahora tengo de nuevo ese definidor, cuando miro mi ruta put, no aparece automáticamente porque hemos tomado el control gracias a nuestros campos de normalización de DN. También voy a añadir lo mismo para "expoliado en", a veces es útil, como en los accesorios de datos, sobre todo para poder establecer el "expoliado en". Así que también lo añadiré rápidamente. Probablemente debería haber sido más perezoso y haber generado el definidor, pero ya está.
+La segunda solución, y la que vamos a utilizar, son los grupos de serialización. Compruébalo. Sobre el atributo `ApiResource`, añade una nueva opción llamada`normalizationContext`. Si recuerdas, la "normalización" es el proceso de pasar de un objeto a una matriz, como cuando haces una petición a `GET` para leer un tesoro. El `normalizationContext` son básicamente opciones que se pasan al serializador durante ese proceso. Y la opción más importante es `groups`. Establécela en un grupo llamado `treasure:read`:
 
-Vale, ya sabemos que la obtención y la API de obtención de un recurso funcionan. Veamos ahora si podemos crear un nuevo recurso. Así que por la ruta post, le daré a probar. Y vamos a rellenar nuestro nuevo tesoro, que es, por supuesto, nuestro tarro gigante de pepinillos. Esto es muy valioso. Factor guay de 10. Y añadiré una descripción.
+[[[ code('7093028e4d') ]]]
 
-De acuerdo. Y cuando probamos esto, oh 500 aire se produjo una excepción. Se publica la columna no no violación, viola la restricción no no. Así que hemos reducido nuestra API a sólo los campos que queremos que sean escribibles, pero aún nos falta un campo que debe establecerse en la base de datos. Si te desplazas hacia arriba y encuentras que está publicado, vale, es = nulo. Cambiémoslo a = false por defecto, entonces en realidad no necesitamos ese toro. La propiedad ya no es nula de más. Y ahora lo probamos. El tarro gigante de pepinillos se carga en la base de datos. Funciona. Muy bien, a continuación quiero mostrar unos cuantos trucos más de serialización geniales que harán que tu clase sea impresionante y tu api. Impresionante.
+Hablaremos de lo que hace esto en un minuto. Pero puedes ver el patrón que estoy utilizando para el grupo: el nombre de la clase (podría ser `dragon_treasure` si quisiéramos) y luego `:read`... porque la normalización significa que estamos leyendo esta clase. Puedes nombrar estos grupos como quieras: éste es mi patrón.
+
+Entonces... ¿qué hace eso? ¡Vamos a averiguarlo! Actualiza la documentación... y, para hacerte la vida más fácil, ve a la URL: `/api/dragon_treasures.jsonld`. ¡Uy! Ahora sólo está`treasures.jsonld`. Ya está. Y... ¡no se devuelve absolutamente nada! Vale, tenemos los campos de la hidra, pero este `hydra:member` contiene la matriz de tesoros. Devuelve un tesoro... pero aparte de `@id` y `@type`... ¡no hay campos reales!
+
+## Cómo funcionan los grupos de serialización
+
+Esto es lo que pasa. En cuanto añadamos un `normalizationContext` con un grupo, cuando se normalice nuestro objeto, el serializador sólo incluirá las propiedades que tengan ese grupo. Y como no hemos añadido ningún grupo a nuestras propiedades, no devuelve nada.
+
+¿Cómo añadimos grupos? ¡Con otro atributo! Encima de la propiedad `$name`, digamos`#[Groups]`, pulsa "tab" para añadir su declaración `use` y luego `treasure:read`. Repite esto encima del campo `$description`... porque queremos que sea legible... y luego el campo `$value`... y finalmente `$coolFactor`:
+
+[[[ code('d97dbaf7a2') ]]]
+
+Buen comienzo. Muévete y actualiza la ruta. Ahora... ¡ya está! Vemos `name`,`description`, `value`, y `coolFactor`.
+
+## DenormlizationContext: Control de los grupos escribibles
+
+Ahora tenemos control sobre qué campos son legibles... y podemos hacer lo mismo para elegir qué campos deben ser escribibles en la API. Eso se llama "desnormalización", y apuesto a que adivinas lo que vamos a hacer. Copia`normalizationContext`, pégalo, cámbialo por `denormalizationContext`... y utiliza`treasure:write`:
+
+[[[ code('6cd21e5fb1') ]]]
+
+Ahora dirígete a la propiedad `$name` y añade `treasure:write`. Voy a saltarme`$description` (recuerda que antes borramos nuestro método `setDescription()`a propósito)... pero añade esto a `$value`... y `$coolFactor`:
+
+[[[ code('50c5182dc1') ]]]
+
+Oh, ¡está enfadado conmigo! En cuanto pasemos varios grupos, tenemos que convertirlo en un array. Añade algo de `[]` alrededor de esas tres propiedades. Mucho más contento.
+
+Para comprobar si esto es A-OK, refresca la documentación... abre la ruta `PUT` y... ¡genial! Vemos `name`, `value`, y `coolFactor`, que son actualmente los únicos campos que se pueden escribir en nuestra API.
+
+## Añadir grupos a los métodos
+
+Sin embargo, nos faltan algunas cosas. Antes hicimos un método `getPlunderedAtAgo()`... 
+
+[[[ code('d5521f7bac') ]]]
+
+y queremos que se incluya cuando leamos nuestro recurso. Ahora mismo, si comprobamos la ruta, no está ahí.
+
+Para solucionarlo, también podemos añadir grupos a los métodos anteriores. Digamos`#[Groups(['treasure:read'])]`:
+
+[[[ code('71791d8a66') ]]]
+
+Y cuando vayamos a comprobarlo... voilà, aparece.
+
+Busquemos también el método `setTextDescription()`... y hagamos lo mismo:`#[Groups([treasure:write])]`:
+
+[[[ code('18514dde07') ]]]
+
+¡Genial! Si volvemos a la documentación, el campo no está actualmente allí... pero cuando actualizamos... y volvemos a comprobar la ruta `PUT`... `textDescription`
+¡ha vuelto!
+
+## Volver a añadir métodos
+
+Oye, ¡ahora podemos volver a añadir cualquiera de los métodos getter o setter que eliminamos antes! Por ejemplo, quizá sí necesite un método `setDescription()` en mi código para algo. Copia`setName()` para dar pereza, pega y cambia "nombre" por "descripción" en algunos sitios.
+
+¡Ya está! Y aunque hemos recuperado ese definidor, cuando miramos la ruta `PUT`, `description` no aparece. Tenemos un control total sobre nuestros campos gracias a los grupos de desnormalización. Haz lo mismo con `setPlunderedAt()`... porque a veces es útil -especialmente en las fijaciones de datos- poder establecer esto manualmente.
+
+Y... ¡listo!
+
+## Añadir valores predeterminados de campo
+
+Ya sabemos que obtener un recurso funciona. Ahora vamos a ver si podemos crear un nuevo recurso. Haz clic en la ruta `POST`, pulsa "Probar", y... rellenemos algunos datos sobre nuestro nuevo tesoro, que es, por supuesto, un `Giant jar of pickles`. Es muy valioso y tiene un `coolFactor` de `10`. También añadiré una descripción... aunque este tarro de pepinillos habla por sí solo.
+
+Cuando intentamos esto... vaya... obtenemos un error 500:
+
+> Se ha producido una excepción al ejecutar una consulta: Violación no nula, `null`
+> valor en la columna `isPublished`.
+
+Hemos reducido nuestra API a sólo los campos que queremos que se puedan escribir... pero aún hay una propiedad que debe establecerse en la base de datos. Desplázate hacia arriba y busca`isPublished`. Sí, actualmente está por defecto en `null`. Cámbialo a `= false`... y ahora la propiedad nunca será `null`.
+
+Si lo probamos... ¡el `Giant jar of pickles` se almacena en la base de datos! ¡Funciona!
+
+A continuación: vamos a explorar algunos trucos más de serialización que nos darán aún más control.
