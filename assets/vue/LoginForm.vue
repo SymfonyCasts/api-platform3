@@ -50,7 +50,7 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
-const emit = defineEmits['user-authenticated'];
+const emit = defineEmits(['user-authenticated']);
 
 const handleSubmit = async () => {
     isLoading.value = true;
