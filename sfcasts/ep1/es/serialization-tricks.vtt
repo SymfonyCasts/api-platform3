@@ -1,306 +1,270 @@
 WEBVTT
 
-00:00:01.076 --> 00:00:01.376 align:middle
-Próximamente...
+00:00:01.086 --> 00:00:06.016 align:middle
+En cierto modo, hemos engañado al sistema para que
+permita un campo textDescription cuando enviamos datos.
 
-00:00:01.376 --> 00:00:06.016 align:middle
-Hemos engañado un poco al sistema para que permita un
-campo de descripción de texto cuando enviamos datos.
+00:00:06.636 --> 00:00:11.856 align:middle
+Esto es posible gracias a nuestro método
+setTextDescription(), que ejecuta nl2br()
 
-00:00:06.576 --> 00:00:10.046 align:middle
-Esto, por supuesto, es posible gracias a nuestro
-método establecer descripción de texto,
+00:00:11.856 --> 00:00:14.246 align:middle
+en la descripción que se envía a nuestra API.
 
-00:00:10.196 --> 00:00:14.246 align:middle
-que añadimos para poder ejecutar NL dos b r en
-cualquier descripción que se envíe a nuestra api.
-
-00:00:14.246 --> 00:00:19.496 align:middle
+00:00:15.176 --> 00:00:20.946 align:middle
 Esto significa que el usuario envía un campo
-de descripción de texto cuando está editando
+textDescription cuando edita o crea un tesoro...
 
-00:00:19.496 --> 00:00:22.756 align:middle
-o creando un tesoro, pero
-luego, cuando está leyendo,
+00:00:21.366 --> 00:00:25.286 align:middle
+pero recibe un campo description al leerlo.
 
-00:00:22.756 --> 00:00:28.026 align:middle
-le devolvemos un campo llamado
-descripción y eso es totalmente legal.
-
-00:00:28.476 --> 00:00:32.866 align:middle
-Está permitido tener diferentes campos
-de entrada frente a campos de salida,
+00:00:26.216 --> 00:00:32.866 align:middle
+Y eso está totalmente bien: está permitido tener
+diferentes campos de entrada frente a campos de salida.
 
 00:00:33.346 --> 00:00:39.656 align:middle
-pero en este caso sería un poco más
-guay que ambos se llamaran descripción.
+Pero sería un poco más guay si, en este caso,
+ambos se llamaran simplemente description.
 
-00:00:40.246 --> 00:00:46.506 align:middle
-Así que la pregunta es, ¿podemos controlar
-cuál es el nombre de un campo en el serializador?
+00:00:40.246 --> 00:00:43.136 align:middle
+Entonces... ¿podemos controlar
+el nombre de un campo?
 
-00:00:46.506 --> 00:00:50.446 align:middle
-La respuesta es, sin ninguna
-sorpresa, mediante otro atributo.
+00:00:43.696 --> 00:00:44.746 align:middle
+Por supuesto que sí
 
-00:00:50.956 --> 00:00:52.996 align:middle
-Éste se llama nombre serializado.
+00:00:45.076 --> 00:00:50.446 align:middle
+Lo hacemos, como ya habrás previsto,
+mediante otro maravilloso atributo.
 
-00:00:52.996 --> 00:00:55.106 align:middle
-Y podemos pasarle la descripción.
+00:00:50.956 --> 00:00:53.256 align:middle
+Éste se llama SerializedName.
 
-00:00:55.696 --> 00:01:01.536 align:middle
-Esto no cambiará cómo se lee el campo,
-pero ahora si actualizamos esta página y
+00:00:53.966 --> 00:01:00.446 align:middle
+Pásale description: Esto no cambiará cómo se
+lee el campo, pero si refrescamos los documentos...
 
-00:01:01.536 --> 00:01:05.416 align:middle
-miramos la ruta put, sí, ahora
-podemos enviar la descripción.
+00:01:00.876 --> 00:01:02.666 align:middle
+y miramos la ruta PUT...
 
-00:01:05.416 --> 00:01:09.516 align:middle
-Muy bien, ¿qué pasa con los argumentos
-del structor en nuestra entidad N?
+00:01:03.226 --> 00:01:06.236 align:middle
+¡sí! Ahora podemos enviar
+un campo llamado description.
 
-00:01:10.116 --> 00:01:13.926 align:middle
-Porque uno, por ejemplo, cuando
-hacemos una petición post,
+00:01:06.906 --> 00:01:09.516 align:middle
+¿Qué pasa con los argumentos del
+constructor en nuestra entidad?
 
-00:01:13.926 --> 00:01:17.236 align:middle
-sabemos que está utilizando nuestros métodos
-Setr para establecer todas estas propiedades.
+00:01:10.116 --> 00:01:15.256 align:middle
+Cuando hacemos una petición a POST, por
+ejemplo, sabemos que utiliza los métodos setter
 
-00:01:17.236 --> 00:01:19.856 align:middle
-Así que veamos qué ocurre si
-eliminamos el método set. Así
+00:01:15.256 --> 00:01:17.336 align:middle
+para escribir los datos en las propiedades.
 
-00:01:19.856 --> 00:01:25.606 align:middle
-que busca set nombre y eliminemos esto
-y en su lugar busca el constructor
+00:01:18.146 --> 00:01:21.746 align:middle
+Ahora prueba esto: busca
+setName() y elimínalo.
 
-00:01:25.606 --> 00:01:28.966 align:middle
-y añadiremos un argumento
-de cadena nombre allí.
+00:01:24.306 --> 00:01:29.476 align:middle
+Luego ve al constructor y añade allí
+un argumento string $name en su lugar.
 
-00:01:28.966 --> 00:01:32.496 align:middle
-Y entonces esta flecha
-nombre es igual a nombre.
+00:01:30.706 --> 00:01:33.126 align:middle
+A continuació n, di $this->name = $name.
 
-00:01:32.496 --> 00:01:37.996 align:middle
-Si lo piensas desde una perspectiva orientada
-a objetos, este campo no se puede establecer
+00:01:34.016 --> 00:01:37.886 align:middle
+Desde una perspectiva orientada
+a objetos, el campo puede pasarse
 
-00:01:37.996 --> 00:01:42.616 align:middle
+00:01:37.886 --> 00:01:42.616 align:middle
 cuando se crea el objeto, pero
-después sólo es de lectura.
+después es de sólo lectura.
 
-00:01:43.116 --> 00:01:45.686 align:middle
-Diablos, si quisieras ponerte
-realmente extravagante,
+00:01:43.116 --> 00:01:47.866 align:middle
+Diablos, si quisieras ponerte elegante,
+podrías añadir readonly a la propiedad.
 
-00:01:45.686 --> 00:01:47.996 align:middle
-podrías incluso añadir sólo
-lectura a la propiedad ahora mismo.
+00:01:48.576 --> 00:01:50.946 align:middle
+Veamos qué aspecto tiene esto
+en nuestra documentación.
 
-00:01:48.556 --> 00:01:50.096 align:middle
-Así que es sólo lectura dentro de php.
+00:01:51.546 --> 00:01:53.066 align:middle
+Abre la ruta POST.
 
-00:01:50.096 --> 00:01:53.076 align:middle
-Y veamos cómo se ve en nuestra documentación.
+00:01:53.906 --> 00:01:56.796 align:middle
+¡Parece que aún podemos enviar un campo name!
 
-00:01:53.856 --> 00:02:02.086 align:middle
-Si abres la petición de publicación, parece
-que aún podemos enviar un campo de nombre.
+00:01:57.416 --> 00:01:58.956 align:middle
+Prueba pulsando "Probar"...
 
-00:02:02.086 --> 00:02:03.556 align:middle
-Así que vamos a probarlo.
+00:01:59.926 --> 00:02:04.256 align:middle
+y añadamos un Giant slinky que ganamos
+a un gigante de la vida real en...
 
-00:02:03.556 --> 00:02:04.876 align:middle
-Vamos a probarlo.
+00:02:04.256 --> 00:02:05.836 align:middle
+una partida de póquer bastante tensa.
 
-00:02:04.876 --> 00:02:07.396 align:middle
-Hablemos de ese slinky gigante.
+00:02:06.566 --> 00:02:10.976 align:middle
+Es bastante valioso, tiene un
+coolFactor de 8, y dale un description.
 
-00:02:07.396 --> 00:02:13.486 align:middle
-Tenemos factor cool 8 y veamos qué pasa.
+00:02:12.476 --> 00:02:13.486 align:middle
+Veamos qué ocurre.
 
-00:02:14.076 --> 00:02:17.226 align:middle
-Pulsa ejecutar y funcionó.
+00:02:14.076 --> 00:02:15.626 align:middle
+Pulsa "Ejecutar" y...
 
-00:02:17.226 --> 00:02:24.456 align:middle
-Y puedes ver en la respuesta que se ha
-establecido el nombre, ¿cómo es posible?
+00:02:16.136 --> 00:02:17.236 align:middle
+¡funcionó!
 
-00:02:24.766 --> 00:02:31.026 align:middle
-Si bajas y miras el punto final put,
-verás que aquí sí anuncia nombre,
+00:02:17.996 --> 00:02:21.516 align:middle
+Y podemos ver en la respuesta
+que se ha fijado el name.
 
-00:02:31.616 --> 00:02:36.616 align:middle
-pero veamos que mi ID era cuatro.
+00:02:22.006 --> 00:02:23.186 align:middle
+¿Cómo es posible?
 
-00:02:36.616 --> 00:02:39.016 align:middle
-Así que vamos a probar esto.
+00:02:23.846 --> 00:02:27.046 align:middle
+Bueno, si bajas y miras la ruta PUT,
 
-00:02:39.636 --> 00:02:39.976 align:middle
-Digamos ID cuatro.
+00:02:27.446 --> 00:02:31.026 align:middle
+verás que aquí también se anuncia name.
 
-00:02:39.976 --> 00:02:47.806 align:middle
-Y cuando se ejecuta aquí, no cambia.
+00:02:31.616 --> 00:02:39.036 align:middle
+Pero... sube a buscar el id del tesoro que acabamos de
+crear - para mí es el 4, pon el 4 aquí para editarlo...
 
-00:02:48.376 --> 00:02:52.946 align:middle
-Así que es sólo lectura en nuestro código
-y también es sólo lectura en nuestra api.
+00:02:39.646 --> 00:02:42.276 align:middle
+luego envía sólo el campo
+nombre para cambiarlo.
 
-00:02:53.166 --> 00:02:58.216 align:middle
-Pero, ¿cómo ha funcionado en
-absoluto la petición de publicación?
+00:02:45.006 --> 00:02:47.806 align:middle
+Y... ¡no cambió!
 
-00:02:58.216 --> 00:03:04.226 align:middle
-Si no tenemos un setter, la respuesta es que el
-serializador es lo suficientemente inteligente
+00:02:48.406 --> 00:02:50.386 align:middle
+Sí, igual que con nuestro código,
 
-00:03:04.386 --> 00:03:08.026 align:middle
-como para establecer argumentos constructores,
-pero la coincidencia se hace por nombre.
+00:02:50.686 --> 00:02:55.006 align:middle
+una vez creado un DragonTreasure,
+el nombre no se puede cambiar.
 
-00:03:08.026 --> 00:03:12.856 align:middle
-Así que el hecho de que este
-argumento se llame nombre
+00:02:55.706 --> 00:02:58.556 align:middle
+Pero... ¿cómo hizo la petición
+a POST para establecer el nombre...
 
-00:03:13.156 --> 00:03:18.126 align:middle
-y la propiedad se llame nombre es lo que
-hace que esto funcione como mira, mira esto.
+00:02:58.716 --> 00:03:00.256 align:middle
+si no hay ningún establecedor?
 
-00:03:18.126 --> 00:03:21.076 align:middle
-Cambiemos este argumento por
-nombre tesoro en ambos puntos.
+00:03:01.046 --> 00:03:06.316 align:middle
+La respuesta es que el serializador es lo suficientemente
+inteligente como para establecer los argumentos del constructor...
 
-00:03:22.806 --> 00:03:27.116 align:middle
-Anuncia sobre refrescar y echa
-un vistazo a nuestro post ruta.
+00:03:06.666 --> 00:03:09.616 align:middle
+si el nombre del argumento coincide
+con el nombre de la propiedad.
+
+00:03:10.366 --> 00:03:12.856 align:middle
+Sí, el hecho de que el argumento se llame name
+
+00:03:13.156 --> 00:03:16.576 align:middle
+y la propiedad también se llame name
+es lo que hace que esto funcione.
+
+00:03:17.516 --> 00:03:23.916 align:middle
+Observa: cambia el argumento a
+treasureName en ambos sitios: Ahora, gira,
+
+00:03:24.556 --> 00:03:27.116 align:middle
+actualiza y comprueba la ruta POST.
 
 00:03:27.676 --> 00:03:29.516 align:middle
-El campo ha desaparecido. La
+El campo ha desaparecido. API
 
-00:03:29.916 --> 00:03:35.556 align:middle
-plataforma APM ve que tenemos un campo nombre
-de tesoro que podría ser, que podría enviarse,
+00:03:29.946 --> 00:03:35.556 align:middle
+Platform ve que tenemos un argumento
+treasureName que podría enviarse,
 
 00:03:35.996 --> 00:03:39.306 align:middle
-pero como nombre de tesoro no
+pero como treasureName no
 corresponde a ninguna propiedad,
 
 00:03:39.486 --> 00:03:42.786 align:middle
 ese campo no tiene ningún
 grupo de serialización.
 
-00:03:43.066 --> 00:03:44.836 align:middle
-Y por eso no se utiliza realmente.
+00:03:43.116 --> 00:03:45.046 align:middle
+Así que no se utiliza.
 
-00:03:44.836 --> 00:03:47.216 align:middle
-Así que voy a volver a
-cambiarlo por nombre. Así,
+00:03:45.626 --> 00:03:51.216 align:middle
+Lo cambiaré de nuevo a name: Al
+utilizar name, mira la propiedad name,
 
-00:03:47.216 --> 00:03:51.986 align:middle
-al utilizar nombre, va y mira
-la propiedad nombre y lee
+00:03:51.416 --> 00:03:53.686 align:middle
+y lee sus grupos de serialización.
 
-00:03:51.986 --> 00:03:55.746 align:middle
-y utiliza los grupos de serialización de
-ella para averiguar si debe establecerse.
+00:03:54.376 --> 00:03:57.026 align:middle
+Sin embargo, sigue habiendo un problema
 
-00:03:55.746 --> 00:03:57.026 align:middle
-Ahora todavía hay otro problema
+00:03:57.026 --> 00:03:59.926 align:middle
+con los argumentos del constructor
+que debes tener en cuenta.
 
-00:03:57.026 --> 00:03:59.916 align:middle
-con los argumentos del Estructor
-que quiero que tengas en cuenta.
+00:04:00.546 --> 00:04:01.786 align:middle
+Actualiza la documentación.
 
-00:03:59.916 --> 00:04:04.876 align:middle
-Así que vuelve a probarlo en la ruta post.
+00:04:02.956 --> 00:04:06.596 align:middle
+¿Qué pasaría si nuestro
+usuario no pasara ningún name?
 
-00:04:04.966 --> 00:04:12.176 align:middle
-En realidad déjame refrescar para asegurarme
-de que tenemos la documentación fresca.
+00:04:07.246 --> 00:04:08.866 align:middle
+Pulsa "Ejecutar" para averiguarlo.
 
-00:04:12.176 --> 00:04:16.166 align:middle
-Así que vamos a suponer que
-nosotros, ¿qué pasa si el U,
+00:04:10.086 --> 00:04:13.586 align:middle
+De acuerdo Obtenemos un error
+con un código de estado 400...
 
-00:04:16.166 --> 00:04:21.326 align:middle
-nuestro usuario en realidad no pasa
-un nombre en absoluto y se ejecuta?
+00:04:13.916 --> 00:04:16.596 align:middle
+pero no es un error muy bueno.
 
-00:04:21.326 --> 00:04:26.256 align:middle
-Puedes ver que se emite con un código de
-estado 400, pero no es un error muy bueno.
+00:04:17.076 --> 00:04:22.596 align:middle
+Dice No se puede crear una instancia de
+App\Entity\DragonTreasure a partir de datos serializados
 
-00:04:26.286 --> 00:04:31.796 align:middle
-Dice que no se puede crear una instancia del
-tesoro dragón a partir de datos serializados
+00:04:22.746 --> 00:04:26.556 align:middle
+porque su constructor requiere que
+el parámetro name esté presente.
 
-00:04:31.796 --> 00:04:35.786 align:middle
-porque su construcción requiere
-un parámetro de nombre.
+00:04:27.156 --> 00:04:29.826 align:middle
+Eso es... en realidad demasiado técnico.
 
-00:04:35.786 --> 00:04:39.536 align:middle
-Así que no es un gran error el que
-quieren mostrarte para que lo utilices.
+00:04:30.316 --> 00:04:34.476 align:middle
+Lo que realmente queremos es permitir
+que la validación se encargue de esto...
 
-00:04:39.536 --> 00:04:45.976 align:middle
-O lo que realmente quieres es permitir
-que la validación se encargue de eso.
+00:04:34.876 --> 00:04:37.116 align:middle
+y pronto hablaremos de la validación.
 
-00:04:45.976 --> 00:04:53.426 align:middle
-Hablaremos de la validación dentro de un
-rato, pero para que la validación funcione,
+00:04:37.836 --> 00:04:43.276 align:middle
+Pero para que la validación funcione, el
+serializador tiene que poder hacer su trabajo:
 
-00:04:53.426 --> 00:04:56.466 align:middle
-el serializador tiene que ser capaz
-de hacer realmente su trabajo.
+00:04:43.706 --> 00:04:49.586 align:middle
+tiene que poder instanciar el
+objeto: Vale, inténtalo ahora...
 
-00:04:56.466 --> 00:04:59.316 align:middle
-Así que en este caso, lo que voy a hacer es permitir que el argumento
-nombre sea opcional y luego , dentro de unos minutos, hablaremos
+00:04:51.016 --> 00:04:57.546 align:middle
+¡mejor! Vale, es peor -un error 500-, pero lo
+arreglaremos con la validación dentro de unos minutos.
 
-00:04:59.346 --> 00:05:00.636 align:middle
-de la validación
+00:04:58.036 --> 00:05:02.596 align:middle
+El caso es que el serializador ha
+sido capaz de crear nuestro objeto.
 
-00:05:00.666 --> 00:05:01.866 align:middle
-y añadiremos validación para
-asegurarnos de que se establece.
+00:05:03.516 --> 00:05:08.686 align:middle
+A continuación: Para ayudarnos mientras desarrollamos,
+vamos a añadir un rico conjunto de accesorios de datos.
 
-00:05:01.896 --> 00:05:03.846 align:middle
-Pero eso nos dará un error de validación
-mucho mejor que este error de aquí.
-
-00:05:03.876 --> 00:05:05.406 align:middle
-Así que si lo intentamos de nuevo,
-ahora mismo es un error peor.
-
-00:05:05.436 --> 00:05:06.846 align:middle
-Es un error 500 porque
-falla en la base de datos.
-
-00:05:06.876 --> 00:05:08.256 align:middle
-Pero la cuestión es que ha
-permitido crear nuestro objeto.
-
-00:05:08.286 --> 00:05:09.756 align:middle
-Y en unos minutos, una vez que
-añadamos reglas de validación,
-
-00:05:09.786 --> 00:05:10.866 align:middle
-verás el aire tan bonito
-que conseguimos aquí.
-
-00:05:10.896 --> 00:05:12.666 align:middle
-Muy bien, a continuación, para ayudarnos mientras
-desarrollamos, vamos a añadir un rico conjunto
-
-00:05:12.696 --> 00:05:14.466 align:middle
-de accesorios de datos, luego vamos a
-disfrutar y jugar con una gran característica
-
-00:05:14.496 --> 00:05:15.756 align:middle
-que la API Platform nos da de
-forma gratuita Page Nation.
+00:05:09.176 --> 00:05:14.806 align:middle
+Luego jugaremos con una gran función que API
+Platform nos ofrece gratuitamente: la paginación
