@@ -12,7 +12,9 @@
                 <span v-if="user">
                     authenticated as: <strong>{{ user.username }}</strong>
 
-                    | <a href="/logout" class="btn btn-warning btn-sm underline">Log out</a>
+                    <br>
+                    <a href="/logout" class="underline">Log out</a>
+                    | <a href="/api-tokens" class="underline">Access tokens</a>
                 </span>
                 <span v-else>not authenticated</span>
 
