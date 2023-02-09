@@ -1,13 +1,56 @@
 # Validación
 
-Próximamente...
+Los usuarios de nuestra API pueden estropear las cosas de muchas maneras, por ejemplo con un JSON incorrecto o haciendo tonterías como introducir un número negativo en el campo `value`. ¡Esto es oro de dragón, no deuda de dragón!
 
-Hay muchas formas de que los usuarios de nuestra API estropeen las cosas, como una J O incorrecta o datos incorrectos, como introducir un número negativo en el campo de valor. Así que vamos a comprobar cómo funcionan las API con algunas de ellas en este momento. Así que voy a darle a probar en la ruta post y vamos a añadir invalid. Vamos a enviar algunos mal js o, voy a quitar esa coma allí mismo. Ejecutar e impresionante 400 errores. Así que eso es lo que queremos. Un cuatro. Cualquier error que empiece por cuatro significa que el cliente, el usuario de su API ha cometido un error. Así que 400 significa petición errónea. Y puedes ver aquí abajo que el tipo es error hidroco y que tiene un error ocurrido y un error syntex. Y esta traza sólo se muestra en el entorno de depuración. Así que esto no se mostraría en producción. Así que eso es bastante impresionante. Eso ya se maneja fuera de la caja. Vamos a probar algo diferente. Probemos a enviar un json vacío, como si nos hubiéramos olvidado de enviar alguno de nuestros campos. Eso es un aire 500 no tan genial internamente API Platform crea nuestro objeto tesoro dragón pero no le pone ningún dato y como que explota cuando llega a la base de datos porque algunas de las columnas están nu
+## JSON no válido
 
-Y, por supuesto, esperábamos esto. Lo que nos falta es validación y añadir validación a nuestra API es como añadir validación en cualquier parte de Symphony. Es muy sencillo. Así, por ejemplo, encontramos la propiedad nombre, queremos que nombre sea obligatorio. Así que voy a añadir el no en blanco decir no en blanco y pulsa tabulador para añadir que usted declara. ¿Y sabes qué? Vamos a hacer también un oh y en realidad está bien, pero voy a buscar ese no en blanco aquí arriba. Y cambiar esto a asert. Así es como se suelen hacer las cosas dentro de Symphony. Y diré assert barra no en blanco. Y luego mi abajo, vamos a añadir uno más. Voy a decir longitud y diremos que el nombre debe tener al menos dos caracteres a lo largo de un máximo, eh, de 50 caracteres. Y aquí está el mensaje máximo. Describe tu botín en 50 caracteres o menos. Genial. Así que probemos ahora cogeré ese mismo json vacío, le daré a ejecutar y genial Una respuesta 4 22, que es un código de respuesta muy común que básicamente significa error de validación. Y fíjate en este tipo, es una lista de violación de restricciones. Se trata de un formato especial J S O N L D. Puede que no lo recuerdes, pero antes lo vimos documentado en la documentación de JSUN LD. Así que voy a ir a esa barra api barra do
+Este capítulo trata sobre cómo manejar estas cosas malas con elegancia. Prueba con la ruta POST. Enviemos algo de JSON no válido. Pulsa Ejecutar. ¡Impresionante! Un error `400`! Eso es lo que queremos. 400 -o cualquier código de estado que empiece por 4- significa que el cliente -el usuario de la API- ha cometido un error. en concreto, 400 significa "petición errónea".
 
-Barra api barra docs punto jsun LD y a ti para buscar una violación de restricción. Ahí lo tienes. Así que en realidad hay clases integradas como violación de restricciones y lista de violaciones de restricciones integradas en nuestra A P I junto con nuestro recurso de tesorería. Y puedes ver cuál es su estructura. Una lista de violaciones de restricciones es, básicamente, una colección de violaciones de restricciones y describe las propiedades de las violaciones de restricciones. Y podemos verlas aquí. Es bastante impresionante. Y hay una propiedad de violaciones y muestra la ruta de la propiedad y luego tiene el mensaje debajo. Muy bien, vamos a añadir algunas cosas más. Así que vamos a, vamos a añadir por encima de la descripción de la propiedad. Añadiremos no en blanco y encima del valor añadiremos mayor o igual que cero. Así que tiene que ser, no puede ser negativo. Y por último, factor guay utilizaremos mayor o igual que cero. Y luego añadiremos un segundo de esos. Cámbialo a menor o igual que 10. Así que algo entre cero y 10. Y ya que estamos aquí, no necesitamos hacer esto, pero voy a inicializar el valor a cero y el factor de enfriamiento a cero. Así que si no estaba establecido, podemos simplemente, hace que esos campos no sean necesarios en la api. Se inicializarán a cero si no están configurados.
+En la respuesta, el tipo es `hydra:error` y dice: `An error occurred`
+y `Syntax Error`. Ah, y este `trace` sólo se muestra en el entorno de depuración: no se mostrará en producción.
 
-Ahora voy a volver y probar esa misma ruta, ver esa hermosa validación e incluso podemos activar un poco más añadiendo un factor de enfriamiento de 11. Sí, a nuestro sistema definitivamente no le gusta eso. Muy bien, hay una última forma de que falle la validación. Es pasando el tipo incorrecto. Así que el factor de enfriamiento 11 fallará nuestras reglas de validación, pero ¿y si en lugar de eso le pasáramos una cadena? Una que hubiéramos ejecutado, vale, 400 códigos de estado. Eso está bien. Falla con un código de estado de nivel 400. No es un error de validación, tiene un tipo diferente, pero le dice al usuario lo que ha pasado. El tipo de factor guay debe ser una cadena INT dada. Así que el punto no es válido. Jason se encarga. Los tipos malos están solucionados
+¡Así que esto es muy bonito! El JSON no válido se gestiona de forma automática.
 
-En el caso de los tipos incorrectos, el sistema ve este tipo INT en el factor de enfriamiento establecido. Y lo rechaza con este error de aquí. Así que de lo único que tenemos que preocuparnos en nuestra aplicación es de escribir un buen código que utilice correctamente los pines de tipo y B, añadiendo nuestra validación. Añadiendo validación para nuestras reglas de negocio, como que el valor debe ser mayor que cero o que la descripción es obligatoria. La API Platform se encargará del resto. Muy bien, a continuación, nuestra API sólo tiene un recurso en este momento es nuestro tesoro dragón. Vamos a añadir un segundo recurso, un recurso de usuario, para que podamos vincular qué usuario posee qué tesoro en la api.
+## Restricciones de validación de reglas de negocio
+
+Probemos algo diferente, como enviar JSON vacío. Esto nos da el temido error 500. Boo. Internamente, la API Platform crea un objeto `DragonTreasure`... pero no establece ningún dato en él. Y luego explota cuando llega a la base de datos porque algunas de las columnas son `null`.
+
+Y, ¡nos lo esperábamos! Nos falta la validación. Añadir validación a nuestra API es exactamente igual que añadir validación en cualquier parte de Symfony. Por ejemplo, busca la propiedad`name`. Necesitamos que `name` sea obligatoria. Así que añade la restricción `NotBlank`, y pulsa tabulador. Oh, pero voy a buscar la declaración `NotBlank` `use` ... y cambiarla por `Assert`. Eso es opcional... pero es la forma en que los chicos guays suelen hacerlo en Symfony. Ahora di `Assert\NotBlank`:
+
+[[[ code('b05489e9e8') ]]]
+
+A continuación, añade una más: `Length`. Digamos que el nombre debe tener al menos dos caracteres, `max` 50 caracteres... y añade un `maxMessage`:`Describe your loot in 50 chars or less`:
+
+[[[ code('5f18649857') ]]]
+
+## Cómo se ven los errores en la respuesta
+
+¡Buen comienzo! Intentémoslo de nuevo. Coge ese mismo JSON vacío, pulsa Ejecutar, y ¡sí! ¡Una respuesta 422! Se trata de un código de respuesta muy común que suele significar que se ha producido un error de validación. Y ¡he aquí! El `@type` es `ConstraintViolationList`. Se trata de un tipo especial de JSON-LD añadido por API Platform. Anteriormente, lo vimos documentado en la documentación de `JSON-LD`.
+
+Observa: ve a `/api/docs.jsonld` y busca un `ConstraintViolation`. ¡Ahí está! API Platform añade dos clases: `ConstraintViolation` y`ConstraintViolationList` para describir el aspecto que tendrán los errores de validación. Un`ConstraintViolationList` es básicamente una colección de `ConstraintViolations`... y luego describe cuáles son las propiedades de `ConstraintViolation`.
+
+Podemos verlas aquí: tenemos una propiedad `violations` con `propertyPath`y luego la `message` debajo.
+
+## Añadir más restricciones
+
+¡Vale! Vamos a añadir unas cuantas restricciones más. Añade `NotBlank` por encima de `description`... y `GreaterThanOrEqual` a `0` por encima de `value` para evitar los negativos. Por último, para`coolFactor` utiliza `GreaterThanOrEqual` a 0 y también `LessThanOrEqual` a 10. Así que algo entre 0 y 10:
+
+[[[ code('edb7d7cf25') ]]]
+
+Y ya que estamos aquí, no necesitamos hacer esto, pero voy a inicializar`$value` a 0 y `$coolFactor` a 0. Esto hace que ambos no sean necesarios en la API: si el usuario no los envía, tendrán por defecto el valor 0:
+
+[[[ code('343088fb55') ]]]
+
+Vale, vuelve a probar esa misma ruta. ¡Mira qué validación más bonita! Prueba también a poner `coolFactor` en `11`. ¡Sí! Ningún tesoro mola tanto... bueno, a menos que sea un plato gigante de nachos.
+
+## Pasar tipos malos
+
+Vale, hay una última forma de que un usuario envíe cosas malas: pasando un tipo incorrecto. Así que `coolFactor: 11` fallará nuestras reglas de validación. Pero, ¿y si en su lugar pasamos un `string`? ¡Qué asco! Pulsa Ejecutar. Vale: un código de estado `400`, eso es bueno. Aunque, no es un error de validación, tiene un tipo diferente. Pero indica al usuario lo que ha ocurrido:
+
+> el tipo del atributo `coolFactor` debe ser `int`, `string` dado.
+
+¡Suficientemente bueno! Esto es gracias al método `setCoolFactor()`. El sistema ve el tipo `int` y por eso rechaza la cadena con este error.
+
+Así que de lo único que tenemos que preocuparnos en nuestra aplicación es de escribir un buen código que utilice correctamente `type` y de añadir restricciones de validación: la red de seguridad que atrapa las violaciones de las reglas de negocio... como que `value` debe ser mayor que 0 o que `description`es obligatorio. API Platform se encarga del resto.
+
+A continuación: nuestra API sólo tiene un recurso: `DragonTreasure`. Añadamos un segundo recurso -un recurso `User` - para que podamos vincular qué usuario posee qué tesoro en la API.
