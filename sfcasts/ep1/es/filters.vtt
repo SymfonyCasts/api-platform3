@@ -1,316 +1,276 @@
 WEBVTT
 
-00:00:00.106 --> 00:00:01.076 align:middle
-Próximamente...
+00:00:00.036 --> 00:00:05.036 align:middle
+Algunos de nuestros tesoros de
+dragón están publicados y otros no.
 
-00:00:01.076 --> 00:00:05.036 align:middle
-Algunos de nuestros tesoros de dragón están
-publicados actualmente y otros no. Eso es
+00:00:05.476 --> 00:00:10.796 align:middle
+Eso es gracias a DragonTreasureFactory, donde
+publicamos aleatoriamente algunos pero no otros.
 
-00:00:05.476 --> 00:00:09.846 align:middle
-gracias a nuestra Fábrica de
-Tesoros de Dragón, donde en realidad
+00:00:11.596 --> 00:00:15.216 align:middle
+Ahora mismo, la API devuelve
+hasta el último tesoro dragón.
 
-00:00:09.846 --> 00:00:13.016 align:middle
-publicamos algunos al azar y otros no.
+00:00:15.576 --> 00:00:17.666 align:middle
+En el futuro, vamos a hacer que
 
-00:00:13.016 --> 00:00:15.716 align:middle
-Ahora mismo, todos se muestran siendo
-devueltos desde nuestra api. En el
+00:00:17.666 --> 00:00:21.976 align:middle
+nuestra API devuelva automáticamente
+sólo los tesoros publicados.
 
-00:00:15.716 --> 00:00:18.736 align:middle
-futuro, cambiaremos nuestra API
+00:00:22.436 --> 00:00:26.766 align:middle
+Pero para empezar, al menos hagamos posible
+que nuestros clientes de la API puedan
 
-00:00:18.856 --> 00:00:22.436 align:middle
-para ocultar automáticamente los tesoros no
-publicados, de modo que nunca se muestren.
+00:00:26.836 --> 00:00:29.376 align:middle
+filtrar los resultados no
+publicados si lo desean.
 
-00:00:22.436 --> 00:00:26.386 align:middle
-Pero para empezar, al menos vamos a hacer
-posible que los clientes de nuestra API
+00:00:30.136 --> 00:00:32.386 align:middle
+¿Cómo? Aprovechando los filtros. La API
 
-00:00:26.386 --> 00:00:29.316 align:middle
-puedan ocultar los resultados
-no publicados si así lo desean.
+00:00:33.046 --> 00:00:38.716 align:middle
+Platform viene con un montón de filtros
+incorporados que te permiten filtrar las colecciones
 
-00:00:29.316 --> 00:00:33.836 align:middle
-Para ello, vamos a aprovechar algo
-llamado Plataforma API filtrada.
+00:00:38.716 --> 00:00:42.136 align:middle
+de resultados por texto,
+booleanos, fechas y mucho más.
 
-00:00:33.836 --> 00:00:39.446 align:middle
-Viene con un montón de filtros incorporados
-que te permiten básicamente buscar y filtrar
+00:00:42.916 --> 00:00:47.496 align:middle
+Funciona así: sobre tu clase,
+añade un atributo llamado ApiFilter.
 
-00:00:39.446 --> 00:00:42.726 align:middle
-a través de las colecciones de resultados.
-
-00:00:42.726 --> 00:00:47.486 align:middle
-Así es como funciona por encima de tu clase
-en otra, un atributo llamado filtro API.
-
-00:00:47.486 --> 00:00:52.686 align:middle
-Ahora normalmente hay dos cosas
-que tienes que pasar al filtro API.
+00:00:48.536 --> 00:00:51.956 align:middle
+Normalmente hay dos
+ingredientes que debes pasarle.
 
 00:00:52.686 --> 00:00:55.686 align:middle
-La primera es qué clase
+El primero es qué clase
 de filtro quieres utilizar.
 
-00:00:56.046 --> 00:01:00.576 align:middle
-Y si miras la documentación que he
-mencionado, hay un montón de ellas.
+00:00:56.046 --> 00:01:01.676 align:middle
+Y si miras la documentación, hay un montón
+de ellas, como una llamada BooleanFilter
 
-00:01:00.576 --> 00:01:06.236 align:middle
-Está el filtro de boya, vamos a usar
-el filtro de búsqueda en un segundo.
+00:01:01.676 --> 00:01:06.406 align:middle
+que utilizaremos ahora y otra llamada SearchFilter
+que utilizaremos dentro de unos minutos. Pasa
 
-00:01:07.536 --> 00:01:09.246 align:middle
-Y hay otros.
+00:01:07.526 --> 00:01:12.726 align:middle
+este BooleanFilter -el de ORM, ya que
+estamos utilizando el ORM Doctrine-
 
-00:01:09.246 --> 00:01:16.416 align:middle
-En este caso, queremos Filtro Boo porque estamos
-permitiendo al usuario buscar en un campo booleano.
+00:01:12.876 --> 00:01:16.396 align:middle
+porque queremos permitir al usuario
+filtrar en un campo booleano. Lo
 
-00:01:17.336 --> 00:01:23.536 align:middle
-Deberían poder elegir si quieren
-que les devolvamos resultados
+00:01:16.396 --> 00:01:22.076 align:middle
+segundo que tienes que pasar es
+properties a una matriz de los campos
 
-00:01:23.536 --> 00:01:28.656 align:middle
-con se publica verdadero o se publica falso.
+00:01:22.076 --> 00:01:25.256 align:middle
+o propiedades en los que
+quieres utilizar este filtro.
 
-00:01:28.656 --> 00:01:32.356 align:middle
-Ahora fíjate, coge el de O RM porque
-estamos usando la doctrina O rm
+00:01:25.366 --> 00:01:29.146 align:middle
+Establécelo en isPublished: ¡Muy bien!
 
-00:01:32.356 --> 00:01:37.426 align:middle
-y luego añade la llamada en la clase llamada.
+00:01:29.566 --> 00:01:33.376 align:middle
+Vuelve a la documentación y
+comprueba la ruta de recolección GET.
 
-00:01:37.426 --> 00:01:43.936 align:middle
-La otra cosa que necesitas tener aquí son
-las propiedades establecidas en un array
+00:01:36.236 --> 00:01:37.456 align:middle
+Cuando probemos esto...
 
-00:01:44.766 --> 00:01:50.536 align:middle
-de qué campos o campos quieres buscar.
+00:01:37.866 --> 00:01:40.216 align:middle
+¡hay un nuevo campo isPublished!
 
-00:01:50.596 --> 00:01:52.836 align:middle
-Así que vamos a hacer es publicado.
+00:01:40.366 --> 00:01:44.096 align:middle
+Primero, pulsa "Ejecutar" sin configurarlo.
 
-00:01:52.836 --> 00:02:03.986 align:middle
-Bien, volvamos a nuestra documentación y
-comprobemos la ruta de la colección IG.
+00:01:44.776 --> 00:01:47.256 align:middle
+Cuando nos desplacemos
+hasta abajo, ¡allí vamos!
 
-00:02:03.986 --> 00:02:07.766 align:middle
-Cuando lo probamos, aquí hay
-un nuevo campo es publicado,
+00:01:47.536 --> 00:01:49.316 align:middle
+hydra:totalItems: 40.
 
-00:02:08.656 --> 00:02:14.336 align:middle
-así que vamos a probarlo vacío
-Primero le daré a ejecutar
+00:01:50.306 --> 00:01:54.586 align:middle
+Ahora establece isPublished
+en true e inténtalo de nuevo.
 
-00:02:14.336 --> 00:02:17.646 align:middle
-y si me desplazo hasta abajo, ahí lo tenemos.
+00:01:55.266 --> 00:01:58.736 align:middle
+¡Sí! Ya tenemos hydra:totalItems: 16.
 
-00:02:17.646 --> 00:02:19.466 align:middle
-Hydro Total Artículos 40.
+00:01:58.916 --> 00:02:00.046 align:middle
+¡Está vivo!
 
-00:02:20.146 --> 00:02:26.396 align:middle
-Ahora si decimos se publica Verdadero y le damos a
-Ejecutar, tenemos hidro total Artículo 16, está vivo.
-
-00:02:27.126 --> 00:02:30.106 align:middle
+00:02:00.376 --> 00:02:02.736 align:middle
 Y comprueba cómo se produce el filtrado.
 
-00:02:30.276 --> 00:02:35.696 align:middle
-Es realmente sencillo, es sólo un parámetro
-de consulta se publica igual a verdadero.
+00:02:03.146 --> 00:02:07.816 align:middle
+Es muy sencillo, mediante un parámetro
+de consulta: isPublished=true.
 
-00:02:35.696 --> 00:02:38.006 align:middle
-Y esto es realmente genial aquí abajo.
+00:02:08.676 --> 00:02:09.886 align:middle
+Y la cosa se pone más chula. Mira
 
-00:02:38.006 --> 00:02:43.606 align:middle
-Si miras la respuesta, tenemos la vista
-Hydra, que muestra la Nación de Páginas.
+00:02:10.206 --> 00:02:15.416 align:middle
+la respuesta: tenemos hydra:view,
+que muestra la paginación
 
-00:02:43.666 --> 00:02:44.816 align:middle
-También tenemos una nueva búsqueda Hydra.
+00:02:15.726 --> 00:02:19.446 align:middle
+y ahora también tenemos un nuevo hydra:search.
 
-00:02:44.816 --> 00:02:48.026 align:middle
-En realidad, Hydra documenta esta nueva
-forma de buscar en nuestro contenido.
+00:02:20.146 --> 00:02:26.576 align:middle
+Sí, API Platform documenta esta nueva
+forma de búsqueda en la respuesta.
 
-00:02:48.026 --> 00:02:51.076 align:middle
-Básicamente dice: "Oye, si quieres,
+00:02:27.146 --> 00:02:33.326 align:middle
+Está diciendo: Oye, si quieres, puedes añadir
+un parámetro de consulta ?isPublished=true
 
-00:02:51.076 --> 00:02:58.056 align:middle
-puedes añadir un signo de interrogación es parámetro
-de consulta publicado para filtrar estos resultados".
+00:02:33.326 --> 00:02:34.756 align:middle
+para filtrar estos resultados.
 
-00:02:58.856 --> 00:02:59.306 align:middle
-Genial.
+00:02:35.296 --> 00:02:36.716 align:middle
+Bastante guay.
 
-00:02:59.496 --> 00:02:59.696 align:middle
-Muy bien.
+00:02:37.496 --> 00:02:41.456 align:middle
+Ahora bien, cuando lees sobre filtros
+en los documentos de la API Platform,
 
-00:02:59.696 --> 00:03:07.596 align:middle
-Ahora bien, cuando leas sobre los filtros de
-la API en la documentación de la API Platform,
+00:02:41.796 --> 00:02:45.606 align:middle
+casi siempre lo muestran encima de
+la clase, como hemos hecho nosotros.
 
-00:03:07.596 --> 00:03:16.026 align:middle
-casi siempre lo muestran encima de la clase,
-pero también puedes ponerlo encima del acto.
+00:02:46.046 --> 00:02:49.436 align:middle
+Pero también puedes poner el filtro
+encima de la propiedad a la que se refiere.
 
-00:03:16.026 --> 00:03:21.366 align:middle
-Puedes poner la mayoría de los filtros encima
-de la propiedad con la que se relacionan.
+00:02:50.036 --> 00:02:55.426 align:middle
+Observa: copia la línea ApiFilter,
+elimínala, y baja hasta $isPublished.
 
-00:03:21.366 --> 00:03:24.946 align:middle
-Así que voy a copiar este
-filtro API, lo quitaré,
+00:02:56.796 --> 00:02:57.946 align:middle
+Pégala encima.
 
-00:03:24.946 --> 00:03:28.806 align:middle
-y bajaremos al campo IS publicado
-y lo añadiré ahí arriba.
+00:02:58.806 --> 00:03:01.766 align:middle
+Y ahora, ya no necesitamos
+la opción properties...
 
-00:03:28.806 --> 00:03:34.266 align:middle
-Y no te sorprendas cuando hagas esto, ya no
-necesitarás pasar la opción de propiedades.
+00:03:02.226 --> 00:03:06.546 align:middle
+API Platform lo resuelve por
+sí sola: ¿El resultado?
 
-00:03:35.366 --> 00:03:36.496 align:middle
-Eso estará incorporado.
+00:03:06.856 --> 00:03:08.156 align:middle
+El mismo que antes.
 
-00:03:36.496 --> 00:03:38.926 align:middle
-Así que el resultado es el mismo.
+00:03:08.476 --> 00:03:11.676 align:middle
+No lo probaré, pero si echas un
+vistazo a la ruta de recogida,
 
-00:03:38.926 --> 00:03:43.446 align:middle
-No lo probaré, pero si miras
-nuestra colección en Punto,
+00:03:11.886 --> 00:03:14.636 align:middle
+sigue teniendo el campo de filtro isPublished.
 
-00:03:43.446 --> 00:03:45.786 align:middle
-sigue teniendo está publicado ahí.
-
-00:03:45.786 --> 00:03:46.536 align:middle
-Muy bien, ¿qué?
-
-00:03:46.536 --> 00:03:48.116 align:middle
+00:03:15.456 --> 00:03:16.246 align:middle
 ¿Qué más podemos hacer?
 
-00:03:48.116 --> 00:03:54.756 align:middle
-Bueno, hay otro filtro muy útil
-llamado filtro de búsqueda.
+00:03:16.736 --> 00:03:19.616 align:middle
+Otro filtro realmente útil es SearchFilter.
 
-00:03:54.756 --> 00:03:59.686 align:middle
-Así que vamos a permitir que alguien
-busque en la propiedad nombre.
+00:03:20.146 --> 00:03:23.926 align:middle
+Hagamos que sea posible buscar
+por texto en la propiedad title.
 
-00:03:59.686 --> 00:04:04.876 align:middle
-Así que iré encima de la N, iré encima
-de esa propiedad, y añadiré el filtro APA.
+00:03:24.436 --> 00:03:28.806 align:middle
+Es casi lo mismo: encima de
+$title, añade ApiFilter.
 
-00:04:04.876 --> 00:04:07.316 align:middle
-En este caso queremos filtro de búsqueda.
+00:03:28.806 --> 00:03:34.296 align:middle
+En este caso queremos SearchFilter:
+de nuevo, coge el del ORM.
 
-00:04:07.796 --> 00:04:12.756 align:middle
-Y de nuevo, coge el del RM y haz
-dos puntos, dos puntos clase.
+00:03:35.366 --> 00:03:37.726 align:middle
+Este filtro también acepta una opción.
 
-00:04:12.756 --> 00:04:17.666 align:middle
-Ahora bien, éste sí que
-tiene una opción extra.
+00:03:38.086 --> 00:03:41.186 align:middle
+Aquí puedes ver que, además de properties,
 
-00:04:17.666 --> 00:04:25.136 align:middle
-Así que puedes ver aquí que hay,
-además de ese argumento de propiedades,
+00:03:41.436 --> 00:03:44.336 align:middle
+ApiFilter tiene un argumento llamado strategy.
 
-00:04:25.546 --> 00:04:27.456 align:middle
-un argumento aquí llamado estrategia.
-
-00:04:27.456 --> 00:04:32.216 align:middle
-No se aplica a todos los
+00:03:45.056 --> 00:03:49.616 align:middle
+Eso no se aplica a todos los
 filtros, pero sí a éste.
 
-00:04:32.216 --> 00:04:34.446 align:middle
-Nos quedaremos estrategia y luego parcial.
+00:03:49.966 --> 00:03:54.826 align:middle
+Establece strategy como partial:
+Esto nos permitirá buscar
 
-00:04:34.446 --> 00:04:38.426 align:middle
-Lo que esto significa es que nos va a permitir
+00:03:54.826 --> 00:03:57.816 align:middle
+en la propiedad title una coincidencia parcial.
 
-00:04:38.426 --> 00:04:41.876 align:middle
-buscar en la propiedad nombre y va a
-ser una coincidencia difusa. Podremos
+00:03:57.956 --> 00:03:59.656 align:middle
+Es una búsqueda "difusa".
 
-00:04:41.876 --> 00:04:45.106 align:middle
-poner cualquier te, podremos introducir algo
+00:04:00.086 --> 00:04:03.546 align:middle
+Otras estrategias son exact, start y más.
 
-00:04:45.106 --> 00:04:46.546 align:middle
-y si eso coincide con cualquier
-parte del nombre, volverá.
+00:04:03.546 --> 00:04:05.436 align:middle
+¡Vamos a intentarlo!
 
-00:04:46.576 --> 00:04:49.006 align:middle
-También hay estrategias exactas y otras sobre
-las que puedes leer en la documentación.
+00:04:05.916 --> 00:04:07.276 align:middle
+Actualiza la página de documentos.
 
-00:04:49.036 --> 00:04:50.296 align:middle
-Muy bien, voy a refrescar la documentación.
+00:04:07.796 --> 00:04:12.766 align:middle
+Y... ahora la ruta de la colección
+tiene otro cuadro de filtro.
 
-00:04:50.326 --> 00:04:51.676 align:middle
-Ahora esa ruta de recolección
-tiene otro campo aquí arriba.
+00:04:13.496 --> 00:04:16.346 align:middle
+Busca rare y pulsa Ejecutar.
 
-00:04:51.706 --> 00:04:52.276 align:middle
-Así que vamos a buscar raro.
+00:04:17.386 --> 00:04:18.676 align:middle
+Veamos, aquí abajo...
 
-00:04:52.306 --> 00:04:52.666 align:middle
-Pulsa Ejecutar.
+00:04:20.486 --> 00:04:25.116 align:middle
+¡sí! Al parecer, 15 de los resultados
+tienen rare en algún lugar de title.
 
-00:04:52.696 --> 00:04:53.506 align:middle
-Y veamos, abajo del todo.
+00:04:25.526 --> 00:04:30.716 align:middle
+Y de nuevo, esto funciona añadiendo
+un simple ?name=rare a la URL.
 
-00:04:53.536 --> 00:04:55.246 align:middle
-Impresionante. 15 de nuestros resultados son
-raros, tienen raro en alguna parte del nombre.
+00:04:32.026 --> 00:04:38.556 align:middle
+Oh, hagamos también que el campo
+description se pueda buscar: Y ahora...
 
-00:04:55.276 --> 00:04:56.836 align:middle
-Y de nuevo, funciona sólo con que
-el nombre sea igual a Raro en la url.
+00:04:39.876 --> 00:04:42.226 align:middle
+¡también aparece en la API!
 
-00:04:56.866 --> 00:04:58.906 align:middle
-Muy bien, hagamos que también se pueda
-buscar en el campo de descripción.
+00:04:42.936 --> 00:04:45.246 align:middle
+El SearchFilter es fácil de configurar...
 
-00:04:58.936 --> 00:04:59.926 align:middle
-Y eso ahora aparece dentro de nuestra api.
+00:04:45.466 --> 00:04:48.146 align:middle
+pero es una búsqueda difusa bastante simple.
 
-00:04:59.956 --> 00:05:01.096 align:middle
-Esto sigue siendo una búsqueda
-difusa bastante sencilla.
+00:04:48.146 --> 00:04:54.536 align:middle
+Si quieres algo más complejo, como
+ElasticSearch, API Platform lo admite.
 
-00:05:01.126 --> 00:05:02.596 align:middle
-Si quieres algo, um, más
-complejo como Elastic Search,
-
-00:05:02.626 --> 00:05:04.216 align:middle
-puedes enganchar filtros de la API
-Platform con Elastic search también.
-
-00:05:04.246 --> 00:05:06.436 align:middle
-E incluso puedes crear tus propios filtros
+00:04:54.936 --> 00:04:59.066 align:middle
+Incluso puedes crear tus propios filtros
 personalizados, cosa que haremos en un futuro tutorial.
 
-00:05:06.466 --> 00:05:08.236 align:middle
-Como por ejemplo, tal vez sólo quieras
-tener un pequeño signo de interrogación.
+00:04:59.996 --> 00:05:06.026 align:middle
+Muy bien: a continuación, veamos dos
+filtros más: uno sencillo y otro extraño...
 
-00:05:08.266 --> 00:05:09.856 align:middle
-Buscar iguales en tu en la URL
-que busca en muchos campos.
+00:05:06.486 --> 00:05:11.326 align:middle
+Un filtro que, en lugar de ocultar los
+resultados, permite al usuario de la API
 
-00:05:09.886 --> 00:05:12.046 align:middle
-Muy bien, a continuación, vamos a ver un filtro más
-de un segundo filtro que es un poco diferente. En
-
-00:05:12.076 --> 00:05:13.966 align:middle
-lugar de ocultar determinados resultados, ese
-filtro permite al usuario de la API ocultar
-
-00:05:13.996 --> 00:05:14.926 align:middle
-o mostrar determinados campos en la respuesta.
+00:05:11.326 --> 00:05:13.956 align:middle
+ocultar determinados campos en la respuesta.
