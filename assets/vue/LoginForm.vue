@@ -1,61 +1,85 @@
 <template>
-    <form v-on:submit.prevent="handleSubmit">
+    <form
+        v-on:submit.prevent="handleSubmit"
+        class="book shadow-md rounded px-8 pt-6 pb-8 mb-4 sm:w-1/2 md:w-1/3"
+    >
         <div v-if="error" class="alert alert-danger">
             {{ error }}
         </div>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" v-model="email" class="form-control" id="exampleInputEmail1"
-                   aria-describedby="emailHelp" placeholder="Enter email">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                Email
+            </label>
+            <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                v-model="email"
+                type="email"
+                placeholder="Email">
         </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" v-model="password" class="form-control"
-                   id="exampleInputPassword1" placeholder="Password">
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                Password
+            </label>
+            <input
+                class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
+                v-model="password"
+                type="password"
+                placeholder="Password"
+                >
         </div>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">I like cheese</label>
+        <div class="flex items-center justify-between">
+            <button
+                class="bg-indigo-700 hover:bg-indigo-900 shadow-lg text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline text-sm"
+                type="submit"
+                :disabled="isLoading"
+                :class="{ 'bg-indigo-400': isLoading, 'hover:bg-indigo-400': isLoading }"
+            >
+                Log In
+            </button>
         </div>
-        <button type="submit" class="btn btn-primary" v-bind:class="{ disabled: isLoading }">Log in</button>
     </form>
 </template>
 
-<script>
-    export default {
-        data() {
-            return {
-                email: '',
-                password: '',
-                error: '',
-                isLoading: false
-            }
-        },
-        props: ['user'],
-        methods: {
-            handleSubmit() {
-                this.isLoading = true;
-                this.error = '';
+<script setup>
 
-                /*
-                axios
-                    .post('/login', {
-                        email: this.email,
-                        password: this.password
-                    })
-                    .then(response => {
-                        console.log(response.data);
+import { ref } from 'vue';
 
-                        //this.$emit('user-authenticated', userUri);
-                        //this.email = '';
-                        //this.password = '';
-                    }).catch(error => {
-                        console.log(error.response.data);
-                    }).finally(() => {
-                        this.isLoading = false;
-                    })
-                */
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const isLoading = ref(false);
+
+const handleSubmit = async () => {
+    isLoading.value = true;
+    error.value = '';
+
+    // TODO: uncomment and implement
+    return;
+
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-        },
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+
+        //this.$emit('user-authenticated', userUri);
+        //this.email = '';
+        //this.password = '';
+    } catch (e) {
+        error.value = e.message;
+    } finally {
+        isLoading.value = false;
     }
+}
+
 </script>
