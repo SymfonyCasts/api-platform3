@@ -10,11 +10,13 @@
                 class="book shadow-md rounded sm:ml-3 px-8 pt-8 pb-8 mb-4 sm:w-1/2 md:w-1/3 text-center">
                 You are currently
                 <span v-if="user">
-                    authenticated as {{ user.username }}
+                    authenticated as: <strong>{{ user.username }}</strong>
 
-                    <a href="/logout" class="btn btn-warning btn-sm">Log out</a>
+                    | <a href="/logout" class="btn btn-warning btn-sm underline">Log out</a>
                 </span>
                 <span v-else>not authenticated</span>
+
+                <hr class="my-10 mx-auto" style="border-top: 1px solid #ccc; width: 70%;" />
 
                 <p>Check out the <a :href="entrypoint" class="underline">API Docs</a></p>
             </div>
