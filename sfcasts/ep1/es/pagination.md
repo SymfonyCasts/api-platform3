@@ -1,11 +1,91 @@
-# Paginación
+# Paginación y accesorios de fundición
 
-Próximamente...
+Vamos a empezar a hacer más cosas con nuestra API... ¡así que es hora de darle vida a esto con algunos data fixtures!
 
-Vamos a empezar a hacer más cosas con nuestros datos. Así que vamos a añadir algunos accesorios ricos a nuestro sitio. Para los fixtures, me gusta usar foundry, así que voy a componer el coro foundry y también la biblioteca de fixtures de doctrine. Así que ORM fixtures e instalar ambos como dev dependencies. Perfecto. Una vez que termine, vamos a ejecutar la consola Bin. Make factory, si no has usado foundry antes, la idea es que tengas una clase de fábrica para cada entidad que te ayude a crearlas realmente rápido. Así que le daré a cero para generar la de nuestra única entidad tesoro dragón. Así que el resultado final es que ahora tenemos un objeto de fábrica Tesoro del dragón de fábrica de origen. Se trata de un objeto que es realmente bueno para crear un tesoro dragón ficticio y luego obtener valores por defecto. Incluso tiene un montón de datos aleatorios agradables tipo de pre-llenado pulg En realidad voy a pegar sobre eso algo de código que he actualizado. Lo he modificado un poco y lo único que necesitamos aquí es que el nombre lo elija de una nueva constante de nombre de tesoro. Y también voy a pegar eso que puedes coger de esta página. Sólo nos da algo interesante con lo que trabajar. Muy bien, así que esta clase está hecha. Paso dos, para cargarla como data fixtures y app fixtures. Voy a borrar el método de carga y todo lo que necesitamos es la fábrica de Tesoros Dragón, dos puntos, dos puntos crear muchos, y vamos a crear 40 tesoros dragón. Muy bien, carguemos esto en la Terminal Ejecuta la Consola Sinfónica Doctrine, fixtures Carga. Di que sí y guay. Veamos si funciona
+Para ello, me gusta utilizar Foundry junto con DoctrineFixturesBundle. Así que ejecuta
 
-De vuelta a nuestra api. Actualizaré. Probemos con la ruta get collection. Pulsa ejecutar y guay. Mira todos esos impresionantes ocho tesoros. Recuerda que hemos añadido 40, pero si miras aquí, aunque los ID no se han quedado, lo siento, uno, definitivamente no hay 40 aquí. Dice Total de objetos 40, pero sólo muestra 25 de ellos. Y aquí abajo está esta vista Hydra, que más o menos explica por qué hay naciones de páginas Builtin. Así que ahora mismo estamos viendo la página uno y también podemos ir a ver cuál es la última página y cuál es la siguiente. Así que sí, estamos hablando de AP de culto como de retorno. Así que una forma fácil de verlo es ir a slash api slash tesoros que Jason ld. Así que aquí está la página uno y luego podemos añadir pregunta Marca Página igual a dos. Y ahora tenemos la página dos. Es increíble no tener que preocuparse por eso. Ahora, si lo necesitas, puedes cambiar algunas opciones de Page Nation. Así que para una especificación en tu terminal ejecuta bin console, debug config API Platform. Así que, en general, hay un montón de cosas que puedes configurar en API Platform. Y este comando nos va a mostrar la configuración actual para API Platform. Así, por ejemplo, puedes añadir un título y una descripción a tu api. Esto pasa a formar parte de la especificación API abierta y aparece en tu documentación. Y hay muchas otras cosas que puedes hacer dentro de Fear.
+```terminal
+composer require foundry orm-fixtures --dev
+```
 
-Si buscas Page Nation, no queremos la que está bajo Graph ql. Allá vamos. Queremos la que está bajo Colección. Colección Page Nation. Aquí puedes modificar algunas cosas. Una de ellas, de nuevo, te muestra la configuración actual, por lo que no te muestra todas las claves posibles. De hecho, hay una clave llamada Elementos por página que puedes configurar para cambiar globalmente el número predeterminado de elementos por página. Así que, como recordatorio, acabamos de ejecutar depurar config. El otro comando que siempre debes recordar es config, dump config, debug config te muestra la configuración actual config dump te muestra un árbol completo de posibles configuraciones. Así que ahí está, página Nación Máximos elementos por página bajo, en realidad está bajo una clave de valores predeterminada. Esto está muy bien porque te muestra un montón de valores por defecto que puedes especificar. En realidad son las mismas opciones que encontrarás en tu atributo de recurso a API. Así que puedes especificar globalmente el máximo de elementos por página de Page Nation, o puedes tomar esa misma opción e ir a Dragon Treasure, buscar tu atributo de recurso API
+para instalar ambos como dependencias de `dev`. Cuando termine, ejecuta
 
-Y añade aquí elementos de nación de página por página. Y probemos esto. Lo fijaremos en 10. De nuevo, puedes ver que las claves que vemos aquí son las mismas que las que ves dentro de esta configuración predeterminada. Así que es bueno que tengas en cuenta que puedes dar a todos los atributos de tus recursos API algunas opciones por defecto. Antes de que probemos esto de aquí, volvamos a la página uno y hermosa, una lista mucho más corta. Y ahora puedes ver que tenemos cuatro páginas en lugar de sólo dos. También hay otras cosas que puedes configurar. Por ejemplo, puedes permitir que tu cliente API diga cuántas quiere por página. Así podrías dejarles elegir. Consulta la documentación para saber cómo hacerlo. Muy bien, ahora que tenemos un montón de datos, vamos a dar a nuestros usuarios de la API Dragón la posibilidad de buscar y filtrar entre los tesoros. Por ejemplo, quizá un dragón esté buscando un tesoro de caramelos envueltos individualmente. Eso a continuación.
+```terminal
+php bin/console make:factory
+```
+
+## Añadir la fábrica de Foundry
+
+Si no has utilizado Foundry antes, para cada entidad, creas una clase de fábrica que sea realmente buena para crear esa entidad. Yo le daré a cero para generar la de`DragonTreasure`.
+
+El resultado final es un nuevo archivo `src/Factory/DragonTreasureFactory.php`:
+
+[[[ code('eedeb52468') ]]]
+
+Esta clase es realmente buena creando objetos `DragonTreasure`. ¡Incluso tiene un montón de bonitos datos aleatorios listos para ser utilizados!
+
+Para hacerlo aún más elegante, voy a pegar un poco de código que he dragonizado. Ah, y también necesitamos una constante `TREASURE_NAMES`... que también pegaré encima. Puedes coger todo esto del bloque de código de esta página.
+
+[[[ code('2a817a6662') ]]]
+
+Bien, esta clase ya está lista. Segundo paso: para crear realmente algunos accesorios, abre`src/DataFixtures/AppFixtures.php`. Borraré el método `load()`. Todo lo que necesitamos es: `DragonTreasureFactory::createMany(40)` para crear un buen botín de 40 tesoros:
+
+[[[ code('7c677fd71a') ]]]
+
+¡Probemos esto! De vuelta a tu terminal, ejecuta:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+Y... ¡parece que ha funcionado! Volvamos a nuestros documentos de la API, actualicemos... y probemos la ruta de recolección `GET`. Pulsa ejecutar.
+
+## ¡Ya tenemos Paginación!
+
+¡Qué guay! ¡Mira todos esos preciosos tesoros! Recuerda que hemos añadido 40. Pero si te fijas bien... aunque `IDs` no empiece por 1, podemos ver que aquí hay definitivamente menos de 40. La respuesta dice `hydra:totalItems: 40`, pero sólo muestra 25.
+
+Aquí abajo, este `hydra:view` explica un poco por qué: ¡hay paginación integrada! Ahora mismo estamos viendo la página 1... y también podemos ver las URL de la última página y de la página siguiente.
+
+Así que sí, las rutas API que devuelven una colección necesitan paginación... igual que un sitio web. Y con API Platform, simplemente funciona.
+
+Para jugar con esto, vamos a `/api/treasures.jsonld`. Ésta es la página 1... y luego podemos añadir `?page=2` para ver la página 2. Es lo más fácil que haré en todo el día.
+
+## Profundizando en la configuración de la API Platform
+
+Ahora, si lo necesitas, puedes cambiar un montón de opciones de paginación. Veamos si podemos ajustar el número de elementos por página de 25 a 10.
+
+Para empezar a indagar en la configuración, abre tu terminal y ejecuta:
+
+```terminal
+php bin/console debug:config api_platform
+```
+
+Hay muchas cosas que puedes configurar en API Platform. Y este comando nos muestra la configuración actual. Así, por ejemplo, puedes añadir un `title` y un `description` a tu API. Esto pasa a formar parte de la OpenAPI Spec... y así aparece en tu documentación.
+
+Si buscas `pagination` -no queremos la que está bajo `graphql`... queremos la que está bajo `collection` - podemos ver varias opciones relacionadas con la paginación. Pero, de nuevo, esto nos está mostrando la configuración actual... no nos muestra necesariamente todas las claves posibles.
+
+Para verlo, en lugar de `debug:config`, ejecuta:
+
+```terminal
+php bin/console config:dump api_platform
+```
+
+`debug:config` te muestra la configuración actual. `config:dump` te muestra un árbol completo de configuraciones posibles. Ahora... vemos `pagination_items_per_page`. ¡Eso parece lo que queremos!
+
+Esto es realmente genial. Todas estas opciones viven bajo algo llamado`defaults`. Y son versiones en forma de serpiente de exactamente las mismas opciones que encontrarás dentro del atributo `ApiResource`. Establecer cualquiera de estas `defaults` en la configuración hace que ese sea el valor por defecto que se pasa a esa opción para cada `ApiResource`de tu sistema. Genial.
+
+Así que, si quisiéramos cambiar los elementos por página globalmente, podríamos hacerlo con esta configuración. O, si queremos cambiarlo sólo para un recurso, podemos hacerlo sobre la clase.
+
+## Personalizar el número máximo de elementos por página
+
+Busca el atributo `ApiResource` y añade `paginationItemsPerPage` ajustado a 10:
+
+[[[ code('f13c0bab76') ]]]
+
+De nuevo, puedes ver que las opciones que ya tenemos... están incluidas en la configuración de `defaults`.
+
+Muévete y vuelve a la página 1. Y... ¡voilà! Una lista mucho más corta. Además, ahora hay 4 páginas de tesoros en lugar de 2.
+
+Ah, y para tu información: también puedes hacer que el usuario de tu API pueda determinar cuántos elementos mostrar por página mediante un parámetro de consulta. Consulta la documentación para saber cómo hacerlo.
+
+Bien, ahora que tenemos un montón de datos, vamos a añadir la posibilidad de que nuestros usuarios de la API Dragón busquen y filtren entre los tesoros. Por ejemplo, tal vez un dragón esté buscando un tesoro de caramelos envueltos individualmente entre todo este botín. Eso a continuación.
