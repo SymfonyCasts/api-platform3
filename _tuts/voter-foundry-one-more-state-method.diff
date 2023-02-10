@@ -1,0 +1,28 @@
+diff --git a/src/Factory/UserFactory.php b/src/Factory/UserFactory.php
+index 3b4c043..13adf18 100644
+--- a/src/Factory/UserFactory.php
++++ b/src/Factory/UserFactory.php
+@@ -57,6 +57,11 @@ final class UserFactory extends ModelFactory
+         return $this->addState(['roles' => $roles]);
+     }
+ 
++    public function asAdmin(): self
++    {
++        return $this->withRoles(['ROLE_ADMIN']);
++    }
++
+     /**
+      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
+      *
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 5c9924f..4e32181 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -121,6 +121,6 @@ class DragonTreasureResourceTest extends ApiTestCase
+ 
+     public function testAdminCanPatchToEditTreasure(): void
+     {
+-        $admin = UserFactory::new()->withRoles(['ROLE_ADMIN'])->createOne();
++        $admin = UserFactory::new()->asAdmin()->createOne();
+     }
+ }

@@ -1,0 +1,29 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 4d6f2a7..44adec9 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Tests\Functional;
+ 
++use App\Entity\User;
+ use App\Factory\ApiTokenFactory;
+ use App\Factory\DragonTreasureFactory;
+ use App\Factory\UserFactory;
+@@ -92,5 +93,16 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ->assertStatus(200)
+             ->assertJsonMatches('value', 12345)
+         ;
++
++        $user2 = UserFactory::createOne();
++        $this->browser()
++            ->actingAs($user2)
++            ->patch('/api/treasures/'.$treasure->getId(), [
++                'json' => [
++                    'value' => 6789,
++                ],
++            ])
++            ->assertStatus(403)
++        ;
+     }
+ }

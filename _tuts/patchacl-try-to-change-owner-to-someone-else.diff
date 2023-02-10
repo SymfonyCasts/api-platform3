@@ -1,0 +1,24 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 44adec9..698009e 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -100,6 +100,19 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ->patch('/api/treasures/'.$treasure->getId(), [
+                 'json' => [
+                     'value' => 6789,
++                    // be tricky and try to change the owner
++                    'owner' => '/api/users/'.$user2->getId(),
++                ],
++            ])
++            ->assertStatus(403)
++        ;
++
++        $this->browser()
++            ->actingAs($user)
++            ->patch('/api/treasures/'.$treasure->getId(), [
++                'json' => [
++                    // change the owner to someone else
++                    'owner' => '/api/users/'.$user2->getId(),
+                 ],
+             ])
+             ->assertStatus(403)

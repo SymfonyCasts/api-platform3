@@ -1,0 +1,12 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 5f74054..f0a3377 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -55,7 +55,6 @@ class DragonTreasureResourceTest extends ApiTestCase
+                 'owner' => '/api/users/'.$user->getId(),
+             ]))
+             ->assertStatus(201)
+-            ->dump()
+             ->assertJsonMatches('name', 'A shiny thing')
+         ;
+     }

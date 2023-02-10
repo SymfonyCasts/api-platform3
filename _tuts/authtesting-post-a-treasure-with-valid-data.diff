@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 8e684d9..fb5d1e5 100644
+index 123cd43..92be305 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -49,7 +49,16 @@ class DragonTreasureResourceTest extends KernelTestCase

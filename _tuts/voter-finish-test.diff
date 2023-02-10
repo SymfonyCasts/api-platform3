@@ -1,0 +1,39 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 8931916..f869925 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -39,8 +39,8 @@ use function Symfony\Component\String\u;
+             security: 'is_granted("ROLE_USER")',
+         ),
+         new Patch(
+-            security: 'is_granted("ROLE_USER") and object.getOwner() == user',
+-            securityPostDenormalize: 'object.getOwner() == user',
++            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object.getOwner() == user)',
++            securityPostDenormalize: 'is_granted("ROLE_ADMIN") or object.getOwner() == user',
+         ),
+         new Delete(
+             security: 'is_granted("ROLE_ADMIN")',
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 4e32181..94378a6 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -121,6 +121,18 @@ class DragonTreasureResourceTest extends ApiTestCase
+ 
+     public function testAdminCanPatchToEditTreasure(): void
+     {
+-        $admin = UserFactory::new()->asAdmin()->createOne();
++        $admin = UserFactory::new()->asAdmin()->create();
++        $treasure = DragonTreasureFactory::createOne();
++
++        $this->browser()
++            ->actingAs($admin)
++            ->patch('/api/treasures/'.$treasure->getId(), [
++                'json' => [
++                    'value' => 12345,
++                ],
++            ])
++            ->assertStatus(200)
++            ->assertJsonMatches('value', 12345)
++        ;
+     }
+ }

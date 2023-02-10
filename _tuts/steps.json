@@ -331,6 +331,36 @@
             "description": null
         },
         {
+            "id": "authtesting-assert-name-field-on-result",
+            "name": "AuthTesting: assert() name field on result",
+            "description": null
+        },
+        {
+            "id": "authtesting-use-httpoptions-json",
+            "name": "AuthTesting: Use HttpOptions::json()",
+            "description": null
+        },
+        {
+            "id": "authtesting-add-accept-header",
+            "name": "AuthTesting: Add Accept header",
+            "description": null
+        },
+        {
+            "id": "authtesting-create-new-base-class",
+            "name": "AuthTesting: Create new base class",
+            "description": null
+        },
+        {
+            "id": "authtesting-remove-hasbrowser-from-child-test",
+            "name": "AuthTesting: Remove HasBrowser from child test",
+            "description": null
+        },
+        {
+            "id": "authtesting-remove-other-dump",
+            "name": "AuthTesting: remove other dump",
+            "description": null
+        },
+        {
             "id": "authtesting-new-method-to-test-api-token",
             "name": "AuthTesting: New method to test API Token",
             "description": null
@@ -344,7 +374,97 @@
             "id": "authtesting-pass-real-token",
             "name": "AuthTesting: Pass real token",
             "description": null
+        },
+        {
+            "id": "authtesting-remove-dump",
+            "name": "AuthTesting: remove dump",
+            "description": null
+        },
+        {
+            "id": "newput-add-standard-put-in-1-spot",
+            "name": "NewPut: Add standard_put in 1 spot",
+            "description": null
+        },
+        {
+            "id": "patchacl-create-test-for-patch-update",
+            "name": "PatchAcl: Create test for Patch update",
+            "description": null
+        },
+        {
+            "id": "patchacl-test-403-with-different-user",
+            "name": "PatchAcl: Test 403 with different user",
+            "description": null
+        },
+        {
+            "id": "patchacl-remove-put-endpoint",
+            "name": "PatchAcl: Remove PUT endpoint",
+            "description": null
+        },
+        {
+            "id": "patchacl-add-is-owner-check-to-patch",
+            "name": "PatchAcl: Add is owner check to Patch",
+            "description": null
+        },
+        {
+            "id": "patchacl-use-the-getter",
+            "name": "PatchAcl: use the getter",
+            "description": null
+        },
+        {
+            "id": "patchacl-try-to-change-owner-to-someone-else",
+            "name": "PatchAcl: Try to change owner to someone else",
+            "description": null
+        },
+        {
+            "id": "patchacl-show-securitypostdenormalize",
+            "name": "PatchAcl: Show securityPostDenormalize",
+            "description": null
+        },
+        {
+            "id": "voter-start-test-that-admin-can-edit",
+            "name": "Voter: start test that admin can edit",
+            "description": null
+        },
+        {
+            "id": "voter-add-foundry-state-method",
+            "name": "Voter: Add Foundry state method",
+            "description": null
+        },
+        {
+            "id": "voter-foundry-one-more-state-method",
+            "name": "Voter: Foundry, one more state method",
+            "description": null
+        },
+        {
+            "id": "voter-finish-test",
+            "name": "Voter: Finish test",
+            "description": null
+        },
+        {
+            "id": "voter-make-voter",
+            "name": "Voter: make:voter",
+            "description": null
+        },
+        {
+            "id": "voter-basic-customizations",
+            "name": "Voter: Basic customizations",
+            "description": null
+        },
+        {
+            "id": "voter-use-new-voter",
+            "name": "Voter: Use new voter",
+            "description": null
+        },
+        {
+            "id": "voter-allow-access-if-owner",
+            "name": "Voter: allow access if owner",
+            "description": null
+        },
+        {
+            "id": "voter-allow-admin-access",
+            "name": "Voter: Allow admin access",
+            "description": null
         }
     ],
-    "sha": "1f989a0d091e2fb73d44eabefaa42ca93142c39e"
+    "sha": "3029f442448a5b858d0f22ef0c144524773fd947"
 }

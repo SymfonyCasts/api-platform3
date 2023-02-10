@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index a36e181..e0cf731 100644
+index 7b75151..86d9a76 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -2,6 +2,7 @@
@@ -9,8 +9,8 @@ index a36e181..e0cf731 100644
 +use App\Factory\ApiTokenFactory;
  use App\Factory\DragonTreasureFactory;
  use App\Factory\UserFactory;
- use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-@@ -64,11 +65,15 @@ class DragonTreasureResourceTest extends KernelTestCase
+ use Zenstruck\Browser\HttpOptions;
+@@ -61,11 +62,15 @@ class DragonTreasureResourceTest extends ApiTestCase
  
      public function testPostToCreateTreasureWithApiKey(): void
      {

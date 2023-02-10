@@ -1,9 +1,13 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index e9c3764..8e684d9 100644
+index e9c3764..123cd43 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -44,13 +44,7 @@ class DragonTreasureResourceTest extends KernelTestCase
-         $user = UserFactory::createOne(['password' => 'pass']);
+@@ -41,16 +41,10 @@ class DragonTreasureResourceTest extends KernelTestCase
+ 
+     public function testPostToCreateTreasure(): void
+     {
+-        $user = UserFactory::createOne(['password' => 'pass']);
++        $user = UserFactory::createOne();
  
          $this->browser()
 -            ->post('/login', [

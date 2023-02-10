@@ -1,0 +1,29 @@
+diff --git a/src/Security/Voter/DragonTreasureVoter.php b/src/Security/Voter/DragonTreasureVoter.php
+index 2bd6f67..64c6cad 100644
+--- a/src/Security/Voter/DragonTreasureVoter.php
++++ b/src/Security/Voter/DragonTreasureVoter.php
+@@ -19,18 +19,21 @@ class DragonTreasureVoter extends Voter
+ 
+     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+     {
+-        return false;
+         $user = $token->getUser();
+         // if the user is anonymous, do not grant access
+         if (!$user instanceof UserInterface) {
+             return false;
+         }
+ 
++        assert($subject instanceof DragonTreasure);
++
+         // ... (check conditions and return true to grant permission) ...
+         switch ($attribute) {
+             case self::EDIT:
+-                // logic to determine if the user can EDIT
+-                // return true or false
++                if ($subject->getOwner() === $user) {
++                    return true;
++                }
++
+                 break;
+         }
+ 

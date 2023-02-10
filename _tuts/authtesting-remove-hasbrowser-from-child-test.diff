@@ -1,0 +1,17 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index def75fe..5f74054 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -6,12 +6,10 @@ use App\Factory\DragonTreasureFactory;
+ use App\Factory\UserFactory;
+ use Zenstruck\Browser\HttpOptions;
+ use Zenstruck\Browser\Json;
+-use Zenstruck\Browser\Test\HasBrowser;
+ use Zenstruck\Foundry\Test\ResetDatabase;
+ 
+ class DragonTreasureResourceTest extends ApiTestCase
+ {
+-    use HasBrowser;
+     use ResetDatabase;
+ 
+     public function testGetCollectionOfTreasures(): void
