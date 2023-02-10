@@ -37,7 +37,7 @@ Podemos verlas aquí: tenemos una propiedad `violations` con `propertyPath`y lue
 
 [[[ code('edb7d7cf25') ]]]
 
-Y ya que estamos aquí, no necesitamos hacer esto, pero voy a inicializar`$value` a 0 y `$coolFactor` a 0. Esto hace que ambos no sean necesarios en la API: si el usuario no los envía, tendrán por defecto el valor 0:
+Y ya que estamos aquí, no necesitamos hacer esto, pero voy a inicializar`$value` a 0 y `$coolFactor` a 0. Esto hace que ambos no sean necesarios en la API: si el usuario no los envía, serán 0 por defecto:
 
 [[[ code('343088fb55') ]]]
 
