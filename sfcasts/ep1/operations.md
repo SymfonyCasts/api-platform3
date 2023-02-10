@@ -35,6 +35,24 @@ a single treasure, create a treasure and delete a treasure. The only confusing o
 are put versus patch. `PUT` says "replaces" and `PATCH` says "updates". That...
 sounds like two ways of saying the same thing!
 
+***TIP
+In API Platform 4, `PUT` will become a "replace": meaning if you *only* sent a
+single field, all of the other fields in your resource will be set to null: you
+object is completely "replaced" by the JSON you send. Starting in API Platform
+3.1, you can "opt into" this new behavior by adding an `extraProperties` option
+to every `ApiResource`:
+
+```php
+#[ApiResource(
+    // ...
+
+    extraProperties: [
+        'standard_put' => true,
+    ],
+)]#
+```
+***
+
 The topic of PUT versus PATCH in APIs can get spicy. But in API Platform, at
 least today, PUT and PATCH work the same: they're both used to update a resource.
 And we'll see them in action along the way.
