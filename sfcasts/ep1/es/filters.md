@@ -1,13 +1,62 @@
-# Filtros
+# Filtros: Buscar resultados
 
-Próximamente...
+Algunos de nuestros tesoros de dragón están publicados y otros no. Eso es gracias a `DragonTreasureFactory`, donde publicamos aleatoriamente algunos pero no otros.
 
-Algunos de nuestros tesoros de dragón están actualmente publicados y otros no. Eso es gracias a nuestra Fábrica de Tesoros de Dragón, donde en realidad publicamos aleatoriamente algunos y aleatoriamente no publicamos otros. Ahora mismo, todos se muestran siendo devueltos desde nuestra api. En el futuro, cambiaremos nuestra API para ocultar automáticamente los tesoros no publicados, de modo que nunca se muestren. Pero para empezar, al menos vamos a hacer posible que los clientes de nuestra API puedan ocultar los resultados no publicados si así lo desean. Para ello, vamos a aprovechar algo llamado API Platform filtrada. Viene con un montón de filtros incorporados que te permiten, básicamente, buscar y filtrar a través de las colecciones de resultados. Así es como funciona por encima de tu clase en otra, un atributo llamado filtro API.
+Ahora mismo, la API devuelve hasta el último tesoro dragón. En el futuro, haremos que nuestra API devuelva automáticamente sólo los tesoros publicados. Pero para empezar, al menos hagamos posible que nuestros clientes de la API puedan filtrar los resultados no publicados si lo desean.
 
-Ahora normalmente hay dos cosas que tienes que pasar al filtro API. La primera es qué clase de filtro quieres utilizar. Y si miras la documentación que he mencionado, hay un montón de ellas. Está el filtro de boya, vamos a usar el filtro de búsqueda en un segundo. Y hay otros. En este caso, queremos Filtro Boo porque estamos permitiendo al usuario buscar en un campo booleano. Deberían poder elegir si quieren que les devuelva resultados con se publica verdadero o se publica falso. Ahora fíjate, coge el de O RM porque estamos usando la doctrina O rm y luego añade la llamada en la clase llamada. La otra cosa que necesitas tener aquí son las propiedades establecidas en un array de qué campos o campos quieres buscar. Así que vamos a hacerlo público. Bien, volvamos a nuestra documentación y comprobemos la ruta de la colección IG. Cuando lo probemos, aquí hay un nuevo campo es publicado, así que vamos a probarlo vacío Primero le daré a ejecutar y si me desplazo hasta abajo, ahí lo tenemos. Hydro Total Artículos 40. Ahora si decimos se publica Verdadero y pulsamos Ejecutar,
+## Hola ApiFiltro
 
-Tenemos Hidro Total Artículo 16, está vivo. Y mira cómo se produce el filtrado. Es realmente sencillo, es sólo un parámetro de consulta que se publica igual que el verdadero. Y esto es realmente genial aquí abajo. Si miras la respuesta, tenemos la vista Hydra, que muestra la Nación de Páginas. También tenemos una nueva búsqueda Hydra. En realidad, Hydra documenta esta nueva forma de buscar en nuestro contenido. Básicamente dice: "Oye, si quieres, puedes añadir un signo de interrogación es parámetro de consulta publicado para filtrar estos resultados". Muy chulo. Muy bien. Ahora bien, cuando leas sobre los filtros de la API en la documentación de la API Platform, casi siempre lo muestran encima de la clase, pero también puedes ponerlo encima del acto. Puedes poner la mayoría de los filtros encima de la propiedad con la que se relacionan. Así que voy a copiar este filtro API, lo quitaré, y bajaremos al campo IS publicado y lo añadiré ahí arriba. Y no te sorprendas cuando hagas esto, ya no necesitarás pasar la opción de propiedades. Eso estará incorporado. Así que el resultado es el mismo. No lo probaré, pero si miras nuestra colección en Punto, sigue teniendo está publicado ahí.
+¿Cómo? Aprovechando los filtros. API Platform viene con un montón de filtros incorporados que te permiten filtrar las colecciones de resultados por texto, booleanos, fechas y mucho más.
 
-Muy bien, ¿qué? ¿Qué más podemos hacer? Bueno, hay otro filtro muy útil llamado filtro de búsqueda. Así que vamos a permitir que alguien busque en la propiedad nombre. Así que iré encima de la N, iré encima de esa propiedad, y añadiré el filtro APA. En este caso queremos filtro de búsqueda. Y de nuevo, coge el del RM y haz dos puntos, dos puntos clase. Ahora bien, éste sí que tiene una opción extra. Aquí puedes ver que, además del argumento de las propiedades, hay un argumento llamado estrategia. No se aplica a todos los filtros, pero sí a éste. Nos quedaremos estrategia y luego parcial. Lo que esto significa es que nos va a permitir buscar en la propiedad el nombre y va a ser una coincidencia difusa. Podremos poner cualquier te, podremos introducir algo y si eso coincide con cualquier parte del nombre, volverá. También hay estrategias exactas y otras sobre las que puedes leer en la documentación. Muy bien, voy a refrescar la documentación. Ahora esa ruta de recolección tiene otro campo aquí arriba. Así que vamos a buscar raro. Pulsa Ejecutar. Y veamos, abajo del todo. Impresionante. 15 de nuestros resultados son raros, tienen raro en alguna parte del nombre.
+Funciona así: sobre tu clase, añade un atributo llamado `ApiFilter`.
 
-Y de nuevo, funciona sólo con que el nombre sea igual a Raro en la url. Muy bien, hicimos que también se pudiera buscar en el campo de descripción. Y eso ahora aparece dentro de nuestra api. Esto sigue siendo una búsqueda difusa bastante sencilla. Si quieres algo, um, más complejo como Elastic Search, puedes enganchar filtros de la API Platform con Elastic search también. E incluso puedes crear tus propios filtros personalizados, cosa que haremos en un futuro tutorial. Como por ejemplo, tal vez sólo quieras tener un pequeño signo de interrogación. Busca iguales en tu URL que busca en muchos campos. Muy bien, a continuación, vamos a ver un filtro más de un segundo filtro que es un poco diferente. En lugar de ocultar determinados resultados, ese filtro permite al usuario de la API ocultar o mostrar determinados campos en la respuesta.
+Normalmente hay dos ingredientes que debes pasarle. El primero es qué clase de filtro quieres utilizar. Y si miras la documentación, hay un montón de ellas, como una llamada `BooleanFilter` que utilizaremos ahora y otra llamada`SearchFilter` que utilizaremos dentro de unos minutos.
+
+Pasa este `BooleanFilter` -el de `ORM`, ya que estamos utilizando el ORM Doctrine- porque queremos permitir al usuario filtrar en un campo booleano.
+
+Lo segundo que tienes que pasar es `properties` a una matriz de los campos o propiedades en los que quieres utilizar este filtro. Establécelo en `isPublished`:
+
+[[[ code('75f2466630') ]]]
+
+## Utilizar el filtro en la petición
+
+¡Muy bien! Vuelve a la documentación y comprueba la ruta de recolección GET. Cuando probemos esto... ¡habrá un nuevo campo `isPublished`! Primero, pulsa "Ejecutar" sin configurarlo. Cuando nos desplacemos hasta abajo, ¡ahí lo tenemos!`hydra:totalItems: 40`. Ahora establece `isPublished` en `true` e inténtalo de nuevo.
+
+¡Sí! Tenemos `hydra:totalItems: 16`. ¡Está vivo! Y comprueba cómo se produce el filtrado. Es muy sencillo, mediante un parámetro de consulta: `isPublished=true`. Y la cosa se pone más chula. Mira la respuesta: tenemos `hydra:view`, que muestra la paginación y ahora también tenemos un nuevo `hydra:search`. Sí, la API Platform documenta esta nueva forma de buscar directamente en la respuesta. Dice:
+
+> Oye, si quieres, puedes añadir un parámetro de consulta `?isPublished=true` para filtrar
+> estos resultados.
+
+Bastante guay.
+
+## Añadir filtros directamente sobre las propiedades
+
+Ahora bien, cuando lees sobre filtros en los documentos de la API Platform, casi siempre los muestran encima de la clase, como hemos hecho nosotros. Pero también puedes poner el filtro encima de la propiedad a la que se refiere.
+
+Observa: copia la línea `ApiFilter`, elimínala y baja a `$isPublished`. Pégala encima. Y ahora, ya no necesitamos la opción `properties`... API Platform lo resuelve por sí sola:
+
+[[[ code('3bd0cf4bce') ]]]
+
+¿El resultado? El mismo que antes. No lo probaré, pero si echas un vistazo a la ruta de la colección, sigue teniendo el campo de filtro `isPublished`.
+
+## Filtro de búsqueda: Filtrar por texto
+
+¿Qué más podemos hacer? Otro filtro realmente útil es `SearchFilter`. Hagamos que sea posible buscar por texto en la propiedad `title`. Esto es casi lo mismo: encima de `$title`, añade `ApiFilter`. En este caso queremos `SearchFilter`: de nuevo, coge el del ORM. Este filtro también acepta una opción. Aquí puedes ver que, además de `properties`, `ApiFilter` tiene un argumento llamado `strategy`. Eso no se aplica a todos los filtros, pero sí a éste. Establece `strategy`en `partial`:
+
+[[[ code('bf1c077bbd') ]]]
+
+Esto nos permitirá buscar en la propiedad `title` una coincidencia parcial. Es una búsqueda "difusa". Otras estrategias son `exact`, `start` y más.
+
+¡Vamos a intentarlo! Actualiza la página de documentos. Y... ahora la ruta de la colección tiene otro cuadro de filtro. Busca `rare` y pulsa Ejecutar. Veamos, aquí abajo... ¡sí! Al parecer, 15 de los resultados tienen `rare` en algún lugar de `title`.
+
+Y de nuevo, esto funciona añadiendo un simple `?name=rare` a la URL.
+
+Oh, hagamos también que se pueda buscar en el campo `description`:
+
+[[[ code('f9800671f7') ]]]
+
+Y ahora... ¡también aparece en la API!
+
+`SearchFilter` es fácil de configurar... pero es una búsqueda difusa bastante simple. Si quieres algo más complejo -como ElasticSearch- API Platform lo admite. Incluso puedes crear tus propios filtros personalizados, cosa que haremos en un futuro tutorial.
+
+Muy bien: a continuación, veamos dos filtros más: uno sencillo y otro extraño... Un filtro que, en lugar de ocultar los resultados, permite al usuario de la API ocultar determinados campos en la respuesta.
