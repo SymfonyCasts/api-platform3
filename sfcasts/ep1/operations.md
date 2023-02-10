@@ -37,7 +37,7 @@ sounds like two ways of saying the same thing!
 
 ***TIP
 In API Platform 4, `PUT` will become a "replace": meaning if you *only* sent a
-single field, all of the other fields in your resource will be set to null: you
+single field, all of the other fields in your resource will be set to null: your
 object is completely "replaced" by the JSON you send. Starting in API Platform
 3.1, you can "opt into" this new behavior by adding an `extraProperties` option
 to every `ApiResource`:
