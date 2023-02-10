@@ -1,0 +1,20 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 4c88be5..ff7027b 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -37,4 +37,15 @@ class DragonTreasureResourceTest extends KernelTestCase
+             })
+         ;
+     }
++
++    public function testPostToCreateTreasure(): void
++    {
++        $this->browser()
++            ->post('/api/treasures', [
++                'json' => [],
++            ])
++            ->assertStatus(422)
++            ->dump()
++        ;
++    }
+ }

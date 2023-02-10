@@ -1,0 +1,22 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 8e684d9..fb5d1e5 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -49,7 +49,16 @@ class DragonTreasureResourceTest extends KernelTestCase
+                 'json' => [],
+             ])
+             ->assertStatus(422)
+-            ->dump()
++            ->post('/api/treasures', [
++                'json' => [
++                    'name' => 'A shiny thing',
++                    'description' => 'It sparkles when I wave it in the air.',
++                    'value' => 1000,
++                    'coolFactor' => 5,
++                    'owner' => '/api/users/'.$user->getId(),
++                ],
++            ])
++            ->assertStatus(201)
+         ;
+     }
+ }

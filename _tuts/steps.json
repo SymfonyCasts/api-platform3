@@ -239,7 +239,112 @@
             "id": "security-public-access-on-user-post",
             "name": "Security: PUBLIC_ACCESS on User Post",
             "description": null
+        },
+        {
+            "id": "testing-install-test-pack",
+            "name": "Testing: install test-pack",
+            "description": null
+        },
+        {
+            "id": "testing-install-browser",
+            "name": "Testing: install browser",
+            "description": null
+        },
+        {
+            "id": "testing-add-extension-in-phpunit-xml-dist",
+            "name": "Testing: Add extension in phpunit.xml.dist",
+            "description": null
+        },
+        {
+            "id": "testing-first-test-class",
+            "name": "Testing: First test class",
+            "description": null
+        },
+        {
+            "id": "testing-first-test-with-dump",
+            "name": "Testing: first test with dump",
+            "description": null
+        },
+        {
+            "id": "testing-add-resetdatabase-trait",
+            "name": "Testing: Add ResetDatabase trait",
+            "description": null
+        },
+        {
+            "id": "testing-assertjson",
+            "name": "Testing: assertJson()",
+            "description": null
+        },
+        {
+            "id": "testing-assertjsoncontains",
+            "name": "Testing: assertJsonContains()",
+            "description": null
+        },
+        {
+            "id": "testing-install-mtdowling-jmespath-php",
+            "name": "Testing: Install mtdowling\/jmespath.php",
+            "description": null
+        },
+        {
+            "id": "testing-quote-string",
+            "name": "Testing: quote : string",
+            "description": null
+        },
+        {
+            "id": "testing-add-some-data",
+            "name": "Testing: Add some data!",
+            "description": null
+        },
+        {
+            "id": "testing-show-the-json-callback",
+            "name": "Testing: show the Json callback",
+            "description": null
+        },
+        {
+            "id": "testing-try-to-get-keys-of-result",
+            "name": "Testing: Try to get keys of result",
+            "description": null
+        },
+        {
+            "id": "testing-transform-into-assertion",
+            "name": "Testing: Transform into assertion",
+            "description": null
+        },
+        {
+            "id": "authtesting-write-test-to-post-treasure",
+            "name": "AuthTesting: Write test to POST treasure",
+            "description": null
+        },
+        {
+            "id": "authtesting-create-user-and-log-in",
+            "name": "AuthTesting: Create user and log in",
+            "description": null
+        },
+        {
+            "id": "authtesting-easier-shortcut-method",
+            "name": "AuthTesting: Easier shortcut method",
+            "description": null
+        },
+        {
+            "id": "authtesting-post-a-treasure-with-valid-data",
+            "name": "AuthTesting: POST a treasure with valid data",
+            "description": null
+        },
+        {
+            "id": "authtesting-new-method-to-test-api-token",
+            "name": "AuthTesting: New method to test API Token",
+            "description": null
+        },
+        {
+            "id": "authtesting-pass-bad-bearer-token",
+            "name": "AuthTesting: Pass bad Bearer token",
+            "description": null
+        },
+        {
+            "id": "authtesting-pass-real-token",
+            "name": "AuthTesting: Pass real token",
+            "description": null
         }
     ],
-    "sha": "9639d77bafe549394a07ec000b9c2255df5a57e4"
+    "sha": "1f989a0d091e2fb73d44eabefaa42ca93142c39e"
 }

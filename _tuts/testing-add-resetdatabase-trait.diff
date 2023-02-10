@@ -1,0 +1,17 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index d7b3a97..7cc1bd3 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -4,10 +4,12 @@ namespace App\Tests\Functional;
+ 
+ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+ use Zenstruck\Browser\Test\HasBrowser;
++use Zenstruck\Foundry\Test\ResetDatabase;
+ 
+ class DragonTreasureResourceTest extends KernelTestCase
+ {
+     use HasBrowser;
++    use ResetDatabase;
+ 
+     public function testGetCollectionOfTreasures(): void
+     {

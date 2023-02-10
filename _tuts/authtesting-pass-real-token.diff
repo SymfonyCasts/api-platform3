@@ -1,0 +1,29 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index a36e181..e0cf731 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Tests\Functional;
+ 
++use App\Factory\ApiTokenFactory;
+ use App\Factory\DragonTreasureFactory;
+ use App\Factory\UserFactory;
+ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+@@ -64,11 +65,15 @@ class DragonTreasureResourceTest extends KernelTestCase
+ 
+     public function testPostToCreateTreasureWithApiKey(): void
+     {
++        $token = ApiTokenFactory::createOne([
++            'scopes' => []
++        ]);
++
+         $this->browser()
+             ->post('/api/treasures', [
+                 'json' => [],
+                 'headers' => [
+-                    'Authorization' => 'Bearer FOO'
++                    'Authorization' => 'Bearer '.$token->getToken()
+                 ]
+             ])
+             ->dump()

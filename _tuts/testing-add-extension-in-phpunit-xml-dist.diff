@@ -1,0 +1,15 @@
+diff --git a/phpunit.xml.dist b/phpunit.xml.dist
+index af3f147..5e01b09 100644
+--- a/phpunit.xml.dist
++++ b/phpunit.xml.dist
+@@ -33,6 +33,10 @@
+         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+     </listeners>
+ 
++    <extensions>
++        <extension class="Zenstruck\Browser\Test\BrowserExtension" />
++    </extensions>
++
+     <!-- Run `composer require symfony/panther` before enabling this extension -->
+     <!--
+     <extensions>

@@ -1,0 +1,20 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index fb5d1e5..c1a49e6 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -61,4 +61,15 @@ class DragonTreasureResourceTest extends KernelTestCase
+             ->assertStatus(201)
+         ;
+     }
++
++    public function testPostToCreateTreasureWithApiKey(): void
++    {
++        $this->browser()
++            ->post('/api/treasures', [
++                'json' => [],
++            ])
++            ->dump()
++            ->assertStatus(422)
++        ;
++    }
+ }

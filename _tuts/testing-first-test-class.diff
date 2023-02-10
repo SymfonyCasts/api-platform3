@@ -1,0 +1,16 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+new file mode 100644
+index 0000000..a54ff71
+--- /dev/null
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -0,0 +1,10 @@
++<?php
++
++namespace App\Tests\Functional;
++
++use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
++
++class DragonTreasureResourceTest extends KernelTestCase
++{
++
++}

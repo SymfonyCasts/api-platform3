@@ -1,0 +1,93 @@
+diff --git a/composer.json b/composer.json
+index 4c78a27..aa6da28 100644
+--- a/composer.json
++++ b/composer.json
+@@ -87,6 +87,7 @@
+     },
+     "require-dev": {
+         "doctrine/doctrine-fixtures-bundle": "^3.4",
++        "mtdowling/jmespath.php": "^2.6",
+         "phpunit/phpunit": "^9.5",
+         "symfony/browser-kit": "6.2.*",
+         "symfony/css-selector": "6.2.*",
+diff --git a/composer.lock b/composer.lock
+index 15f288a..c8681d5 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,7 +4,7 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+         "This file is @generated automatically"
+     ],
+-    "content-hash": "3618ae1130be293162460b92cb92f486",
++    "content-hash": "1d3d29a6559d0dfd066b3d837c30dcc3",
+     "packages": [
+         {
+             "name": "api-platform/core",
+@@ -6961,6 +6961,67 @@
+             ],
+             "time": "2023-02-06T13:46:10+00:00"
+         },
++        {
++            "name": "mtdowling/jmespath.php",
++            "version": "2.6.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/jmespath/jmespath.php.git",
++                "reference": "9b87907a81b87bc76d19a7fb2d61e61486ee9edb"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/9b87907a81b87bc76d19a7fb2d61e61486ee9edb",
++                "reference": "9b87907a81b87bc76d19a7fb2d61e61486ee9edb",
++                "shasum": ""
++            },
++            "require": {
++                "php": "^5.4 || ^7.0 || ^8.0",
++                "symfony/polyfill-mbstring": "^1.17"
++            },
++            "require-dev": {
++                "composer/xdebug-handler": "^1.4 || ^2.0",
++                "phpunit/phpunit": "^4.8.36 || ^7.5.15"
++            },
++            "bin": [
++                "bin/jp.php"
++            ],
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.6-dev"
++                }
++            },
++            "autoload": {
++                "files": [
++                    "src/JmesPath.php"
++                ],
++                "psr-4": {
++                    "JmesPath\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Declaratively specify how to extract elements from a JSON document",
++            "keywords": [
++                "json",
++                "jsonpath"
++            ],
++            "support": {
++                "issues": "https://github.com/jmespath/jmespath.php/issues",
++                "source": "https://github.com/jmespath/jmespath.php/tree/2.6.1"
++            },
++            "time": "2021-06-14T00:11:39+00:00"
++        },
+         {
+             "name": "myclabs/deep-copy",
+             "version": "1.11.0",
