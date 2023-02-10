@@ -214,7 +214,32 @@
             "id": "scopes-call-user-markastokenauthenticated-in-handler",
             "name": "Scopes: Call $user->markAsTokenAuthenticated() in handler",
             "description": null
+        },
+        {
+            "id": "scopes-add-role-hierarchy",
+            "name": "Scopes: Add role hierarchy",
+            "description": null
+        },
+        {
+            "id": "security-add-security-to-post-op",
+            "name": "Security: add security to Post op",
+            "description": null
+        },
+        {
+            "id": "security-add-also-to-put-and-delete",
+            "name": "Security: Add also to Put and Delete",
+            "description": null
+        },
+        {
+            "id": "security-add-security-to-user",
+            "name": "Security: Add security to User",
+            "description": null
+        },
+        {
+            "id": "security-public-access-on-user-post",
+            "name": "Security: PUBLIC_ACCESS on User Post",
+            "description": null
         }
     ],
-    "sha": "4d25c55dddab2668ce9d43d1ea60a070769e6c2d"
+    "sha": "9639d77bafe549394a07ec000b9c2255df5a57e4"
 }

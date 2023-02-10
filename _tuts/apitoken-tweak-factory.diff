@@ -1,5 +1,26 @@
+diff --git a/src/Entity/ApiToken.php b/src/Entity/ApiToken.php
+index 65fb949..414c5a2 100644
+--- a/src/Entity/ApiToken.php
++++ b/src/Entity/ApiToken.php
+@@ -10,6 +10,16 @@ class ApiToken
+ {
+     private const PERSONAL_ACCESS_TOKEN_PREFIX = 'tcp_';
+ 
++    public const SCOPE_USER_EDIT = 'ROLE_USER_EDIT';
++    public const SCOPE_TREASURE_CREATE = 'ROLE_TREASURE_CREATE';
++    public const SCOPE_TREASURE_EDIT = 'ROLE_TREASURE_EDIT';
++
++    public const SCOPES = [
++        self::SCOPE_USER_EDIT => 'Edit User',
++        self::SCOPE_TREASURE_CREATE => 'Create Treasures',
++        self::SCOPE_TREASURE_EDIT => 'Edit Treasures',
++    ];
++
+     #[ORM\Id]
+     #[ORM\GeneratedValue]
+     #[ORM\Column]
 diff --git a/src/Factory/ApiTokenFactory.php b/src/Factory/ApiTokenFactory.php
-index 490d37a..b497ce8 100644
+index 490d37a..652a4b4 100644
 --- a/src/Factory/ApiTokenFactory.php
 +++ b/src/Factory/ApiTokenFactory.php
 @@ -48,8 +48,10 @@ final class ApiTokenFactory extends ModelFactory
@@ -9,8 +30,8 @@ index 490d37a..b497ce8 100644
 -            'scopes' => [],
 -            'token' => self::faker()->text(64),
 +            'scopes' => [
-+                'ROLE_TREASURE_CREATE',
-+                'ROLE_USER_EDIT'
++                ApiToken::SCOPE_TREASURE_CREATE,
++                ApiToken::SCOPE_USER_EDIT,
 +            ],
          ];
      }

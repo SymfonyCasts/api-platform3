@@ -1,0 +1,27 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 7b90493..3f1b343 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+ use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+ use ApiPlatform\Metadata\ApiFilter;
+ use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\Delete;
+ use ApiPlatform\Metadata\Get;
+ use ApiPlatform\Metadata\GetCollection;
+ use ApiPlatform\Metadata\Link;
+@@ -37,8 +38,13 @@ use function Symfony\Component\String\u;
+         new Post(
+             security: 'is_granted("ROLE_USER")',
+         ),
+-        new Put(),
++        new Put(
++            security: 'is_granted("ROLE_USER")',
++        ),
+         new Patch(),
++        new Delete(
++            security: 'is_granted("ROLE_ADMIN")',
++        ),
+     ],
+     formats: [
+         'jsonld',

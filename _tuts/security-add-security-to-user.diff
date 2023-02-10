@@ -1,0 +1,20 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 897f9ec..8f66599 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
+ #[ApiResource(
+     normalizationContext: ['groups' => ['user:read']],
+     denormalizationContext: ['groups' => ['user:write']],
++    security: 'is_granted("ROLE_USER")',
+ )]
+ #[ApiResource(
+     uriTemplate: '/treasures/{treasure_id}/owner.{_format}',
+@@ -32,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
+         ),
+     ],
+     normalizationContext: ['groups' => ['user:read']],
++    security: 'is_granted("ROLE_USER")',
+ )]
+ #[ApiFilter(PropertyFilter::class)]
+ #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]

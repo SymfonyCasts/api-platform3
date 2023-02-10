@@ -27,10 +27,10 @@ index 97a492f..925b741 100644
  
  const onUserAuthenticated = async (userUri) => {
 diff --git a/src/Entity/ApiToken.php b/src/Entity/ApiToken.php
-index 65fb949..bccdf75 100644
+index 414c5a2..a8d651d 100644
 --- a/src/Entity/ApiToken.php
 +++ b/src/Entity/ApiToken.php
-@@ -85,4 +85,9 @@ class ApiToken
+@@ -95,4 +95,9 @@ class ApiToken
  
          return $this;
      }
