@@ -1,0 +1,18 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 52a4d8f..3075684 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -16,7 +16,12 @@ class DragonTreasureResourceTest extends ApiTestCase
+ 
+     public function testGetCollectionOfTreasures(): void
+     {
+-        DragonTreasureFactory::createMany(5);
++        DragonTreasureFactory::createMany(5, [
++            'isPublished' => true,
++        ]);
++        DragonTreasureFactory::createOne([
++            'isPublished' => false,
++        ]);
+ 
+         $this->browser()
+             ->get('/api/treasures')

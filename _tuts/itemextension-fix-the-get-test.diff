@@ -1,0 +1,74 @@
+diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
+index d515b0c..0aee6d2 100644
+--- a/src/DataFixtures/AppFixtures.php
++++ b/src/DataFixtures/AppFixtures.php
+@@ -21,6 +21,7 @@ class AppFixtures extends Fixture
+         DragonTreasureFactory::createMany(40, function () {
+             return [
+                 'owner' => UserFactory::random(),
++                'isPublished' => rand(0, 10) > 3,
+             ];
+         });
+ 
+diff --git a/src/Factory/DragonTreasureFactory.php b/src/Factory/DragonTreasureFactory.php
+index 51e308e..a44b163 100644
+--- a/src/Factory/DragonTreasureFactory.php
++++ b/src/Factory/DragonTreasureFactory.php
+@@ -49,7 +49,7 @@ final class DragonTreasureFactory extends ModelFactory
+         return [
+             'coolFactor' => self::faker()->numberBetween(1, 10),
+             'description' => self::faker()->paragraph(),
+-            'isPublished' => self::faker()->boolean(),
++            'isPublished' => true,
+             'name' => self::faker()->randomElement(self::TREASURE_NAMES),
+             'plunderedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year')),
+             'value' => self::faker()->numberBetween(1000, 1000000),
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index f0a328f..d49c9c4 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -96,7 +96,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+     public function testPatchToUpdateTreasure()
+     {
+         $user = UserFactory::createOne();
+-        $treasure = DragonTreasureFactory::createOne(['owner' => $user]);
++        $treasure = DragonTreasureFactory::createOne(['owner' => $user, 'isPublished' => true]);
+ 
+         $this->browser()
+             ->actingAs($user)
+@@ -138,7 +138,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+     {
+         $admin = UserFactory::new()->asAdmin()->create();
+         $treasure = DragonTreasureFactory::createOne([
+-            'isPublished' => false,
++            'isPublished' => true,
+         ]);
+ 
+         $this->browser()
+@@ -150,7 +150,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ])
+             ->assertStatus(200)
+             ->assertJsonMatches('value', 12345)
+-            ->assertJsonMatches('isPublished', false)
++            ->assertJsonMatches('isPublished', true)
+         ;
+     }
+ 
+@@ -158,7 +158,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+     {
+         $user = UserFactory::new()->create();
+         $treasure = DragonTreasureFactory::createOne([
+-            'isPublished' => false,
++            'isPublished' => true,
+             'owner' => $user,
+         ]);
+ 
+@@ -171,7 +171,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ])
+             ->assertStatus(200)
+             ->assertJsonMatches('value', 12345)
+-            ->assertJsonMatches('isPublished', false)
++            ->assertJsonMatches('isPublished', true)
+             ->assertJsonMatches('isMe', true)
+         ;
+     }

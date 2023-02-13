@@ -694,7 +694,117 @@
             "id": "validationsecurity-allow-admins-to-do-anything",
             "name": "ValidationSecurity: Allow admins to do anything",
             "description": null
+        },
+        {
+            "id": "embeddedsecurity-add-failing-test",
+            "name": "EmbeddedSecurity: Add failing test",
+            "description": null
+        },
+        {
+            "id": "embeddedsecurity-make-validator",
+            "name": "EmbeddedSecurity: make:validator",
+            "description": null
+        },
+        {
+            "id": "embeddedsecurity-basic-usage-and-setup",
+            "name": "EmbeddedSecurity: Basic usage and setup",
+            "description": null
+        },
+        {
+            "id": "embeddedsecurity-use-uow-to-get-original-data",
+            "name": "EmbeddedSecurity: Use UoW to get original data",
+            "description": null
+        },
+        {
+            "id": "embeddedsecurity-check-if-owner-is-changing",
+            "name": "EmbeddedSecurity: check if owner is changing",
+            "description": null
+        },
+        {
+            "id": "autosetowner-tweak-test-to-not-pass-owner",
+            "name": "AutoSetOwner: tweak test to not pass owner",
+            "description": null
+        },
+        {
+            "id": "autosetowner-remove-validation-constraint",
+            "name": "AutoSetOwner: Remove validation constraint",
+            "description": null
+        },
+        {
+            "id": "autosetowner-set-up-decoration",
+            "name": "AutoSetOwner: Set up decoration",
+            "description": null
+        },
+        {
+            "id": "autosetowner-complete-processor",
+            "name": "AutoSetOwner: complete processor",
+            "description": null
+        },
+        {
+            "id": "queryextension-adjust-test",
+            "name": "QueryExtension: adjust test",
+            "description": null
+        },
+        {
+            "id": "queryextension-bootstrap-class",
+            "name": "QueryExtension: Bootstrap class",
+            "description": null
+        },
+        {
+            "id": "queryextension-complete-logic",
+            "name": "QueryExtension: Complete logic",
+            "description": null
+        },
+        {
+            "id": "itemextension-add-test-for-unpublished-single-item",
+            "name": "ItemExtension: add test for unpublished single item",
+            "description": null
+        },
+        {
+            "id": "itemextension-add-interface",
+            "name": "ItemExtension: Add interface",
+            "description": null
+        },
+        {
+            "id": "itemextension-extract-query-to-private-method",
+            "name": "ItemExtension: Extract query to private method",
+            "description": null
+        },
+        {
+            "id": "itemextension-fix-the-get-test",
+            "name": "ItemExtension: Fix the Get test",
+            "description": null
+        },
+        {
+            "id": "itemextension-duplicate-part-of-test",
+            "name": "ItemExtension: Duplicate part of test",
+            "description": null
+        },
+        {
+            "id": "itemextension-finish-test",
+            "name": "ItemExtension: finish test",
+            "description": null
+        },
+        {
+            "id": "itemextension-add-owner-or-to-query",
+            "name": "ItemExtension: Add owner OR to query",
+            "description": null
+        },
+        {
+            "id": "filterrelatedcollections-add-failing-test",
+            "name": "FilterRelatedCollections: add failing test",
+            "description": null
+        },
+        {
+            "id": "filterrelatedcollections-add-getpublisheddragontreasures",
+            "name": "FilterRelatedCollections: Add getPublishedDragonTreasures()",
+            "description": null
+        },
+        {
+            "id": "filterrelatedcollections-expose-new-method-in-api",
+            "name": "FilterRelatedCollections: Expose new method in API",
+            "description": null
         }
     ],
-    "sha": "a2a2fabee53c40074975e99709be148a87adeb73"
+    "sha": "2ac1f9b9ea7b55352c8e8bcbe928089f2af66210"
 }

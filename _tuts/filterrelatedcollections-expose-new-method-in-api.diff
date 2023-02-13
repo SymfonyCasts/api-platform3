@@ -1,0 +1,22 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 0774786..c4d2eff 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -99,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     private ?string $username = null;
+ 
+     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
+-    #[Groups(['user:read', 'user:write'])]
++    #[Groups(['user:write'])]
+     #[Assert\Valid]
+     #[TreasuresAllowedOwnerChange]
+     private Collection $dragonTreasures;
+@@ -212,6 +212,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         return $this->dragonTreasures;
+     }
+ 
++    #[Groups(['user:read'])]
++    #[SerializedName('dragonTreasures')]
+     public function getPublishedDragonTreasures(): Collection
+     {
+         return $this->dragonTreasures->filter(static function (DragonTreasure $treasure) {

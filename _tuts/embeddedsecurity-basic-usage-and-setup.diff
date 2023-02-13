@@ -1,0 +1,49 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 87e3e0a..e0ff6a2 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
+ use ApiPlatform\Metadata\Put;
+ use ApiPlatform\Serializer\Filter\PropertyFilter;
+ use App\Repository\UserRepository;
++use App\Validator\TreasuresAllowedOwnerChange;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
+ use Doctrine\ORM\Mapping as ORM;
+@@ -100,6 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
+     #[Groups(['user:read', 'user:write'])]
+     #[Assert\Valid]
++    #[TreasuresAllowedOwnerChange]
+     private Collection $dragonTreasures;
+ 
+     #[ORM\OneToMany(mappedBy: 'ownedBy', targetEntity: ApiToken::class)]
+diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+index 2f81f1e..ee22964 100644
+--- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
++++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Validator;
+ 
++use Doctrine\Common\Collections\Collection;
+ use Symfony\Component\Validator\Constraint;
+ use Symfony\Component\Validator\ConstraintValidator;
+ 
+@@ -9,12 +10,15 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
+ {
+     public function validate($value, Constraint $constraint)
+     {
+-        /* @var App\Validator\TreasuresAllowedOwnerChange $constraint */
++        assert($constraint instanceof TreasuresAllowedOwnerChange);
+ 
+         if (null === $value || '' === $value) {
+             return;
+         }
+ 
++        // meant to be used above a Collection field
++        assert($value instanceof Collection);
++
+         // TODO: implement the validation here
+         $this->context->buildViolation($constraint->message)
+             ->setParameter('{{ value }}', $value)

@@ -1,0 +1,29 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index d49c9c4..8c66af1 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -134,6 +134,24 @@ class DragonTreasureResourceTest extends ApiTestCase
+         ;
+     }
+ 
++    public function testPatchUnpublishedWorks()
++    {
++        $user = UserFactory::createOne();
++        $treasure = DragonTreasureFactory::createOne(['owner' => $user]);
++
++        $this->browser()
++            ->actingAs($user)
++            ->patch('/api/treasures/'.$treasure->getId(), [
++                'json' => [
++                    'value' => 12345,
++                ],
++            ])
++            ->assertStatus(200)
++            ->assertJsonMatches('value', 12345)
++        ;
++    }
++
++
+     public function testAdminCanPatchToEditTreasure(): void
+     {
+         $admin = UserFactory::new()->asAdmin()->create();

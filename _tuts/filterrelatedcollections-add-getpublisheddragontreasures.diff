@@ -1,0 +1,18 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index e0ff6a2..0774786 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -212,6 +212,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         return $this->dragonTreasures;
+     }
+ 
++    public function getPublishedDragonTreasures(): Collection
++    {
++        return $this->dragonTreasures->filter(static function (DragonTreasure $treasure) {
++            return $treasure->getIsPublished();
++        });
++    }
++
+     public function addDragonTreasure(DragonTreasure $treasure): self
+     {
+         if (!$this->dragonTreasures->contains($treasure)) {

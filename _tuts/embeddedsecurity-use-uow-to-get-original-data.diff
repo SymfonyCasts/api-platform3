@@ -1,0 +1,38 @@
+diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+index ee22964..f78f424 100644
+--- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
++++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+@@ -2,12 +2,18 @@
+ 
+ namespace App\Validator;
+ 
++use App\Entity\DragonTreasure;
+ use Doctrine\Common\Collections\Collection;
++use Doctrine\ORM\EntityManagerInterface;
+ use Symfony\Component\Validator\Constraint;
+ use Symfony\Component\Validator\ConstraintValidator;
+ 
+ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
+ {
++    public function __construct(private EntityManagerInterface $entityManager)
++    {
++    }
++
+     public function validate($value, Constraint $constraint)
+     {
+         assert($constraint instanceof TreasuresAllowedOwnerChange);
+@@ -19,6 +25,14 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
+         // meant to be used above a Collection field
+         assert($value instanceof Collection);
+ 
++        $unitOfWork = $this->entityManager->getUnitOfWork();
++        foreach ($value as $dragonTreasure) {
++            assert($dragonTreasure instanceof DragonTreasure);
++
++            $originalData = $this->entityManager->getUnitOfWork()->getOriginalEntityData($dragonTreasure);
++            dd($dragonTreasure, $originalData);
++        }
++
+         // TODO: implement the validation here
+         $this->context->buildViolation($constraint->message)
+             ->setParameter('{{ value }}', $value)
