@@ -1,0 +1,29 @@
+diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
+index 1020171..12265c3 100644
+--- a/src/Normalizer/AddOwnerGroupsNormalizer.php
++++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
+@@ -4,9 +4,11 @@ namespace App\Normalizer;
+ 
+ use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
++use Symfony\Component\Serializer\SerializerAwareInterface;
++use Symfony\Component\Serializer\SerializerInterface;
+ 
+ #[AsDecorator('api_platform.jsonld.normalizer.item')]
+-class AddOwnerGroupsNormalizer implements NormalizerInterface
++class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareInterface
+ {
+     public function __construct(private NormalizerInterface $decorated)
+     {
+@@ -23,4 +25,11 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface
+     {
+         return $this->decorated->supportsNormalization($data, $format);
+     }
++
++    public function setSerializer(SerializerInterface $serializer)
++    {
++        if ($this->decorated instanceof SerializerAwareInterface) {
++            $this->decorated->setSerializer($serializer);
++        }
++    }
+ }

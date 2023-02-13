@@ -1,0 +1,11 @@
+diff --git a/src/Validator/IsValidOwner.php b/src/Validator/IsValidOwner.php
+index bc0debe..034ceda 100644
+--- a/src/Validator/IsValidOwner.php
++++ b/src/Validator/IsValidOwner.php
+@@ -16,5 +16,5 @@ class IsValidOwner extends Constraint
+      * Any public properties become valid options for the annotation.
+      * Then, use these in your validator class.
+      */
+-    public $message = 'The value "{{ value }}" is not valid.';
++    public string $message = 'You are not allowed to set the owner to this value.';
+ }

@@ -541,25 +541,160 @@
             "description": null
         },
         {
-            "id": "stateprocessor-add-test-for-patching-user",
-            "name": "StateProcessor: Add test for patching user",
+            "id": "patch-add-test-for-patching-user",
+            "name": "Patch: Add test for patching user",
             "description": null
         },
         {
-            "id": "stateprocessor-customize-the-test",
-            "name": "StateProcessor: customize the test",
+            "id": "patch-customize-the-test",
+            "name": "Patch: customize the test",
             "description": null
         },
         {
-            "id": "stateprocessor-add-header",
-            "name": "StateProcessor: Add header",
+            "id": "patch-add-header",
+            "name": "Patch: Add header",
             "description": null
         },
         {
-            "id": "stateprocessor-add-validation-group",
-            "name": "StateProcessor: Add validation group",
+            "id": "patch-add-validation-group",
+            "name": "Patch: Add validation group",
+            "description": null
+        },
+        {
+            "id": "delete-me-1",
+            "name": "delete me 1",
+            "description": null
+        },
+        {
+            "id": "delete-me-2",
+            "name": "delete me 2",
+            "description": null
+        },
+        {
+            "id": "dynamicgroups-add-admin-read-admin-write",
+            "name": "DynamicGroups: Add admin:read, admin:write",
+            "description": null
+        },
+        {
+            "id": "dynamicgroups-bootstrap-context-builder",
+            "name": "DynamicGroups: Bootstrap context builder",
+            "description": null
+        },
+        {
+            "id": "dynamicgroups-implement-decoration",
+            "name": "DynamicGroups: Implement decoration",
+            "description": null
+        },
+        {
+            "id": "dynamicgroups-add-asdecorator",
+            "name": "DynamicGroups: Add AsDecorator",
+            "description": null
+        },
+        {
+            "id": "dynamicgroups-add-dynamic-groups",
+            "name": "DynamicGroups: Add dynamic groups",
+            "description": null
+        },
+        {
+            "id": "ownergroups-add-owner-read-group",
+            "name": "OwnerGroups: add owner:read group",
+            "description": null
+        },
+        {
+            "id": "ownergroups-create-normalizer-class",
+            "name": "OwnerGroups: Create normalizer class",
+            "description": null
+        },
+        {
+            "id": "ownergroups-add-array-context-arg",
+            "name": "OwnerGroups: Add array $context arg",
+            "description": null
+        },
+        {
+            "id": "ownergroups-set-up-the-decoration",
+            "name": "OwnerGroups: Set up the decoration",
+            "description": null
+        },
+        {
+            "id": "ownergroups-asdecorator",
+            "name": "OwnerGroups: AsDecorator",
+            "description": null
+        },
+        {
+            "id": "ownergroups-fix-decorated-service-id",
+            "name": "OwnerGroups: Fix decorated service id",
+            "description": null
+        },
+        {
+            "id": "ownergroups-add-serializerawareinterface",
+            "name": "OwnerGroups: Add SerializerAwareInterface",
+            "description": null
+        },
+        {
+            "id": "ownergroups-add-dynamic-group",
+            "name": "OwnerGroups: Add dynamic group",
+            "description": null
+        },
+        {
+            "id": "customfield-tweak-test-for-isme",
+            "name": "CustomField: Tweak test for isMe",
+            "description": null
+        },
+        {
+            "id": "customfield-add-isme-in-normalizer",
+            "name": "CustomField: Add isMe in normalizer",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-remove-securitypostdenormalize",
+            "name": "ValidationSecurity: Remove securityPostDenormalize",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-change-assert-to-422",
+            "name": "ValidationSecurity: Change assert to 422",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-make-validator",
+            "name": "ValidationSecurity: make:validator",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-add-constraint-to-dragontreasure-owner",
+            "name": "ValidationSecurity: Add constraint to DragonTreasure.owner",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-tweak-default-message",
+            "name": "ValidationSecurity: tweak default message",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-start-to-implement-constraint",
+            "name": "ValidationSecurity: start to implement constraint",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-add-notblank-constraint",
+            "name": "ValidationSecurity: Add NotBlank constraint",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-inject-security",
+            "name": "ValidationSecurity: Inject Security",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-check-security",
+            "name": "ValidationSecurity: Check security",
+            "description": null
+        },
+        {
+            "id": "validationsecurity-allow-admins-to-do-anything",
+            "name": "ValidationSecurity: Allow admins to do anything",
             "description": null
         }
     ],
-    "sha": "2a27f196cbf6997b630c2eac35dce87f5bc94a68"
+    "sha": "a2a2fabee53c40074975e99709be148a87adeb73"
 }

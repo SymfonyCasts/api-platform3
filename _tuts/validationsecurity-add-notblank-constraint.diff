@@ -1,0 +1,12 @@
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index b18303f..41add35 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -134,6 +134,7 @@ class DragonTreasure
+     #[Groups(['treasure:read', 'treasure:write'])]
+     #[Assert\Valid]
+     #[IsValidOwner]
++    #[Assert\NotNull]
+     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+     private ?User $owner = null;
+ 

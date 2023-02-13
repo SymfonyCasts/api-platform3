@@ -11,7 +11,7 @@ index 3713348..94fd275 100644
  
      enable_docs: false
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 0c60f2c..689ede9 100644
+index 6477d85..67459ee 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -41,7 +41,6 @@ use function Symfony\Component\String\u;

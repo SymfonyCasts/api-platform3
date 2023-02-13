@@ -1,0 +1,21 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 62eaef1..5edd7df 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -139,7 +139,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+         ;
+     }
+ 
+-    public function testOwnerCanSeeIsPublishedField(): void
++    public function testOwnerCanSeeIsPublishedAndIsMeFields(): void
+     {
+         $user = UserFactory::new()->create();
+         $treasure = DragonTreasureFactory::createOne([
+@@ -157,6 +157,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ->assertStatus(200)
+             ->assertJsonMatches('value', 12345)
+             ->assertJsonMatches('isPublished', false)
++            ->assertJsonMatches('isMe', true)
+         ;
+     }
+ }

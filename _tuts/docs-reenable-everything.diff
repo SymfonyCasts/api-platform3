@@ -18,7 +18,7 @@ index 94fd275..374fb52 100644
 +#    enable_swagger: false
 +#    enable_swagger_ui: false
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 689ede9..0c60f2c 100644
+index 67459ee..6477d85 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -41,6 +41,7 @@ use function Symfony\Component\String\u;

@@ -1,0 +1,20 @@
+diff --git a/src/ApiPlatform/AdminGroupsContextBuilder.php b/src/ApiPlatform/AdminGroupsContextBuilder.php
+new file mode 100644
+index 0000000..65f1949
+--- /dev/null
++++ b/src/ApiPlatform/AdminGroupsContextBuilder.php
+@@ -0,0 +1,14 @@
++<?php
++
++namespace App\ApiPlatform;
++
++use ApiPlatform\Serializer\SerializerContextBuilderInterface;
++use Symfony\Component\HttpFoundation\Request;
++
++class AdminGroupsContextBuilder implements SerializerContextBuilderInterface
++{
++    public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null): array
++    {
++        // TODO: Implement createFromRequest() method.
++    }
++}

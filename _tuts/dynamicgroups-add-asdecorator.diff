@@ -1,0 +1,15 @@
+diff --git a/src/ApiPlatform/AdminGroupsContextBuilder.php b/src/ApiPlatform/AdminGroupsContextBuilder.php
+index 9b432ce..b02d480 100644
+--- a/src/ApiPlatform/AdminGroupsContextBuilder.php
++++ b/src/ApiPlatform/AdminGroupsContextBuilder.php
+@@ -3,8 +3,10 @@
+ namespace App\ApiPlatform;
+ 
+ use ApiPlatform\Serializer\SerializerContextBuilderInterface;
++use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+ use Symfony\Component\HttpFoundation\Request;
+ 
++#[AsDecorator('api_platform.serializer.context_builder')]
+ class AdminGroupsContextBuilder implements SerializerContextBuilderInterface
+ {
+     public function __construct(private SerializerContextBuilderInterface $decorated)

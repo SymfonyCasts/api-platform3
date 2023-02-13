@@ -1,12 +1,13 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index bf03117..aacc035 100644
+index ab473de..a922f7e 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
-@@ -125,6 +125,7 @@ class DragonTreasure
+@@ -126,7 +126,7 @@ class DragonTreasure
  
      #[ORM\Column]
      #[ApiFilter(BooleanFilter::class)]
-+    #[Groups(['treasure:read', 'treasure:write'])]
+-    #[Groups(['admin:read', 'admin:write'])]
++    #[Groups(['admin:read', 'admin:write', 'owner:read'])]
      private bool $isPublished = false;
  
      #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
