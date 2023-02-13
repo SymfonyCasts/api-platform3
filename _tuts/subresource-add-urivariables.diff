@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 3e8b1e1..f7227b3 100644
+index 3e8b1e1..c1b35cc 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiFilter;
@@ -16,7 +16,7 @@ index 3e8b1e1..f7227b3 100644
      operations: [new GetCollection()],
 +    uriVariables: [
 +        'user_id' => new Link(
-+            fromProperty: 'treasures',
++            fromProperty: 'dragonTreasures',
 +            fromClass: User::class,
 +        ),
 +    ],
