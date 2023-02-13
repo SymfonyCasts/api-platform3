@@ -1,0 +1,21 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index b4d9e15..87e3e0a 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
+         new GetCollection(),
+         new Post(
+             security: 'is_granted("PUBLIC_ACCESS")',
++            validationContext: ['groups' => ['Default', 'postValidation']],
+         ),
+         new Put(),
+         new Patch(),
+@@ -88,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+     #[Groups(['user:write'])]
+     #[SerializedName('password')]
+-    #[Assert\NotBlank]
++    #[Assert\NotBlank(groups: ['postValidation'])]
+     private ?string $plainPassword = null;
+ 
+     #[ORM\Column(length: 255, unique: true)]

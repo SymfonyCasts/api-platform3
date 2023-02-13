@@ -464,7 +464,102 @@
             "id": "voter-allow-admin-access",
             "name": "Voter: Allow admin access",
             "description": null
+        },
+        {
+            "id": "conditionalfield-make-ispublished-readable-writable",
+            "name": "ConditionalField: make isPublished readable+writable",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-add-apiproperty-with-readable",
+            "name": "ConditionalField: Add ApiProperty with readable",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-add-security-for-role-admin",
+            "name": "ConditionalField: Add security for ROLE_ADMIN",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-expect-field-for-admins",
+            "name": "ConditionalField: Expect field for admins",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-bootstrap-method-checking-owner",
+            "name": "ConditionalField: Bootstrap method checking owner",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-tweak-test",
+            "name": "ConditionalField: Tweak test",
+            "description": null
+        },
+        {
+            "id": "conditionalfield-use-voter",
+            "name": "ConditionalField: Use voter",
+            "description": null
+        },
+        {
+            "id": "password-bootstrap-user-test",
+            "name": "Password: Bootstrap User test",
+            "description": null
+        },
+        {
+            "id": "password-fill-in-test",
+            "name": "Password: Fill in test",
+            "description": null
+        },
+        {
+            "id": "password-add-plainpassword-property",
+            "name": "Password: Add plainPassword property",
+            "description": null
+        },
+        {
+            "id": "password-expose-in-api-as-password",
+            "name": "Password: Expose in API as password",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-make-state-processor",
+            "name": "StateProcessor: make:state-processor",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-set-up-as-decorator",
+            "name": "StateProcessor: Set up as decorator",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-hash-password",
+            "name": "StateProcessor: hash password",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-add-password-validation",
+            "name": "StateProcessor: Add password validation",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-add-test-for-patching-user",
+            "name": "StateProcessor: Add test for patching user",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-customize-the-test",
+            "name": "StateProcessor: customize the test",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-add-header",
+            "name": "StateProcessor: Add header",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-add-validation-group",
+            "name": "StateProcessor: Add validation group",
+            "description": null
         }
     ],
-    "sha": "3029f442448a5b858d0f22ef0c144524773fd947"
+    "sha": "2a27f196cbf6997b630c2eac35dce87f5bc94a68"
 }

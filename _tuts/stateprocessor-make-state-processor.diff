@@ -1,0 +1,20 @@
+diff --git a/src/State/UserHashPasswordStateProcessor.php b/src/State/UserHashPasswordStateProcessor.php
+new file mode 100644
+index 0000000..4ad929d
+--- /dev/null
++++ b/src/State/UserHashPasswordStateProcessor.php
+@@ -0,0 +1,14 @@
++<?php
++
++namespace App\State;
++
++use ApiPlatform\Metadata\Operation;
++use ApiPlatform\State\ProcessorInterface;
++
++class UserHashPasswordStateProcessor implements ProcessorInterface
++{
++    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
++    {
++        // Handle the state
++    }
++}
