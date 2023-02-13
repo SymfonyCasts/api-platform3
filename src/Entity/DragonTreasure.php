@@ -59,7 +59,7 @@ use function Symfony\Component\String\u;
     operations: [new GetCollection()],
     uriVariables: [
         'user_id' => new Link(
-            fromProperty: 'treasures',
+            fromProperty: 'dragonTreasures',
             fromClass: User::class,
         ),
     ],
