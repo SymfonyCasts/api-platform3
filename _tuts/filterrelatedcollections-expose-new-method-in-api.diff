@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 0774786..c4d2eff 100644
+index c53765f..50c6f7d 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -99,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -11,7 +11,7 @@ index 0774786..c4d2eff 100644
      #[Assert\Valid]
      #[TreasuresAllowedOwnerChange]
      private Collection $dragonTreasures;
-@@ -212,6 +212,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -210,6 +210,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
          return $this->dragonTreasures;
      }
  

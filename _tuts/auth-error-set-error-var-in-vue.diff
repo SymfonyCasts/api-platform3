@@ -1,5 +1,5 @@
 diff --git a/assets/vue/LoginForm.vue b/assets/vue/LoginForm.vue
-index 45710b0..628ac02 100644
+index 621add7..d619152 100644
 --- a/assets/vue/LoginForm.vue
 +++ b/assets/vue/LoginForm.vue
 @@ -82,8 +82,7 @@ const handleSubmit = async () => {

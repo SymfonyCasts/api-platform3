@@ -23,7 +23,7 @@ index bc8a59d..efe45ca 100644
  #[ApiFilter(PropertyFilter::class)]
  #[ApiFilter(SearchFilter::class, properties: [
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 7b6f1e7..13dd326 100644
+index a2cc714..3127b93 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -38,6 +38,9 @@ use Symfony\Component\Validator\Constraints as Assert;

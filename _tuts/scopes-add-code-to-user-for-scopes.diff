@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 2c348c9..897f9ec 100644
+index 2c348c9..3f8208d 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -12,23 +12,23 @@ index 2c348c9..897f9ec 100644
      /**
       * @var string The hashed password
       */
-@@ -114,6 +117,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -110,7 +113,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+      */
+     public function getRoles(): array
+     {
+-        $roles = $this->roles;
++        if (null === $this->accessTokenScopes) {
++            // logged in via the full user mechanism
++            $roles = $this->roles;
++            $roles[] = 'ROLE_FULL_USER';
++        } else {
++            $roles = $this->accessTokenScopes;
++        }
++
          // guarantee every user at least has ROLE_USER
          $roles[] = 'ROLE_USER';
  
-+        if (null === $this->accessTokenScopes) {
-+            // logged in via the full user mechanism
-+            $roles[] = 'ROLE_FULL_USER';
-+
-+            return $roles;
-+        }
-+
-+        $roles = array_merge($roles, $this->accessTokenScopes);
-+
-         return array_unique($roles);
-     }
- 
-@@ -231,4 +243,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -231,4 +241,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
              ->toArray()
          ;
      }

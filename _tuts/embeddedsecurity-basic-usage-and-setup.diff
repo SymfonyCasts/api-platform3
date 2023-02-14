@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 87e3e0a..e0ff6a2 100644
+index 171f507..43560c3 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
