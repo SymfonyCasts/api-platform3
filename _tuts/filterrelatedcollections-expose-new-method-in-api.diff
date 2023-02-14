@@ -1,8 +1,8 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index c53765f..50c6f7d 100644
+index 1cff724..1f57d4d 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
-@@ -99,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -103,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      private ?string $username = null;
  
      #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
@@ -11,7 +11,7 @@ index c53765f..50c6f7d 100644
      #[Assert\Valid]
      #[TreasuresAllowedOwnerChange]
      private Collection $dragonTreasures;
-@@ -210,6 +210,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -214,6 +214,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
          return $this->dragonTreasures;
      }
  

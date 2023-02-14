@@ -1,8 +1,8 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 43560c3..c53765f 100644
+index a729faf..1cff724 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
-@@ -210,6 +210,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+@@ -214,6 +214,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
          return $this->dragonTreasures;
      }
  

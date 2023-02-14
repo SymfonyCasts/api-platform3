@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index aacc035..7fe9c89 100644
+index 4a62d66..8e23d56 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;

@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 83b81f6..171f507 100644
+index 2f01702..84a06a8 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
@@ -8,9 +8,9 @@ index 83b81f6..171f507 100644
              security: 'is_granted("PUBLIC_ACCESS")',
 +            validationContext: ['groups' => ['Default', 'postValidation']],
          ),
-         new Put(),
-         new Patch(),
-@@ -88,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         new Put(
+             security: 'is_granted("ROLE_USER_EDIT")'
+@@ -92,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  
      #[Groups(['user:write'])]
      #[SerializedName('password')]

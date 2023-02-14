@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 5edd7df..c3035d4 100644
+index b37dd1e..3e6f423 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -115,7 +115,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -132,7 +132,7 @@ class DragonTreasureResourceTest extends ApiTestCase
                      'owner' => '/api/users/'.$user2->getId(),
                  ],
              ])

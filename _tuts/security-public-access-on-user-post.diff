@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 2567ffd..a2cc714 100644
+index 2567ffd..e536566 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -4,8 +4,13 @@ namespace App\Entity;
@@ -16,7 +16,7 @@ index 2567ffd..a2cc714 100644
  use ApiPlatform\Serializer\Filter\PropertyFilter;
  use App\Repository\UserRepository;
  use Doctrine\Common\Collections\ArrayCollection;
-@@ -19,6 +24,17 @@ use Symfony\Component\Validator\Constraints as Assert;
+@@ -19,6 +24,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  #[ORM\Entity(repositoryClass: UserRepository::class)]
  #[ORM\Table(name: '`user`')]
  #[ApiResource(
@@ -27,8 +27,12 @@ index 2567ffd..a2cc714 100644
 +        new Post(
 +            security: 'is_granted("PUBLIC_ACCESS")',
 +        ),
-+        new Put(),
-+        new Patch(),
++        new Put(
++            security: 'is_granted("ROLE_USER_EDIT")'
++        ),
++        new Patch(
++            security: 'is_granted("ROLE_USER_EDIT")'
++        ),
 +        new Delete(),
 +    ],
      normalizationContext: ['groups' => ['user:read']],

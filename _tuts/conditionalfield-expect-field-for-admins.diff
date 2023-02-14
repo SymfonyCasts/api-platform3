@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 94378a6..51e833e 100644
+index 9559d65..ceb9274 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -122,7 +122,9 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -139,7 +139,9 @@ class DragonTreasureResourceTest extends ApiTestCase
      public function testAdminCanPatchToEditTreasure(): void
      {
          $admin = UserFactory::new()->asAdmin()->create();
@@ -13,7 +13,7 @@ index 94378a6..51e833e 100644
  
          $this->browser()
              ->actingAs($admin)
-@@ -133,6 +135,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -150,6 +152,7 @@ class DragonTreasureResourceTest extends ApiTestCase
              ])
              ->assertStatus(200)
              ->assertJsonMatches('value', 12345)

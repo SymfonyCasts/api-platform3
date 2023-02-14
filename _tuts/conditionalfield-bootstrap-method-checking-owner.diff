@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 51e833e..f8790c0 100644
+index ceb9274..e305e11 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -138,4 +138,24 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -155,4 +155,24 @@ class DragonTreasureResourceTest extends ApiTestCase
              ->assertJsonMatches('isPublished', false)
          ;
      }

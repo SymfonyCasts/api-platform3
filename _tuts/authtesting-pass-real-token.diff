@@ -1,21 +1,22 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 7b75151..86d9a76 100644
+index 7b75151..b61bb9b 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -2,6 +2,7 @@
+@@ -2,6 +2,8 @@
  
  namespace App\Tests\Functional;
  
++use App\Entity\ApiToken;
 +use App\Factory\ApiTokenFactory;
  use App\Factory\DragonTreasureFactory;
  use App\Factory\UserFactory;
  use Zenstruck\Browser\HttpOptions;
-@@ -61,11 +62,15 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -61,11 +63,15 @@ class DragonTreasureResourceTest extends ApiTestCase
  
      public function testPostToCreateTreasureWithApiKey(): void
      {
 +        $token = ApiTokenFactory::createOne([
-+            'scopes' => []
++            'scopes' => [ApiToken::SCOPE_TREASURE_CREATE]
 +        ]);
 +
          $this->browser()

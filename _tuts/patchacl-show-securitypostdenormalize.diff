@@ -1,11 +1,11 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 55ecb41..d93694e 100644
+index 8c09381..0e6e678 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -40,6 +40,7 @@ use function Symfony\Component\String\u;
          ),
          new Patch(
-             security: 'is_granted("ROLE_USER") and object.getOwner() == user',
+             security: 'is_granted("ROLE_TREASURE_EDIT") and object.getOwner() == user',
 +            securityPostDenormalize: 'object.getOwner() == user',
          ),
          new Delete(

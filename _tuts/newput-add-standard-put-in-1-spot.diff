@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index bc8a59d..efe45ca 100644
+index 4a0beac..86367e6 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -62,6 +62,9 @@ use function Symfony\Component\String\u;
@@ -23,10 +23,10 @@ index bc8a59d..efe45ca 100644
  #[ApiFilter(PropertyFilter::class)]
  #[ApiFilter(SearchFilter::class, properties: [
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index a2cc714..3127b93 100644
+index e536566..ab9ddcd 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
-@@ -38,6 +38,9 @@ use Symfony\Component\Validator\Constraints as Assert;
+@@ -42,6 +42,9 @@ use Symfony\Component\Validator\Constraints as Assert;
      normalizationContext: ['groups' => ['user:read']],
      denormalizationContext: ['groups' => ['user:write']],
      security: 'is_granted("ROLE_USER")',
@@ -36,7 +36,7 @@ index a2cc714..3127b93 100644
  )]
  #[ApiResource(
      uriTemplate: '/treasures/{treasure_id}/owner.{_format}',
-@@ -50,6 +53,9 @@ use Symfony\Component\Validator\Constraints as Assert;
+@@ -54,6 +57,9 @@ use Symfony\Component\Validator\Constraints as Assert;
      ],
      normalizationContext: ['groups' => ['user:read']],
      security: 'is_granted("ROLE_USER")',

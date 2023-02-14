@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 8c66af1..2c57ee2 100644
+index 524e465..b10ccdb 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -137,7 +137,10 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -154,7 +154,10 @@ class DragonTreasureResourceTest extends ApiTestCase
      public function testPatchUnpublishedWorks()
      {
          $user = UserFactory::createOne();

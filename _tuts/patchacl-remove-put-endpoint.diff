@@ -1,14 +1,14 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index efe45ca..be68443 100644
+index 86367e6..ed78896 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -38,9 +38,6 @@ use function Symfony\Component\String\u;
          new Post(
-             security: 'is_granted("ROLE_USER")',
+             security: 'is_granted("ROLE_TREASURE_CREATE")',
          ),
 -        new Put(
--            security: 'is_granted("ROLE_USER")',
+-            security: 'is_granted("ROLE_TREASURE_EDIT")',
 -        ),
          new Patch(
-             security: 'is_granted("ROLE_USER")',
+             security: 'is_granted("ROLE_TREASURE_EDIT")',
          ),

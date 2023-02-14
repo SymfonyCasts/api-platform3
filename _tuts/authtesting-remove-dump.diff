@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 86d9a76..f6cd236 100644
+index b61bb9b..300c297 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -73,7 +73,6 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -74,7 +74,6 @@ class DragonTreasureResourceTest extends ApiTestCase
                      'Authorization' => 'Bearer '.$token->getToken()
                  ]
              ])

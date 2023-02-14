@@ -381,6 +381,11 @@
             "description": null
         },
         {
+            "id": "authtesting-test-no-access-without-scope",
+            "name": "AuthTesting: Test no access without scope",
+            "description": null
+        },
+        {
             "id": "newput-add-standard-put-in-1-spot",
             "name": "NewPut: Add standard_put in 1 spot",
             "description": null
@@ -458,6 +463,11 @@
         {
             "id": "voter-allow-access-if-owner",
             "name": "Voter: allow access if owner",
+            "description": null
+        },
+        {
+            "id": "voter-check-for-role-treasure-edit",
+            "name": "Voter: Check for ROLE_TREASURE_EDIT",
             "description": null
         },
         {
@@ -806,5 +816,5 @@
             "description": null
         }
     ],
-    "sha": "02311c519e24d43d02e7cee25aee27e9d6f13278"
+    "sha": "d910199a37c4c80df847573a94f9b865a56ff843"
 }

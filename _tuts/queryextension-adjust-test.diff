@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 52a4d8f..3075684 100644
+index 2962741..5420729 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -16,7 +16,12 @@ class DragonTreasureResourceTest extends ApiTestCase

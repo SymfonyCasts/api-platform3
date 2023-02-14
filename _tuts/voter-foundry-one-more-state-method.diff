@@ -15,10 +15,10 @@ index 3b4c043..13adf18 100644
       * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
       *
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 5c9924f..4e32181 100644
+index ecebed8..6c156bf 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -121,6 +121,6 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -138,6 +138,6 @@ class DragonTreasureResourceTest extends ApiTestCase
  
      public function testAdminCanPatchToEditTreasure(): void
      {

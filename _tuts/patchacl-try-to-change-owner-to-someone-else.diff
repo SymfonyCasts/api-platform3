@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 44adec9..698009e 100644
+index 0adc9ab..22bc6fd 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -100,6 +100,19 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -117,6 +117,19 @@ class DragonTreasureResourceTest extends ApiTestCase
              ->patch('/api/treasures/'.$treasure->getId(), [
                  'json' => [
                      'value' => 6789,

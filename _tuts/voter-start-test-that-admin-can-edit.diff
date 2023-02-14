@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 698009e..b0b05f0 100644
+index 22bc6fd..0711688 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -118,4 +118,9 @@ class DragonTreasureResourceTest extends ApiTestCase
+@@ -135,4 +135,9 @@ class DragonTreasureResourceTest extends ApiTestCase
              ->assertStatus(403)
          ;
      }
