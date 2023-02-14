@@ -17,7 +17,7 @@
                 v-model="email"
                 type="email"
                 placeholder="Email">
-            <p class="mt-1 text-xs text-gray-500">Try: <a href="#" @click.prevent="loadEmailField">bernie@dragonmail.com</a></p>
+            <p class="mt-1 text-xs text-gray-500">Try: <a href="#" tabindex="-1" @click.prevent="loadEmailField">bernie@dragonmail.com</a></p>
         </div>
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
@@ -31,7 +31,7 @@
                 type="password"
                 placeholder="Password"
                 >
-            <p class="mt-1 text-xs text-gray-500">Try: <a href="#" @click.prevent="loadPasswordField">roar</a></p>
+            <p class="mt-1 text-xs text-gray-500">Try: <a href="#" tabindex="-1" @click.prevent="loadPasswordField">roar</a></p>
         </div>
         <div class="flex items-center justify-between">
             <button
