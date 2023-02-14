@@ -45,6 +45,9 @@ symfony console doctrine:migrations:migrate
 symfony console doctrine:fixtures:load
 ```
 
+If you're using something other than Postgresql, you can replace
+`doctrine:migrations:migrate` with `doctrine:schema:update --force`.
+
 If you do *not* want to use Docker, just make sure to start your own
 database server and update the `DATABASE_URL` environment variable in
 `.env` or `.env.local` before running the commands above.
