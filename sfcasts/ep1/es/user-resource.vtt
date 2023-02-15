@@ -1,0 +1,346 @@
+WEBVTT
+
+00:00:00.846 --> 00:00:01.096 align:middle
+Próximamente...
+
+00:00:01.096 --> 00:00:05.256 align:middle
+Tenemos nuestra nueva entidad user en,
+pero aún no forma parte de nuestra api.
+
+00:00:06.046 --> 00:00:08.746 align:middle
+¿Cómo hacemos que forme parte de nuestra api?
+
+00:00:08.746 --> 00:00:11.676 align:middle
+Ah, ya sabemos que es super sencillo.
+
+00:00:11.676 --> 00:00:15.006 align:middle
+Ve encima de la clase y añade
+el atributo de recurso API.
+
+00:00:16.026 --> 00:00:17.046 align:middle
+Actualiza la documentación.
+
+00:00:17.676 --> 00:00:18.576 align:middle
+Fíjate.
+
+00:00:18.746 --> 00:00:22.076 align:middle
+Seis nuevas rutas para
+nuestra entidad de usuario.
+
+00:00:22.076 --> 00:00:26.656 align:middle
+Gracias a nuestros fixtures, deberíamos
+poder ver los datos inmediatamente.
+
+00:00:27.316 --> 00:00:30.796 align:middle
+Intentaré obtener el punto final de
+la colección y echarle un vistazo.
+
+00:00:31.306 --> 00:00:32.826 align:middle
+Está vivo.
+
+00:00:33.336 --> 00:00:39.236 align:middle
+No. Es un poco raro que cosas como rollos
+y contraseñas aparezcan dentro de aquí.
+
+00:00:39.346 --> 00:00:41.896 align:middle
+Nos preocuparemos de eso en un segundo.
+
+00:00:41.896 --> 00:00:45.716 align:middle
+Rápidamente, quiero decir una
+cosa rápida sobre los ID UU. Como
+
+00:00:45.716 --> 00:00:52.696 align:middle
+puedes ver, estamos utilizando IDs
+autoincrementados dentro de nuestra api,
+
+00:00:52.696 --> 00:00:59.696 align:middle
+pero puedes utilizar un UU ID en su lugar.
+
+00:00:59.696 --> 00:01:02.626 align:middle
+Y de eso hablaremos en un futuro tutorial.
+
+00:01:03.236 --> 00:01:05.906 align:middle
+¿Por qué utilizar IDs UU?
+
+00:01:06.446 --> 00:01:10.256 align:middle
+Bueno, a veces puede hacerte la vida
+más fácil en JavaScript. En JavaScript
+
+00:01:10.256 --> 00:01:15.146 align:middle
+puedes, de hecho, generar el UU i d
+
+00:01:15.146 --> 00:01:18.516 align:middle
+en JavaScript y luego
+enviarlo a tu api. A veces
+
+00:01:18.876 --> 00:01:24.126 align:middle
+eso te hace la vida más fácil en
+JavaScript porque sabes cuál es el ID
+
+00:01:24.126 --> 00:01:29.086 align:middle
+de ese recurso inmediatamente, en lugar de tener
+que hacer la petición de la edad X, esperar a que
+
+00:01:29.086 --> 00:01:35.036 align:middle
+termine y luego obtener de vuelta el
+nuevo ID autoincrementado de todos modos.
+
+00:01:35.296 --> 00:01:37.946 align:middle
+API Platform sí suministra,
+sí admite UID UU. Hay
+
+00:01:37.946 --> 00:01:40.846 align:middle
+una forma de que añadas una
+nueva columna U I UU ID aquí
+
+00:01:40.846 --> 00:01:44.526 align:middle
+y le digas a API Platform
+que ése es tu identificador.
+
+00:01:45.036 --> 00:01:47.876 align:middle
+Si lo haces, una advertencia: en algunos
+motores de bases de datos , los UU
+
+00:01:47.876 --> 00:01:51.196 align:middle
+ID no son una buena clave
+primaria para el rendimiento.
+
+00:01:51.196 --> 00:01:54.926 align:middle
+Así que tal vez quieras mantener
+el id pero tener un segundo UU i d,
+
+00:01:54.926 --> 00:01:57.726 align:middle
+que es lo que en realidad
+utiliza una plataforma APAP,
+
+00:01:57.726 --> 00:02:01.506 align:middle
+pero eso depende de cuál sea
+tu motor de base de datos.
+
+00:02:01.506 --> 00:02:08.396 align:middle
+De todos modos, volviendo a nuestra entidad de usuario, está
+devolviendo demasiados campos y conocemos ese problema. Sabemos
+
+00:02:08.506 --> 00:02:11.936 align:middle
+cómo solucionar ese problema
+en el recurso API, vamos a
+
+00:02:12.166 --> 00:02:15.486 align:middle
+añadir una clave de contexto
+de normalización con grupos.
+
+00:02:15.486 --> 00:02:20.626 align:middle
+Establecer dos puntos de usuario leer para seguir
+ese mismo patrón que utilizamos en Dragon Treasure
+
+00:02:21.236 --> 00:02:25.236 align:middle
+y luego DN normalización contacto
+establecer dos puntos de usuario.
+
+00:02:25.236 --> 00:02:30.386 align:middle
+Ahora sólo podemos decorar los campos
+que realmente queremos devolver. Así
+
+00:02:30.386 --> 00:02:35.036 align:middle
+que no necesitamos devolver el ID porque siempre
+tenemos el at id, que es más útil de todos modos,
+
+00:02:35.446 --> 00:02:39.136 align:middle
+pero sí queremos devolver el correo electrónico,
+así que añadiré un atributo de grupo ahí,
+
+00:02:39.136 --> 00:02:43.526 align:middle
+pulsaré tabulador y obtendremos esa declaración
+de uso pass y right, y tendremos user calling read.
+
+00:02:43.856 --> 00:02:45.296 align:middle
+Y esto también es escribir
+también usuario llamando y Wright.
+
+00:02:45.296 --> 00:02:46.536 align:middle
+Ahora copia eso.
+
+00:02:46.776 --> 00:02:47.706 align:middle
+Bajemos aquí.
+
+00:02:47.706 --> 00:02:52.356 align:middle
+Contraseña, necesitamos que la
+contraseña sea escribible pero no legible.
+
+00:02:52.656 --> 00:02:55.496 align:middle
+Así que voy a usar los dos
+puntos de usuario justo aquí.
+
+00:02:55.496 --> 00:02:57.856 align:middle
+Ahora bien, esto todavía
+no es del todo correcto.
+
+00:02:58.076 --> 00:03:01.256 align:middle
+El campo de contraseña debe
+ser la contraseña cifrada
+
+00:03:01.496 --> 00:03:06.616 align:middle
+y no queremos que nuestros usuarios
+nos envíen una contraseña cifrada.
+
+00:03:06.616 --> 00:03:13.046 align:middle
+Lo que queremos es que nos envíen una contraseña
+sin formato y luego la convertimos en hash.
+
+00:03:13.686 --> 00:03:16.386 align:middle
+Eso es algo que resolveremos
+en un futuro tutorial
+
+00:03:16.616 --> 00:03:18.506 align:middle
+cuando hablemos más sobre el objeto usuario.
+
+00:03:18.866 --> 00:03:21.936 align:middle
+Pero esto será un comienzo
+suficientemente bueno por ahora.
+
+00:03:21.936 --> 00:03:22.766 align:middle
+Por encima de nombre de usuario.
+
+00:03:22.766 --> 00:03:27.546 align:middle
+Añadamos también usuario lectura
+y usuario escritura sobre eso.
+
+00:03:28.246 --> 00:03:34.306 align:middle
+Cool, así que vamos a refrescar y
+hermoso y probar nuestros puntos finales
+
+00:03:34.306 --> 00:03:39.726 align:middle
+y hermoso correo electrónico
+y nombre de usuario volver.
+
+00:03:40.266 --> 00:03:47.656 align:middle
+Y si fuéramos a crear un nuevo usuario, lo hacemos
+pasando email, nombre de usuario y contraseña.
+
+00:03:48.536 --> 00:03:50.456 align:middle
+Muy bien, ¿qué más nos falta?
+
+00:03:50.886 --> 00:03:53.216 align:middle
+¿Qué hay de las restricciones de validación?
+
+00:03:53.216 --> 00:03:59.206 align:middle
+Si ahora probamos nuestra ruta vacía,
+obtendremos ese desagradable aire 500.
+
+00:03:59.206 --> 00:04:01.596 align:middle
+Así que vamos a arreglar eso en una clase.
+
+00:04:01.596 --> 00:04:05.486 align:middle
+En realidad voy a empezar por encima de la clase
+asegurándome de que el correo electrónico
+
+00:04:05.486 --> 00:04:09.056 align:middle
+y el nombre de usuario son únicos para
+que podamos pasar la entidad única
+
+00:04:09.366 --> 00:04:14.576 align:middle
+Por encima de los campos de paso y
+haremos primero el correo electrónico.
+
+00:04:16.476 --> 00:04:25.126 align:middle
+Y si quieres, puedes pasar un mensaje a esto.
+
+00:04:25.126 --> 00:04:25.526 align:middle
+Precioso.
+
+00:04:25.816 --> 00:04:32.016 align:middle
+Y luego vamos a repetir lo mismo
+para el campo nombre de usuario.
+
+00:04:32.306 --> 00:04:36.766 align:middle
+Así que actualiza el campo
+y también el mensaje.
+
+00:04:36.766 --> 00:04:42.696 align:middle
+Muy bien, luego aquí abajo para el correo
+electrónico, vamos a querer que no esté en blanco.
+
+00:04:42.696 --> 00:04:50.106 align:middle
+Permíteme poner la afirmación delante de eso y sólo
+ajustaré la afirmación tú como la última vez.
+
+00:04:50.106 --> 00:04:54.106 align:middle
+Muy bien. Y luego una más, también
+podemos PA puede pasar esto,
+
+00:04:54.106 --> 00:04:58.886 align:middle
+las restricciones de correo electrónico, por lo
+que la dirección de correo electrónico válida.
+
+00:04:58.886 --> 00:05:03.656 align:middle
+Y luego lo único que necesitamos ahora
+es justo encima de nombre de usuario.
+
+00:05:03.656 --> 00:05:04.526 align:middle
+Añadiremos un espacio en blanco.
+
+00:05:04.526 --> 00:05:10.636 align:middle
+No me preocupa mucho la contraseña
+ahora mismo porque es un poco rara.
+
+00:05:10.636 --> 00:05:16.986 align:middle
+En fin. Muy bien , pues ahora si probamos cosas,
+déjame de hecho, pasemos sólo contraseña
+
+00:05:16.986 --> 00:05:21.106 align:middle
+y hermoso código de estado 4 22 y
+vemos los errores de validación.
+
+00:05:21.726 --> 00:05:24.176 align:middle
+Muy bien, entonces vamos
+a probar una cosa válida.
+
+00:05:24.176 --> 00:05:29.426 align:middle
+Pon una dirección de correo electrónico
+el nombre de usuario y el nombre de usuario.
+
+00:05:29.426 --> 00:05:32.506 align:middle
+No, no creo que este tipo
+sea realmente un dragón.
+
+00:05:32.506 --> 00:05:36.536 align:middle
+Creo que, creo que puede ser otra persona
+después de que el tesoro del dragón se ejecute.
+
+00:05:36.536 --> 00:05:38.626 align:middle
+Entendido. código de estado 2 0 1.
+
+00:05:38.626 --> 00:05:40.456 align:middle
+Se devuelve el correo electrónico
+y el nombre de usuario.
+
+00:05:40.456 --> 00:05:41.166 align:middle
+Así que esto es genial.
+
+00:05:41.166 --> 00:05:42.846 align:middle
+Tenemos nuestro nuevo
+recurso de usuario en la api.
+
+00:05:42.876 --> 00:05:43.626 align:middle
+Tiene estas seis operaciones.
+
+00:05:43.656 --> 00:05:45.666 align:middle
+Tenemos la validación Page Nation, si
+quisiéramos, podríamos añadirle filtrado.
+
+00:05:45.696 --> 00:05:46.146 align:middle
+Lo estamos machacando.
+
+00:05:46.176 --> 00:05:47.226 align:middle
+Ahora llegamos a la parte
+realmente interesante.
+
+00:05:47.256 --> 00:05:49.146 align:middle
+Tenemos que relacionar nuestros dos recursos
+para que cada tesoro pertenezca a un usuario.
+
+00:05:49.176 --> 00:05:50.286 align:middle
+¿Qué aspecto tiene eso en una API Platform?
+
+00:05:50.316 --> 00:05:51.276 align:middle
+Es superinteresante y es lo siguiente.
