@@ -1,0 +1,445 @@
+WEBVTT
+
+00:00:00.846 --> 00:00:01.106 align:middle
+Próximamente...
+
+00:00:01.106 --> 00:00:08.316 align:middle
+En nuestra aplicación, cada Tesoro del Dragón debe
+pertenecer a un único dragón o usuario de nuestro sistema.
+
+00:00:08.316 --> 00:00:13.416 align:middle
+Así que olvidémonos de la API por un
+segundo y modelémoslo en la base de datos.
+
+00:00:13.416 --> 00:00:16.996 align:middle
+Así que gira sobre ella y
+ejecuta Consola Bin, make entity.
+
+00:00:16.996 --> 00:00:20.716 align:middle
+Y vamos a añadir nuestra modificar
+nuestra entidad Tesoro del
+
+00:00:20.846 --> 00:00:23.456 align:middle
+Dragón porque nuestro tesoro del
+dragón necesita un propietario.
+
+00:00:23.456 --> 00:00:30.296 align:middle
+Así que vamos a añadir una propiedad propietario
+y luego esto va a ser una relación mini a uno.
+
+00:00:30.566 --> 00:00:36.066 align:middle
+Recuerda, si no estás seguro
+de qué relación necesitas,
+
+00:00:36.606 --> 00:00:40.946 align:middle
+siempre puedes escribir relación,
+y te enviarán un asistente
+
+00:00:40.946 --> 00:00:44.056 align:middle
+para ayudarte a averiguar cuál.
+
+00:00:44.946 --> 00:00:50.846 align:middle
+Pero nosotros queremos una relación muchos-a-uno,
+y ésta va a ser relación con usuario.
+
+00:00:50.846 --> 00:00:58.196 align:middle
+A continuación nos pregunta si la propiedad
+propietario del punto tesoro dragón puede ser nula.
+
+00:00:58.196 --> 00:01:01.466 align:middle
+Todo tesoro dragón debe tener un propietario.
+
+00:01:01.466 --> 00:01:02.636 align:middle
+Así que aquí voy a decir que no.
+
+00:01:02.636 --> 00:01:07.576 align:middle
+Y luego nos pregunta si queremos
+mapear el otro lado de la relación.
+
+00:01:07.576 --> 00:01:16.946 align:middle
+Así que básicamente, ¿queremos la capacidad de decir,
+flecha de usuario, consigue tesoros dragón en nuestro código?
+
+00:01:17.216 --> 00:01:18.396 align:middle
+Voy a decir que sí a esto.
+
+00:01:18.396 --> 00:01:20.386 align:middle
+Diría que sí a esto por dos razones.
+
+00:01:20.386 --> 00:01:25.456 align:middle
+Una, puede ser útil tener esto en tu código.
+
+00:01:25.456 --> 00:01:31.796 align:middle
+Y dos, como veremos un poco más
+adelante, esto nos va a permitir
+
+00:01:31.796 --> 00:01:37.276 align:middle
+mostrar realmente los Tesoros del Dr. Dragón
+para un usuario cuando estemos utilizando,
+
+00:01:37.556 --> 00:01:41.596 align:middle
+cuando estemos obteniendo
+nuestro recurso de usuario.
+
+00:01:41.596 --> 00:01:44.286 align:middle
+Así que di que sí a eso.
+
+00:01:44.286 --> 00:01:50.446 align:middle
+Y el nombre del campo dentro del
+usuario Tesoros del Dragón está bien.
+
+00:01:50.896 --> 00:01:58.926 align:middle
+Y por último, para la eliminación de huérfanos, di
+que no, vamos a hablar de la eliminación de huérfanos.
+
+00:01:58.926 --> 00:02:04.526 align:middle
+Y Más tarde, creo que y lo
+hizo, entró a salir de eso.
+
+00:02:04.526 --> 00:02:09.216 align:middle
+Entonces Esto no tiene nada
+que ver con la plataforma APAP.
+
+00:02:09.276 --> 00:02:12.146 align:middle
+Es muy sencillo.
+
+00:02:12.146 --> 00:02:16.366 align:middle
+Nuestro tesoro dragón tiene
+ahora una nueva, veamos,
+
+00:02:16.366 --> 00:02:21.436 align:middle
+propiedad owner con nuevos
+métodos get owner y set owner.
+
+00:02:21.436 --> 00:02:26.106 align:middle
+Y encima en usuario tenemos una
+nueva propiedad Tesoros del Dragón,
+
+00:02:26.106 --> 00:02:31.106 align:middle
+que es una Toman empaquetada
+a TR Tesoro del Dragón.
+
+00:02:31.106 --> 00:02:38.196 align:middle
+Y en la parte inferior de aquí
+tenemos obtener Tesoros Dragón.
+
+00:02:38.196 --> 00:02:43.196 align:middle
+Añadir Tesoro Dragón y quitar Tesoro Dragón.
+
+00:02:43.196 --> 00:02:44.536 align:middle
+Cosas muy estándar.
+
+00:02:44.536 --> 00:02:51.136 align:middle
+Muy bien, hagamos una migración
+para esta consola sinfónica.
+
+00:02:51.536 --> 00:02:52.426 align:middle
+Haz la migración.
+
+00:02:52.686 --> 00:02:54.686 align:middle
+Haremos nuestra doble comprobación estándar.
+
+00:02:54.686 --> 00:02:55.156 align:middle
+Sí, tiene buena pinta.
+
+00:02:55.156 --> 00:02:58.516 align:middle
+Y luego ejecuta esto con la
+doctrina de la consola Symphony.
+
+00:02:58.516 --> 00:03:02.196 align:middle
+La migración migra y nos explota en la cara.
+
+00:03:02.196 --> 00:03:05.076 align:middle
+Vale, no debería ser demasiado sorprendente.
+
+00:03:05.076 --> 00:03:13.006 align:middle
+Tenemos un montón de Tesoros del Dragón en la base de datos
+ERO cuando intentamos añadir el ID de propietario a la tabla
+
+00:03:13.006 --> 00:03:19.506 align:middle
+donde no está Nu, nuestra base de datos
+no tiene ni idea de qué valor poner
+
+00:03:19.506 --> 00:03:22.606 align:middle
+para esos tesoros del Dragón existentes.
+
+00:03:22.606 --> 00:03:27.216 align:middle
+Si esto ya estuviera en producción,
+tendríamos que hacer un poco más de trabajo.
+
+00:03:27.216 --> 00:03:31.916 align:middle
+Y hablamos de ello en nuestra
+doctrina, el tutorial de doctrina.
+
+00:03:31.916 --> 00:03:34.376 align:middle
+Pero como esto aún no está en producción,
+
+00:03:34.376 --> 00:03:38.066 align:middle
+lo más fácil es resetear
+completamente la base de datos.
+
+00:03:38.066 --> 00:03:42.336 align:middle
+Así que voy a ejecutar Symphony console
+doctrine database, Drop dash dash force,
+
+00:03:42.336 --> 00:03:47.686 align:middle
+luego doctrine database, create, luego Doctrine,
+migrations Migrate, que ahora funcionará ya
+
+00:03:47.686 --> 00:03:50.956 align:middle
+que nuestra base de datos no
+tiene ninguna rose dentro.
+
+00:03:50.956 --> 00:03:55.436 align:middle
+Por último, ejecuta la Consola
+Symphony Doctrine Fixtures Load.
+
+00:03:55.436 --> 00:03:59.176 align:middle
+Así obtendremos nuevos datos.
+
+00:03:59.176 --> 00:04:01.216 align:middle
+Y oh, esto falla por la
+misma razón que intenta
+
+00:04:01.216 --> 00:04:03.406 align:middle
+crear Tesoros Dragón sin propietario. Así
+
+00:04:03.406 --> 00:04:09.566 align:middle
+que para solucionarlo, en realidad hay dos
+formas en las que me gusta hacer las dos cosas
+
+00:04:09.566 --> 00:04:12.856 align:middle
+en la Fábrica de Tesoros Dragón y
+obtener los valores predeterminados.
+
+00:04:13.246 --> 00:04:19.576 align:middle
+Añadiremos un nuevo campo de propietario aquí y
+lo llamaremos Llamada a la Fábrica de Usuarios.
+
+00:04:19.796 --> 00:04:27.156 align:middle
+No, no voy a entrar en los detalles de fa uh,
+fundador tiene muy buena documentación sobre
+
+00:04:27.156 --> 00:04:32.026 align:middle
+cómo trabajar con las relaciones, pero esto
+es básicamente va a asegurarse de que si l
+
+00:04:32.026 --> 00:04:34.496 align:middle
+pero lo que esto haría si
+no hiciéramos nada más,
+
+00:04:34.496 --> 00:04:41.156 align:middle
+esto crearía un nuevo usuario cada vez que
+creó un Tesoro Dragón y relacionarlos.
+
+00:04:41.156 --> 00:04:45.036 align:middle
+Así que está bien tener eso por defecto.
+
+00:04:45.036 --> 00:04:49.036 align:middle
+Pero en nuestra aplicación fija, voy
+a hacer algo un poco más guay. Vamos a
+
+00:04:49.086 --> 00:04:56.836 align:middle
+mover Tesoro Dragón después de Fábrica de
+Usuarios y a pasar un segundo argumento aquí,
+
+00:04:56.836 --> 00:05:04.816 align:middle
+que es una forma de anular los
+valores por defecto cada vez.
+
+00:05:05.026 --> 00:05:13.856 align:middle
+Así que al pasar una llamada de retorno cada vez,
+deberá llamar a esta llamada de retorno 40 veces.
+
+00:05:13.856 --> 00:05:19.966 align:middle
+Y aquí podemos devolver un array de datos
+que deberían anular esos valores por defecto.
+
+00:05:19.966 --> 00:05:25.856 align:middle
+Así que voy a decir propietario y podemos decir
+llamada de fábrica de usuario, llamada aleatoria.
+
+00:05:25.856 --> 00:05:27.576 align:middle
+Así está bien.
+
+00:05:27.576 --> 00:05:34.566 align:middle
+Encontrará un objeto usuario aleatorio
+y lo establecerá como propietario.
+
+00:05:35.316 --> 00:05:39.136 align:middle
+Así que tendremos 40 tesoros
+Dragón asignados cada uno a uno,
+
+00:05:39.136 --> 00:05:42.736 align:middle
+asignados aleatoriamente a
+uno de estos 10 usuarios.
+
+00:05:42.736 --> 00:05:48.966 align:middle
+Muy bien, prueba a cargar de nuevo los
+accesorios de doctrina de la Consola Sinfónica.
+
+00:05:48.966 --> 00:05:50.276 align:middle
+Esta vez funciona.
+
+00:05:50.276 --> 00:05:57.576 align:middle
+Así que en un nivel muy alto, todo lo que básicamente acabamos de
+hacer fue añadir una nueva propiedad propietario a Tesoro Dragón
+
+00:05:57.576 --> 00:06:02.486 align:middle
+y una nueva propiedad Tesoros
+Dragón, propiedad sobre a usuario.
+
+00:06:02.486 --> 00:06:08.796 align:middle
+Así que no debería sorprendernos demasiado si vamos
+y hacemos, usamos nuestra ruta final Obtener colección
+
+00:06:08.796 --> 00:06:12.606 align:middle
+para nuestros tesoros, el nuevo campo
+de propiedad no aparece en nuestra api.
+
+00:06:12.606 --> 00:06:16.516 align:middle
+Es lógico que la propiedad no esté dentro
+de nuestro grupo de normalización. Así
+
+00:06:16.516 --> 00:06:19.706 align:middle
+que si queremos exponer la
+propiedad owner en la api,
+
+00:06:19.706 --> 00:06:23.546 align:middle
+como cualquier otro campo,
+tenemos que añadirle grupos.
+
+00:06:23.546 --> 00:06:25.666 align:middle
+Así que voy a copiar los grupos
+de Cool Factor y pegarlos aquí.
+
+00:06:25.696 --> 00:06:27.256 align:middle
+Esto significa que podremos establecer el
+propietario cuando establezcamos el propietario
+
+00:06:27.286 --> 00:06:28.336 align:middle
+y también que se nos
+devolverá el propietario.
+
+00:06:28.366 --> 00:06:30.166 align:middle
+Y sí, más adelante aprenderemos a establecer el
+propietario automáticamente para que no tengas que hacerlo
+
+00:06:30.196 --> 00:06:32.416 align:middle
+, para que el usuario de la
+API A no tenga que enviarlo.
+
+00:06:32.446 --> 00:06:33.586 align:middle
+Pero por ahora, dejaremos que
+lo establezcan manualmente.
+
+00:06:33.616 --> 00:06:34.186 align:middle
+Muy bien, probemos esto.
+
+00:06:34.216 --> 00:06:35.776 align:middle
+Ni siquiera refrescaré, sólo
+pulsaré ejecutar y hermoso.
+
+00:06:35.806 --> 00:06:36.706 align:middle
+Tiene propietario y muy interesante.
+
+00:06:36.736 --> 00:06:37.186 align:middle
+Está establecido en una url.
+
+00:06:37.216 --> 00:06:38.776 align:middle
+Hablaremos más de esto, pero ese
+es el comportamiento por defecto.
+
+00:06:38.806 --> 00:06:40.786 align:middle
+Cuando tienes relaciones, lo establece,
+no lo establece en la API Platform.
+
+00:06:40.816 --> 00:06:42.676 align:middle
+Podrías simplemente establecerlo al, ID como
+propietario uno, pero esto es mucho más útil
+
+00:06:42.706 --> 00:06:44.176 align:middle
+porque esto le dice a tu
+cliente API a dónde podría ir
+
+00:06:44.206 --> 00:06:45.286 align:middle
+para obtener más información
+sobre ese propietario.
+
+00:06:45.316 --> 00:06:46.216 align:middle
+Muy bien, vamos a intentar escribir ese campo.
+
+00:06:46.246 --> 00:06:47.116 align:middle
+Así que déjame cerrar esta ruta.
+
+00:06:47.146 --> 00:06:47.986 align:middle
+Vamos a crear un nuevo tesoro dragón.
+
+00:06:48.016 --> 00:06:48.616 align:middle
+Di tesoro dragón.
+
+00:06:48.646 --> 00:06:49.036 align:middle
+Muy valioso.
+
+00:06:49.066 --> 00:06:49.306 align:middle
+Superguay.
+
+00:06:49.336 --> 00:06:49.666 align:middle
+Oh, ¿sabes qué?
+
+00:06:49.696 --> 00:06:51.016 align:middle
+En realidad todavía no veo
+aquí mi ID de propietario.
+
+00:06:51.046 --> 00:06:51.646 align:middle
+Podría añadirlo manualmente.
+
+00:06:51.676 --> 00:06:52.066 align:middle
+Quiero actualizar. Voy a
+
+00:06:52.096 --> 00:06:54.316 align:middle
+copiarlo y actualizarlo rápidamente porque quiero
+que todos veáis que el propietario aparece ahí
+
+00:06:54.346 --> 00:06:55.336 align:middle
+desde que lo añadimos a nuestro grupo.
+
+00:06:55.366 --> 00:06:56.356 align:middle
+Así que voy a pegar eso y
+ahora añadiré el propietario.
+
+00:06:56.386 --> 00:06:58.096 align:middle
+Y para el propietario, vamos a buscar un
+ID aquí abajo en nuestro, vale, genial.
+
+00:06:58.126 --> 00:06:59.056 align:middle
+Tengo un propietario cuyo ID es sólo uno.
+
+00:06:59.086 --> 00:06:59.866 align:middle
+Así que pondré uno justo ahí.
+
+00:06:59.896 --> 00:07:00.616 align:middle
+Pulsa ejecutar y veamos.
+
+00:07:00.646 --> 00:07:01.366 align:middle
+Ah, código de estado 400.
+
+00:07:01.396 --> 00:07:01.816 align:middle
+Y mira esto.
+
+00:07:01.846 --> 00:07:03.826 align:middle
+Esperado I r I o documento anidado
+para atributo propietario entero dado.
+
+00:07:03.856 --> 00:07:04.216 align:middle
+Así que lo pasé.
+
+00:07:04.246 --> 00:07:05.326 align:middle
+El ID del propietario no le gusta.
+
+00:07:05.356 --> 00:07:05.896 align:middle
+¿Qué debemos poner aquí?
+
+00:07:05.926 --> 00:07:07.996 align:middle
+Bueno, nos lo dice en iri, claro, qué diablos
+no es I, I, vamos a averiguarlo a continuación.
