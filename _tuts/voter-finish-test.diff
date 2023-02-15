@@ -14,15 +14,13 @@ index 0e6e678..1b649cb 100644
          new Delete(
              security: 'is_granted("ROLE_ADMIN")',
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index f5a5dca..34024f4 100644
+index f951d7b..d12c258 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
-@@ -138,6 +138,18 @@ class DragonTreasureResourceTest extends ApiTestCase
- 
+@@ -139,5 +139,17 @@ class DragonTreasureResourceTest extends ApiTestCase
      public function testAdminCanPatchToEditTreasure(): void
      {
--        $admin = UserFactory::new()->asAdmin()->createOne();
-+        $admin = UserFactory::new()->asAdmin()->create();
+         $admin = UserFactory::new()->asAdmin()->create();
 +        $treasure = DragonTreasureFactory::createOne();
 +
 +        $this->browser()

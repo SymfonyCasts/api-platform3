@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index c753b43..4d044b6 100644
+index 751fc0b..17075d4 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -6,12 +6,10 @@ use App\Factory\DragonTreasureFactory;

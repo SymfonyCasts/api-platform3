@@ -1,6 +1,6 @@
 diff --git a/tests/Functional/ApiTestCase.php b/tests/Functional/ApiTestCase.php
 new file mode 100644
-index 0000000..615cb3c
+index 0000000..95aa59a
 --- /dev/null
 +++ b/tests/Functional/ApiTestCase.php
 @@ -0,0 +1,26 @@
@@ -19,9 +19,9 @@ index 0000000..615cb3c
 +        browser as baseKernelBrowser;
 +    }
 +
-+    protected function browser(): KernelBrowser
++    protected function browser(array $options = [], array $server = [])
 +    {
-+        return $this->baseKernelBrowser()
++        return $this->baseKernelBrowser($options, $server)
 +            ->setDefaultHttpOptions(
 +                HttpOptions::create()
 +                    ->withHeader('Accept', 'application/ld+json')
@@ -31,7 +31,7 @@ index 0000000..615cb3c
 +    }
 +}
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 670d201..c753b43 100644
+index 78a9118..751fc0b 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -4,13 +4,12 @@ namespace App\Tests\Functional;

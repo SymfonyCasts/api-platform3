@@ -316,6 +316,11 @@
             "description": null
         },
         {
+            "id": "testing-use-normal-assert-methods",
+            "name": "Testing: use normal assert methods",
+            "description": null
+        },
+        {
             "id": "authtesting-write-test-to-post-treasure",
             "name": "AuthTesting: Write test to POST treasure",
             "description": null
@@ -548,6 +553,11 @@
         {
             "id": "stateprocessor-hash-password",
             "name": "StateProcessor: hash password",
+            "description": null
+        },
+        {
+            "id": "stateprocessor-erasecredentials",
+            "name": "StateProcessor: eraseCredentials()",
             "description": null
         },
         {
@@ -821,5 +831,5 @@
             "description": null
         }
     ],
-    "sha": "202e9b257443d2fa9acf57b1a8db93b419abf5f1"
+    "sha": "849ef39d3e7f7831bdb26eb9da3c40fc4dc8579d"
 }

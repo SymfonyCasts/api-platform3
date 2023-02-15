@@ -15,14 +15,14 @@ index 3b4c043..13adf18 100644
       * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
       *
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 91edfbb..f5a5dca 100644
+index f38d5ef..f951d7b 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -138,6 +138,6 @@ class DragonTreasureResourceTest extends ApiTestCase
  
      public function testAdminCanPatchToEditTreasure(): void
      {
--        $admin = UserFactory::new()->withRoles(['ROLE_ADMIN'])->createOne();
-+        $admin = UserFactory::new()->asAdmin()->createOne();
+-        $admin = UserFactory::new()->withRoles(['ROLE_ADMIN'])->create();
++        $admin = UserFactory::new()->asAdmin()->create();
      }
  }
