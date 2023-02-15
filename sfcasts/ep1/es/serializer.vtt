@@ -68,14 +68,14 @@ en nuestra API, cuando probamos la ruta GET,
 cadena especial de fecha y hora.
 
 00:01:26.966 --> 00:01:30.836 align:middle
-El DateTimeNormalizer se encarga de hacer eso.
+El DateTimeNormalizer es el responsable de hacerlo.
 
 00:01:31.566 --> 00:01:35.556 align:middle
-También hay otro normalizador realmente
+También hay otro normalizador muy
 importante llamado ObjectNormalizer.
 
 00:01:35.986 --> 00:01:41.926 align:middle
-Su función es leer las propiedades
+Su trabajo consiste en leer las propiedades
 de un objeto para normalizarlas.
 
 00:01:42.836 --> 00:01:47.016 align:middle
@@ -454,10 +454,10 @@ Volvamos atrás, probemos
 la ruta GET con el ID one.
 
 00:08:51.816 --> 00:08:54.936 align:middle
-Y... ¿a que mola? A
+Y... ¿a que mola?
 
 00:08:55.876 --> 00:09:00.116 align:middle
-continuación: ¿qué pasa si queremos tener
+A continuación: ¿qué pasa si queremos tener
 ciertos métodos getter o setter en nuestra clase,
 
 00:09:00.386 --> 00:09:04.466 align:middle
