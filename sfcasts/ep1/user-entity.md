@@ -34,6 +34,8 @@ Ok, inside the `src/Entity/` directory, we have our new `User` entity class with
 fancy. This implements two interfaces that we need for security... but those aren't
 important right now.
 
+[[[ code('0d971142a0') ]]]
+
 Oh, but I *do* want to add one more field to this class: a `username` that we can
 show in the API.
 
@@ -49,6 +51,8 @@ and done. Hit enter one more time to exit.
 Back over on the class... perfect! There's the new field. While we're here, add
 `unique: true` to make this unique in the database.
 
+[[[ code('fafceb175b') ]]]
+
 Entity done! Let's make a migration for it. Back at the terminal run:
 
 ```terminal
@@ -56,7 +60,11 @@ symfony console make:migration
 ```
 
 Then... spin over and open that new migration file. No surprises: it creates the
-`user` table. Close that up and run it with:
+`user` table:
+
+[[[ code('0ae474f637') ]]]
+
+Close that up and run it with:
 
 ```terminal
 symfony console doctrine:migrations:migrate
@@ -78,12 +86,16 @@ which is really good at creating `User` objects. The main thing we need to tweak
 is `getDefaults()` to make the data even better. I'm going to paste in new
 contents for the entire class, which you can copy from the code block on this page.
 
+[[[ code('af90bf3450') ]]]
+
 This updates `getDefaults()` to have a little more pizazz and sets the `password`
 to `password`. I know, creative. I'm also leveraging an `afterInstantiation` hook
 to hash that password.
 
 Finally, to actually create some fixtures, open up `AppFixtures`. Pretty simple
 here: `UserFactory::createMany()` and let's create 10.
+
+[[[ code('79b774e6f6') ]]]
 
 Let's see if that worked! Spin over and run:
 
