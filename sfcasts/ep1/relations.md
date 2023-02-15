@@ -31,10 +31,15 @@ for `orphanRemoval`, say no. We'll also talk about that later.
 And... done! Hit enter to exit.
 
 So this had nothing to do with API Platform. Our `DragonTreasure` entity now has
-a new `owner` property with `getOwner()` and `setOwner()` methods. And over in
-`User` we have a new `dragonTreasures` property, which is a `OneToMany` back to
+a new `owner` property with `getOwner()` and `setOwner()` methods. 
+
+[[[ code('9a8f09be4c') ]]]
+
+And over in `User` we have a new `dragonTreasures` property, which is a `OneToMany` back to
 `DragonTreasure`. At the bottom, it generated `getDragonTreasures()`,
 `addDragonTreasure()`, and `removeDragonTreasure()`. Very standard stuff.
+
+[[[ code('5de6cf009c') ]]]
 
 Let's create a migration for this:
 
@@ -43,7 +48,11 @@ symfony console make:migration
 ```
 
 We'll do our standard double-check to make sure the migration isn't trying to
-mine bitcoin. Yep, all boring SQL queries here. Run it with:
+mine bitcoin. Yep, all boring SQL queries here. 
+
+[[[ code('dedb502552') ]]]
+
+Run it with:
 
 ```terminal
 symfony console doctrine:migrations:migrate
@@ -88,6 +97,8 @@ And oh, this fails for the same reason! It's trying to create Dragon Treasures
 without an owner. To fix that, there are two options. In `DragonTreasureFactory`,
 add a new `owner` field to `getDefaults()` set to `UserFactory::new()`.
 
+[[[ code('5e89f3ad8c') ]]]
+
 I'm not going to go into the specifics of Foundry - and Foundry has great docs
 on how to work with relationships - but this will create a *new* `User` each time
 it creates a new `DragonTreasure`... and then will relate them. So that's nice to
@@ -99,6 +110,8 @@ which is a way to override the defaults. By passing a callback, each time a
 `DragonTreasure` is created - so 40 times - it will call this method and we
 can return unique data to use for overriding the defaults for that treasure. Return
 `owner` set to `User::factory()->random()`.
+
+[[[ code('e87c62ef4b')]]]
 
 That'll find a random `User` object and set it as the `owner`. So we'll have 40
 `DragonTreasure`s each randomly hoarded by one of these 10 `User`s.
@@ -123,6 +136,8 @@ The `owner` property is *not* inside the normalization group.
 So *if* we want to expose the `owner` property in the API, just like any other field,
 we need to add groups to it. Copy the groups from `coolFactor`... and paste them
 here.
+
+[[[ code('554977e73d') ]]]
 
 This makes the property readable *and* writable. And yes, later, we'll learn how
 to set the `owner` property automatically so that the API user doesn't need to send

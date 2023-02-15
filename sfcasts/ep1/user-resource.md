@@ -4,6 +4,8 @@ We have a `User` entity... but it is not *yet* part of our API. How *do* we make
 it part of the API? Ah, we already know! Go above the class and add the `ApiResource`
 attribute.
 
+[[[ code('92949c6bd5') ]]]
+
 Refresh the docs. Look at that! Six fresh new endpoints for the `User` class! And
 thanks to our fixtures, we *should* be able to see data immediately. Let's try the
 collection endpoint. Execute and... it's alive.
@@ -39,13 +41,19 @@ Fortunately, we know how to fix that. Up on `ApiResource`, add a
 pattern that we used in `DragonTreasure`. Also add `denormalizationContext`
 set to `user:write`.
 
+[[[ code('815bd94371') ]]]
+
 Now we can just decorate the fields that we want in the API. We don't
 need `id`... since we always have `@id`, which is more useful. But we
 *do* want `email`. So add the `#Groups()` attribute, hit tab to add
 that `use` statement and pass both `user:read` and `user:write`.
 
+[[[ code('6d252dc798') ]]]
+
 Copy that... and go down to `password`. We *do* need the password to be writeable
 but not readable. So add `user:write`.
+
+[[[ code('8e24ec96a7') ]]]
 
 Now this still isn't quite correct. The `password` field should hold the *hashed*
 password. But our users will, of course, send the plaintext passwords via the API
@@ -54,6 +62,8 @@ something we're going to solve in a future tutorial when we talk more about secu
 But this will be good enough for now.
 
 Oh, and above `username`, also add `user:read` and `user:write`.
+
+[[[ code('51e0656fd4') ]]]
 
 Cool! Refresh the docs... and open up the collections endpoint to give it a go.
 The result... exactly what we wanted! Only `email` and `username` come back.
@@ -71,10 +81,16 @@ Back over in the file, start *above* the class to make sure that both `email` an
 and we can even include a message. Repeat that *same* thing... but change `email`
 to `username`.
 
+[[[ code('80dc514174') ]]]
+
 Next, down in `email`, add `NotBlank`... then I'll add the `Assert` in front...
 and tweak the `use` statement so it works just like last time.
 
+[[[ code('be7c823ff0') ]]]
+
 Nice. email needs one more - `Assert\Email` - and above `username`, add `NotBlank`.
+
+[[[ code('0d0ce6f949') ]]]
 
 I'm not too worried about `password` right now... because it's already a bit weird.
 
