@@ -18,7 +18,7 @@ So... can we control the *name* of a field? *Absolutely*! We do this, as
 you may have predicted, via another wonderful attribute. This one is called
 `SerializedName`. Pass it `description`:
 
-[[[ code('a7af4c4e40') ]]]
+[[[ code('27bdb7b102') ]]]
 
 This won't change how the field is *read*, but if we refresh the docs... and look
 at the `PUT` endpoint... yep! We can now *send* a field called `description`.
@@ -57,7 +57,7 @@ and the property is *also* called `name` is what makes this work.
 
 Watch: change the argument to `treasureName` in both places:
 
-[[[ code('2f2c83cd90') ]]]
+[[[ code('b71ce3363b') ]]]
 
 Now, spin over, refresh, and check out the POST endpoint. The field is *gone*. 
 API Platform sees that we have a `treasureName` argument that *could* be sent, 
