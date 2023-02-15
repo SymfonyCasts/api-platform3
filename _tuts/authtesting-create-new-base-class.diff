@@ -31,7 +31,7 @@ index 0000000..615cb3c
 +    }
 +}
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 62ae57a..def75fe 100644
+index 670d201..c753b43 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -4,13 +4,12 @@ namespace App\Tests\Functional;

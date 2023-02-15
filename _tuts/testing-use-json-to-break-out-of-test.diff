@@ -1,0 +1,43 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index 4c88be5..d9926cc 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -17,24 +17,24 @@ class DragonTreasureResourceTest extends KernelTestCase
+     {
+         DragonTreasureFactory::createMany(5);
+ 
+-        $this->browser()
++        $json = $this->browser()
+             ->get('/api/treasures')
+             ->assertJson()
+             ->assertJsonMatches('"hydra:totalItems"', 5)
+             ->assertJsonMatches('length("hydra:member")', 5)
+-            ->use(function(Json $json) {
+-                $json->assertMatches('keys("hydra:member"[0])', [
+-                    '@id',
+-                    '@type',
+-                    'name',
+-                    'description',
+-                    'value',
+-                    'coolFactor',
+-                    'owner',
+-                    'shortDescription',
+-                    'plunderedAtAgo',
+-                ]);
+-            })
++            ->json()
+         ;
++
++        $json->assertMatches('keys("hydra:member"[0])', [
++            '@id',
++            '@type',
++            'name',
++            'description',
++            'value',
++            'coolFactor',
++            'owner',
++            'shortDescription',
++            'plunderedAtAgo',
++        ]);
+     }
+ }

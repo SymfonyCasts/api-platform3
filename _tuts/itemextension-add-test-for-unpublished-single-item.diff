@@ -1,9 +1,9 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 5420729..42ee0e4 100644
+index c3bf072..6b147aa 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -44,6 +44,17 @@ class DragonTreasureResourceTest extends ApiTestCase
-         ;
+         ]);
      }
  
 +    public function testGetOneUnpublishedTreasure404s(): void

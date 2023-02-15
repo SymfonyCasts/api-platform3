@@ -311,6 +311,11 @@
             "description": null
         },
         {
+            "id": "testing-use-json-to-break-out-of-test",
+            "name": "Testing: use ->json() to break out of test",
+            "description": null
+        },
+        {
             "id": "authtesting-write-test-to-post-treasure",
             "name": "AuthTesting: Write test to POST treasure",
             "description": null
@@ -816,5 +821,5 @@
             "description": null
         }
     ],
-    "sha": "d910199a37c4c80df847573a94f9b865a56ff843"
+    "sha": "202e9b257443d2fa9acf57b1a8db93b419abf5f1"
 }

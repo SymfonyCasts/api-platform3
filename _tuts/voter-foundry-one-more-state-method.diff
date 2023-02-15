@@ -15,7 +15,7 @@ index 3b4c043..13adf18 100644
       * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
       *
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index ecebed8..6c156bf 100644
+index 91edfbb..f5a5dca 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -138,6 +138,6 @@ class DragonTreasureResourceTest extends ApiTestCase

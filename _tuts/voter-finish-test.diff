@@ -14,7 +14,7 @@ index 0e6e678..1b649cb 100644
          new Delete(
              security: 'is_granted("ROLE_ADMIN")',
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 6c156bf..9559d65 100644
+index f5a5dca..34024f4 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -138,6 +138,18 @@ class DragonTreasureResourceTest extends ApiTestCase
