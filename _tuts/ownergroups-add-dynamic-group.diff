@@ -1,5 +1,5 @@
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
-index 12265c3..c6fcbfe 100644
+index 12265c3..3ec6d3a 100644
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
 @@ -2,6 +2,8 @@
@@ -24,7 +24,7 @@ index 12265c3..c6fcbfe 100644
      {
 -        dump('IT WORKS!');
 +        if ($object instanceof DragonTreasure && $this->security->getUser() === $object->getOwner()) {
-+            $context['groups'][] = 'admin:read';
++            $context['groups'][] = 'owner:read';
 +        }
  
          return $this->decorated->normalize($object, $format, $context);
