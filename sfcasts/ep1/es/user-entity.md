@@ -1,11 +1,85 @@
-# Entidad usuaria
+# Crear una entidad de usuario
 
-Próximamente...
+No hablaremos de seguridad en este tutorial. Pero aun así, necesitamos el concepto de usuario... porque cada tesoro de la base de datos será propiedad de un usuario... o, en realidad, de un dragón. Más adelante, utilizaremos esto para permitir a los usuarios de la API ver qué tesoros pertenecen a qué usuario y un montón de cosas más.
 
-No hablaremos de seguridad en este tutorial, pero aun así necesitamos el concepto de usuario porque cada tesoro de la base de datos va a pertenecer a un usuario. Y podremos ver cuál, que por supuesto con usuario me refiero a Dragón. Y entonces podremos ver qué tesoros pertenecen a qué usuario y quizás más adelante, quizás incluso los usuarios puedan enviar mensajes a otros usuarios sobre sus tesoros. Así que vamos a crear una clase de usuario, busca tu terminal y ejecuta bin consola. Make user, podría usar make entity para esto, pero en su lugar usaré make user para configurar un poco las cosas de seguridad que necesitarán un futuro tutorial. Así que vamos a utilizar usuario para la clase de seguridad. Sí, vamos a almacenar los usuarios en la base de datos y luego para el uso de correo electrónico para el campo principal. Y luego nos pregunta si necesitamos hash y comprobar las contraseñas de los usuarios. Si la contraseña de usuario con hash se almacena y comprueba en tu sistema, sí. Si tienes un sistema en el que el usuario envía una contraseña pero tú la validas en otro servidor, no lo necesitas. Eso significa que es el otro servidor el que va a manejar las contraseñas. Pero voy a decir que sí a esto.
+## make:user
 
-Así que esto no hizo mucho. Fern Get Status creado, la entidad de usuario, la clase de repositorio, y luego una pequeña actualización en la seguridad de que yammel. Si abres paquetes de configuración. La munición, es realmente básico aquí. Sólo configura nuestro proveedor de usuario. Nada especial. Y de nuevo, hablaremos de eso en el futuro. Tutorial. Dentro del directorio de entidades fuente, tenemos nuestra U nueva entidad de usuario de cristal con ID rollos de correo electrónico y contraseña, y luego los getters y setters a continuación. Así que nada demasiado lujoso. Esto implementa dos interfaces que necesitamos, pero nada que, pero esos no van a ser importantes para nosotros en este momento. Ahora quiero añadir una sensación más a mi clase de usuario, que va a ser un nombre de usuario para que si los dragones están hablando entre sí, tengan estos nombres de usuario tan chulos que podamos mostrar. Así que vamos a girar de nuevo y vamos a ejecutar esta vez, make:entity. Actualizaremos el campo usuario. Añadiré una propiedad nombre de usuario. Habrá una cadena. 2 55 está bien. Asentir en la base de datos está bien y listo. Pulsa intro. Una vez más para salir. Estupendo. Y por aquí. Perfecto. Ahí está nuestro campo nombre de usuario. Y ya que estoy aquí, voy a añadir un pequeño true único que lo haga único en la base de datos.
+Así pues, vamos a crear esa clase `User`. Busca tu terminal y ejecuta:
 
-Genial. Así que tenemos nuestra nueva clase de entidad de usuario, así que necesitamos una migración para ella aquí atrás, ejecutar terminal, consola symphony, hacer migración. Perfecto. Luego giraré y abriré ese nuevo archivo de migración y sip, sin sorpresas. Crea la tabla de usuarios. Así que cierra eso y ejecuta la migración con la Doctrina de la Consola Symphony. Las migraciones migran. Precioso. Muy bien, entonces si vamos a tener esta entidad de usuario, probablemente queramos tener unos bonitos datos fijos F para ella. Así que vamos a utilizar Foundry como hicimos para nuestro tesoro dragón. Así que ejecuta bin console, make factory, y generaremos la fábrica para user. Así que al igual que antes en el directorio de la fábrica de origen, ahora tenemos una fábrica de usuario de clase U new, que es realmente buena para crear objetos de usuario. Lo único que realmente tenemos que retocar aquí es obtener los valores por defecto. En realidad voy a pegar nuevos contenidos para esta clase, que puedes copiar del bloque de código de esta página. Todo lo que decía era actualizar get defaults con algunos buenos valores predeterminados. Así que password será nuestra contraseña. Y luego añadió un pequeño gancho después de la instanciación para hacer hash de esa contraseña. Por último, para crear algunos accesorios con esto. Abre la clase fixtures
+```terminal
+php bin/console make:user
+```
 
-Y añadiremos user factory, dos puntos, dos puntos, create many, y vamos a crear 10. Muy bien, veamos si ha funcionado. Ejecuta. Consola sinfónica doctrine, fixtures, cargar, y genial. Sin errores. Muy bien, así que tenemos una clase de usuario, tenemos la migración para ella. Incluso tenemos data fixtures para ella, pero aún no forma parte de nuestra api. Si actualizas la documentación, aquí sólo hay un tesoro. Así que vamos a hacer que forme parte de nuestra API a continuación.
+Podríamos utilizar `make:entity`, pero `make:user` configurará un poco las cosas de seguridad que necesitaremos en un tutorial futuro. Llamemos a la clase `User`, sí, vamos a almacenarlos en la base de datos, y establezcamos `email` como campo identificador principal.
+
+A continuación nos pregunta si necesitamos hash y comprobar las contraseñas de los usuarios. Si en tu sistema se va a almacenar la versión hash de las contraseñas de los usuarios, di que sí. Si tus usuarios no van a tener contraseñas -o algún sistema externo comprueba las contraseñas- responde que no. Di que sí a esto.
+
+Esto no hizo mucho... ¡en el buen sentido! Nos dio una entidad `User`, la clase repositorio... y una pequeña actualización de `config/packages/security.yaml`. Sí, sólo configura el proveedor de usuarios: nada especial. Y, de nuevo, hablaremos de ello en un futuro tutorial.
+
+## Añadir una propiedad de nombre de usuario
+
+Vale, dentro del directorio `src/Entity/`, tenemos nuestra nueva clase de entidad `User` con las propiedades`id`, `email` y `password`... y los getters y setters a continuación. Nada del otro mundo. Esto implementa dos interfaces que necesitamos para la seguridad... pero no son importantes ahora.
+
+[[[ code('0d971142a0') ]]]
+
+Ah, pero quiero añadir un campo más a esta clase: un `username` que podamos mostrar en la API.
+
+Así que, vuelve a tu terminal y esta vez ejecuta:
+
+```terminal
+php bin/console make:entity
+```
+
+Actualiza la clase `User`, añade una propiedad `username`, la longitud de `255` es buena, no nula... y listo. Pulsa enter una vez más para salir.
+
+Vuelve a la clase... ¡perfecto! Ahí está el nuevo campo. Ya que estamos aquí, añade`unique: true` para que sea único en la base de datos.
+
+[[[ code('fafceb175b') ]]]
+
+¡Entidad terminada! Hagamos una migración para ella. De vuelta en el terminal ejecuta:
+
+```terminal
+symfony console make:migration
+```
+
+Y abre el nuevo archivo de migración. Sin sorpresas: crea la tabla`user`:
+
+[[[ code('0ae474f637') ]]]
+
+Ciérralo y ejecútalo con:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Añadir la fábrica y los accesorios
+
+¡Estupendo! Aunque, creo que nuestra nueva entidad se merece unas jugosas fijaciones de datos. Utilicemos Foundry como hicimos para `DragonTreasure`. Empieza ejecutando
+
+```terminal
+php bin/console make:factory
+```
+
+para generar la fábrica de `User`.
+
+Como antes, en el directorio `src/Factory/`, tenemos una nueva clase - `UserFactory` - que es realmente buena para crear objetos `User`. Lo principal que tenemos que retocar es `getDefaults()` para que los datos sean aún mejores. Voy a pegar nuevos contenidos para toda la clase, que puedes copiar del bloque de código de esta página.
+
+[[[ code('af90bf3450') ]]]
+
+Esto actualiza `getDefaults()` para que tenga un poco más de chispa y establece `password`en `password`. Lo sé, creativo. También aprovecho un gancho de `afterInstantiation` para hacer hash de esa contraseña.
+
+Por último, para crear realmente algunos accesorios, abre `AppFixtures`. Aquí es bastante sencillo: `UserFactory::createMany()` y vamos a crear 10.
+
+[[[ code('79b774e6f6') ]]]
+
+Veamos si ha funcionado Gira y ejecuta:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+¡Sin errores!
+
+Comprobación de estado: tenemos una entidad `User` y hemos creado una migración para ella. Diablos, ¡incluso hemos cargado algunos schweet data fixtures! Pero todavía no forma parte de nuestra API. Si actualizas la documentación, todavía sólo aparece `Treasure`.
+
+Hagamos que forme parte de nuestra API a continuación.
