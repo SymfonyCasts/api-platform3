@@ -2,129 +2,27 @@
 
 Coming soon...
 
-Let's create a test to post and create a new cheese listing. So I'll say public
-function test post to create treasure that returns void. And we start the same way as
-before. We'll say this arrow, browser arrow post slash API slash treasures. And in
-this case we actually need to send data. So the second argument to any of these post
-or GI methods is an array of options. There's, you can pass things like headers, but
-one of the keys you can pass is jsun that you wanna send. And for this first test,
-I'm actually gonna send empty jsun and we'll just assert that the status code is 4
-22. And then just to see what that looks like, I'm gonna put a little dump on the end
-of it. Awesome. All right. Copy this test method I wanna focus on just run this one
-test. So we'll do symphony PHB bin slash PHB unit dash dash filter equals test post
-to create treasure and oh, current response status code is 4 0 1, but 4 22 expect it
-by the way. When you have a test failure browser automatically saves the last
-response into a file. It's actually in our var directory
+Let's create a test to post and create a new cheese listing. So I'll say public function test post to create treasure that returns void. And we start the same way as before. We'll say this arrow, browser arrow post slash API slash treasures. And in this case we actually need to send data. So the second argument to any of these post or GI methods is an array of options. There's, you can pass things like headers, but one of the keys you can pass is jsun that you wanna send. And for this first test, I'm actually gonna send empty jsun and we'll just assert that the status code is 4 22. And then just to see what that looks like, I'm gonna put a little dump on the end of it. Awesome. All right. Copy this test method I wanna focus on just run this one test. So we'll do symphony PHB bin slash PHB unit dash dash filter equals test post to create treasure and oh, current response status code is 4 0 1, but 4 22 expect it by the way. When you have a test failure browser automatically saves the last response into a file. It's actually in our var directory
 
-In my terminal. I can actually hold command and click and that opens that up in my
-browser. And actually I actually see the full response that came back. So we're
-gonna, you're gonna see me just do this a bunch of times to actually help debug what
-happened in our test. But the point is we are getting a 4 0 1 status code. Of course
-we need to log in in order to create a user. And we have two ways in our API to log
-in via the login form in the session or via API token. We're gonna try both, but
-first we will log in via the login form. So if we're gonna log in, we need a user.
-And remember at the start of each test, our database is empty. So let's log in with
-let's create a user with user, factory, colon, colon, create one. And since we're
-gonna need to log in, I'm gonna need to control what the password is. So I'll say
-create a user. I don't care what its data is, but make sure its password is pass. And
-then down here, before we make our post request, we first need to actually post the
-the login form. So we're gonna post to slash login again
+In my terminal. I can actually hold command and click and that opens that up in my browser. And actually I actually see the full response that came back. So we're gonna, you're gonna see me just do this a bunch of times to actually help debug what happened in our test. But the point is we are getting a 4 0 1 status code. Of course we need to log in in order to create a user. And we have two ways in our API to log in via the login form in the session or via API token. We're gonna try both, but first we will log in via the login form. So if we're gonna log in, we need a user. And remember at the start of each test, our database is empty. So let's log in with let's create a user with user, factory, colon, colon, create one. And since we're gonna need to log in, I'm gonna need to control what the password is. So I'll say create a user. I don't care what its data is, but make sure its password is pass. And then down here, before we make our post request, we first need to actually post the the login form. So we're gonna post to slash login again
 
-And we're gonna send JSON with email set to user arrow, get email, whatever random
-email address it chose and password set to pass. And then down here just to make sure
-that worked. Okay, I can say assert status 2 0 4. Cause remember we returned a 2 0 4
-status code after our authentication is successful. All right, let's give that a try.
-Send back over, rerun the test and it passes.
+And we're gonna send JSON with email set to user arrow, get email, whatever random email address it chose and password set to pass. And then down here just to make sure that worked. Okay, I can say assert status 2 0 4. Cause remember we returned a 2 0 4 status code after our authentication is successful. All right, let's give that a try. Send back over, rerun the test and it passes.
 
 Woo.
 
-We are getting the 4 22 status code and we can see our nice validation messages right
-there. So logging in is just that easy
+We are getting the 4 22 status code and we can see our nice validation messages right there. So logging in is just that easy
 
 And
 
-I would recommend actually having a test that specifically tests your login to make
-sure your login is working correctly. However, in my actual tests where I'm testing
-something different, like whether or not I can post to create a treasure, there's a
-faster way to log in. It looks like this. Instead of actually going through the
-manual post request, you can say acting as user. This is a sneaky way of actually
-taking the user object and kind of and pushing it directly into symphony security
-system without making any requests. And now I actually don't care what the password
-is at all. So we can just simplify it to that. Now we wanna try it. Awesome. Still
-works. All right, let's try another post down here. But for with real data so we can
-just kind of keep chanting here. So say post actually I'll be lazy and copying my
-other post and this time we'll send some real data. I'll quickly type in some test
-data. This can be anything. And then the last queue we here need to send here is
-actually the owner right now we are required to send the owner when you create a
-treasurer in the future, we're gonna fix that where if you don't send the owner, it
-automatically assigns it to whoever you are logged in as. But we'll set this to slash
-api slash users slash
+I would recommend actually having a test that specifically tests your login to make sure your login is working correctly. However, in my actual tests where I'm testing something different, like whether or not I can post to create a treasure, there's a faster way to log in. It looks like this. Instead of actually going through the manual post request, you can say acting as user. This is a sneaky way of actually taking the user object and kind of and pushing it directly into symphony security system without making any requests. And now I actually don't care what the password is at all. So we can just simplify it to that. Now we wanna try it. Awesome. Still works. All right, let's try another post down here. But for with real data so we can just kind of keep chanting here. So say post actually I'll be lazy and copying my other post and this time we'll send some real data. I'll quickly type in some test data. This can be anything. And then the last queue we here need to send here is actually the owner right now we are required to send the owner when you create a treasurer in the future, we're gonna fix that where if you don't send the owner, it automatically assigns it to whoever you are logged in as. But we'll set this to slash api slash users slash
 
-And then user arrow get ID to use the ID of the user that we are currently logged in
-as and below this we should assert status that this returns a 2 0 1. Remember 2 0 1
-status code is what is returned when an object is created. So let's try that, rerun
-the test and that passes. Awesome. We're in a roll. Let's do like a really quick
-little sanity check down here. After we assert, I'm gonna dump, you'll see why in a
-second. And let's assert JSON matches that name matches a shiny thing, make sure we
-get back the right data. So me try now it still passes but the reason I dumped is
-check this out. What we got back is not JS O L D, we're getting back just standard J
-S O N. You can actually see in the content type header up here content type
-application slash json. That might actually be fine, but I just wanted to highlight
-something here. When we made our test for our GIT request earlier, we didn't include
-any except headers, but the API was smart enough to send back jsun ld and I mentioned
-that's because J S O LD is the default format. However, when we make a post request
-and we send J S O N,
+And then user arrow get ID to use the ID of the user that we are currently logged in as and below this we should assert status that this returns a 2 0 1. Remember 2 0 1 status code is what is returned when an object is created. So let's try that, rerun the test and that passes. Awesome. We're in a roll. Let's do like a really quick little sanity check down here. After we assert, I'm gonna dump, you'll see why in a second. And let's assert JSON matches that name matches a shiny thing, make sure we get back the right data. So me try now it still passes but the reason I dumped is check this out. What we got back is not JS O L D, we're getting back just standard J S O N. You can actually see in the content type header up here content type application slash json. That might actually be fine, but I just wanted to highlight something here. When we made our test for our GIT request earlier, we didn't include any except headers, but the API was smart enough to send back jsun ld and I mentioned that's because J S O LD is the default format. However, when we make a post request and we send J S O N,
 
-That actually sets the content type head of our, of our request as J S O N. When we
-send jsun here, that actually sets the content type of the request for us to
-application slash jsun, which is correct. That's just notifying the server. Hey, I'm
-sending you jsun. It also sets the accept header to application slash jsun. So it
-actually tells the server we want jsun back, not jsun ld. So I wanna use J S O LD
-everywhere. So I'm gonna fix this so that we always return Jason ld. So to do this,
-step one is for the second argument, this options argument, you can either pass an
-array or an object called HTTP options. So I'm actually gonna pass http options,
-colon, colon, then he can create an object. There's a couple shortcut methods on
-there. I'm gonna say JSON and then I can pass it my array of json. So so far this is
-basically equivalent to what we had before. Oh actually except we don't need the JSON
-key anymore. We just passed the array of data. Help me fix my syntax there. There we
-go. So h to be calling, calling Jsun, we pass the jsun we want. Perfect.
+That actually sets the content type head of our, of our request as J S O N. When we send jsun here, that actually sets the content type of the request for us to application slash jsun, which is correct. That's just notifying the server. Hey, I'm sending you jsun. It also sets the accept header to application slash jsun. So it actually tells the server we want jsun back, not jsun ld. So I wanna use J S O LD everywhere. So I'm gonna fix this so that we always return Jason ld. So to do this, step one is for the second argument, this options argument, you can either pass an array or an object called HTTP options. So I'm actually gonna pass http options, colon, colon, then he can create an object. There's a couple shortcut methods on there. I'm gonna say JSON and then I can pass it my array of json. So so far this is basically equivalent to what we had before. Oh actually except we don't need the JSON key anymore. We just passed the array of data. Help me fix my syntax there. There we go. So h to be calling, calling Jsun, we pass the jsun we want. Perfect.
 
-Now we can change the options by saying with header and we can say we accept
-application slash LD plus jsun. We could have done this with just the array of
-options. There's actually a option called headers, but this object is kind of nice.
-All right, so now let's try this. We're looking to see that we get back at Jason LD
-and we do, here's our object. You can see it's got the JS LD fields and we have the
-JS LD content type. So that's cool. But I mean doing this every single time we make a
-request in our API is kind of lame. So I wanna do this automatically. So nice way to
-do this
+Now we can change the options by saying with header and we can say we accept application slash LD plus jsun. We could have done this with just the array of options. There's actually a option called headers, but this object is kind of nice. All right, so now let's try this. We're looking to see that we get back at Jason LD and we do, here's our object. You can see it's got the JS LD fields and we have the JS LD content type. So that's cool. But I mean doing this every single time we make a request in our API is kind of lame. So I wanna do this automatically. So nice way to do this
 
-Is to create a base test class. So inside of tests I'll do it actually inside of test
-slash functional. I'm gonna create a new PHP class called API test case. I'm gonna
-make this abstract. This is just gonna be a base class. And then we'll extend the
-kernel test case just like we did before. Then here we're gonna use that has browser,
-but we're gonna do something a little tricky here. When we're gonna do this, we're
-actually gonna alias the browser function as base kernel browser. So what that does
-is it imports the browser function that we've been using here. It imports it into
-this class, but it renames it as base kernel browser. Why the heck are we doing that?
-Because now I'm going to reimplement the browser <affirmative> and then inside my
-re-implemented browser function, I'm going to call base kernel browser pass options
-and server. But then we can actually, there's a method on the browser that you can
-call said set default HTTP options since out of here we'll pass HTP options, colon
-create, and then we can do that same with header except app application slash LD plus
-jsun. So ultimately what this means now is in our test classes we can extend from our
-API test case,
+Is to create a base test class. So inside of tests I'll do it actually inside of test slash functional. I'm gonna create a new PHP class called API test case. I'm gonna make this abstract. This is just gonna be a base class. And then we'll extend the kernel test case just like we did before. Then here we're gonna use that has browser, but we're gonna do something a little tricky here. When we're gonna do this, we're actually gonna alias the browser function as base kernel browser. So what that does is it imports the browser function that we've been using here. It imports it into this class, but it renames it as base kernel browser. Why the heck are we doing that? Because now I'm going to reimplement the browser <affirmative> and then inside my re-implemented browser function, I'm going to call base kernel browser pass options and server. But then we can actually, there's a method on the browser that you can call said set default HTTP options since out of here we'll pass HTP options, colon create, and then we can do that same with header except app application slash LD plus jsun. So ultimately what this means now is in our test classes we can extend from our API test case,
 
-Get the one actually actually from our app and down here when we call this arrow
-browser, it's actually now calling this arrow browser. It's actually now going to be
-calling our browser function, which changes this default option for us, which means
-we can go back down here and remove the with header function. All right, so we're
-gonna try that now. It actually failed to the strange method cannot override final
-method reset browser clients. This is actually because I am extending API test case,
-which uses has browser and then we're still using has browser here. So we're kind of
-importing those, the methods from that trait twice. So we don't actually need to have
-used has browser in here anymore. I'll do a little cleanup on my use statements and
-now when we try to test again, got it, it passes and we have Jsun ld. So that problem
-is solved. We can just happily make our requests like normal and it's going to always
-make sure that we are asking for jsun LD back. So I will remove that dump. All right,
-next, let's do something similar, but use an API token for authentication.
+Get the one actually actually from our app and down here when we call this arrow browser, it's actually now calling this arrow browser. It's actually now going to be calling our browser function, which changes this default option for us, which means we can go back down here and remove the with header function. All right, so we're gonna try that now. It actually failed to the strange method cannot override final method reset browser clients. This is actually because I am extending API test case, which uses has browser and then we're still using has browser here. So we're kind of importing those, the methods from that trait twice. So we don't actually need to have used has browser in here anymore. I'll do a little cleanup on my use statements and now when we try to test again, got it, it passes and we have Jsun ld. So that problem is solved. We can just happily make our requests like normal and it's going to always make sure that we are asking for jsun LD back. So I will remove that dump. All right, next, let's do something similar, but use an API token for authentication.
 

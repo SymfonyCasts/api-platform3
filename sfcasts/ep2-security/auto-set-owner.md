@@ -2,54 +2,9 @@
 
 Coming soon...
 
-Every dragon treasure must have an owner. And to set that we currently require, when
-you're posting integrated treasure, that you set the specific owner. Now we've added
-some validation to make sure that you only set yourself as the owner, but we still
-need to pass this field. I think we should make that optional. So delete that. The
-idea is that we'll automatically set if the owner property is not sent, we'll
-automatically set it to the currently authenticated user. Now, right now, this should
-make that test fail. So I'm gonna copy that at test name, run it and perfect. Yep. 4
-22. Uh, got a 4 22, but 2 0 1 expected. Oh, and it's a 4 22. Interesting. If you look
-at this, it is because we have validation on the owner property, this value should
-not be null. So if we're gonna make it optional, we're gonna need to first take off
-that assert slash not null on there. And now when we try the test, we are agreed with
-a beautiful 500 error. Probably because it's exploding in the database. Yep. Not null
-violation. Error owner ID must owner id. All right. So how can we automatically set
-this field if it's not already set? Well, in the previous, maybe apart from two
-tutorial, I did this with an entity listener, which is a fine <affirmative>,
+Every dragon treasure must have an owner. And to set that we currently require, when you're posting integrated treasure, that you set the specific owner. Now we've added some validation to make sure that you only set yourself as the owner, but we still need to pass this field. I think we should make that optional. So delete that. The idea is that we'll automatically set if the owner property is not sent, we'll automatically set it to the currently authenticated user. Now, right now, this should make that test fail. So I'm gonna copy that at test name, run it and perfect. Yep. 4 22. Uh, got a 4 22, but 2 0 1 expected. Oh, and it's a 4 22. Interesting. If you look at this, it is because we have validation on the owner property, this value should not be null. So if we're gonna make it optional, we're gonna need to first take off that assert slash not null on there. And now when we try the test, we are agreed with a beautiful 500 error. Probably because it's exploding in the database. Yep. Not null violation. Error owner ID must owner id. All right. So how can we automatically set this field if it's not already set? Well, in the previous, maybe apart from two tutorial, I did this with an entity listener, which is a fine <affirmative>,
 
-But API platform three, just like when we hashed the user password, there's now a
-really nice system for this. We can leverage the state processor system. As a
-reminder, our post and patch endpoints for Dragon Treasure already have a state
-processor that comes from doctrine, which is responsible for actually saving it to
-the database. What we are going to do is decorate that and do something in addition
-to that. So just like before to start this out, we're gonna run bin console, make
-state processor, and I'm gonna call it Dragon Treasure Set Owner Processor. Perfect.
-And in the source state directory, here we go. Just like we've done multiple times,
-now we're gonna set up decoration. So we're gonna add a construct method. Vince, I
-will say private processor interface and I'll call it inter processor. Perfect. And
-then down here in process, we just call that, so this method doesn't return anything.
-It's gotta avoid return types. So we just say this error process, data operation, UI
-variables and context. All right. Now to actually make API, make Symphony, use our
-data process state processor instead of the normal one from doctrine, we say as
-decorator.
+But API platform three, just like when we hashed the user password, there's now a really nice system for this. We can leverage the state processor system. As a reminder, our post and patch endpoints for Dragon Treasure already have a state processor that comes from doctrine, which is responsible for actually saving it to the database. What we are going to do is decorate that and do something in addition to that. So just like before to start this out, we're gonna run bin console, make state processor, and I'm gonna call it Dragon Treasure Set Owner Processor. Perfect. And in the source state directory, here we go. Just like we've done multiple times, now we're gonna set up decoration. So we're gonna add a construct method. Vince, I will say private processor interface and I'll call it inter processor. Perfect. And then down here in process, we just call that, so this method doesn't return anything. It's gotta avoid return types. So we just say this error process, data operation, UI variables and context. All right. Now to actually make API, make Symphony, use our data process state processor instead of the normal one from doctrine, we say as decorator.
 
-And then the name of the service is apep platform dot doctrine dot orm dot state dot
-persist processor. So now when everything that uses this service in the system will
-now be passed our service, then the original service will be passed into us. Now, one
-kind of cool thing about this is that if you look at our user hash password
-processor, we're decorating the same service there. So we're actually decorating that
-service two times, which in Symphony is totally allowed. All right, so let's get to
-work actually setting the owner. So we're going to auto wire, actually, lemme say
-private security. Security. And then down here, before we do the saving, say if data
-is an instance of Dragon treasure and data arrow get owner is Nu, and this arrow,
-security arrow get user, we actually have a user logged in. We should, but just
-checking that to be sure. Then we'll say data arrow, set owner, this aero security
-arrow get user and that should do it. All right, run that test and ooh, loud memory
-size exhausted. That smells to me like I got some incursion and I know what it is
-cause I do this all the time. This arrow, inner processor arrow process. Don't forget
-that part. Now when I try it, passing test is much better than recursion and the
-owner field is now optional. All right, next, we currently return unpublished
-treasures from our Git collection, GIT collection, treasures endpoint. Let's finally
-fix that by automatically modifying the query behind this endpoint to hide those.
+And then the name of the service is apep platform dot doctrine dot orm dot state dot persist processor. So now when everything that uses this service in the system will now be passed our service, then the original service will be passed into us. Now, one kind of cool thing about this is that if you look at our user hash password processor, we're decorating the same service there. So we're actually decorating that service two times, which in Symphony is totally allowed. All right, so let's get to work actually setting the owner. So we're going to auto wire, actually, lemme say private security. Security. And then down here, before we do the saving, say if data is an instance of Dragon treasure and data arrow get owner is Nu, and this arrow, security arrow get user, we actually have a user logged in. We should, but just checking that to be sure. Then we'll say data arrow, set owner, this aero security arrow get user and that should do it. All right, run that test and ooh, loud memory size exhausted. That smells to me like I got some incursion and I know what it is cause I do this all the time. This arrow, inner processor arrow process. Don't forget that part. Now when I try it, passing test is much better than recursion and the owner field is now optional. All right, next, we currently return unpublished treasures from our Git collection, GIT collection, treasures endpoint. Let's finally fix that by automatically modifying the query behind this endpoint to hide those.
 

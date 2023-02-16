@@ -2,139 +2,21 @@
 
 Coming soon...
 
-Let's cove to this test method here. Test owner can see is published field, as we
-mentioned to work on this is published field right now and we're doing some magic so
-that only admin users and owners of a dragon treasure will see this property. And
-that's what this test looks for. It looks to make sure that the owner can see the is
-published prop field. So we'll run that with symphony bin P bin Symphony, PHP bin
-slash pH unit dash dash filter equals test owner can see is published field and it
-fails. Expected no to be the same as false cuz the field isn't showing up at all. All
-right, so to fix this over in dragon treasure, I'm gonna add a third kind of special
-group here called owner calling Colin Reid. See where we're going with this. If we
-are the owner of a dragon treasure, we will add this group and this will get
-included. However, this is a bit tricky as we talked about in the last video.
-Normally normalization groups are static. They're just up here in our configuration.
-The context builder allows us to make these groups dynamic per request.
+Let's cove to this test method here. Test owner can see is published field, as we mentioned to work on this is published field right now and we're doing some magic so that only admin users and owners of a dragon treasure will see this property. And that's what this test looks for. It looks to make sure that the owner can see the is published prop field. So we'll run that with symphony bin P bin Symphony, PHP bin slash pH unit dash dash filter equals test owner can see is published field and it fails. Expected no to be the same as false cuz the field isn't showing up at all. All right, so to fix this over in dragon treasure, I'm gonna add a third kind of special group here called owner calling Colin Reid. See where we're going with this. If we are the owner of a dragon treasure, we will add this group and this will get included. However, this is a bit tricky as we talked about in the last video. Normally normalization groups are static. They're just up here in our configuration. The context builder allows us to make these groups dynamic per request.
 
-So if we are an admin user, then we're a sea realizing what this extra admin call and
-reed group for every object for this entire request. But in this case, we need to
-make the group dynamic per object. Imagine returning 10 dragon treasures. The user
-may only own one of them. So nine of those dragon treasure objects to only one of
-those dragon treasure objects should have this extra group. And to handle this level
-of control, we need a custom normalizer. And these are a bit tricky in API platform.
-Now Normalizer are core to symphony, serializer and API platform. If you'll remember,
-a normalizer is responsible for turning a piece of data like an object or like a API
-resource object or even a datetime object into S into an array. And it's actually
-kind of cool if you over over to your terminal, you can run bin console debug
-container dash dash tag equals serializer dot normalizer. And this will show you
-every single normalizer in the system, which is pretty sweet. So you can see, see
-stuff is responsible for normalizing UU IDs. This is actually responsible for
-normalizing any any of our API resource objects to Jason ld. Here's one for daytime.
-There's a lots of interesting stuff in inside of here.
+So if we are an admin user, then we're a sea realizing what this extra admin call and reed group for every object for this entire request. But in this case, we need to make the group dynamic per object. Imagine returning 10 dragon treasures. The user may only own one of them. So nine of those dragon treasure objects to only one of those dragon treasure objects should have this extra group. And to handle this level of control, we need a custom normalizer. And these are a bit tricky in API platform. Now Normalizer are core to symphony, serializer and API platform. If you'll remember, a normalizer is responsible for turning a piece of data like an object or like a API resource object or even a datetime object into S into an array. And it's actually kind of cool if you over over to your terminal, you can run bin console debug container dash dash tag equals serializer dot normalizer. And this will show you every single normalizer in the system, which is pretty sweet. So you can see, see stuff is responsible for normalizing UU IDs. This is actually responsible for normalizing any any of our API resource objects to Jason ld. Here's one for daytime. There's a lots of interesting stuff in inside of here.
 
-So our goal is to decorate one of these normalizer so that we can add our dynamic
-group and then call the core normalizer. So let's get to this over in the source
-directory. It doesn't really matter how we organize this, but I'm gonna create a new
-directory called normalizer. And actually let me collapse a couple things just so
-it's easier to look at. Inside here we'll create a new class called How about add
-Owner groups, normalizer. Now all normalizer must implement NORMALIZER interface. And
-then down here I'll go to code generate or Command N and go to implement methods to
-implement the two methods we need. Now the way this works is as soon as we implement
-normalizer interface, anytime any piece of data is being normalized, it's gonna call
-our supports normalization method and we can decide whether or not we know how to
-normalize that thing. If we return true, it calls normalized, it passes us that data
-and then we return the normalized diversion. And actually to avoid some deprecation
-errors, this is optional. Let me look at the parent class. The return type is
-actually this crazy array thingy right here. So I'm actually gonna copy that and that
-add that as a return type. If you don't have that, everything would've worked just
-fine. But you get a little deprecation warning in your tests that say that the next
-version of API platform or the serializer might add that. So you can add that right
-now to be future proof.
+So our goal is to decorate one of these normalizer so that we can add our dynamic group and then call the core normalizer. So let's get to this over in the source directory. It doesn't really matter how we organize this, but I'm gonna create a new directory called normalizer. And actually let me collapse a couple things just so it's easier to look at. Inside here we'll create a new class called How about add Owner groups, normalizer. Now all normalizer must implement NORMALIZER interface. And then down here I'll go to code generate or Command N and go to implement methods to implement the two methods we need. Now the way this works is as soon as we implement normalizer interface, anytime any piece of data is being normalized, it's gonna call our supports normalization method and we can decide whether or not we know how to normalize that thing. If we return true, it calls normalized, it passes us that data and then we return the normalized diversion. And actually to avoid some deprecation errors, this is optional. Let me look at the parent class. The return type is actually this crazy array thingy right here. So I'm actually gonna copy that and that add that as a return type. If you don't have that, everything would've worked just fine. But you get a little deprecation warning in your tests that say that the next version of API platform or the serializer might add that. So you can add that right now to be future proof.
 
-And then same thing down here. Actually in the next version there's gonna be an array
-context argument and this is gonna return a bull. All right, so before we fill this
-in or set up decoration, we have to think about which service are we gonna decorate.
-Cuz my idea is that we could replace the main core normalizer service with ours. So
-we can add the group and then call the core normalizer system. So then it will use
-our group when it's serializing like normal. So back at the terminal, if we run bin
-console, debug container normalizer, we get back a bunch of results because as we
-mentioned, there is a top level normalizer, but then the normalizer itself has lots
-of normalizer inside of it to handle different types of data. So where is the top
-level normalizer? It's actually not even in this list. It's actually called
-serializer Serializer. IT service itself is also, but even that isn't quite the right
-answer. But let's see, I want to kind of see the errors that we're gonna get. So
-let's set up our decoration. So I add public function construct, private normalizer
-interface, normalizer. And down here I'll do my normal
+And then same thing down here. Actually in the next version there's gonna be an array context argument and this is gonna return a bull. All right, so before we fill this in or set up decoration, we have to think about which service are we gonna decorate. Cuz my idea is that we could replace the main core normalizer service with ours. So we can add the group and then call the core normalizer system. So then it will use our group when it's serializing like normal. So back at the terminal, if we run bin console, debug container normalizer, we get back a bunch of results because as we mentioned, there is a top level normalizer, but then the normalizer itself has lots of normalizer inside of it to handle different types of data. So where is the top level normalizer? It's actually not even in this list. It's actually called serializer Serializer. IT service itself is also, but even that isn't quite the right answer. But let's see, I want to kind of see the errors that we're gonna get. So let's set up our decoration. So I add public function construct, private normalizer interface, normalizer. And down here I'll do my normal
 
-Dump and then return this arrow, normalize this arrow, normalizer arrow normalize
-pass a object format and context down here for supports normalization, supports
-normalization, same thing. We'll just call that same supports normalization on the
-inner method. Perfect. Now to do the decoration, I'll remove a couple of you
-statements We don't need up here. I'll say as decorator and then we'll pass
-serializer elier. All right, let's try that.
+Dump and then return this arrow, normalize this arrow, normalizer arrow normalize pass a object format and context down here for supports normalization, supports normalization, same thing. We'll just call that same supports normalization on the inner method. Perfect. Now to do the decoration, I'll remove a couple of you statements We don't need up here. I'll say as decorator and then we'll pass serializer elier. All right, let's try that.
 
-When we're on the tests, we are greeted with a big explosion. Wow, okay. It says
-something about validation, exception, listener construct, argument, argument. One,
-serial laer must be of type serializer interface app normalizer, ad owner groups
-normalizer given. Okay, so when we do as decorator serializer, it means that
-internally our service becomes the new service known as serializer. So everyone
-that's depending on this service is now going to be past us. US and the original
-serializer will be passed to the first argument to our to our instructor. The problem
-is that the serializer service and symphony is kind of big. It implements normalizer
-interface, but also de-normalized interface and also encoder and decoder interface.
-And so now our object that only implements one of these interfaces is being passed in
-its place and things are exploding. So if we truly wanted to decorate the serializer
-service, we would need to implement all four of those interfaces, which we don't
-really wanna do. That's too much work. And actually that's fine. If we did decorate
-the top level serializer, it would mean that supports normalization would be called
-for every single data, uh, every single time it's sea, anything whether it's objects
-or individual properties.
+When we're on the tests, we are greeted with a big explosion. Wow, okay. It says something about validation, exception, listener construct, argument, argument. One, serial laer must be of type serializer interface app normalizer, ad owner groups normalizer given. Okay, so when we do as decorator serializer, it means that internally our service becomes the new service known as serializer. So everyone that's depending on this service is now going to be past us. US and the original serializer will be passed to the first argument to our to our instructor. The problem is that the serializer service and symphony is kind of big. It implements normalizer interface, but also de-normalized interface and also encoder and decoder interface. And so now our object that only implements one of these interfaces is being passed in its place and things are exploding. So if we truly wanted to decorate the serializer service, we would need to implement all four of those interfaces, which we don't really wanna do. That's too much work. And actually that's fine. If we did decorate the top level serializer, it would mean that supports normalization would be called for every single data, uh, every single time it's sea, anything whether it's objects or individual properties.
 
-So instead of decorating the top level normalizer, we're going to decorate one
-specific normalizer that is responsible for normalizing a API resource objects into
-JS nld. This is a spot where you need, you can rely on the documentation a little bit
-to give you the exact service ID that you need. It's API platform dot js ld dot
-normalizer dot item. So that is the service that is responsible for normalizing an
-API resource item into O ld. All right, try the test again. And yes, we see our dump
-and the 400 air. So let me pop this open real quick so we can see. Oh, this is a very
-strange error. It says the injected serializer must be an instance of normalizer
-interface. It's coming deep from inside of API platform's. Serializer code, as I
-mentioned earlier, decorating the normalizer is not a super nice friendly thing to do
-inside of API platform. It's well documented, but it's complex. So what you need to
-do when you decorate the normalizer is you also need to implement this cer aware
-interface. And that's gonna require you to have a set serializer method. And I'm
-gonna import that class. I don't know why that didn't come automatically. There we
-go.
+So instead of decorating the top level normalizer, we're going to decorate one specific normalizer that is responsible for normalizing a API resource objects into JS nld. This is a spot where you need, you can rely on the documentation a little bit to give you the exact service ID that you need. It's API platform dot js ld dot normalizer dot item. So that is the service that is responsible for normalizing an API resource item into O ld. All right, try the test again. And yes, we see our dump and the 400 air. So let me pop this open real quick so we can see. Oh, this is a very strange error. It says the injected serializer must be an instance of normalizer interface. It's coming deep from inside of API platform's. Serializer code, as I mentioned earlier, decorating the normalizer is not a super nice friendly thing to do inside of API platform. It's well documented, but it's complex. So what you need to do when you decorate the normalizer is you also need to implement this cer aware interface. And that's gonna require you to have a set serializer method. And I'm gonna import that class. I don't know why that didn't come automatically. There we go.
 
-And inside we're gonna say, if this arrow decorated did, if this arrow deck say, if
-this arrow normalizer is an instance of serializer aware interface, then we'll call
-this arrow normalizer, arrow set. Serializer serializer. I don't even really want to
-get into the details on this. It just happens that the serializer we're decorating
-implements another interface. So we actually need to implement both interfaces.
-Again, it's a bit ugly how the Normalizer system works at this level. So it's just
-something we need. So we try this. Finally, we have our dump. It's still failing, but
-it's not exploding anymore. We're getting the same errors before because even though
-we've done all this work, we haven't still haven't added our group. So to remember
-the goal here, if we own this dragon treasure, we want to add this group right here.
-So we are of course gonna need to get the security service so we can figure out who
-the current user is. So as a private security, security. And then down here, if
-object is an instance of Dragon treasure, because this will actually be called for
-any of our API resource classes. And this arrow, security arrow get user
+And inside we're gonna say, if this arrow decorated did, if this arrow deck say, if this arrow normalizer is an instance of serializer aware interface, then we'll call this arrow normalizer, arrow set. Serializer serializer. I don't even really want to get into the details on this. It just happens that the serializer we're decorating implements another interface. So we actually need to implement both interfaces. Again, it's a bit ugly how the Normalizer system works at this level. So it's just something we need. So we try this. Finally, we have our dump. It's still failing, but it's not exploding anymore. We're getting the same errors before because even though we've done all this work, we haven't still haven't added our group. So to remember the goal here, if we own this dragon treasure, we want to add this group right here. So we are of course gonna need to get the security service so we can figure out who the current user is. So as a private security, security. And then down here, if object is an instance of Dragon treasure, because this will actually be called for any of our API resource classes. And this arrow, security arrow get user
 
-Equals object arrow, get owner, perfect. Then we can call context. Let's go back at
-groups to add owner Reed. Phew. And now when we run the test, we've got it. So that's
-a dynamic field on a user by user basis. Now this was just adding an owner colon
-Reid. If you also needed like an owner colon, right, you would actually need to also
-implement a DN normalizer interface. So I'm not gonna do the whole thing here, but
-what you do there is you need to make this implement, implement DN normalizer
-interface. And then you would implement the two methods here. You would once again
-call the uh, decorated call in the decorated service. You'd also allow this to be a
-private normalizer interface or DN normalizer interface. And then finally, the
-service that you'd be decorating in that case is called API platform serializer
-normalizer item. And if you wanted to decorate both of them, you would actually need
-to use yammel. You can't decorate two services at once. AP firm covers that in their
-documentation. Um, so I won't go into it too much further. It's just a bit of ugly
-code to make it happen. So I'm gonna undo all of that and just stick with adding the
-owner call and Reid via the custom normalizer. All right, next we're gonna do
-something else.
+Equals object arrow, get owner, perfect. Then we can call context. Let's go back at groups to add owner Reed. Phew. And now when we run the test, we've got it. So that's a dynamic field on a user by user basis. Now this was just adding an owner colon Reid. If you also needed like an owner colon, right, you would actually need to also implement a DN normalizer interface. So I'm not gonna do the whole thing here, but what you do there is you need to make this implement, implement DN normalizer interface. And then you would implement the two methods here. You would once again call the uh, decorated call in the decorated service. You'd also allow this to be a private normalizer interface or DN normalizer interface. And then finally, the service that you'd be decorating in that case is called API platform serializer normalizer item. And if you wanted to decorate both of them, you would actually need to use yammel. You can't decorate two services at once. AP firm covers that in their documentation. Um, so I won't go into it too much further. It's just a bit of ugly code to make it happen. So I'm gonna undo all of that and just stick with adding the owner call and Reid via the custom normalizer. All right, next we're gonna do something else.
 
