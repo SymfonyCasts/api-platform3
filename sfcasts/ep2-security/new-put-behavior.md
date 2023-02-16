@@ -1,0 +1,65 @@
+# New Put Behavior
+
+Coming soon...
+
+Start your terminal and manually clear, clear the cash directory. You don't have to
+do this, but if you do, and maybe if you, even if you don't, when you run all of your
+tests, you should see a deprecation warning down here, which is really interesting.
+It says, since API platform 3.1 says, in API platform four put will always replace
+the data, use extra property standard, put true on every operation to avoid breaking
+puts behavior use patch to use the old behavior. Okay, what does that mean? Well,
+right now it means nothing has changed. Our put operation acts like it always did,
+but in API platform four, the behavior of put is gonna change dramatically. And at
+some point between now and then we need to opt into that new behavior so that it
+doesn't suddenly break on us an API platform. Four. So what's changing? Well if you
+go over your api, let me actually refresh, use the GI collection endpoint to see
+execute so we can get a ballot id. Great. Okay, so we have a treasurer with ID one.
+We know right now that if we use the put request and use ID one, we can send just one
+of these fields to update just one thing. So I'm gonna send just the description and
+say changed. Now before I try this, our port re request does require us to be logged
+in. So my other tab I'm gonna go over and just make sure we log in first. Perfect.
+And then down here we'll execute.
+
+Awesome. So we only passed the description property. It means it kept all the other
+descriptions, all the other fields the same,
+
+But it updated the one field we sent. Well turns out that's not how put is supposed
+to work. Put is supposed to be a replace, meaning if we send only one field, it would
+actually, if the put operation works correctly, it should actually replace and remove
+all the other fields. It means when you use the put operation, you're actually
+supposed to send every single field, even the fields that aren't changing. Now that
+sounds kind of crazy. There are technical reasons for that. I'll mention some of them
+later. But the point is, that's how put is supposed to work in the Navy Eye Platform
+four. That is how post, that is how put is going to work. Honestly, it makes put in a
+lot of situations less useful. So you'll notice that we're gonna lean use patch a lot
+more going forward. So whether we like it or not, at some point between now and API
+platform four, we're going to need to tell API platform that it is now okay for it to
+change the behavior of put to the new way of doing it. So let's just do that. Now,
+the way we do this is we go into every single operation,
+
+Find, put uh, find our API resource and add a new option called extra properties set
+to an array with one called Standard Put True. So you're saying I want to use the
+standard behavior for put, so I'm gonna copy that cause we're gonna need that down
+here on this API resource. This one doesn't even have a put, but it's, we're still
+gonna get the deprecation warning if we don't have it there. And then also over in
+our user class, we're gonna add that to both of the API resource spots here as well.
+And now when you're run our tests, we don't have any tests that use our port
+requests. So we won't see the difference here, but we can see that that deprecation
+is gone. So to see the difference, let's use our port request again. Let's once again
+just send one field and we'll execute in this time, check it out, 4 22, validation
+error because any fields we didn't send got set to null and so now we're failing
+validation. So as I mentioned, this kind of makes for me put less useful and so we're
+gonna use the patch request a lot more. And honestly, if you don't want to have a put
+put operation at all anymore,
+
+That actually makes a lot of sense and we're gonna remove it. In some cases you could
+just go ahead and remove it. Um, but put, but one nice thing is that put does now
+allow you to create new objects, which can be good in some edge cases or it could
+actually be a nightmare from the security standpoint because now you need to worry
+about this put operation and that can actually be used to create users as well as
+edit users. And sometimes creating versus editing has different permissions. So this
+is all a little confusing to you. My recommendation might actually be to remove the
+put operation and just use the patch operation, which works exactly like you've
+always expected it to. All right, next, let's get more complex with security by
+allowing a treasure to be edited only by its owner.
+

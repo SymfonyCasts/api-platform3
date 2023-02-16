@@ -1,0 +1,104 @@
+# Test Setup
+
+Coming soon...
+
+Our API is getting more and more complex and manually testing our API is not a great
+long-term plan. So let's install some tools to get a killer test set up. Step one at
+your terminal run composer require test. This is a flex alias for a package called
+Symphony Test Pack. Remember, packs are kind of shortcut packages that actually
+install a bunch of packages. So for example, when this finishes and we tech out
+Composer J S o, you can see down in required dev this added pH unit itself as well as
+a few other tools from Symphony to help testing it Also executed a recipe which added
+a number of files. We have a PHP unit to XML that disk file. To get us started, we
+have a test directory, a dot N test file for test specific environment variables and
+even a little bin slash php unit executable shortcut that we'll use to run our tests.
+Alright, so obviously Symphony has tools for testing and these can definitely be used
+to test an api. An API platform even has their own tools built on top of those to
+make testing and API even easier. However, we are going to use a tool that I love
+
+That's built on top of Symphony's tools called Browser because it's just super fun to
+use. Browser gives us a nice fluid interface that can be used for testing web
+applications like you see here, or testing APIs. It can also can be used to um, test,
+uh, JavaScript. So let's get this guy install, I'll comp copy the composer choir
+line, we'll spin back over, run that. And while that's running it's optional, but
+there's one other little extension class that you can add to pH unit XML dot disk.
+Add it down here on the bottom. And what this is gonna do is add some extra features
+like when tests fail, it will automatically save the last re response that happened.
+And if you're using JavaScript testing, it'll actually take screenshots for you.
+You'll see this in terms of the API in a minute. All right, so we are ready. Let's
+create our first test in a test directory. Doesn't really matter how you organize
+things in here, but I'm gonna create a functional directory because what we're gonna
+be doing is making functional tests to our api. We're actually gonna be taking API
+client making git and post requests and then asserting that we have the correct
+output. I'm gonna create a class called Dragon Treasure Resource
+
+Test, PHP Dragon Treasure Resource Test. And then kind of like a normal test, we're
+gonna make this extend not test case from PHB unit, but kernel test case that extends
+test case. But this gives us access to symphony's container, which we're gonna need.
+All right, so let's start simple. Let's just test the GI collection endpoint and make
+sure that we get back the data that we expect to use a browser. Right now this is
+just a normal PHB unit test To use that browser library. We're gonna add a tray
+called use has browser, and then down here I'll say public function. How about test
+get collection of treasures? This method will return void using browser is dead
+simple thanks to that trait. We have a new browser variable and then we can make GI
+post posed patch whatever request we want. So let's make a get request to slash API
+slash treasures and then just to see what that looks like, we can use this nifty
+little dump function. How cool is that? All right, let's try it. So to execute our
+test, we can run vendor bin PHB units. That works just fine. There's also a little
+shortcut that symphony at that the recipe added which has bin slash pH unit.
+
+So when we run that, ooh, let's see, you can see this. The dump did happen, but look
+it, it says SQL State connection to server port 5, 4, 3, 2 failed. It's not talking
+to our database. Ah, remember how our database is working? Our database is running
+via Docker and thens are using the Symphony web server. When we use our browser over
+here, the Symphony web server is detecting Docker and setting the database U URL
+environment variable for us. So that's why our web, our API is talking to able to
+talk to the Docker database When we run commands in the command line that need to
+talk to the database, we've been running things like Symphony console make migration
+because when we execute things through Symphony, it adds the database underscore URL
+environment variable that talks to Docker. So when we run our test and we can't just
+run PIN PHB bin slash PHB unit, we need to run Symphony PHB bin slash PHB units. It's
+the same thing, but it's gonna allow Symphony to add that database URL environment
+variable. And now let's see, we see a dump. Let's go to the top. Okay, better it's
+talking to the database, but it says
+
+Database app underscore test does not exist. Interesting. So let's take a little look
+here. If you open your config packages doctrine YAML file
+
+And you scroll down, there's a when at test section that's added automatically. This
+is really cool. So when we're in the test environment, there's a little configure
+called DB name Suffix. So it's automatically gonna take whatever database name you
+have configured normally and it's gonna add underscore test to it. This next part
+here is actually specific to a library called Para Test where you can run your test
+in parallel. That's, we're not doing that, so that's just an empty string for us. So
+anyways, that's how we end up with an underscore test at the end of our database
+name. And we want that. We don't want our development environment and our test
+environment to use the same database cuz it just gets annoying that they're running
+over each other's data. By the way, before we fix that, I do wanna mention if you're
+not using the Symphony Binary and Docker setup and you're configuring your database
+manually, be aware that in the test environment you're, if you have a dot end dot
+local file, it is not read. The test environment is special. It skips reading the.mt
+local file and only reads the DOM test file.
+
+So if you do have some database specific configuration that you want, don't wanna
+commit to your repository, you can create a DOM test dot local file and configure
+your database underscore URL there. There. All right. Anyways, in the test
+environment, we're missing our database. So we could easily fix this by running
+Symphony console doctrine database create dash NV equals test. But we are not going
+to do that cause that's way too much work. Instead we're gonna use one more trait
+inside of our test, say use reset database. This comes from Foundry, the library
+where that gives us all of our test data via the factories. And what Reset database
+does is it automatically makes sure that the database is cleared before every test.
+So if you have two tests, your second test isn't gonna mess up because it has data
+from the first test. It's also gonna create the database automatically for us. Check
+this out. Run Symphony PHP bin slash peach MUN again and check out that dump. That is
+our response. The beautiful J S O LD is coming back. We don't have any items inside
+of there yet, but it's working. And by the way, just wanna point out that right now
+when we make this get request, this is not passing the except header
+
+That says we want, as a reminder, when we try out, when you use swagger over here, it
+actually pass an accept header that advertises that we want application slash LD plus
+jsun. We could have that here. I'm just pointing out we are not. The fact that we're,
+we are getting back Jasons LD is because that's the default format in our api.
+Anyways, next, let's actually write this test and do some assertions.
+

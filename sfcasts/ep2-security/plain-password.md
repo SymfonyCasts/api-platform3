@@ -1,0 +1,137 @@
+# Plain Password
+
+Coming soon...
+
+All right, we have a pretty nice dragon treasure test. So let's create one for the
+user class. So I'll create new peach B class called user resource test, and then
+we'll make that extend our custom API test case. And then we just need to reuse reset
+database. You don't need to use has browser because that's already done for us in our
+base class. We'll start with public function test post to create user. All right, so
+this is gonna be pretty simple. It's actually gonna a pretty cool test. We are going
+to make a post request to slash api slash users to create a new user. So I'll pass
+pass JSON with an email and a password. Then we'll do some basic things. We'll start
+the status as 2 0 1. And then now that we've created that new user, let's immediately
+see if logging in works. So we can create a post request slash login. And here we're
+also gonna have a JSON key and I'll just copy the email and password from above. And
+down here it'll say Assert
+
+Six
+
+Successful. All right, let's give that a try in theory that might work. Say symphony
+bin, symphony PHP bin slash piece of unit. This time I'll run the entire user
+resource test and okay, 4 22 status code, but 2 0 1 expected. So if you look here,
+that means that something went wrong with creating our user. And you know what? I
+know what it was. I forgot to pass the username field. That was an accident. Let's
+pass the username set to a username. All right, now I'm gonna try it. Okay, that's
+what I expected. Expected successful status code, but got 4 0 1. So the failure is
+actually down here. So we were able to create, create the user successfully, but then
+when we try to log in with it, that failed. And the reason is that we never set up
+our database to ha our API to hash passwords. So in our user class above the password
+property, we did make that part of our api, but the plain text password's going
+directly into the database, which is a no-no, and also it just won't work because our
+login system, when we use our login system, it will hash this password and compare
+that to what's in the database and those will never match. So we forgot to hash the
+password.
+
+So let's fix this. One of the things I like to do is, is I like to leave the password
+field as just the hash password. So instead of, so, instead of temporarily storing
+the plain text password there, I'm gonna create a totally new property called private
+nullable string. Plain password equals null. This is not gonna be stored in the
+database, it's just a temporary property that will hold the plain text password and
+then we will hash it in stored on the real uh, property down at the bottom. I'll go
+to co co-gen or command N on a Mac and we can generate plain password. I'll make a
+fluent setter just to match my other ones and perfect. And we can clean that up as
+much as we want to. All right, so now here's the idea. If we scroll all the way to
+the top and find the password field, we're gonna remove this from our api. This will
+no longer be directly modifiable in our API and instead plain password will. But we
+are gonna also use serialized name so that this is called password. So the user's
+gonna post a pass, send a password field, it's actually gonna populate plain
+password.
+
+So this isn't gonna work yet. And if you run a test now things are actually worse
+than they were before. We have 500 air. And the reason is because not null violation,
+the password on password. So we're sending the password, it's getting saved on
+planned password, but we're not doing anything with that. And so the password
+property is staying null and it's exploding when it gets in the database. So the
+question is how can we hash the password? Is there, well, just like in we did in
+foundry hash password is actually pretty easy. You just need the user password,
+password interface service, and then you can just call a method on that. What we need
+is a hook in APF platform to do it something after the user. Our data's been deser
+last under the user object. We need to be able to run some code before the user
+object is saved in the episode. An API platform version two version of this tutorial.
+I used a doctrine listener for this. That is a bit, that solution is a bit magical
+and it does have one downside where if only the plane password is set when editing
+and user, your doctrine listener doesn't run at all and you have to do some weird
+workarounds to get it to work. So in API platform three, there's kind of a new spot
+for us to do that that I want to take advantage of.
+
+It's called a state processor. And in fact, our user class is already using a state
+processor. If you look for an upgrade guide on the API platform and search for
+processor, let's see here. Here we go. They have a section down here called Providers
+and Processors. We're gonna talk about providers later, but what it's actually saying
+here is that if you have a entity right now, your put request already has a processor
+called a persist processor on it Post also uses that persist processor and delete has
+a different one called remove processor. These persist process processors are things
+that happen after you send data. So we send data that data's DC relies into the
+object, and then something needs to happen. If our API resource as an entity, like in
+our project, what we need to happen is we need to persist that those changes to the
+database. That's actually what the persist processor does. So what we're gonna do is
+hook into this persist processor status with our own. So check this out. Step one, we
+can run a new bin console, make state processor from API platform. Let's create one
+called user hash Password processor.
+
+Perfect. And we'll spin over go to source. It creates new state directory with user
+hash password processor inside. It's pretty simple. API platform will just call this
+method, pass US data, tell us with operations on there, it has some other information
+and we just do whatever we need to. Now, using this processor is really simple in
+theory. We could actually go up to our, for example, post endpoint and we could say
+processor equals, and we could just point it to that service ID app slash state slash
+user hash password processor. Unfortunately, if we did that, that would replace the
+persist processor that's already on there. We don't wanna replace that processor. We
+want that persist processor processor to run and we want our new processor to run. So
+due to that, we're not gonna change the processor in the config. We're going to use
+service decoration. This is something we did earlier. So decoration always follows
+the same pattern. We're gonna have a construct function that takes an argument, which
+is the same interface that we have. So we're gonna say private processor interface
+and I'll call it inner processor. And down here I'm gonna put a little dump
+
+So we can see if this is working. And then we're just gonna call this arrow inter
+processor arrow process and pass a data operation, UI variables. Let's see, what
+else? And context. So all the arguments that we got.
+
+Perfect.
+
+So this is now set up for a decoration, but to tell Symphony to you. So what we're
+gonna basically do is tell Symphony that internally in Symphony and API platform,
+this persist processor is a service. We're gonna tell Symphony that whenever it needs
+this persist processor service to use our service instead, but then pass us the
+original persist processor to our constructor. So what we do that is we say as
+decorator, and then we pass the ID of the of that core service, which is something
+you can find in the documentation. It's a you platform, dot doctrine, dot orm, dot
+state persist processor, and that's it. So we're not doing anything yet, but if
+everything's working, we should be able to run our test and see our dump. Let's try
+it and got it still the same 500, but it's using our processor now. Now we can get to
+work. So first here, the way we've written this processor, it's gonna be called when
+any object is being processed, whether it's a user dragon treasure or something else.
+So the first thing I'm gonna check here is if data is an instance of user and user,
+
+Oops,
+
+And data arrow get plain password, that's when we want to do our work. I should
+mention, if you follow the core way of doing this decoration, it's slightly different
+then to actually hash the password. We're gonna have a second argument to the
+instructor. Private user hash password, password hasher interface. That's what we
+want. We'll call that user password hasher. And down here, data arrow set password
+set to this arrow, user password, hasher arrow hash password passing at the user,
+which is gonna be data. And then the plane password, which is gonna be stored on data
+arrow, get plain password. So this is all happening before we call the inner
+processor. That actually saves it. So we're gonna set the password first and then we
+are going to process it. All right, so let's try this spin over, try that test and
+got it. By the way, it's really minor, but once you have that plane password property
+inside of user, there's a method called erase credentials, and you can just uncommon
+A, this airplane password equals null there. This just makes sure that if this object
+ever gets, for example, serialized to the session, if there's any sensitive data on
+it, like the plane, password, property, we make sure we get rid of that before it
+goes into our session storage. All right, next, let's fix some issues with validation
+groups and discover something about the patch method.
+

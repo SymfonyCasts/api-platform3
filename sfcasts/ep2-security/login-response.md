@@ -1,0 +1,81 @@
+# Login Response
+
+Coming soon...
+
+All right, if you refresh the page and check the Web Depot toolbar, we are not
+currently logged in. Let's try a real email and password and you can cheat by just
+clicking this email and this password here. This exists in our app fixtures, so that
+should work when we log in. Okay, the boxes disappear, but nothing else happens.
+We'll improve that in a minute, but now refresh this page and look down here on the
+web two bar, we are authenticated just by making a successful age X request to that
+login endpoint. That was enough to create this session and keep us logged in. And
+what's better is if we started making requests to our API from our JavaScript, those
+requests would be authenticated. That's right. We don't need any fancy API token
+system where we attach a token to every request. We can just make a request and the
+magic of cookies are gonna automatically attach that to every request we make and we
+are gonna be authenticated, okay? So when we logged in, it works, but nothing
+happened on the page. The question is what should we return after authentication?
+What would be helpful to return so that we could show something different here?
+
+Well, again, it doesn't really matter if you're writing this for your own JavaScript,
+do whatever is useful for your app. We're currently returning the user id, but we
+could if we wanted to return the entire user object as jsun.
+
+However,
+
+There's one tiny problem with that. It's not super restful. This is a kind of rest
+purity thing. Every different u l that you have represents a different resource. So
+this returns the represents the collection of resources and these, this u l here
+represents a single user resource. And if you have a different URL that's kind of
+known as a different resource. So the kind of the, the point is here that in a
+perfect world, you would just return a user resource from a single url, not have five
+different endpoints where you can get user resources. So if we return the user json
+from this end point, we're kind of almost creating a new API resource that is also
+the user. It's not really that important, it's just not the most restful thing to do.
+In fact, anything we return from this endpoint from a rest point of view becomes a
+new resource in our api. So it doesn't really matter. Do whatever you want. I'm just
+making that point. So to try to be helpful to our front end and try to follow the
+spec. I have another idea. What if we return nothing from this endpoint, but then
+
+We sneak in the user i r i onto the location header of the response? Because if we
+debt so that our front end knows who just logged in, lemme show you. So thing number
+one is instead of return to user id, we're gonna now gonna return the I R I, which is
+gonna look something like slash api slash user slash and then the user id. But I
+don't wanna hard code that because maybe we change that in the future. I'd rather
+have API platform generate that for me. How can we do that? Fortunately, API platform
+gives us an auto wire service. So before the optional argument, add a new argument,
+type into with i i converter interface, call it i r i converter. And then down here,
+this is kind of cool, we're gonna return a new response, the one from H two
+Foundation with no content and a 2 0 4 status code 2 0 4 means successful, but there
+is no content to return. And then we'll pass a location header set to i r i converter
+arrow, get i r i from resource. So you can, so you can get the resource from an i i
+or the i i string from the resource, the resource being your object. So pass this
+user. How nice is that?
+
+All right, so now we're returning this. The next question is how could we use this in
+JavaScript? So my goal is that after we log in, I want to automatically show some
+user information over here on the right, this right side here is actually being built
+by another view file called Treasure Connect app. I won't go into the details, but
+basically as long as it has a user information, it's gonna print out some user
+information and log inform. That view is actually already set up to pass that user
+information to Treasure Connect down at the bottom after successful authentication,
+you can see this is where we clear the email and password state. That's what kind of
+clears these boxes after login. And then if we emit an event called User
+Authenticated and pass at the user, i r i, our Treasure Connect app is actually
+already set up to listen to this and it will make a age X request to the user. I I I
+get that js O back and populate its own data. So don't worry about the details of the
+View app. The point is all we need to do is grab the IRI from the re location header
+here and then emit this event and everything else should be connected.
+
+So to read the the header, we can say you const user IRI equals, and then response
+headers dot get location and I'll uncommon that emit and we should be good. All
+right, let's move over and refresh. Now, first thing I want you to notice is that we
+are still logged in, but our page actually doesn't know we're logged in. We're gonna
+fix that in a second, but let's log in again with our valid email and password and
+beautiful, we made the post request here that returned the i I and our JavaScript
+made a second request to that I r i to get the user information and then displayed it
+over here. All right, next, let's talk about what it means to log out of an api and
+then we'll show a simple way of telling our JavaScript who is logged in on page load.
+Because right now, even though we're logged in, as soon as I refresh our JavaScript
+thinks we're logged out, let's fix that.
+
