@@ -137,7 +137,7 @@ doctrine:migrations:migrate
 Y nos explota en la cara.
 
 00:02:18.016 --> 00:02:20.326 align:middle
-¡Qué grosero! Pero...
+¡Grosero! Pero...
 
 00:02:20.326 --> 00:02:22.156 align:middle
 no debería sorprenderte demasiado.
@@ -308,7 +308,7 @@ Y sí, más adelante aprenderemos a establecer la propiedad
 owner automáticamente para que el usuario de la API
 
 00:05:30.936 --> 00:05:34.586 align:middle
-no tenga que enviarlo manualmente.
+no tenga que enviarla manualmente.
 
 00:05:35.316 --> 00:05:39.666 align:middle
 Pero por ahora, hacer que el cliente de la API
@@ -336,7 +336,7 @@ Cuando empecé a trabajar con la API Platform,
 
 00:05:59.456 --> 00:06:03.926 align:middle
 pensaba que las propiedades de relación
-utilizarían simplemente el id del objeto.
+podrían utilizar simplemente el id del objeto.
 
 00:06:04.316 --> 00:06:06.186 align:middle
 Como owner: 1.
