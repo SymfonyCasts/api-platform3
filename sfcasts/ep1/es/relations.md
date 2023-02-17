@@ -1,19 +1,119 @@
-# Relaciones
+# Relacionar recursos
 
-Próximamente...
+En nuestra aplicación, cada `DragonTreasure` debe pertenecer a un único dragón... o `User`en nuestro sistema. Para configurar esto, olvídate por un momento de la API y modelémoslo en la base de datos.
 
-En nuestra aplicación, cada Tesoro del Dragón debe pertenecer a un único dragón o usuario de nuestro sistema. Así que olvidémonos de la API por un segundo y modelémoslo en la base de datos. Así que gira sobre ella y ejecuta Consola Bin, make entity. Y vamos a añadir nuestra modificar nuestra entidad Tesoro del Dragón porque nuestro tesoro del dragón necesita un propietario. Así que vamos a añadir una propiedad propietario y luego esto va a ser una relación mini a uno. Recuerda, si no estás seguro de qué relación necesitas, siempre puedes escribir relación, y te enviarán un asistente para ayudarte a averiguar cuál. Pero nosotros queremos una relación muchos-a-uno, y ésta va a ser relación con usuario. A continuación nos pregunta si la propiedad propietario del punto tesoro dragón puede ser nula. Todo tesoro dragón debe tener un propietario. Así que aquí voy a decir que no. Y luego nos pregunta si queremos mapear el otro lado de la relación. Así que básicamente, ¿queremos la capacidad de decir, flecha de usuario, consigue tesoros dragón en nuestro código? Voy a decir que sí a esto. Diría que sí a esto por dos razones. Una, puede ser útil tener esto en tu código. Y dos, como veremos un poco más adelante, esto nos va a permitir mostrar realmente los Tesoros del Dr. Dragón para un usuario cuando estemos utilizando, cuando estemos obteniendo nuestro recurso de usuario. Así que di que sí a eso. Y el nombre del campo dentro del usuario Tesoros del Dragón está bien. Por último, para la eliminación de huérfanos, di que no, vamos a hablar de la eliminación de huérfanos. Y
+## Añadir la relación ManyToOne
 
-Más tarde, creo y lo hizo, entró a salir de eso.
+Dirígete a tu terminal y ejecuta:
 
-Así que
+```terminal
+php bin/console make:entity
+```
 
-Esto no tiene nada que ver con la plataforma APAP. Es muy sencillo. Nuestro tesoro dragón tiene ahora una nueva, veamos, propiedad owner con nuevos métodos get owner y set owner. Y encima en usuario tenemos una nueva propiedad Tesoros del Dragón, que es una Toman empaquetada a TR Tesoro del Dragón. Y en la parte inferior de aquí tenemos obtener Tesoros Dragón. Añadir Tesoro Dragón y quitar Tesoro Dragón. Cosas muy estándar. Muy bien, hagamos una migración para esta consola sinfónica. Haz la migración. Haremos nuestra doble comprobación estándar. Sí, tiene buena pinta. Y luego ejecuta esto con la doctrina de la consola Sinfonía. La migración migra y nos explota en la cara. Vale, no debería ser demasiado sorprendente. Tenemos un montón de Tesoros del Dragón en la base de datos ERO cuando intentamos añadir el ID de propietario a la tabla donde no está Nu, nuestra base de datos no tiene ni idea de qué valor poner para esos tesoros del Dragón existentes. Si esto ya estuviera en producción, tendríamos que hacer un poco más de trabajo. Y hablamos de ello en nuestro tutorial de doctrina, doctrina. Pero como esto aún no está en producción, lo más fácil es resetear completamente la base de datos. Así que voy a ejecutar la consola Sinfonía base de datos doctrina,
+Modifiquemos la entidad `DragonTreasure` para añadir una propiedad `owner`... y entonces ésta será una relación `ManyToOne`. Si no estás seguro de qué relación necesitas, siempre puedes escribir `relation` y obtendrás un pequeño asistente.
 
-Luego base de datos doctrina, crear, luego Doctrine, migraciones Migrar, que ahora funcionará ya que nuestra base de datos no tiene ninguna rosa en su interior. Por último, ejecuta la Consola Symphony Doctrine Fixtures Load. Así obtendremos nuevos datos. Y oh, esto falla por la misma razón que intenta crear Tesoros Dragón sin propietario. Así que para solucionarlo, en realidad hay dos formas en las que me gusta hacer las dos cosas en la Fábrica de Tesoros Dragón y obtener los valores predeterminados. Añadiremos un nuevo campo de propietario aquí y lo llamaremos Llamada a la Fábrica de Usuarios. No, no voy a entrar en los detalles de fa uh, fundador tiene muy buena documentación sobre cómo trabajar con las relaciones, pero esto es básicamente va a asegurarse de que si l pero lo que esto haría si no hiciéramos nada más, esto crearía un nuevo usuario cada vez que creó un Tesoro Dragón y relacionarlos. Así que está bien tener eso por defecto. Pero en nuestra aplicación fija, voy a hacer algo un poco más guay. Vamos a mover Tesoro Dragón después de Fábrica de Usuarios y a pasar un segundo argumento aquí, que es una forma de anular los valores por defecto cada vez. Así que al pasar una llamada de retorno cada vez, deberá llamar a esta llamada de retorno 40 veces.
+Será una relación con `User`... y te preguntará si la nueva propiedad `owner` puede ser nula en la base de datos. Cada `DragonTreasure` debe tener un propietario... así que di "no". A continuación: ¿queremos mapear el otro lado de la relación? Básicamente, ¿queremos tener la posibilidad de decir `$user->getDragonTreasures()` en nuestro código? Voy a decir "sí" a esto. Y puede que respondas "sí" por dos razones. O bien porque poder decir `$user->getDragonTreasures()` sería útil en tu código o, como veremos un poco más adelante, porque quieres poder obtener un`User` en tu API y ver al instante qué tesoros tiene.
 
-Y aquí podemos devolver un array de datos que deberían anular esos valores por defecto. Así que voy a decir propietario y podemos decir fábrica de usuarios llamar a, llamar a aleatorio. Así está bien. Encontrará un objeto usuario aleatorio y lo establecerá como propietario. Así que tendremos 40 tesoros Dragón asignados cada uno a uno, asignados aleatoriamente a uno de estos 10 usuarios. Muy bien, prueba a cargar de nuevo los accesorios de doctrina de la Consola Sinfónica. Esta vez funciona. Así que en un nivel muy alto, todo lo que básicamente acabamos de hacer fue añadir una nueva propiedad propietario a Tesoro Dragón y una nueva propiedad Tesoros Dragón, propiedad sobre a usuario. Así que no debería sorprendernos demasiado si vamos y hacemos, usamos nuestra ruta final Obtener colección para nuestros tesoros, el nuevo campo de propiedad no aparece en nuestra api. Es lógico que la propiedad no esté dentro de nuestro grupo de normalización. Así que si queremos exponer la propiedad owner en la api, como cualquier otro campo, tenemos que añadirle grupos. Así que voy a copiar los grupos de Cool Factor y pegarlos aquí. Esto significa que podremos establecer el propietario cuando establezcamos el propietario y también que se nos devolverá el propietario.
+De todos modos, la propiedad - `dragonTreasures` dentro de `User` es fine.... y, por último, para `orphanRemoval`, di que no. También hablaremos de eso más adelante.
 
-Y sí, más adelante aprenderemos a establecer el propietario automáticamente para que no tengas que hacerlo, para que el usuario de la API A no tenga que enviarlo. Pero por ahora, dejaremos que lo establezcan manualmente. Muy bien, probemos esto. Ni siquiera refrescaré, sólo pulsaré ejecutar y hermoso. Tiene propietario y muy interesante. Está establecido en una url. Hablaremos más de esto, pero ese es el comportamiento por defecto. Cuando tienes relaciones, se establece, no se establece en la API Platform. Podrías simplemente establecerlo al, ID como propietario uno, pero esto es mucho más útil porque esto le dice a tu cliente API a dónde podría ir para obtener más información sobre ese propietario. Muy bien, vamos a intentar escribir ese campo. Así que déjame cerrar esta ruta. Vamos a crear un nuevo tesoro dragón. Di tesoro dragón. Muy valioso. Superguay. Oh, ¿sabes qué? En realidad aún no veo mi ID de propietario aquí. Podría añadirlo manualmente. Quiero actualizar. Voy a copiarlo y actualizarlo rápidamente porque quiero que todos veáis que el propietario aparece ahí
+Y... ¡listo! Pulsa intro para salir.
 
-Desde que lo añadimos a nuestro grupo. Así que voy a pegar eso y ahora añadiré el propietario. Y para el propietario, vamos a buscar un ID aquí abajo en nuestro, vale, genial. Tengo un propietario cuyo ID es sólo uno. Así que pondré uno justo ahí. Pulsa ejecutar y veamos. Ah, código de estado 400. Y mira esto. Esperado I r I o documento anidado para atributo propietario entero dado. Así que lo pasé. El ID del propietario no le gusta. ¿Qué ponemos aquí? Bueno, nos lo dice en iri, claro, qué demonios no es I, I, vamos a averiguarlo a continuación.
+Así que esto no tiene nada que ver con la API Platform. Nuestra entidad `DragonTreasure` tiene ahora una nueva propiedad `owner` con los métodos `getOwner()` y `setOwner()`. 
+
+[[[ code('9a8f09be4c') ]]]
+
+Y en `User` tenemos una nueva propiedad `dragonTreasures`, que es un `OneToMany` de vuelta a`DragonTreasure`. En la parte inferior, se ha generado `getDragonTreasures()`,`addDragonTreasure()`, y `removeDragonTreasure()`. Cosas muy estándar.
+
+[[[ code('5de6cf009c') ]]]
+
+Vamos a crear una migración para esto:
+
+```terminal
+symfony console make:migration
+```
+
+Haremos nuestra doble comprobación estándar para asegurarnos de que la migración no está intentando minar bitcoin. Sí, aquí todo son aburridas consultas SQL. 
+
+[[[ code('dedb502552') ]]]
+
+Ejecútala con:
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Reiniciar la base de datos
+
+Y nos explota en la cara. ¡Grosero! Pero... no debería sorprenderte demasiado. Ya tenemos unos 40 registros `DragonTreasure` en nuestra base de datos. Así que cuando la migración intenta añadir la columna `owner_id` a la tabla -que no permite nulos-, nuestra base de datos se queda perpleja: no tiene ni idea de qué valor poner para esos tesoros existentes.
+
+Si nuestra aplicación ya estuviera en producción, tendríamos que trabajar un poco más para solucionar esto, de lo que hablamos en nuestro tutorial de Doctrine. Pero como esto no está en producción, podemos hacer trampas y simplemente apagar y volver a encender la base de datos. Para ello ejecuta:
+
+```terminal
+symfony console doctrine:database:drop --force
+```
+
+Luego:
+
+```terminal
+symfony console doctrine:database:create
+```
+
+Y la migración, que debería funcionar ahora que nuestra base de datos está vacía.
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+## Configurar las Fijaciones
+
+Por último, vuelve a añadir algunos datos con:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+Y oh, ¡esto falla por la misma razón! Está intentando crear Tesoros Dragón sin propietario. Para solucionarlo, hay dos opciones. En `DragonTreasureFactory`, añade un nuevo campo `owner` a `getDefaults()` configurado como `UserFactory::new()`.
+
+[[[ code('5e89f3ad8c') ]]]
+
+No voy a entrar en los detalles de Foundry -y Foundry tiene una documentación estupenda sobre cómo trabajar con relaciones-, pero esto creará un nuevo `User` cada vez que cree un nuevo `DragonTreasure`... y luego los relacionará. Así que está bien tenerlo por defecto.
+
+Pero en `AppFixtures`, anulemos eso para hacer algo más guay. Desplaza la llamada a`DragonTreasureFactory` después de `UserFactory`... y pasa un segundo argumento, que es una forma de anular los valores por defecto. Pasando una llamada de retorno, cada vez que se cree un`DragonTreasure` -es decir, 40 veces- se llamará a este método y podremos devolver datos únicos que utilizaremos para anular los valores por defecto de ese tesoro. Devuelve`owner` ajustado a `User::factory()->random()`.
+
+[[[ code('e87c62ef4b') ]]]
+
+Eso encontrará un objeto `User` aleatorio y lo establecerá como `owner`. Así tendremos 40`DragonTreasure`s cada uno acaparado aleatoriamente por uno de estos 10 `User`s.
+
+¡Vamos a probarlo! Ejecuta:
+
+```terminal
+symfony console doctrine:fixtures:load
+```
+
+Esta vez... ¡éxito!
+
+## Exponer el "propietario" en la API
+
+Vale, ahora `DragonTreasure` tiene una nueva propiedad de relación `owner`... y `User`tiene una nueva propiedad de relación `dragonTreasures`.
+
+¿Aparecerá... esa nueva propiedad `owner` en la API? Prueba con la ruta GET del tesoro. Y... ¡el nuevo campo no aparece! Eso tiene sentido! La propiedad `owner` no está dentro del grupo de normalización.
+
+Así que si queremos exponer la propiedad `owner` en la API, como cualquier otro campo, tenemos que añadirle grupos. Copia los grupos de `coolFactor`... y pégalos aquí.
+
+[[[ code('554977e73d') ]]]
+
+Esto hace que la propiedad sea legible y escribible. Y sí, más adelante aprenderemos a establecer la propiedad `owner` automáticamente para que el usuario de la API no tenga que enviarlo manualmente. Pero por ahora, hacer que el cliente de la API envíe el campo `owner` funcionará de maravilla.
+
+En cualquier caso, ¿qué aspecto tiene esta nueva propiedad `owner`? Pulsa "Ejecutar" y... ¡guau! ¡La propiedad `owner` se establece en una URL! Bueno, en realidad, el IRI de `User`.
+
+Esto me encanta. Cuando empecé a trabajar con la API Platform, pensaba que las propiedades de relación utilizarían simplemente el id del objeto. Como `owner: 1`. Pero esto es mucho más útil... porque le dice a nuestro cliente API exactamente cómo puede obtener más información sobre este usuario: ¡sólo tiene que seguir la URL!
+
+## Escribir una propiedad de relación
+
+Así que, por defecto, una relación se devuelve como una URL. Pero, ¿qué aspecto tiene establecer un campo de relación? Actualiza la página, abre la ruta POST, inténtalo, y pegaré todos los campos excepto `owner`. ¿Qué utilizamos para `owner`? ¡No lo sé! Probemos a ponerle un id, como `1`.
+
+Momento de la verdad. Pulsa ejecutar. Veamos... ¡un código de estado 400! Y comprueba el error:
+
+> IRI esperado o documento anidado para el atributo `owner`, entero dado.
+
+Así que pasé el `ID` del propietario y... eso no le gusta. ¿Qué debemos poner aquí? Pues el IRI, ¡por supuesto! Averigüemos más sobre eso a continuación.
