@@ -1,13 +1,67 @@
-# Recurso de usuario
+# Recurso API de usuario
 
-Próximamente...
+Tenemos una entidad `User`... pero aún no forma parte de nuestra API. ¿Cómo hacemos que forme parte de la API? Ah, ¡ya lo sabemos! Ve encima de la clase y añade el atributo `ApiResource`.
 
-Tenemos nuestra nueva entidad user en, pero aún no forma parte de nuestra api. ¿Cómo hacemos que forme parte de nuestra api? Ah, ya sabes que es super sencillo. Ve encima de la clase y añade el atributo de recurso API. Actualiza la documentación. Fíjate. Seis nuevas rutas para nuestra entidad de usuario. Gracias a nuestros fixtures, deberíamos poder ver los datos inmediatamente. Voy a intentar obtener la ruta de recogida y mirarla. Está vivo. No. Es un poco raro que cosas como rollos y contraseñas aparezcan dentro de aquí. Nos preocuparemos de eso en un segundo. Rápidamente, quiero decir una cosa rápida sobre los ID UU. Como puedes ver, estamos utilizando IDs autoincrementados dentro de nuestra api, pero puedes utilizar un UU ID en su lugar. Y de eso hablaremos en un tutorial futuro. ¿Por qué utilizar ID UU? Bueno, a veces puede hacerte la vida más fácil en JavaScript. En JavaScript puedes, de hecho, generar el UU i d en JavaScript y luego enviarlo a tu api. A veces eso te hace la vida más fácil en JavaScript porque sabes cuál es el ID de ese recurso inmediatamente, en lugar de tener que hacer la petición de la edad X, esperar a que termine y luego obtener de vuelta el nuevo ID autoincrementado de todos modos. API Platform sí suministra, sí admite UID UU. Hay una forma de que añadas una nueva columna U I UU ID aquí y le digas a API Platform que ése es tu identificador.
+[[[ code('92949c6bd5') ]]]
 
-Si lo haces, una advertencia: en algunos motores de bases de datos, los UU ID no son una buena clave primaria para el rendimiento. Así que tal vez quieras mantener el id pero tener un segundo UU i d, que es lo que en realidad utiliza una plataforma APAP, pero eso depende de cuál sea tu motor de base de datos. De todos modos, volviendo a nuestra entidad de usuario, está devolviendo demasiados campos y conocemos ese problema. Sabemos cómo solucionar ese problema en el recurso API, vamos a añadir una clave de contexto de normalización con grupos. Establecer dos puntos de usuario leer para seguir ese mismo patrón que utilizamos en Dragon Treasure y luego DN normalización contacto establecer dos puntos de usuario. Ahora sólo podemos decorar los campos que realmente queremos devolver. Así que no necesitamos devolver el ID porque siempre tenemos el at id, que es más útil de todos los modos, pero sí queremos devolver el correo electrónico, así que añadiré un atributo de grupo ahí, pulsaré tabulador y obtendremos esa declaración de uso pass y right, y tendremos user calling read. Y esto también es escribir usuario llamando y Wright.
+Actualiza la documentación. ¡Fíjate! ¡Seis nuevas rutas para la clase `User`! Y gracias a nuestros fixtures, deberíamos poder ver los datos inmediatamente. Probemos la ruta de recogida. Ejecuta y... está vivo.
 
-Ahora copia eso. Bajemos aquí. Contraseña, necesitamos que la contraseña sea escribible pero no legible. Así que voy a usar los dos puntos de usuario justo aquí. Ahora bien, esto todavía no es del todo correcto. El campo de la contraseña debe ser la contraseña cifrada y en realidad no queremos que nuestros usuarios nos envíen una contraseña cifrada. Lo que queremos es que nos envíen una contraseña sin formato y luego la convirtamos en hash. Eso es algo que resolveremos en un futuro tutorial cuando hablemos más sobre el objeto usuario. Pero esto será un comienzo suficientemente bueno por ahora. Por encima de nombre de usuario. Añadamos también usuario lectura y usuario escritura sobre eso. Guay, así que vamos a refrescar y hermoso y probar nuestros puntos finales y hermoso correo electrónico y nombre de usuario volver. Y si fuéramos a crear un nuevo usuario, lo hacemos pasando email, nombre de usuario y contraseña. Muy bien, ¿qué más nos falta? ¿Qué hay de las restricciones de validación? Si ahora mismo probamos nuestra ruta vacía, obtendremos ese desagradable aire 500. Así que vamos a arreglarlo en una clase. En realidad voy a empezar por encima de la clase asegurándome de que el correo electrónico y el nombre de usuario sean únicos para que podamos pasar la entidad única
+Aunque... es un poco raro que aparezcan campos como `roles` y `password`. Ah, nos preocuparemos de eso en un minuto.
 
-Por encima pasaremos los campos y haremos primero el email. Y si quieres, puedes pasar un mensaje a esto. Precioso. Y luego vamos a repetir lo mismo para el campo nombre de usuario. Así que actualiza el campo y también el mensaje. Muy bien, luego aquí abajo para el correo electrónico, vamos a querer que no esté en blanco. Permíteme poner la afirmación delante de eso y sólo ajustaré la afirmación tú como la última vez. Muy bien. Y luego una más, también podemos PA puede pasar esto, las restricciones de correo electrónico, por lo que la dirección de correo electrónico válida. Y luego lo único que necesitamos ahora es justo encima de nombre de usuario. Añadiremos un espacio en blanco. No me preocupa demasiado la contraseña ahora mismo porque es un poco rara. De todas formas. Muy bien, pues ahora si probamos cosas, déjame de hecho, pasemos sólo contraseña y hermoso código de estado 4 22 y veamos los errores de validación. Muy bien, entonces vamos a probar una cosa válida. Pon una dirección de correo electrónico y el nombre de usuario. No, no creo que este tipo sea realmente un dragón. Creo que, creo que puede ser otra persona después de que el tesoro del dragón se ejecute. Entendido. código de estado 2 0 1. Se devuelve el correo electrónico y el nombre de usuario. Así que esto es genial.
+## API Platform y UUIDs
 
-Tenemos nuestro nuevo recurso de usuario en la api. Tiene estas seis operaciones. Tenemos la validación Page Nation, si quisiéramos, podríamos añadirle filtrado. Lo estamos machacando. Ahora llegamos a la parte realmente interesante. Tenemos que relacionar nuestros dos recursos para que cada tesoro pertenezca a un usuario. ¿Qué aspecto tiene eso en una API Platform? Es superinteresante y eso a continuación.
+Antes de seguir avanzando, quiero mencionar una cosa rápida sobre los UUID. Como puedes ver, estamos utilizando UUID autoincrementados para nuestra API: siempre es`/api/users/` y luego el id de la entidad. Pero puedes utilizar un `UUID` en su lugar. Y eso es algo que haremos en un futuro tutorial.
+
+Pero... ¿por qué utilizar UUIDs? Bueno, a veces puede hacer la vida más fácil en JavaScript cuando se trabaja con frameworks frontales. De hecho, puedes generar el`UUID` en JavaScript y luego enviarlo a tu API al crear un nuevo recurso. Esto puede ser útil porque tu JavaScript conoce el identificador del recurso inmediatamente y puede actualizar el estado... en lugar de esperar a que termine la petición Ajax para obtener el nuevo identificador autoincrementado.
+
+En cualquier caso, lo que quiero decir es que API Platform admite `UUIDs`. Podrías añadir una nueva columna UUID y decirle a API Platform que ese debe ser tu identificador. Ah, pero ten en cuenta que algunos motores de bases de datos -como MySQL- pueden tener un rendimiento deficiente si haces del UUID la clave primaria. En ese caso, mantén `id` como clave principal y añade una columna UUID adicional.
+
+## Añadir los grupos de serialización
+
+En cualquier caso, ¡volvamos a nuestro recurso `User`! Ahora mismo, devuelve demasiados campos. Afortunadamente, sabemos cómo solucionarlo. Arriba, en `ApiResource`, añade una clave`normalizationContext` con `groups` establecida en `user:read` para seguir el mismo patrón que utilizamos en `DragonTreasure`. Añade también `denormalizationContext`fijado en `user:write`.
+
+[[[ code('815bd94371') ]]]
+
+Ahora sólo tenemos que decorar los campos que queramos en la API. No necesitamos `id`... ya que siempre tenemos `@id`, que es más útil. Pero sí queremos `email`. Así que añade el atributo `#Groups()`, pulsa tabulador para añadir esa declaración `use` y pasa `user:read` y `user:write`.
+
+[[[ code('6d252dc798') ]]]
+
+Copia eso... y baja a `password`. Necesitamos que la contraseña sea escribible pero no legible. Así que añade `user:write`.
+
+[[[ code('8e24ec96a7') ]]]
+
+Esto todavía no es del todo correcto. El campo `password` debe contener la contraseña cifrada. Pero nuestros usuarios, por supuesto, enviarán las contraseñas en texto plano a través de la API cuando creen un usuario o actualicen su contraseña. Entonces haremos el hash. Eso es algo que resolveremos en un tutorial futuro, cuando hablemos más de seguridad, pero esto bastará por ahora.
+
+Ah, y encima de `username`, añade también `user:read` y `user:write`.
+
+[[[ code('51e0656fd4') ]]]
+
+¡Genial! Actualiza los documentos... y abre la ruta de las colecciones para probarlo. El resultado... ¡exactamente lo que queríamos! Sólo vuelven `email` y `username`.
+
+Y si creáramos un nuevo usuario... ¡sí! Los campos escribibles son `email`,`username`, y `password`.
+
+## Añadir validación
+
+Vale, ¿qué más nos falta? ¿Qué tal la validación? Si probamos la ruta POST con datos vacíos... obtendremos el desagradable error 500. ¡Hora de arreglarlo!
+
+De nuevo en el archivo, empieza por encima de la clase para asegurarte de que tanto `email` como`username` son `unique`. Añade `UniqueEntity` pasando `fields` a `email`... e incluso podemos incluir un mensaje. Repite lo mismo... pero cambia `email`por `username`.
+
+[[[ code('80dc514174') ]]]
+
+A continuación, abajo en `email`, añade `NotBlank`... luego añadiré el `Assert` delante... y retocaré la declaración `use` para que funcione igual que la última vez.
+
+[[[ code('be7c823ff0') ]]]
+
+Bien. el correo electrónico necesita uno más - `Assert\Email` - y encima de `username`, añadir `NotBlank`.
+
+[[[ code('0d0ce6f949') ]]]
+
+Ahora mismo no me preocupa demasiado `password`... porque ya es un poco raro.
+
+¡Vamos a probar esto! Desplázate hacia arriba y envía un campo `password`. Y... ¡sí! El simpático código de estado 422 con errores de validación. Prueba ahora con datos válidos: pasa un `email` y un `username`... aunque no estoy seguro de que este tipo sea realmente un dragón... quizá necesitemos un captcha.
+
+Pulsa Ejecutar. Ya está ¡Código de estado 201 con `email` y `username` devueltos!
+
+Nuestro recurso tiene validación, paginación y contiene una gran información! E incluso podríamos añadir filtros fácilmente. En otras palabras, ¡lo estamos machacando!
+
+Y ahora llegamos a la parte realmente interesante. Tenemos que "relacionar" nuestros dos recursos para que cada tesoro pertenezca a un usuario. ¿Qué aspecto tiene eso en API Platform? Es superinteresante, y es lo siguiente.
