@@ -1,1 +1,32 @@
-chapters: []
+chapters:
+    - production-docs
+    - tokens-cookies
+    - json-login
+    - auth-errors
+    - login-response
+    - data-page-load
+    - api-token-entity
+    - access-token-authenticator
+    - open-api-decoration
+    - scopes
+    - security
+    - test-setup
+    - browser
+    - test-user-login
+    - api-token-test
+    - new-put-behavior
+    - acl-owner
+    - admin-edit
+    - access-control-voter
+    - api-property
+    - plain-password
+    - validation-groups
+    - context-builder
+    - custom-normalizer
+    - custom-field
+    - custom-validator
+    - unit-of-work-validator
+    - auto-set-owner
+    - query-extension
+    - query-item-extension
+    - filtered-collection
