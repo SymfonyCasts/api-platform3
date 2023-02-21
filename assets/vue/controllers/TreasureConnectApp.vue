@@ -31,7 +31,7 @@ import coinLogoPath from '../../images/coinLogo.png';
 import goldPilePath from '../../images/GoldPile.png';
 
 defineProps(['entrypoint']);
-const user = ref(null);
+const user = ref(window.user);
 
 const onUserAuthenticated = async (userUri) => {
     const response = await fetch(userUri);
