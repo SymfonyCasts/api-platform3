@@ -14,12 +14,6 @@
         {% endblock %}
     </head>
     <body>
-        <script>
-            window.user = {{ app.user|serialize('jsonld', {
-                'groups': ['user:read']
-            })|raw }};
-        </script>
-
         {% block body %}{% endblock %}
     </body>
 </html>
