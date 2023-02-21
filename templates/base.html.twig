@@ -14,6 +14,10 @@
         {% endblock %}
     </head>
     <body>
+        <script>
+            window.user = {{ app.user|serialize('jsonld')|raw }};
+        </script>
+
         {% block body %}{% endblock %}
     </body>
 </html>
