@@ -4,3 +4,5 @@ api_platform:
         json: [ 'application/json' ]
         html: [ 'text/html' ]
         jsonhal: [ 'application/hal+json' ]
+
+    enable_docs: false
