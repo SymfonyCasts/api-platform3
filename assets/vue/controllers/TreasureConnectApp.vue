@@ -12,6 +12,14 @@
                     Authenticated as: <strong>{{ user.username }}</strong>
 
                     | <a href="/logout" class="underline">Log out</a>
+                    <br>
+                    <h3 class="text-left font-semibold mt-2">Tokens</h3>
+                    <div v-if="null === tokens">Refresh to see tokens...</div>
+                    <dl v-else class="text-left max-w-md text-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                        <div class="flex flex-col py-3" v-for="token in tokens" :key="token">
+                            <dd class="text-xs whitespace-normal break-words">{{ token }}</dd>
+                        </div>
+                    </dl>
                 </div>
                 <div v-else>Not authenticated</div>
 
@@ -30,7 +38,7 @@ import LoginForm from '../LoginForm';
 import coinLogoPath from '../../images/coinLogo.png';
 import goldPilePath from '../../images/GoldPile.png';
 
-const props = defineProps(['entrypoint', 'user'])
+const props = defineProps(['entrypoint', 'user', 'tokens'])
 const user = ref(props.user);
 
 const onUserAuthenticated = async (userUri) => {

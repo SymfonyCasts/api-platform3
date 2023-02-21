@@ -4,5 +4,6 @@
     <div {{ vue_component('TreasureConnectApp', {
         entrypoint: path('api_entrypoint'),
         user: userData,
+        tokens: app.user ? app.user.validTokenStrings : null
     }) }}></div>
 {% endblock %}
