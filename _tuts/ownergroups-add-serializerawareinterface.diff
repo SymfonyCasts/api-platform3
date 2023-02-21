@@ -1,5 +1,5 @@
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
-index 1020171..12265c3 100644
+index c62c27b..66f89b2 100644
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
 @@ -4,9 +4,11 @@ namespace App\Normalizer;
@@ -13,17 +13,17 @@ index 1020171..12265c3 100644
 -class AddOwnerGroupsNormalizer implements NormalizerInterface
 +class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareInterface
  {
-     public function __construct(private NormalizerInterface $decorated)
+     public function __construct(private NormalizerInterface $normalizer)
      {
 @@ -23,4 +25,11 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface
      {
-         return $this->decorated->supportsNormalization($data, $format);
+         return $this->normalizer->supportsNormalization($data, $format);
      }
 +
 +    public function setSerializer(SerializerInterface $serializer)
 +    {
-+        if ($this->decorated instanceof SerializerAwareInterface) {
-+            $this->decorated->setSerializer($serializer);
++        if ($this->normalizer instanceof SerializerAwareInterface) {
++            $this->normalizer->setSerializer($serializer);
 +        }
 +    }
  }
