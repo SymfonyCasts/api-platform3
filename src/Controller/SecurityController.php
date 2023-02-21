@@ -12,8 +12,14 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login', methods: ['POST'])]
     public function login(#[CurrentUser] $user = null): Response
     {
+        if (!$user) {
+            return $this->json([
+                'error' => 'Invalid login request: check that the Content-Type header is "application/json".',
+            ], 401);
+        }
+
         return $this->json([
-            'user' => $user ? $user->getId() : null,
+            'user' => $user->getId(),
         ]);
     }
 }
