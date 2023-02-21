@@ -6,3 +6,4 @@ api_platform:
         jsonhal: [ 'application/hal+json' ]
 
     enable_docs: false
+    enable_entrypoint: false
