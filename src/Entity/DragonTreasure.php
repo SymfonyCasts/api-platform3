@@ -41,7 +41,6 @@ use function Symfony\Component\String\u;
     formats: [
         'jsonld',
         'json',
-        'html',
         'jsonhal',
         'csv' => 'text/csv',
     ],
