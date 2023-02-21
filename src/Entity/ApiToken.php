@@ -10,6 +10,16 @@ class ApiToken
 {
     private const PERSONAL_ACCESS_TOKEN_PREFIX = 'tcp_';
 
+    public const SCOPE_USER_EDIT = 'ROLE_USER_EDIT';
+    public const SCOPE_TREASURE_CREATE = 'ROLE_TREASURE_CREATE';
+    public const SCOPE_TREASURE_EDIT = 'ROLE_TREASURE_EDIT';
+
+    public const SCOPES = [
+        self::SCOPE_USER_EDIT => 'Edit User',
+        self::SCOPE_TREASURE_CREATE => 'Create Treasures',
+        self::SCOPE_TREASURE_EDIT => 'Edit Treasures',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
