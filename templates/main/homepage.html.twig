@@ -3,6 +3,6 @@
 {% block body %}
     <div {{ vue_component('TreasureConnectApp', {
         entrypoint: path('api_entrypoint'),
-        user: app.user
+        user: userData,
     }) }}></div>
 {% endblock %}
