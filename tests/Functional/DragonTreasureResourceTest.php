@@ -16,6 +16,7 @@ class DragonTreasureResourceTest extends KernelTestCase
         $this->browser()
             ->get('/api/treasures')
             ->dump()
+            ->assertJson()
         ;
     }
 }
