@@ -1,20 +1,120 @@
-# Tokens Cookies
+# API Tokens? Session Cookies?
 
-Coming soon...
+Join me, while we tell a tale as old as... the past 10 years: API authentication.
+A topic of hype, complexity and unlikely heroes. Characters include sessions,
+API tokens, OAuth, JSON web tokens! But what do we need for *our* situation?
 
-Oh, API authentication. We have sessions, we have API token, we have OAuth, we have JSON web tokens. What do we need for our situation? This can get complex. First I want you to ask, who will be using my api? Is it your own JavaScript, or `is_programatic`, do you need to allow programmatic access? Like some code somewhere will be talking to your api. We're gonna go through both of these use cases and each of them have some extra complexities that we'll discuss along the way. By the way, when you think of API authentication, you typically think of API token, and that's true, but it turns out that pretty much all authentication is done via some sort of a token. Even session based authentication is done by sending a cookie, which contains a unique, you guessed it token. The trick is figuring out which type of token you need to send in each situation and how the end user will get that token. So let's talk about that first use case. The user of your API is your own JavaScript. So first, before we even talk about security, make sure your front end and your A and your API live on the same domain, like the exact same domain. Why? Because if they live on two different domains or subdomains, you have to deal with CORS,
+The first I want you to ask is: who will be using my API? Is it your own JavaScript,
+or do you need to allow programmatic access? Like someone will write a script that
+will use your API.
 
-Cross-Origin Resource Sharing (CORS), something that adds complexity to your application and also hurts performance. Kevin Douglas, the lead developer on API Platform, has a blog post about this where he even shows you how you can have two separate code repositories for your backend and your front end if you want that. And still, I have them served under the same domain using some web server magic. If you do for some reason decide to put things on different sub-domains, then you can, you'll need to worry about CORS headers and you can solve that with NelmioCorsBundle, but I don't recommend it anyways. If you are using your API from your own JavaScript, you're probably log, the user is probably logging into a login form with an email and password. It doesn't matter if that's a traditional login form or one that's built with some fancy JavaScript framework that submits AJAX. So again, when you think about API authentication, you think about tokens like I need an API token, right? And the answer is not necessarily a really simple restful way to handle authentication from your own job script would be just to use H G T P basic authentication on all of your endpoints.
+We're going to go through both of these use cases... and each has some extra
+complexities that we'll discuss along the way.
 
-Like the user enters an email and password and then you make an API request to some endpoint just to make sure if that's valid,
+## Everything is a Token!
 
-Then you store that username and password in JavaScript and you send it on every single API request going forward. However, this might be a bit problematic cuz there's the question of where do you securely store the email and password in JavaScript so you can continually use it. This is actually a problem in general with JavaScript. Even if you have an API token, you need to be very careful where you store it so that other JavaScript on your page can't read it. There are solutions, but it's a bit of complexity that you likely don't need. So instead for your own JavaScript, you, you can use a session. When you start a session in Symphony, it returns a cookie that is HTTP only, and that cookie contains a token and actually the contents of the HTTP only cookie aren't really important. It could be a session id, some sort of a token, whatever. But session cookies are sessions. Cookies are automatic and easy. The really important thing is that because the cookie is HTTP only, it can't be read by JavaScript, your JavaScript or anyone else's JavaScript, but whenever you make an API request that cookie's gonna come with it and it's gonna authenticate you a safe, secure way to store your token, which in this case is your session identifier.
+By the way, when you think of API authentication, you typically think of an API token.
+And that's true! But it turns out that... pretty much *all* authentication is done
+via *some* sort of a token. Even session-based authentication is done by sending
+a cookie... which contains a unique, you guessed it token. It's a random string
+that PHP uses to find and load the related session data.
 
-So the API token in this situation is simply the session cookie storaged securely in an HTTP-only cookie. Mm. We will go through this use case. Oh, and by the way, one edge case with this situation is if you have a single sign on situation, in that case, you'll authenticate with your SSO like a normal web app.
+So the trick is figuring out which *type* of token you need in each situation and
+how the end-user will *get* that token.
 
-You'll end up with an access token, which you can, and then you can choose to just log the user in, uh, via session authentication like normal or use that access token directly from your JavaScript. That's a more advanced use case that we won't go through. In this tutorial though, we will talk about how to read API tokens in your API regardless of where those come from. Now the second big use case is programmatic access. Some code will use your api. In this case, the API clients absolutely will be sending some sort of an API token string. And so you need to make your API able to read a token that's sent on each request and it's usually sent on an authorization header. How the user gets this token depends, there are kind of two main cases. The first case is the GitHub personal access token situation. This is where you can, where a user on your site can actually browse your site and choose to create a new access token that they can go copy themselves and then go use inside of their code. The second big situation is O OWA is just a way to get an access token and it's especially important if the API client,
+## Use-Case 1: Building for your Own JavaScript
 
-The person making the API request is not directly the user. The, the code that's making the API request is making those API requests on behalf of some user on your system. So imagine a website that allows you to connect with Facebook or any other system so that the website can then make API requests to Facebook for your account or an iPhone app where to log in. You show the use of the login of your site and ultimately OAuth flow. That mobile app gets an access token it can use to talk to your API on behalf of that user. We're gonna talk about the per personal access token method in this tutorial, and we'll talk about how to read and validate API tokens, no matter where they come from. We won't talk about the OAuth flow and it's partially because it's kind of a separate thing. Yes, if you have this use case where you need to allow third parties to get `API Tokens` for different `users` on your site, you will need some sort of OAuth server, whether you build it yourself or use some other solution. But once the OAuth server has done its work,
+So let's talk about that first use-case: the user of your API is your own JavaScript.
 
-The client will talk to your API with a `API token`. So your API will need to read, validate, and, and understand that token, but it doesn't care how the user got it. Next, let's go through the first use case, allowing our JavaScript to log in by sending an `XMLHttpRequest`.
+Well, before we even dive into security, make sure your frontend and your API live
+on the same domain... like the *exact* same domain, not just a subdomain. Why?
+Because if they live on two different domains or subdomains, you have to deal with
+CORS: Cross-Origin Resource Sharing.
 
+CORS not only adds complexity to your setup, it also hurts performance. Kévin
+Dinglas - the lead developer of API Platform - has a
+[blog post](https://dunglas.dev/2022/01/preventing-cors-preflight-requests-using-content-negotiation/)
+about this where he even shows a strategy where your frontend and backend can live
+in totally different directories or repositories, but *still* live on the same domain.
+
+If you *do*, for some reason, decide to put your API and frontend on different
+sub-domains, then you *will* need to worry about CORS headers and you can solve that
+with NelmioCorsBundle. But, I don't recommend it.
+
+## The case for Sessions
+
+Anyways, back to security. If you're calling your API from your own JavaScript,
+the user is probably logging in via a login form with an email and password. It
+doesn't matter if that's a traditional login form or one that's built with a fancy
+JavaScript framework that submits via AJAX.
+
+And, honestly, a *really* simple way to handle this use-case is *not* with API
+tokens, but with good ol fashioned HTTP Basic authentication. Yea, where you
+literally pass the email & password to each endpoint. For example, the user enters
+their email and password, you make an API request to some endpoint just to make
+sure it's valid, then you store that email and password in JavaScript and send it
+on every single API request going forward. Your email & password token works basically
+like an API token.
+
+However, in practice, this has some practical challenges, like the question of *where*
+you securely store the email and password in JavaScript so you can continually
+use it. This is actually a problem in *general* with JavaScript and "credentials",
+including API tokens: you need to be *very* careful where you store those so that
+other JavaScript on your page can't read them. There *are* solutions, but it adds
+complexity that you likely don't need.
+
+So instead, for your own JavaScript, you can use a session. When you start a session
+in Symfony, it returns an "HTTP only" cookie... and that cookie contains the session
+id. Though, the contents of the cookie aren't really important: it could be the
+session id or some sort of token you invented. The really important thing is that
+because the cookie is "HTTP only", it can't be read by JavaScript: your JavaScript
+or anyone else's JavaScript. But whenever you make an API request to your domain,
+that cookie's will come with it... and your app will use it to log in the user.
+
+So the API token in this situation is simply the "session id", which is stored
+securely in an HTTP-only cookie. Mmm. We will code through this use case.
+
+Oh, and by the way, one edge-case with this situation is if you have a single sign
+on situation - and SSO. In that case, you'll authenticate with your SSO like a normal
+web app. When you finish, you'll have an access token, which you can then use to
+either authenticate the user with a session like normal... or you use that token
+directly from tour JavaScript. That's a more advanced use case that we won't go
+through in this tutorial... though, we *will* talk about how to read & validate
+API tokens regardless of where that token came from.
+
+## Use-Case 2: Programmatic Access & API Tokens
+
+The second big use-case for authentication is programmatic access. Some *code* will
+talk to your API... besides JavaScript from inside the browser.
+
+In this case, the API clients absolutely *will* send some sort of an API token string.
+And so, you need to make your API able to read a token that's sent on each request,
+usually sent on an `Authorization` header.
+
+*How* the user gets this token depends: there are kind of two main cases. The first
+case is the "GitHub personal access token" case. This is where a user on your site
+can actually browse to a page and click to create a new access token. Then they can
+copy that and go use it in some code.
+
+The second big case is OAuth, which is just a fancy & secure way to get an access
+token. And it's especially important the "code" that's making the API request is
+making those requests on "behalf" of some user on your system.
+
+Like imagine a site that allows you to connect with GitHub or any other system.
+Once you do, that site can *then* make API requests to GitHub for your account,
+like making comments as your user. Or imagine an iPhone app where, to log in, you
+show the user the login form on your site. Then, via an OAuth flow, that mobile app
+receives an access token it can use to talk to your API on behalf of that user.
+
+We're going to talk about the personal access token method in this tutorial, including
+how to read and validate API tokens, no matter where they come from. We won't talk
+about the OAuth flow... and it's partially because it's a separate beast. Yes, if
+you have the use case where you need to allow third parties to get API tokens
+for different users on your site, you *will* need some sort of OAuth server, whether
+you build it yourself or use some other solution. But once the OAuth server has done
+its work, the client that will talk to your API receives a token! And then they'll
+use that token to talk to your API. So your API will need to read, validate, and
+understand that token, but it doesn't care *how* the API client got it.
+
+Ok, let's put all this theory behind us and start going through the first use case
+next: allowing our JavaScript to log in by sending an AJAX request.
