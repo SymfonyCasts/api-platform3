@@ -52,8 +52,7 @@ property. After `cascade`, add one more option here: `orphanRemoval: true`.
 This tells Doctrine that if any of these `dragonTreasures` become "orphaned" - meaning
 they no longer have *any* owner - they should be *deleted*.
 
-Let's try it. When we hit "Execute" again... got it! It saves just fine. And if we
-try to look up the treasure with the `id` `44`, it's gone! So sad.
+Let's try it. When we hit "Execute" again... got it! It saves just fine.
 
 Next: Let's circle back to filters and see how we can use them to search across
 related resources.
