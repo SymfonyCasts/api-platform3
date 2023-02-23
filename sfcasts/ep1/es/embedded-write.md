@@ -34,8 +34,8 @@ Esto funciona exactamente igual que los campos incrustados cuando los leemos. B�
 
 Observa: enciéndelo de nuevo. Funciona... casi. Obtenemos un error 500:
 
-> Se ha encontrado una nueva entidad a través de la relación `DragonTreasure.owner`, pero no estaba
-> no estaba configurada para persistir en `cascade`.
+> Se ha encontrado una nueva entidad a través de la relación `DragonTreasure.owner`,
+> pero no se ha configurado para persistir en `cascade`.
 
 Woh. Esto significa que el serializador vio nuestros datos, creó un nuevo objeto `User` y luego configuró el `username` en él. Doctrine falló porque nunca le dijimos que persistiera el nuevo objeto `User`.
 
