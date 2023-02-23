@@ -1,0 +1,213 @@
+WEBVTT
+
+00:00:01.116 --> 00:00:06.026 align:middle
+Vamos a buscar un único usuario en
+nuestra API: Sé que existe uno con ID 2.
+
+00:00:06.556 --> 00:00:13.736 align:middle
+Y ¡genial! Como hemos aprendido antes, exponer
+una propiedad de relación de colección es
+
+00:00:13.736 --> 00:00:18.476 align:middle
+como cualquier otro campo: simplemente asegúrate
+de que está en el grupo de serialización correcto.
+
+00:00:18.896 --> 00:00:24.196 align:middle
+Y luego puedes ir más allá con los grupos de
+serialización para elegir entre hacer que se devuelva
+
+00:00:24.196 --> 00:00:30.936 align:middle
+como una matriz de cadenas IRI o como una matriz
+de objetos incrustados, como tenemos ahora.
+
+00:00:31.586 --> 00:00:35.556 align:middle
+Nueva pregunta: ¿podríamos
+modificar también el dragonTreasures
+
+00:00:35.556 --> 00:00:38.806 align:middle
+que posee un usuario desde una
+de las operaciones de usuario?
+
+00:00:39.286 --> 00:00:41.316 align:middle
+La respuesta es, por supuesto, ¡sí!
+
+00:00:41.316 --> 00:00:46.456 align:middle
+Y vamos a hacerlo de
+formas cada vez más locas.
+
+00:00:47.326 --> 00:00:48.616 align:middle
+Mira la ruta POST.
+
+00:00:49.396 --> 00:00:52.336 align:middle
+Ahora mismo no vemos un campo
+dragonTreasures porque...
+
+00:00:52.496 --> 00:00:56.226 align:middle
+el campo simplemente no es escribible:
+no está en el grupo correcto.
+
+00:00:57.126 --> 00:01:02.016 align:middle
+Para remediarlo, ya sabemos
+qué hacer: añadir user:write.
+
+00:01:02.656 --> 00:01:03.436 align:middle
+¡Muy fácil!
+
+00:01:03.846 --> 00:01:07.146 align:middle
+Cuando actualicemos los documentos
+y comprobemos esa ruta...
+
+00:01:07.986 --> 00:01:10.236 align:middle
+ya está: dragonTreasures.
+
+00:01:10.616 --> 00:01:16.636 align:middle
+Y dice que este campo debe ser una matriz
+de cadenas: una matriz de cadenas IRI.
+
+00:01:17.296 --> 00:01:19.436 align:middle
+Intentemos crear un nuevo usuario.
+
+00:01:19.436 --> 00:01:22.046 align:middle
+Rellenemos email y username.
+
+00:01:24.686 --> 00:01:28.966 align:middle
+Luego, asignemos el nuevo usuario
+a algunos tesoros existentes.
+
+00:01:29.646 --> 00:01:32.746 align:middle
+Vamos a colarnos en la ruta
+GET de colección de tesoros...
+
+00:01:34.446 --> 00:01:36.066 align:middle
+e impresionante.
+
+00:01:36.386 --> 00:01:38.466 align:middle
+Tenemos los ids 2, 3 y 4.
+
+00:01:39.386 --> 00:01:45.636 align:middle
+Aquí abajo, asigna owner a una
+matriz con /api/treasures/2,
+
+00:01:45.636 --> 00:01:51.176 align:middle
+/api/treasures/3 y /api/treasures/4.
+
+00:01:51.916 --> 00:01:52.606 align:middle
+Tiene sentido, ¿verdad?
+
+00:01:52.606 --> 00:01:58.036 align:middle
+Si la API puede devolver
+dragonTreasures como una matriz de
+
+00:01:58.346 --> 00:02:01.736 align:middle
+cadenas IRI, ¿por qué no podemos
+enviar una matriz de cadenas IRI?
+
+00:02:02.326 --> 00:02:03.846 align:middle
+Cuando pulsamos Ejecutar...
+
+00:02:05.026 --> 00:02:07.776 align:middle
+¡efectivamente! ¡Funcionó perfectamente!
+
+00:02:08.326 --> 00:02:11.126 align:middle
+Y como cada tesoro sólo
+puede tener un propietario...
+
+00:02:11.486 --> 00:02:15.826 align:middle
+¡eso significa que, en cierto modo,
+robamos esos tesoros a otra persona!
+
+00:02:16.226 --> 00:02:17.846 align:middle
+¡Perdón! Pero...
+
+00:02:18.056 --> 00:02:20.236 align:middle
+espera un segundo, ¿cómo ha funcionado?
+
+00:02:20.976 --> 00:02:24.766 align:middle
+Sabemos que cuando enviamos campos
+como email, password, y username,
+
+00:02:25.116 --> 00:02:30.206 align:middle
+como son propiedades privadas, el
+serializador llama a los métodos setter.
+
+00:02:30.756 --> 00:02:33.786 align:middle
+Cuando pasamos username, llama a setUsername().
+
+00:02:33.786 --> 00:02:39.626 align:middle
+Así que cuando pasamos dragonTreasures,
+debe llamar a setDragonTreasures, ¿no?
+
+00:02:40.186 --> 00:02:41.346 align:middle
+Pues, ¿adivina qué?
+
+00:02:41.716 --> 00:02:44.706 align:middle
+¡No tenemos un método setDragonTreasures()!
+
+00:02:45.216 --> 00:02:51.196 align:middle
+Pero sí tenemos un método addDragonTreasure()
+y un método removeDragonTreasure().
+
+00:02:51.786 --> 00:02:53.786 align:middle
+El serializador es muy inteligente.
+
+00:02:54.296 --> 00:02:57.906 align:middle
+Ve que el nuevo objeto User no
+tiene dragonTreasures. Así que
+
+00:02:58.366 --> 00:03:04.036 align:middle
+reconoce que cada uno de estos tres
+objetos son nuevos para este usuario
+
+00:03:04.186 --> 00:03:07.996 align:middle
+y por eso llama a addDragonTreasure()
+una vez para cada uno.
+
+00:03:07.996 --> 00:03:12.066 align:middle
+Y la forma en que MakerBundle ha
+generado estos métodos es fundamental.
+
+00:03:12.396 --> 00:03:17.806 align:middle
+Toma el nuevo DragonTreasure y
+establece que el owner sea este objeto.
+
+00:03:18.486 --> 00:03:21.986 align:middle
+Esto es importante por cómo
+Doctrine maneja las relaciones:
+
+00:03:22.386 --> 00:03:27.156 align:middle
+establecer el propietario establece lo que se
+llama el lado "propietario" de la relación.
+
+00:03:27.716 --> 00:03:32.676 align:middle
+Básicamente, sin esto, Doctrine no guardaría
+este cambio en la base de datos. Las conclusiones
+
+00:03:33.486 --> 00:03:37.976 align:middle
+son que, gracias a addDragonTreasure()
+y sus poderes mágicos,
+
+00:03:38.286 --> 00:03:43.366 align:middle
+el owner del DragonTreasure se cambia
+de su antiguo propietario al nuevo User,
+
+00:03:43.756 --> 00:03:46.576 align:middle
+y todo se guarda exactamente como queremos.
+
+00:03:47.456 --> 00:03:50.496 align:middle
+A continuación, vamos a ponernos
+más complejos permitiendo que
+
+00:03:50.496 --> 00:03:54.096 align:middle
+se creen tesoros cuando
+estamos creando un nuevo User.
+
+00:03:54.766 --> 00:03:58.086 align:middle
+También vamos a permitir que se
+eliminen tesoros de un User...
+
+00:03:58.086 --> 00:04:02.066 align:middle
+para el improbable caso de que
+los enanos recuperen la montaña.
+
+00:04:02.496 --> 00:04:04.396 align:middle
+Como si tal cosa.
