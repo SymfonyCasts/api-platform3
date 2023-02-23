@@ -16,9 +16,13 @@ When the `User` object is being serialized, it uses the normalization groups to
 determine which fields to include. In this case, we have one group called
 `user:read`. That's why `email`, `username` and `dragonTreasures` are all returned.
 
+[[[ code('d2df34ad85') ]]]
+
 To transform the `dragonTreasures` property into *embedded* data, we need to go into
 `DragonTreasure` and add this *same* `user:read` group to at least *one* field.
 Watch: above `name`, add `user:read`. Then... go down and also add this for `value`.
+
+[[[ code('177f5ffe30') ]]]
 
 Yup, as soon as we have even *one* property inside of `DragonTreasure` that's
 in the `user:read` normalization group, the *way* the `dragonTreasures` field
@@ -41,6 +45,8 @@ No surprise, we see `owner` as an IRI string. Could we turn that into an embedde
 object instead? Of course! We know that `DragonTreasure` uses the `treasure:read`
 normalization group. So, go into `User` and add that to the `username` property:
 `treasure:read`.
+
+[[[ code('8f9f8ca297') ]]]
 
 With *just* that change... when we try it... yes! The `owner` field just got
 transformed into an embedded object!
@@ -68,6 +74,8 @@ which will override the default. Add `normalizationContext`, then `groups` set
 to the standard `treasure:read`. Then add a *second* group that's specific to this
 operation: `treasure:item:get`.
 
+[[[ code('77a687acd4') ]]]
+
 You can call this whatever you want... but I like this convention: resource name
 followed by `item` or `collection` then the HTTP method, like `get` or `post`.
 
@@ -79,6 +87,8 @@ these two groups.
 
 *Now* we can leverage that. Copy the new group name. Then, over in `User`, above
 `username`, instead of `treasure:read`, paste that new group.
+
+[[[ code('ca6964b2f1') ]]]
 
 Let's check it out! Try the GET collection endpoint again. Yes! We're back to `owner`
 being an IRI string. And if we try the GET *one* endpoint.. oh, the owner is...

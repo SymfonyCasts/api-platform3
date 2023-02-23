@@ -17,6 +17,8 @@ Look at the POST endpoint. We don't see a `dragonTreasures` field right now beca
 the field simply isn't writable: it's not in the correct group. To remedy that, we
 know what to do: add `user:write`.
 
+[[[ code('961aab3c0d') ]]]
+
 Easy peasy! When we refresh the docs, and check that endpoint... there we go:
 `dragonTreasures`. And it says that this field should be an array of strings: an
 array of IRI strings.
@@ -42,10 +44,14 @@ But... wait a second, how did that work? We know that when we send fields like
 serializer calls the setter methods. When we pass `username`, it calls
 `setUsername()`.
 
+[[[ code('fbc23eb8f2') ]]]
+
 So when we pass `dragonTreasures`, it must call `setDragonTreasures`, right?
 
 Well guess what? We don't *have* a `setDragonTreasures()` method! But we *do* have
 an `addDragonTreasure()` method and a `removeDragonTreasure()` method.
+
+[[[ code('598a552058') ]]]
 
 The serializer is really smart. It sees that the new `User` object has no
 `dragonTreasures`. So it recognizes that each of these three objects are *new*

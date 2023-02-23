@@ -37,8 +37,12 @@ Let's think about this. We're updating a `DragonTreasure`. This means that API
 Platform is using the `treasure:write` serialization group. That group *is*
 above the `owner` property, which is why we can change the `owner`.
 
+[[[ code('6f3c3ee5de') ]]]
+
 But if we want to be able to change the owner's `username`, then we *also* need to
 go into `User` and add that group here.
+
+[[[ code('caffaf1dfd') ]]]
 
 This works exactly like embedded fields when we *read* them. Basically,
 since at least *one* field in `User` has the `treasure:write` group, we are *now*
@@ -107,6 +111,8 @@ it stops. It does *not* continue to validate *that* object as well.
 
 *If* you want that to happen, you need to add a constraint to this called
 `Assert\Valid`.
+
+[[[ code('8928ebc1be') ]]]
 
 Now... on our PUT endpoint... if we try this again, yep! 422: `owner.username`, this
 value should not be blank.
