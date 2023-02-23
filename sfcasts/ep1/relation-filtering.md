@@ -10,6 +10,8 @@ Start like normal: `ApiFilter` and let's first use `PropertyFilter::class`. Reme
 this is kind of a fake filter that allows our API client to select which *fields*
 they want. And this is all pretty familiar so far.
 
+[[[ code('794f814755') ]]]
+
 When we head over, refresh, and go to the `GET` collection endpoint... we see a new
 `properties[]` field. We could choose to return just `username`... or `username`
 *and* `dragonTreasures`.
@@ -37,6 +39,8 @@ all treasures for a specific user.
 
 No sweat! Just add `ApiFilter` above the `$owner` property, passing in the trusty `SearchFilter::class` followed by `strategy: 'exact'`.
 
+[[[ code('950f478cdd') ]]]
+
 Back over on the docs, if we open up the `GET` collection endpoint for treasures
 and give it a whirl... let's see... here we go - "owner". Enter something
 like `/api/users/4`... assuming that's actually a real user in our database,
@@ -52,6 +56,8 @@ put that above a property... because `owner.username` *isn't* a property.
 This is one of the cases where we need to put the filter above the
 *class*. And... that also means we need to add a `properties` option set to an array.
 Inside, say `'owner.username'` and set that to the `partial` strategy.
+
+[[[ code('986925a0c3') ]]]
 
 Ok! Head back over and refresh. We know we have an owner whose username is "Smaug"...
 so let's go back to the `GET` collection endpoint and... here in `owner.username`,

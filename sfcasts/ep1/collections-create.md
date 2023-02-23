@@ -16,13 +16,18 @@ nope! Well, not yet. But we know this error!
 ## Making dragonTreasures Accept JSON Objects
 
 Inside `User`, if we scroll *way* up, the `$dragonTreasures` property *is* writable
-because it has `user:write`. But we can't send an *object* for this property because
-we haven't added `user:write` to any of the fields *inside* of `DragonTreasure`.
-Let's fix that.
+because it has `user:write`. 
+
+[[[ code('e683c98090') ]]]
+
+But we can't send an *object* for this property because we haven't added `user:write` 
+to any of the fields *inside* of `DragonTreasure`. Let's fix that.
 
 We want to be able to send `$name`, so add `user:write`... I'll skip `$description`
 but do the same for `$value`. Now search for `setTextDescription()` which is
 the *actual* description. Add `user:write` here too.
+
+[[[ code('4a50c1c7c7') ]]]
 
 Okay, *in theory*, we should *now* be able to send an embedded object. If we head
 over and try it again... we upgraded to a 500 error!
@@ -39,6 +44,8 @@ it *is* creating a new object,... but nothing told the entity manager to
 
 To solve this, we need to *cascade* persist this property. In `User`, on the
 `OneToMany` for `$dragonTreasures`, add a `cascade` option set to `['persist']`.
+
+[[[ code('5138b52b1c') ]]]
 
 This means that if we're saving a `User` object, it should magically persist
 any `$dragonTreasures` inside. And if we try it now... it works! That's awesome!
@@ -61,6 +68,8 @@ is *not* assigned to the `User` yet, and it calls `addDragonTreasure()`. When it
 does that, the code down here sets the `owner`: just like we saw before. So our
 well-written code is taking care of all of those details *for* us.
 
+[[[ code('9d186c36cf') ]]]
+
 ## Adding the Valid Constraint
 
 Anyways, you might remember from before that as soon as we allow a relation field
@@ -70,6 +79,8 @@ we sent an empty `name` field, it *would* create a `DragonTreasure`... with an e
 Remember: when the system validates the `User` object, it will stop at
 `$dragonTreasures`. It won't *also* validate those objects. If you *do* want to
 validate them, add `#[Assert\Valid]`.
+
+[[[ code('daf001e866') ]]]
 
 Now that I have this, to prove that it's working, hit "Execute" and... awesome!
 We get a 422 status code telling us that `name` shouldn't be empty. I'll
