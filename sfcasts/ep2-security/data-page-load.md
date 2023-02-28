@@ -1,33 +1,93 @@
-# Data Page Load
+# Logout & Passing API Data to JavaScript
 
-Coming soon...
+What does it actually mean to log out of something? Like logging out of an api? Well,
+it's two things. First, it means invalidating whatever your token is, if possible.
+For example, if you have an API token, you would say to the API:
 
-What does it actually mean to log out of something like logging out of an api? Well, it's two things. First, it means invalidating whatever your token is, if that's possible on the server. So if you had an API token, if possible you would actually tell the server, make this API token no longer valid. In the case of session authentication, it's removing that session from your session storage. The second part of it is then removing that token from wherever you're storing it. So if you had an API token and you're using it in JavaScript, you would remove it from JavaScript. In the case of session authentication, we're talking about removing the cookie. So let's add the ability to log out of our session authentication. So back over in `SecurityController`, we have to do kind of a similar thing before we need a route and controller, even though this controller is never going to be called, so I'll call it `logout()`, we're actually going to return `void`. You'll see why in a second. And then I'll give it a `Route` of `/logout` `name: app_logout`.
+> Make this API token no longer valid.
 
-And
+In the case of session authentication, it's basically the same: it means removing
+the session from the session storage.
 
-The reason that I chose `void` here is because we're actually going to throw an exception from here. We're creating this actually just because we need a route. We need to have a valid route. But ultimately in `security.yaml`, we're going to add a key here called `logout` with `path` below set to that new route name `app_logout`. So this activates a listener that's now watching for all you URLs that start with `/logout`. And if and when it finds one, it logs the user out. So it does all the work, but we have to have a valid route or else that won't work. All right, so over here our Vue app thinks we're not logged in but we actually are logged in. But if we go manually to `/logout`, boom, we are logged out. All right, so we saw a second ago, even when we are logged in and refresh, our Vue app has no idea that we're logged in. So how could we fix that? Well, one thing we could do is we could add like a `/me` API endpoint. So then on load our Vue application could make an AJAX request to that endpoint. That endpoint could answer with
+The second part of "logging out" is making whoever is using the token "forget" it.
+If you had an API token and you were using it in JavaScript, you would *remove* it
+from JavaScript. For session authentication, it means deleting the cookie.
 
-`null` or the user that we're authenticated as but `/me` endpoints are super not RESTful and there's a better way anyways for performance. Let's just dump the user information on page load. So there's kind of two different ways generally. Two different ways to do that. The first is by setting a global variable. So for example, in `templates/base.html.twig`, it doesn't really matter where, but inside the body I'm going to add a `script` tag. And here we'll say `window.user =` and then `{{ app.user|` to the `serialize` filter from Twig and we can serialize that into `jsonld` in a little `|raw`. So that doesn't output escape that we want that raw JSON. Then a little semi colon on the end, how cool is that? And in a second we'll read that from our JavaScript. So if we refresh right now and look at our elements, you can see `window.user = nul`. And then when we log in and refresh the page, check that out. Now `window.user =` and it's got all of our huge amount of data on there. Now notice one kind of weird thing here. It has the correct fields like if you look closely. It's got the `email` field, it's got the `username` field,
+## Adding the Ability to Log Out
 
-And then it has the `dragonTreasures` field, which is what all this stuff is. But if you look down here, it doesn't have, if you look in our
+Anyways, let's add the ability to log out of our session authentication. So back
+over in `SecurityController`, like before, we need a route and controller, even though
+this controller is never going to be called. I'll call the method `logout()`, we're
+actually going to return `void`. You'll see why in a second. And then I'll give it
+a `Route` of `/logout` and `name: app_logout`.
 
-`User` entity, it doesn't have `roles`, it doesn't have `password` and on it. So it seems that it's actually reading our it's using our correct normalization groups. But how is that even possible? If you look closely like we are just saying serialize this user to `jsonld`, this has nothing to do with API Platform. It's not being processed by API platform. And our normalization groups are configured on API Platform. So how did the serializer know to use this normalization groups here? The answer to that, as best I can tell is that it might be a bit an accident. During serialization API Platform sees that we're serializing an API resource and so it kind of looks up the metadata that should be used for it. So this is fine, but I'm actually going to be a little bit more explicit by passing a second argument to serialize, which is the context. And we can set `groups` to `user:read`. So that won't make any difference over here. It's still going to have that exact same output, but we're kind of controlling it a bit more or it does have a different output. Nevermind, I need to actually talk about how that
+The reason that I chose `void` is because we're going to throw an exception from
+inside the method. We've created this *entirely* because we need a route... but
+Symfony's security system will intercept things before the actual controller is called.
 
-Took control of the groups a bit more. So now let's use this over in JavaScript. This is going to be over in our `TreasureConnectApp.vue`. We have this user data here right now, which is always starts as `null`. We can change that now too `window.user`. Now when we refresh, watch this not authenticated, you might need to do a force refresh and got it.
+To activate that, in `security.yaml`, add a key here called `logout` with `path`
+below set to that new route name: `app_logout`. So this activates a listener that's
+now watching for requests to `/logout`. When there *is* a request to `/logout`,
+it logs the user out and redirects them.
 
-All right. So if you, setting the global variable is cool, but if you're using Stimulus, we can pass instead of setting global variables, we can pass the user in as a value to our controller. So this is a Vue app, but actually if you look in `templates/main/homepage.html.twig`, we're using `symfony/ux-vue` to render this. This actually just renders a small Stimulus controller that then starts the Vue component. And any arguments that we pass here are actually passed to the Stimulus controller and then passed as props over to our Vue app. So what I'm going to do here is kind of specific to Vue, but you could use this strategy to pass any values to any Stimulus controller. So first we're going to make a couple changes in here. So we're going to allow a new prop to be passed in called `user`. And if you're not using Vue, don't worry too much about the specifics of this. And then just to make sure that's, hello, this is creepy. I'll `console.log(props.user)` to make sure that's being passed in and we'll initialize the data to `props.user`. Are you kidding me?
+All right, over here, our Vue app thinks we're not logged in, but we *are* and we
+can see it in the web debug toolbar. So if we manually go to `/logout`... boom!
+We *are* logged out.
 
-What
+## Getting the Current User Data in JavaScript
 
-The are you? Okay, now next over in `base.html.twig`, I'm going to remove all that fancy `window.user` stuff and then in `homepage.html.twig`, we're going to pass in a new `user` prop set to `app.user`. Now if you move over and refresh, that's not going to quite work.  It's as authenticated as nothing
+So we saw a moment ago that even when we *are* logged in and refresh, our Vue app
+has no *idea* that we're logged in. So how could we fix that? One idea would be
+to create a `/me` API endpoint. Then, on load, our Vue app could make an AJAX request
+to that endpoint... which would either return `null` or the current user information.
+But, `/me` endpoints are super *not* RESTful. And there's a better way anyways:
+dump the user information into JavaScript on page load.
 
-<laugh>.
+## Setting a Global user JavaScript Variable
 
-And if you kind of dig in a little bit to the application, you can see it's sending user as just like empty `{}` to the application.
+There are two different ways to do this. The first is by setting a global variable.
+For example, in `templates/base.html.twig`, it doesn't really matter where, but
+inside the body, add a `script` tag. And here we'll say `window.user =` and then
+`{{ app.user|serialize }}`. Serialize into `jsonld` and a `|raw` so that it doesn't
+output escape the output;: we want raw JSON.
 
-That's
+How cool is that? In a minute, we'll read that from our JavaScript. If we refresh
+right now and look at the source, yea! We see `window.user = null`. And then when
+we log in and refresh the page, check it out: `window.user =` and then a huge amount
+of data!
 
-Because when you send in data to Stimulus, it doesn't use the serializer, it just uses `json_encode()`. So we need to kind of serialize it ourselves. So to do that in `src/Controller/MainController.php`, here's the controller that renders that template. We're going to autowire a service called `NormalizerInterface` and then pass a variable into our template called `userData` and what we're going to do is we're actually going to normalize that data right here. So I'm going to say `$normalizer->normalize()` and then I'm going to normalize, actually, you know what, we need the user. So first I'm going to go up here and get our user the way we always do, use that cool new `#[CurrentUser]` attribute type-hint our `User`, say `$user`, and then equals `null` in case we're not authenticated. Now down here, normalization that turns the object into an array. So we're going to pass a `$user` and then the format that that array will eventually be turned into `jsonld`. Then of course here we can pass our serialization context. We'll set `'groups' => 'user:read'` finally in the template over here we can say set that `user` prop set to `userData`.
+## Serializing to JSON-LD in Twig
 
-That'll run that array through `json_encode()` and that will work just fine now when we move over and refresh. Got it. You can see the entire JSON being passed into the Stimulus controller that's passed a Vue as a prop. Sweet. I can spin back over and just make sure I don't leave that `console.log()` inside there. All right, so we haven't actually seen it yet, but as I mentioned, if we start making requests to our api, those are going to be authenticated thanks to the session. Now I'll make a quick mention of something about CSRF protection because you're not going to see me adding CSRF tokens to our api. The short answer is that as long as you use something called SameSite cookies, which we are automatic in Symfony, then your API probably doesn't need to worry about CSRF protection. The two kind of rules for that are one, you need to make sure that your GET requests don't have any side effects. So don't do something silly like allow the API client to make a get request and that actually saves a treasure resource. As long as you follow that rule, you should be fine. Then you can look at our last API Platform tutorial. We have a whole video talking about what SameSite cookies are, how they affect CSRF tokens and what you need to know. All right, next, logging in from our own JavaScript with session authentication was delightfully simple. So now let's turn to the other use case API tokens.
+But there's something mysterious going on: it has the correct fields! Look closely,
+it has `email`, `username` and then `dragonTreasures`, which is what all this stuff
+is. It also, correctly, does *not* have `roles` or `password`.
+
+So it seems that it's correct reading our normalization groups! But how is that even
+possible? We're just saying "serialize this user to `jsonld`". This has nothing to
+do with API Platform and it's not being processed by API platform. But... our
+normalization groups are *configured* in API Platform. So how did the serializer
+know to use those?
+
+The answer to that, as best I can tell, is that it's working... partially by accident.
+During serialization, API Platform sees that we're serializing an "API resource"
+and so it looks up the metadata for this class.
+
+That's cool... but it's actually *not* perfect... and I like to be explicit anyways.
+Pass a 2nd argument to serialize, which is the context and set `groups` to
+`user:read`.
+
+Now, watch what happens when we refresh. Like before, the correct properties on
+`User` will be exposed. But watch the embedded `dragonTreasures` property. Woh,
+it changed! That was actually *wrong* before: it was including *everything*, not
+just the stuff inside the `user:read` group.
+
+## Reading the Dynamic Data from Vue
+
+Ok, let's go use this global variable over in JavaScript - in
+`TreasureConnectApp.vue`. Right now, the `user` data always starts as `null`. We
+can change that now too `window.user`.
+
+When I refresh... got it!
+
+Next: if you're using Stimulus, an even better way to pass data to JavaScript is
+to use Stimulus values.

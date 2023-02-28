@@ -5,6 +5,7 @@ chapters:
     - auth-errors
     - login-response
     - data-page-load
+    - stimulus-values
     - api-token-entity
     - access-token-authenticator
     - open-api-decoration
