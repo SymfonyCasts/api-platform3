@@ -13,4 +13,3 @@ Anyways, just creating this getter method is not enough. This is not gonna be pa
 What's going on?
 
 All right, try the test and we're green. All right everyone, thank you for joining. I'm in this gigantic cool journey with API platform and security. It's almost was pretty complicated cuz I wanted you to be able to solve real complex security use cases. In the next tutorial we're gonna look at even more custom and cool things you can do with the API platform, including how to use classes for API resources that are not entities and we'll see how that upfront can cause a little bit more work, but how it can also make your API easier to control and your code easier to read. Our friends, if there's something that we haven't covered yet that you wanna make sure is covered in the future tutorial, let us know. Um, as always, we're here for you in the comment section. See ya.
-

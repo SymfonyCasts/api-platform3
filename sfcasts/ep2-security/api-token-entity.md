@@ -25,4 +25,3 @@ And we're now gonna pass entry point user and also tokens. And now we'll have a 
 Oh, hold on a second.
 
 So over here I'll do a force refresh. See, we're not logged in right here. So it doesn't show any API tokens. If we log in with our user, you can see it works. It says refresh to see tokens. We can't see the tokens on page load. Uh, when we log in, it's cuz they're not put over api. But if we refresh, there we go. We have two tokens for this user, which we can use. So next, let's write a systems that we can read these tokens and authenticate the user instead of using our session authentication.
-
