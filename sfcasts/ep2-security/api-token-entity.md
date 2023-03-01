@@ -1,25 +1,102 @@
-# Api Token Entity
-
-Coming soon...
+# Token Types & The ApiToken Entity
 
 Okay, so what if you need programmatic access to your API?
 
-Well, one way or another, when you talk about an API, when you talk to an API via code, you'll send an API token. Exactly how you get that API token will vary. But there are two main cases. One, as a user on the site, like a dragon, you want to generate an API token so that you can use it in a script you are writing like a GitHub personal access token. These are literally created via a web interface then used with the API. We are going to show this use case. The second main use case is a third party wants to make requests to your API on behalf of the users of your system. Like some new site called Dragon Treasure Organizer wants to be able to make an API request to our site on behalf of some of our users in that case. Instead, in that case, instead of our users generating their own tokens and then like giving them to that site, we'll use OAuth. Our site or somewhere in our infrastructure will have an OAuth server. That's beyond the scope of this tutorial. But the important thing is that after OAuth is done,
+## The Types of Access Tokens
 
-The API clients end up with, you guessed it, in API token. So no matter which path you're in, if you're doing programmatic access, you end up with an API token called an access token. All right, so as I mentioned, we're going to show a system where we actually gener allow the users to generate their own access tokens. So how do we do that? Again, there are sort of two main ways. The first is to generate something called a JSON web token or JWT. The cool thing about JWTs are that they don't need to be stored in a database. They actually contain all the information inside them. Like you could in, you can include the user ID and scopes right inside of a JWT. The downside of a JWT is that there's no easy way to log out because there's no way, no way out-of-the-box for you to invalidate JWTs. Now, JWT is really trendy and popular, and they're super great when you have a single sign-on system because the different parts of the, because the multiple APIs in your infrastructure can all validate those JWTs without having to make an extra API request to the single sign-on system. They're self-contained and they can be validated.
+Well, one way or another, when you talk to an API via code, you'll send an API token,
+commonly known as an access token. Exactly how you *get* that token will vary.
+But there are two main cases.
 
-So you might end up using JWTs and there's a great bundle for it called LexikJWTAuthenticationBundle in Symfony. And the second main way of doing things is what we're going to do, it's simple, it's dead simple, is you generate a token string and you store it in the database. This is simple and even allows you to invalidate access tokens by just deleting them from the database. Nice and simple. So let's get to it. We are going to have a database full of API tokens. So find your terminal and run `php bin/console make:entity`, and let's call our new entity `ApiToken`. I'm going to say no to making this an API resource and for the first record, I'm going to say `ownedBy`, and this is going to be a `ManyToOne` to `User` and not `nullable`. And I'll say yes to the inverse. So the idea is that every `User` can have many API tokens. So if I use an API token, we want to know which `User` that's related to. We're going to use that during authentication. So I'll use the `apiTokens` property and they'll say no to orphan removal. Next property, we're probably going to want an `expiresAt`,
+First, as a user on the site, like a dragon, you want to generate an API token so
+that you can personally use it in a script you're writing. This is Like a GitHub
+personal access token. These are literally created via a web interface. We're going
+to show this use-case.
 
-Make that a `datetime_immutable`. I'll say yes to `nullable`. Maybe we allow tokens that don't have an expiration and the field we need is the `token`. This is going to be a string. I'm going to set up to be 68 characters long. I'll tell you why in a second, not `nullable`. And finally, let's do a `scopes` property. This is going to be kind of cool where we'll have this be a `json`. This is going to contain a JSON array of scopes, kind of permissions that this API token has. I'll say, not `nullable` on that one as well. And then hit enter to finish. All right, so if you spin over, we know what that does. It creates an `APIToken` entity. There's nothing too interesting in this right now. So let's go over and make the migration for IT. `symfony console make:migration`. Run that. And then we'll spin over and just peek at that migration. Make sure it looks good. Yeah, perfect. Creating the `api_token` table. So run that with `symfony console doctrine:migrations:migrate`. Beautiful. All right, so the token string is something, it needs to be set to a random token, random string. To set this, we're going to create a construct method here.
+The second main use case is when a third party wants to make requests to your API
+on *behalf* of a user of your system. Like some new site called
+`DragonTreasureOrganizer.com` wants to be able to make an API request to *our*
+API on behalf of some of our users - like it will fetch the treasure's for a user
+and display them decoratively. In this situation, instead of our users generating
+their tokens manually and then... like... entering them into that site, you'll use
+OAuth. OAuth is basically a mechanism for normal users to securely give access
+tokens for their account to a third party. And so, your site, or somewhere in your
+infrastructure you'll have an OAuth server.
 
-And actually I'm going to add a `string $tokenType` argument to this. So this is optional, but one of the things that GitHub has started doing is that they will, they have different types of tokens like personal access tokens, OAuth tokens, and to differentiate those tokens, it gives them each a different prefix. It just kind of helps you figure out where they're coming from. So we're only going to have one token type, and I'm going to do the same thing here. And on top to store my one token type string, I'm going to say `private const PERSONAL_ACCESS_TOKEN_PREFIX = 'tcp_` that's a thing I just made up our site is called Treasure Connect. And this is a personal access token. So `tcp_`. Then down here for token type. We'll say `string $tokenType =` and we'll default it to `self::PERSONAL_ACCESS_TOKEN_PREFIX`. For the token itself. Let's say `$this->token = $tokenType.` and then I'm going to use a little code down here that's going to generate a random string that is 64 characters long. So if you count here, we have 64 characters here. This is going to be four characters long, 68 characters. That's why I chose that for our length. And because we're setting the `$token` in a constructor, this does not need to `= null` or be nullable anymore. It will always be a `string`.
+That's beyond the scope of this tutorial. But the important thing is that after OAuth
+is done, the API client wll end up with, you guessed it, in API token! So no matter
+which path you're in, if you're doing programmatic access, your API users will end
+up with an access token. And then *your* job will be to read and understand that.
+We'll do *exactly* that.
 
-All right? So this is now set up. Next, I want to add some API tokens into our database. So we're going to run `php bin/console make:factory`, so we can generate a Foundry factory for that. We've done this a few times before. So now we have a new `src/Factory/ApiTokenFactory.php` and down and `getDefaults()` this looks fine though. I don't need to pass in the `token`. And for `scopes`, a lot of times when you create an API token, you're able to control like which permissions it has. It doesn't have all the permissions that a normal user has. We're going to kind of create a mini system for this. So you can see how that looks. So back over in `ApiToken`, up at the top after my first constant, I'm going to pace a couple other constants here. So what I'm doing here is I'm defining three different scopes that a token can have. And this isn't all the scopes we could have, but I'm just pretending that maybe we have an API token and you're able to control whether a token can edit that user or whether it can create treasures on behalf of the user or whether it can edit treasures on behalf of the user. So we have those three tokens here and we put a little `public const SCOPES` here that kind of describes them.
+## JWT vs Database Storage?
 
-And then back over in our `ApiTokenFactory`, we'll just give each, by default we'll give each `ApiToken`, two of those three scopes. All right, awesome. So the `ApiTokenFactory` is ready. Last step is let's go into our data fixtures `AppFixtures` and let's just create, what I basically want to do is make sure that in our dummy data, every user has one or two API tokens. An easy way to do that down here is to say `ApiTokenFactory::createMany()`. Since we have 10 users, let's create 30 tokens. Then I'm going to pass that a little callback function and inside of here we'll return an override for the default data. And we're just going to override the `ownedBy` to be `UserFactory::random()`. So it'll create 30 tokens down here, assign them randomly to the 10, well really 11 users that we have. So on average, every user should have about three API tokens already assigned to them. I'm doing this because to keep things simple, we're not going to build a user interface where the user can actually click and create an access token and select the scopes. I'm going to skip all that. Instead, we're just going to give all of our users some API tokens in our fixtures so that we can jump straight into the API and see how to validate those tokens. So let's reload our fixtures with `symfony console doctrine:fixtures:load` and beautiful. All right, since we're not going to build an interface on our site to actually be able to create API tokens, we're going to need to a way to see the API tokens that my user has so that we can use them just to kind of play with our api. So we're going to add a little thing here where once we're authenticated, we print out the API tokens right there. This is not all that important, so I'm going to do it real quick. Over in `User.php` down on the bottom, I'm going to paste in a function called `getValidTokenStrings()`. It just loops over all the API tokens and then finds the ones that are valid and then returns the actual strings. This returns an array of strings. We do need to add a little `ApiToken::isValid()` method. So down here I'm going to paste that as well. So if `expiresAt` is `null` or if `expiresAt` is in the future, this is valid. So a nice, easy way to return all of our API token strings. Next we're going to pass that into our Vue application. So I'm going to go open up `assets/vue/controllers/TreasureConnectApp.vue`.
+So as I mentioned, we're going to show a system where we allow users to generate
+their own access tokens. So how do we do that? Again, there are two main ways. Oh,
+death by choices!
 
-And we're now going to pass `entrypoint`, `user` and also `tokens`. And now we'll have a `tokens` variable inside of here. If you go up here and find our "Log out" link, I'm going to paste a little bit of code there as well, which you can also get from this page. So pretty simple. It says "Tokens" and then it just has a little loop right here to loop over the tokens and print those out. So the last thing we need to do is pass that into our template, pass that into our Vue app. So `templates/main/homepage.html.twig`, this is where we're passing props to our Vue app. So now we can pass a new one called `tokens` and we can kind of cheat and say if we have a user, so if `app.user`, pass `app.user.validTokenStrings` to use that new method we created, else pass `null`. All right, let's try this. If we refresh Right now we are not logged in no API tokens. Let me cheat and log in here. Notice when we log in, it doesn't actually show there. That's a little, it's a little thing I could improve on my system. When we log in, we grab the user, but we have no way of grabbing the API tokens. They're not part of our API.
+The first is to generate something called a JSON web token or JWT. The cool thing
+about JWTs are that they don't need to be stored in a database. They're special
+strings that actually *contain* all the info inside of them. For example, you
+could create a JWT string that includes the user id and some scopes.
 
-Oh, hold on a second.
+One *downside* of JWTs are that there's no easy way to "log out"... because there's
+no out-of-the-box for to invalidate JWTs. You give them an expiration when you
+create them... but then they're valid until then, no matter what.
 
-So over here I'll do a force refresh. See, we're not logged in right here. So it doesn't show any API tokens. If we log in with our user, you can see it works. It says "Refresh to see tokens...". We can't see the tokens on page load, when we log in, it's because they're not part of our api. But if we refresh, there we go. We have two tokens for this user, which we can use. So next, let's write a system so that we can read these tokens and authenticate the user instead of using our session authentication.
+JWT's are trendy, popular and fun! But... you may not need them. They're super great
+when you have a single sign-on system because, if that JWT is used to authenticate
+with multiple systems or APIs, each API can validate the JWT all on their own:
+without needing to make an API request to some central authentication system.
+
+So you might end up using JWTs and there's a great bundle for it called
+LexikJWTAuthenticationBundle in Symfony. JWT's are also the type of access token
+that OpenID gives you in the end.
+
+Instead of JWTs, the second main option is dead simple: generate a random token string
+and store it in the database. This also allows you to invalidate access tokens by...
+just deleting them! This is what we'll do.
+
+## Generating the Entity
+
+So let's get to it. To store API tokens, we need a new entity! Find your terminal
+and run:
+
+```terminal
+php bin/console make:entity
+```
+
+And let's call the new entity `ApiToken`. Say no to making this an API resource.
+In theory, you *could* allow users to authenticate via a login form or HTTP basic
+and then send a POST request to create API tokens... though you probably wouldn't
+want operations to fetch those tokens.
+
+Anyways, add an `ownedBy` property. This is going to be a `ManyToOne` to `User` and
+not `nullable`. And I'll say "yes" to the inverse. So the idea is that every `User`
+can have many API tokens. So if I use an API token, we want to know which `User`
+it's related to. We'll use that during authentication. Calling the property
+`apiTokens` is fine and say no to orphan removal. Next property: `expiresAt`, make
+that a `datetime_immutable` and I'll say yes to `nullable`. Maybe we allow tokens
+to *never* expire by leaving this field blank. Next up is `token`, which will be
+a string. I'm going to the length to 68 - I'll tell you why in a minute - not
+`nullable`. And finally, let's add a `scopes` property as a `json` type. This is
+going to be kind of cool: we'll store an array of "permissions" that this API token
+should have. Say, not `nullable` on that one as well. Finally, hit enter to finish.
+
+All right, spin over to the editor. No surprises: that created an `APIToken` entity...
+and there's nothing too interesting right now. So let's go over and make the migration
+for It:
+
+```terminal
+symfony console make:migration
+```
+
+Then... spin over and peek at that file to make sure it looks good. Yup! It creates
+the `api_token` table. Run that with
+
+```terminal
+symfony console doctrine:migrations:migrate
+```
+
+And... awesome! Next: let's add a way to generate the random token string. Then,
+we'll talk about scopes and load up our fixtures with some API tokens.
