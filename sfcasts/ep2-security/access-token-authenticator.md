@@ -1,20 +1,137 @@
 # Access Token Authenticator
 
-Coming soon...
+To authenticate with an API token, an API client will send an `Authorization` header
+set to the word `Bearer` then the token string... which is just a standard practice.
+Then something in our app will *read* that header, make sure the token is valid,
+and then authenticate the user.
 
-Here's the plan to authenticate with an API token. The API client will send an `Authorization` header set to the word `Bearer` then the string. It's kind of a standard way of doing API authentication. Then something in our app will read that header, make sure the token is valid, and then authenticate the user. Fortunately, there's a built-in system for this in Symfony. Spin over and open up `config/packages/security.yaml` and anywhere under your firewall add `access_token`. This is a system that will listen for an `Authorization` header on every single request and if it sees it, try to authenticate the user.
+## Activating access_token
 
-The one thing it needs though is another class to help it do something with that token. For example, it has no idea that it needs to take that token string and look in the database for it. So to help it where you need to add a `token_handler` string set to the name, the id of a service that's going to handle this. So let's type `App\Security\ApiTokenHandler`. That's a service that we're going to create in a second. By the way, if your entire security system is only logging in via API token, this means that you don't need session storage. If you had that situation, you could set a flag here called `stateless: true`. That tells the security system that if a user logs in, don't try to start a session because you're not relying on session authentication. I'm going to remove that in our case because we actually have a mixture. We have, we do have a way to use session authentication. We also have a way where you don't need session authentication. Anyways, let's go create that class. So in the `src/` directory I'm going to create a new sub-directory called `Security` and inside of there a new PHP class called `ApiTokenHandler`. This is a pretty cool and simple class. It needs to implement
+And fortunately, Symfony has a built-in system for this! Spin over and open up
+`config/packages/security.yaml`. Anywhere under your firewall add `access_token`.
 
-`AccessTokenHandlerInterface`. I'll go to Code -> Generate or Command + N on a Mac and go to "Implement Methods" to generate the one method we need, which is called `getUserBadgeFrom()`. So the access token system knows how to find the token, it knows that there's going to be an `Authorization` header with the word `Bearer` in front of it. You can configure that but it, that's a standard and it knows how to do that. So it grabs that. If it finds one, then it calls our `getUserBadgeFrom()` and passes us this access token. And by the way, this `#[\SensitiveParameter]` thing is a cool new feature. It's not super important it just makes sure that if we have an exception thrown, it's going to hide this value inside the logs. All right, so our job here basically is to query the database for this `$accessToken` and then return which user that `$accessToken` is related to. So to do that we're going to need the `ApiTokenRepository`. So I'm going to create a construct method up here and we'll say an argument `private ApiTokenRepository $apiTokenRepository`. And then down here we'll say `$token = $this->apiTokenRepository`
+This activates a listener that will watch every request to see if it has an
+`Authorization` header. If it does, it will read that and try to authenticate
+the user.
 
-and then we can use the `findOneBy()` and pass it an array and we're going to look by the `token` string set to `$accessToken`. Now if authentication fails for any reason here, we need to throw a type of security exception. So for example, if there is no token, we're going to throw a new `BadCredentialsException` the one from Symfony components. that's going to cause authentication to fail and we don't need to pass a message that will just say "Invalid Credentials". Now because we do have a token now we're good. So ultimately our security system wants to log in a user. And we do that by returning this `UserBadge` that kind of wraps the `User`. So we're going to return a `new UserBadge()` and the first argument is the user identifier. So we're going to pass `$token->getOwnedBy()` to get the `User` object and then `->getUserIdentifier()`.
+Though, it needs another class to help, because even though it knows where to
+*find* the token on the request... it has no idea what to do with! It doesn't
+know if it's a JWT or, in our case, that it can query the database for the matching
+record. So to help it, add a `token_handler` option set to the id of a service
+we'll create: `App\Security\ApiTokenHandler`.
 
-Now notice we're not actually returning the `User` object in here basically because we don't need to. So there's a couple kind of tricky things going on. If I hold command and click on `getUserIdentifier()`, what this really returns is just the `email`. So what we're doing is we're returning a `UserBadge` with the user's `email` inside of here. And what's going to happen then is the same thing that happens when we send an email to our `json_login` endpoint. It's going to take that email and because we have this user provider set up, it's going to know to query the database for a user with that `email`. So it's actually going to query the database again for that user to get that email address. So if you really care about that, you can pass an argument, a callable as a second argument and basically just return that user. I'm not going to do that here. This is going to work just fine. Oh, and you know one other thing, we should probably check to see if the token is valid. So if not `$token->isValid()`, then once again we could throw a `BadCredentialsException` here. But if you want to customize the message a little bit, you can also throw a new `CustomUserMessageAuthentication` exception and then you can say "Token expired". So in this case you can actually control what message would be sent back to the user.
+## Stateless Firewall
 
-So then how do we try this? Well ideally we can try it via our Swagger documentation. So first thing I'm going to do is I'm going to open up a new tab. I'm going to log out but I'm kind of keeping my other tab over here just so I can steal the valid API tokens for this user. So I logged out so we don't get confused about why we're logged in. So now I'm going to go over to the API documentation. So the question is how can we have this interface actually use an API token when it makes these requests? Well check out here there's this little "Authorize" button, but when you click it, there's nothing there. We haven't told Open API how users are able to authenticate. Fortunately we can do this via API platform. So open up `config/packages/api_platform.yaml`, and then we can add a new key here called `swagger`. And then we're going to kind of create a new way of authenticating. So this key `api_keys` could be anything. Actually no it can't. That needs to be `api_keys`. This `access_token` I think can be anything. And then we need to give it a name that can be anything at all. I'll say `Authorization` and then `type: header` because we're going to be passing it on the header
+By the way, if your security system only allows authentication via an API
+token, then you don't need session storage. If you have that situation, you can
+set a `stateless: true` flag. That tells the security system that if a user logs
+in, don't bother storing the user info in the session. I'm going to remove that,
+because we *do* have a way to log in that relies on the session.
 
-So it looks a little weird there. But what that does is it informs Swagger that we can auth, we can send API tokens via the `Authorization` header. So I click this now. Perfect. So it says "Name: Authorization" "In Header". Now to actually use this, we need to start with the word `Bearer`. I'll talk more about that in a second. It doesn't fill that in for us. Well let's first do like an invalid token right here. So I'll hit "Authorize" that didn't actually make any requests yet. It just kind of is holding onto that in JavaScript. And now we can use any endpoint here. So I'll just try to get collection, treasure collection endpoint when we execute awesome 401. We don't need to be authenticated to use this endpoint, but because we passed an `Authorization` header with `Bearer` and then a token, our new `access_token` system caught that passed it to us, but then we couldn't find that so, so we threw our
-`BadCredentialsException`.
+## The Token Handler Class
 
-So you can see this down here, it comes back with an empty response, but there's this kind of like header with the error `invalid_token` and `error_description` "Invalid credentials.". So the bad case is working, let's try the happy case. So I'll go over here, copy one of my valid API tokens. Then I'll slide back up and hit Authorize again. We'll hit "Logout". It's not actually logging out in this case, logging out just means forgetting the API token that we set there a second ago. So re-type `Bearer ` paste, hit "Authorize" close and let's go down and try this endpoint again. And awesome. 200 status code. So it seems like that worked. How can we tell? Well, down here we can go to our web debug toolbar, we can open the profiler for that request. And down on Security we are logged in as Bernie. It did work. So this is awesome. The only thing I don't like is having to type that `Bearer` string in here that's not very user-friendly. So next, let's fix that by extending the way that API Platform generates the OpenAPI spec doc that Swagger uses.
+Anyway, let's go create that handler class. In the `src/` directory create a new
+sub-directory called `Security/` and inside of that a new PHP class called
+`ApiTokenHandler`. This is a beautifully simple class. Make it implement
+`AccessTokenHandlerInterface` and then go to Code -> Generate or Command + N on a
+Mac and select "Implement Methods" to generate the one we need:
+`getUserBadgeFrom()`.
+
+The `access_token` system knows how to *find* the token: it knows it will live
+on an `Authorization` header with the word `Bearer` in front of it. So it grabs
+that string then calls `getUserBadgeFrom()` and passes it to us. By the way this
+`#[\SensitiveParameter]` attribute is new feature in PHP. It's not important,
+it just makes sure that an exception thrown, this value won't be shown in the
+stacktrace.
+
+Ok: our job here is to query the database using the `$accessToken` and then return
+which *user* it relates to. To do that, we need the `ApiTokenRepository`! Add
+a construct method up here and with a
+`private ApiTokenRepository $apiTokenRepository` argument. Below, say
+`$token = $this->apiTokenRepository` and then use the `findOneBy()` passing it an
+array so it will query where the `token` field equals `$accessToken`.
+
+If authentication should fail for *any* reason here we need to throw a type of
+*security* exception. For example, if the token doesn't exist, throw a new
+`BadCredentialsException`: the one from Symfony components. That will cause
+authentication to fail... and we don't need to pass a message. This will return
+a "Bad Credentials"  message to the user.
+
+At this point, we *have* found the `ApiToken` entity. Ultimately our security system
+wants to log in a *user*... not an "Api Token". We do that by returning a
+`UserBadge` that, sort of, wraps the `User` object. Watch: return a `new UserBadge()`.
+The first argument is the "user identifier". Pass `$token->getOwnedBy()` to get the
+`User` and then `->getUserIdentifier()`.
+
+## How the User Object is Loaded
+
+Notice that we're not *actually* returning the `User` object. That's mostly just
+because... we don't need to! Let me explain. Hold command or ctrl and click
+`getUserIdentifier()`. What this *really* returns is the user's `email`. So we're
+returning a `UserBadge` with the user's `email` inside. What happens next is the
+same thing that happens when we send an `email` to the `json_login` authentication
+endpoint. Symfony's security system takes that email and, because we have this user
+provider set up, it's knows to query the database for a `User` with that `email`.
+
+So it's going to query the database *again* for the `User` via the email... which
+is a bit unnecessary, but fine. If you want to avoid that, you could pass a
+callable as a second argument and return `$token->getOwnedBy()`. But this will
+work fine as it is.
+
+Oh, and we should probably check to see if the token is valid! If not
+`$token->isValid()`, then we could throw another `BadCredentialsException`.
+But if you want to customize the message, you can also throw a new
+`CustomUserMessageAuthentication` exception and then say "Token expired" to
+return *that* message to the user.
+
+## Using the Token in Swagger?
+
+And... done! So... how do we try this? Well, ideally we could try it via our Swagger
+docs. I'm going to open up a new tab... then log out. But I'll keep my original tab
+open... just so I can steal the valid API tokens for the user.
+
+Head to the API docs. The question is: how can we tell this interface to send an
+API token when it makes the requests? Well you may have noticed an "Authorize"
+button. But when we click it... it's empty! That's because we haven't, yet, told
+Open API *how* users are able to authenticate. Fortunately we can do this via API
+Platform.
+
+Open up `config/packages/api_platform.yaml`. And a new key called `swagger`.
+And then we're going to add a new way of authenticating. Set `api_keys` to activate
+that type, then `access_token`... which is just a name for this that I made up.
+Below this, give this authentication mechanism a name... `type: header` because
+we want Swagger to pass the token as a header.
+
+This will tell Swagger - via our OpenAPI docs - that we can  we can send API tokens
+via the `Authorization` header. *Now* when we click the "Authorize" button...
+perfect! It says "Name: Authorization", "In Header".
+
+To use this, we need to start with the word `Bearer` then a space... because it
+doesn't fill that in for us. More on that in a minute. Let's first try an invalid
+token. Hit "Authorize". That didn't actually make any requests yet. It just stored
+the token in JavaScript.
+
+Let's try the get treasure collection endpoint. When we execute... awesome! A
+401! We don't *need* to be authenticated to use this endpoint, but because we passed
+an `Authorization` header with `Bearer` and then a token, our new `access_token`
+system caught that, passed the string to our handler... but then we couldn't find
+that so, so we threw the `BadCredentialsException`
+
+You can see it down here: the API returned an empty response, but with a header
+containing `invalid_token` and `error_description`: "Invalid credentials.".
+
+## Checking the Token Authentication is Working
+
+So the *bad* case is working. Let's try the happy case! In the other tab, copy
+one of the valid API tokens. Then slide back up, hit "Authorize", then "Log out".
+Logging out just means that it "forgets" the API token that we set there a minute
+ago. Re-type `Bearer `, paste, hit "Authorize", close... and let's go down and try
+this endpoint again. And... woohoo! A 200 status code.
+
+So it *seems* like that worked... but how can we tell? Whelp, down on the web
+debug toolbar, click to open the profiler for that request. On Security tab...
+yes! We are logged in as Bernie. Success!
+
+The only thing I *don't* like is needing to type that `Bearer` string in the
+authorization box. That's not very user-friendly. So next, let's fix that by
+learning how we can customize the OpenAPI spec document that Swagger uses.
