@@ -29,9 +29,13 @@ how that's used in a moment) then `/treasures`.
 That's it! Well... also add `.{_format}`. This is *optional*, but that's the magic
 that lets us "cheat" and add this `.jsonld` to the end of the URL.
 
+[[[ code('dc8d25efc7') ]]]
+
 Next, add `operations`... because we don't need *all six*... we really need just
 *one*. So, say `[new GetCollection()]` because we will return a *collection*
 of treasures.
+
+[[[ code('e69163ede0') ]]]
 
 Ok, let's see what this did! Head back to the documentation and refresh. Suddenly
 we have... *three* resources and this one has the correct URL!
@@ -39,6 +43,8 @@ we have... *three* resources and this one has the correct URL!
 Oh, and we have *three* resources because, if you recall, we *customized* the
 `shortName`. Copy that and paste it onto the new `ApiResource` so they match.
 And to make PhpStorm happy, I'll put them in *order*.
+
+[[[ code('81664bdefe') ]]]
 
 Now when we refresh... perfect! *That's* what we want!
 
@@ -59,13 +65,19 @@ To do that, add a new option called `uriVariables`. This is where we describe an
 "wildcards" in your URL. Pass `user_id` set to a `new Link()` object. There are
 multiple... we want the one from `ApiPlatform\Metadata`.
 
+[[[ code('7b22cfd797') ]]]
+
 This object needs *two* things. First, point to the *class* that the `{user_id}`
 is referring to. Do that by passing a `fromClass` option set to `User::class`.
+
+[[[ code('0110937d99') ]]]
 
 *Second*, we need to define which *property* on `User` *points* to `DragonTreasure`
 so that it can figure out how to structure the query. To do *this*, set `fromProperty`
 to `treasures`. So, inside `User`, we're saying that this property describes the
 relationship. Oh, but I totally messed that up: the property is `dragonTreasures`.
+
+[[[ code('7598afa4de') ]]]
 
 Ok, cruise back over and refresh. Under the endpoint... yea! It says "User identifier".
 Let's put `4` in there again, hit "Execute" and... *got it*. There are the *five*
@@ -117,6 +129,8 @@ To fix this, copy the `normalizationContext` and paste it down here. We don't ne
 to worry about `denormalizationContext` because we don't have any operations that
 do any denormalizing.
 
+[[[ code('b5e1afb5bb') ]]]
+
 If we refresh now... got it!
 
 ## A Single Subresource Endpoint
@@ -134,14 +148,20 @@ Above it, add `#[ApiResource()]` with `uriTemplate` set to
 `/treasures/{treasure_id}` for the wildcard (though this can be called anything),
 followed by `/owner.{_format}`.
 
+[[[ code('afc3ca23c9') ]]]
+
 Next pass `uriVariables` with `treasure_id` set to a `new Link()` - the one from
 `ApiPlatform\Metadata`. Inside, set `fromClass` to `DragonTreasure::class`. And
 since the *property* inside `DragonTreasure` that refers to this relationship is
 `owner`, add `fromProperty: 'owner'`.
 
+[[[ code('6e2a5a0e44') ]]]
+
 We also know that we're going to need the `normalizationContext`... so copy that...
 and paste it here. Finally, we only want *one* operation: a `GET` operation to
 return a single `User`. So, add `operations` set to `[new Get()]`.
+
+[[[ code('faf3b7ba68') ]]]
 
 That should do it! Move back over to the documentation, refresh, and take a look
 under "User". Yep! We have a new operation! And it even sees that the wildcard
