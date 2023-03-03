@@ -1,0 +1,487 @@
+WEBVTT
+
+00:00:01.016 --> 00:00:04.326 align:middle
+Tenemos dos formas distintas de obtener
+los tesoros del dragón de un usuario.
+
+00:00:05.006 --> 00:00:08.926 align:middle
+La primera, podríamos obtener el User
+y leer su propiedad dragonTreasures.
+
+00:00:09.786 --> 00:00:12.956 align:middle
+La segunda es mediante el filtro
+que hemos añadido hace un momento.
+
+00:00:13.506 --> 00:00:22.456 align:middle
+En la API, eso parece owner=/api/users/4 en
+la operación de recogida de tesoros GET.
+
+00:00:23.316 --> 00:00:25.816 align:middle
+Esta es mi forma habitual
+de obtener los datos...
+
+00:00:26.346 --> 00:00:31.266 align:middle
+porque si quiero obtener tesoros, tiene
+sentido utilizar una ruta treasures.
+
+00:00:31.956 --> 00:00:36.676 align:middle
+Además, si un usuario posee muchos
+tesoros, ¡eso nos dará paginación!
+
+00:00:37.236 --> 00:00:40.826 align:middle
+Pero a veces puedes optar por
+añadir una forma especial
+
+00:00:40.826 --> 00:00:43.986 align:middle
+de obtener un recurso o
+colección de recursos...
+
+00:00:44.286 --> 00:00:46.356 align:middle
+casi como una URL de vanidad.
+
+00:00:47.276 --> 00:00:53.046 align:middle
+Por ejemplo, imagina que, para obtener esta misma
+colección, queremos que el usuario pueda ir
+
+00:00:53.046 --> 00:00:59.386 align:middle
+a /api/users/4/treasures.jsonld.
+
+00:01:00.006 --> 00:01:02.826 align:middle
+Eso, por supuesto, no funciona.
+
+00:01:03.306 --> 00:01:05.456 align:middle
+Pero se puede hacer.
+
+00:01:06.036 --> 00:01:12.176 align:middle
+Esto se llama un subrecurso, y los subrecursos
+son mucho más agradables en API Platform 3.
+
+00:01:13.006 --> 00:01:14.556 align:middle
+Bien, pensemos.
+
+00:01:14.806 --> 00:01:17.276 align:middle
+Esta ruta devolverá tesoros.
+
+00:01:17.556 --> 00:01:22.946 align:middle
+Así que para añadir este subrecurso, tenemos
+que actualizar la clase DragonTreasure.
+
+00:01:23.546 --> 00:01:27.536 align:middle
+¿Cómo? Añadiendo un
+segundo atributo ApiResource.
+
+00:01:28.216 --> 00:01:31.826 align:middle
+Ya tenemos este principal, así
+que ahora añade uno nuevo.
+
+00:01:32.036 --> 00:01:38.236 align:middle
+Pero esta vez, controla la URL con una opción
+uriTemplate ajustada exactamente a lo que queremos:
+
+00:01:38.576 --> 00:01:45.336 align:middle
+/users/{user_id} para la parte del
+comodín (veremos cómo se utiliza
+
+00:01:45.336 --> 00:01:48.016 align:middle
+en un momento) entonces /treasures.
+
+00:01:48.896 --> 00:01:49.336 align:middle
+Ya está
+
+00:01:49.746 --> 00:01:51.256 align:middle
+Bueno... añade también .{_format}.
+
+00:01:51.436 --> 00:01:53.256 align:middle
+Esto
+
+00:01:54.076 --> 00:01:58.996 align:middle
+es opcional, pero es la magia que
+nos permite "hacer trampas" y añadir
+
+00:01:58.996 --> 00:02:02.386 align:middle
+este .jsonld al final de
+la URL. A continuación,
+
+00:02:03.206 --> 00:02:05.116 align:middle
+añade operations... porque
+
+00:02:05.406 --> 00:02:07.926 align:middle
+no necesitamos los seis...
+
+00:02:08.186 --> 00:02:09.826 align:middle
+en realidad sólo necesitamos uno. Entonces,
+
+00:02:10.176 --> 00:02:17.086 align:middle
+di [new GetCollection()] porque devolveremos
+una colección de tesoros. Vale, ¡ vamos a
+
+00:02:17.846 --> 00:02:19.986 align:middle
+ver qué ha hecho esto!
+
+00:02:20.286 --> 00:02:22.716 align:middle
+Vuelve a la documentación y
+actualízala. De repente tenemos...
+
+00:02:23.546 --> 00:02:25.146 align:middle
+¡tres recursos
+
+00:02:25.146 --> 00:02:29.296 align:middle
+y éste tiene la URL correcta! Ah,
+
+00:02:30.016 --> 00:02:36.716 align:middle
+y tenemos tres recursos porque, si
+recuerdas, hemos personalizado el shortName.
+
+00:02:37.346 --> 00:02:42.116 align:middle
+Cópialo y pégalo en el nuevo
+ApiResource para que coincidan. Y
+
+00:02:42.646 --> 00:02:46.056 align:middle
+para contentar a PhpStorm,
+los pondré en orden. Ahora
+
+00:02:46.936 --> 00:02:48.716 align:middle
+cuando actualicemos... ¡perfecto!
+
+00:02:49.646 --> 00:02:51.936 align:middle
+¡Eso es lo que queríamos!
+
+00:02:53.076 --> 00:02:55.886 align:middle
+Ya tenemos una nueva operación
+para obtener tesoros. Pero,
+
+00:02:56.116 --> 00:02:57.986 align:middle
+¿funciona?
+
+00:02:58.446 --> 00:03:04.166 align:middle
+Dice que recuperará una colección de recursos
+de tesoros, así que eso está bien. Pero...
+
+00:03:04.606 --> 00:03:06.826 align:middle
+tenemos un problema.
+
+00:03:07.366 --> 00:03:11.356 align:middle
+Piensa que tenemos que pasar el
+id de un DragonTreasure... ¡pero
+
+00:03:11.836 --> 00:03:14.596 align:middle
+debería ser el id de un User! E
+
+00:03:15.176 --> 00:03:17.996 align:middle
+incluso si pasamos algo, como 4... y
+
+00:03:18.506 --> 00:03:19.766 align:middle
+pulsamos "Ejecutar" ... ¡mira
+
+00:03:20.866 --> 00:03:21.946 align:middle
+la URL! Ni siquiera ha
+
+00:03:22.476 --> 00:03:28.726 align:middle
+utilizado el 4: ¡sigue teniendo
+{user_id} en la URL! Así que,
+
+00:03:29.136 --> 00:03:32.956 align:middle
+por supuesto, vuelve con un error 404. El
+
+00:03:33.706 --> 00:03:39.856 align:middle
+problema es que tenemos que ayudar a API
+Platform a entender qué significa {user_id}.
+
+00:03:39.856 --> 00:03:46.486 align:middle
+Tenemos que decirle que ése es el
+id del usuario y que debe utilizarlo
+
+00:03:46.486 --> 00:03:50.416 align:middle
+para consultar WHERE owner_id
+es igual al valor. Para ello
+
+00:03:51.386 --> 00:03:55.756 align:middle
+, añade una nueva opción
+llamada uriVariables. Aquí
+
+00:03:56.346 --> 00:04:00.656 align:middle
+es donde describimos cualquier
+"comodín" de tu URL. Pasa
+
+00:04:01.676 --> 00:04:05.586 align:middle
+user_id ajustado a un objeto new Link().
+
+00:04:06.146 --> 00:04:07.336 align:middle
+Hay varios...
+
+00:04:07.746 --> 00:04:11.226 align:middle
+queremos el de
+ApiPlatform\Metadata. Este objeto
+
+00:04:12.056 --> 00:04:13.756 align:middle
+necesita dos cosas. Primero, apuntar
+
+00:04:14.446 --> 00:04:19.026 align:middle
+a la clase a la que se refiere {user_id}.
+
+00:04:19.666 --> 00:04:24.646 align:middle
+Hazlo pasando una opción fromClass establecida
+a User::class. En segundo lugar, necesitamos
+
+00:04:25.236 --> 00:04:30.956 align:middle
+definir qué propiedad de User
+apunta a DragonTreasure para
+
+00:04:31.246 --> 00:04:34.256 align:middle
+que pueda averiguar cómo estructurar
+la consulta. Para ello, establece
+
+00:04:34.986 --> 00:04:39.346 align:middle
+fromProperty en treasures. Así,
+
+00:04:39.986 --> 00:04:44.786 align:middle
+dentro de User, estamos diciendo que
+esta propiedad describe la relación. Ah,
+
+00:04:45.716 --> 00:04:50.606 align:middle
+pero lo he estropeado todo: la
+propiedad es dragonTreasures. Vale,
+
+00:04:52.976 --> 00:04:55.346 align:middle
+vuelve y actualiza. Debajo de la ruta...
+
+00:04:56.286 --> 00:04:57.426 align:middle
+¡sí!
+
+00:04:58.716 --> 00:05:01.546 align:middle
+Dice "Identificador de usuario".
+
+00:05:03.006 --> 00:05:07.316 align:middle
+Volvamos a poner 4, pulsamos
+"Ejecutar" y... ya está
+
+00:05:07.876 --> 00:05:11.956 align:middle
+. ¡Ahí están los cinco
+tesoros de este usuario! Y
+
+00:05:12.846 --> 00:05:14.356 align:middle
+en la otra pestaña del navegador... si
+
+00:05:14.736 --> 00:05:15.856 align:middle
+refrescamos...
+
+00:05:16.206 --> 00:05:20.286 align:middle
+¡funciona! Entre bastidores, gracias a Link,
+
+00:05:20.836 --> 00:05:26.626 align:middle
+API Platform realiza básicamente la siguiente
+consulta: SELECT * FROM dragon_treasure WHERE
+
+00:05:26.716 --> 00:05:31.456 align:middle
+owner_id = lo que pasemos por {user_id}.
+
+00:05:31.456 --> 00:05:36.266 align:middle
+Sabe cómo hacer esa consulta mirando
+la relación Doctrine y averiguando
+
+00:05:36.736 --> 00:05:39.156 align:middle
+qué columna utilizar. Es
+
+00:05:39.506 --> 00:05:40.866 align:middle
+superinteligente.
+
+00:05:41.706 --> 00:05:43.526 align:middle
+De hecho, podemos verlo en el perfilador. Ve
+
+00:05:44.096 --> 00:05:48.396 align:middle
+a /_profiler, haz clic en
+nuestra petición... y,
+
+00:05:48.856 --> 00:05:52.466 align:middle
+aquí abajo, vemos 2 consultas... que
+
+00:05:52.846 --> 00:05:58.226 align:middle
+son básicamente iguales: la 2ª se utiliza para
+el "total de elementos" para la paginación. Si
+
+00:05:59.136 --> 00:06:02.196 align:middle
+haces clic en "Ver consulta formateada"
+en la consulta principal... ¡es
+
+00:06:02.756 --> 00:06:05.556 align:middle
+aún más compleja de lo que esperaba!
+
+00:06:06.086 --> 00:06:07.526 align:middle
+Tiene un INNER JOIN... pero
+
+00:06:07.956 --> 00:06:11.566 align:middle
+básicamente está seleccionando todos
+los datos de tesoros de dragones donde
+
+00:06:11.806 --> 00:06:16.486 align:middle
+owner_id = el ID de ese usuario. Por
+
+00:06:17.296 --> 00:06:22.906 align:middle
+cierto, si miras la documentación, también
+hay una forma de configurar todo esto
+
+00:06:22.906 --> 00:06:28.966 align:middle
+a través del otro lado de la relación:
+diciendo toProperty: 'owner'. Esto
+
+00:06:31.976 --> 00:06:33.136 align:middle
+sigue funcionando... y
+
+00:06:33.446 --> 00:06:35.286 align:middle
+funciona exactamente igual. Pero
+
+00:06:35.606 --> 00:06:42.156 align:middle
+yo recomiendo seguir con fromProperty,
+que es coherente y, creo, más claro. El
+
+00:06:43.046 --> 00:06:48.816 align:middle
+toProperty sólo es necesario si no has mapeado
+el lado inverso de una relación... como
+
+00:06:49.176 --> 00:06:53.326 align:middle
+si no hubiera una propiedad
+dragonTreasures en User. A menos que
+
+00:06:53.946 --> 00:06:57.056 align:middle
+te encuentres en esa situación,
+sigue con fromProperty.
+
+00:06:58.076 --> 00:07:01.696 align:middle
+Todo esto funciona muy bien,
+excepto por un pequeño problema. Si
+
+00:07:02.276 --> 00:07:06.446 align:middle
+vuelves a mirar los datos,
+¡muestra los campos equivocados!
+
+00:07:06.826 --> 00:07:10.826 align:middle
+Lo devuelve todo, como id y isPublished. Se
+
+00:07:11.446 --> 00:07:15.316 align:middle
+supone que no deben incluirse gracias a
+nuestros grupos de normalización. Pero
+
+00:07:15.676 --> 00:07:21.486 align:middle
+como no hemos especificado ningún grupo de
+normalización en el nuevo ApiResource , el
+
+00:07:21.746 --> 00:07:24.186 align:middle
+serializador lo devuelve todo. Para
+
+00:07:25.056 --> 00:07:29.876 align:middle
+solucionarlo, copia el normalizationContext
+y pégalo aquí abajo. No tenemos
+
+00:07:31.126 --> 00:07:33.986 align:middle
+que preocuparnos por
+denormalizationContext porque
+
+00:07:34.076 --> 00:07:38.026 align:middle
+no tenemos ninguna operación que
+haga ninguna desnormalización. Si
+
+00:07:38.746 --> 00:07:40.046 align:middle
+refrescamos ahora ... ¡lo
+
+00:07:40.816 --> 00:07:45.886 align:middle
+tenemos! Vamos a añadir un subrecurso
+más para ver un caso ligeramente distinto.
+
+00:07:46.716 --> 00:07:49.016 align:middle
+Primero te mostraré la URL que quiero.
+
+00:07:49.746 --> 00:07:51.896 align:middle
+Tenemos un tesoro con el ID 11. Esto
+
+00:07:52.546 --> 00:07:58.966 align:middle
+significa que podemos ir a
+/api/treasures/11.jsonld para verlo. Ahora
+
+00:07:59.916 --> 00:08:06.326 align:middle
+quiero poder añadir /owner al final para obtener
+el usuario al que pertenece este tesoro. Ahora
+
+00:08:06.806 --> 00:08:08.686 align:middle
+mismo, eso no funciona
+.... así que ¡manos a la
+
+00:08:08.976 --> 00:08:10.286 align:middle
+obra! Como
+
+00:08:11.236 --> 00:08:14.526 align:middle
+el recurso que se devolverá es un User, esa es
+
+00:08:14.916 --> 00:08:18.216 align:middle
+la clase que necesita el
+nuevo Recurso API. Sobre
+
+00:08:19.046 --> 00:08:27.806 align:middle
+ella, añade #[ApiResource()] con uriTemplate
+configurado como /treasures/{treasure_id} para
+
+00:08:27.806 --> 00:08:33.396 align:middle
+el comodín (aunque puede llamarse como quieras),
+seguido de /owner.{_format}. A continuación,
+
+00:08:33.586 --> 00:08:35.096 align:middle
+pasa
+
+00:08:36.286 --> 00:08:44.656 align:middle
+uriVariables con treasure_id fijado a new Link()
+- el de ApiPlatform\Metadata . Dentro, fija
+
+00:08:45.346 --> 00:08:49.666 align:middle
+fromClass a DragonTreasure::class. Y como
+
+00:08:50.476 --> 00:08:54.426 align:middle
+la propiedad dentro de DragonTreasure
+que hace referencia a esta
+
+00:08:54.426 --> 00:08:58.396 align:middle
+relación es owner, añade
+fromProperty: 'owner'. También
+
+00:08:59.446 --> 00:09:02.686 align:middle
+sabemos que vamos a necesitar el
+normalizationContext... así que cópialo...
+
+00:09:02.876 --> 00:09:04.066 align:middle
+y pégalo
+
+00:09:04.326 --> 00:09:05.296 align:middle
+aquí. Por último,
+
+00:09:06.546 --> 00:09:13.156 align:middle
+sólo queremos una operación: una operación
+GET para devolver un único User. Así que añade
+
+00:09:13.816 --> 00:09:18.156 align:middle
+operations fijado en [new Get()] . ¡Ya
+
+00:09:19.206 --> 00:09:19.996 align:middle
+está! Vuelve a
+
+00:09:20.416 --> 00:09:25.926 align:middle
+la documentación, actualízala y echa
+un vistazo en "Usuario". ¡Sí! ¡
+
+00:09:26.596 --> 00:09:29.026 align:middle
+Tenemos una nueva operación! E
+
+00:09:29.686 --> 00:09:34.596 align:middle
+incluso ve que el comodín es un
+"identificador DragonTreasure". Si
+
+00:09:35.266 --> 00:09:37.226 align:middle
+actualizamos la otra pestaña... ¡funciona!
+
+00:09:37.576 --> 00:09:43.906 align:middle
+Vale equipo, he mentido al decir que éste era el
+último tema porque ... ¡es la hora de los temas extra
+
+00:09:43.966 --> 00:09:45.726 align:middle
+! A continuación: vamos a
+
+00:09:46.336 --> 00:09:53.276 align:middle
+crear automáticamente un área de administración basada
+en React a partir de los documentos de nuestra API. Vaya.
