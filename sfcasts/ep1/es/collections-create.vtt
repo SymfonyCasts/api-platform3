@@ -1,0 +1,304 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:05.536 align:middle
+¿Es posible crear un DragonTreasure
+totalmente nuevo cuando creamos un usuario?
+
+00:00:06.026 --> 00:00:11.346 align:middle
+Como... ¿en lugar de enviar el IRI de
+un tesoro existente, enviamos un objeto?
+
+00:00:11.916 --> 00:00:12.526 align:middle
+Vamos a intentarlo
+
+00:00:13.056 --> 00:00:15.766 align:middle
+Primero, cambiaré esto por un correo electrónico
+y un nombre de usuario únicos. Después,
+
+00:00:16.626 --> 00:00:23.246 align:middle
+para dragonTreasures, borra esos IRI
+y, en su lugar, pasa un objeto JSON
+
+00:00:23.246 --> 00:00:25.736 align:middle
+con los campos que sabemos que son necesarios.
+
+00:00:26.096 --> 00:00:30.776 align:middle
+¡Nuestro nuevo usuario dragón acaba de
+conseguir una copia de GoldenEye para N64!
+
+00:00:30.986 --> 00:00:31.866 align:middle
+Legendario.
+
+00:00:32.756 --> 00:00:33.766 align:middle
+Añade un description...
+
+00:00:34.366 --> 00:00:35.296 align:middle
+y un value.
+
+00:00:36.556 --> 00:00:39.466 align:middle
+En teoría, ¡este cuerpo JSON tiene sentido!
+
+00:00:39.916 --> 00:00:41.166 align:middle
+¿Pero funciona?
+
+00:00:41.816 --> 00:00:43.626 align:middle
+Pulsa "Ejecutar" y...
+
+00:00:44.216 --> 00:00:46.106 align:middle
+¡no! Bueno, todavía no.
+
+00:00:46.536 --> 00:00:48.696 align:middle
+¡Pero conocemos este error!
+
+00:00:49.356 --> 00:00:52.616 align:middle
+No se permiten documentos anidados
+para el atributo dragonTreasures.
+
+00:00:52.786 --> 00:00:54.336 align:middle
+Utiliza en su lugar IRI.
+
+00:00:55.226 --> 00:00:58.526 align:middle
+Dentro de User, si nos
+desplazamos hacia arriba,
+
+00:00:58.526 --> 00:01:03.506 align:middle
+la propiedad $dragonTreasures es
+escribible porque tiene user:write.
+
+00:01:04.016 --> 00:01:09.676 align:middle
+Pero no podemos enviar un objeto para esta propiedad
+porque no hemos añadido user:write a ninguno
+
+00:01:09.676 --> 00:01:12.566 align:middle
+de los campos dentro de DragonTreasure.
+
+00:01:13.016 --> 00:01:14.126 align:middle
+Vamos a solucionarlo.
+
+00:01:14.696 --> 00:01:17.416 align:middle
+Queremos poder enviar $name,
+así que añade user:write...
+
+00:01:17.416 --> 00:01:21.746 align:middle
+Me saltaré $description pero
+haré lo mismo con $value.
+
+00:01:23.216 --> 00:01:27.866 align:middle
+Ahora busca setTextDescription()
+que es la descripción real.
+
+00:01:28.236 --> 00:01:30.476 align:middle
+Añade aquí también user:write.
+
+00:01:31.066 --> 00:01:35.676 align:middle
+Vale, en teoría, ahora deberíamos
+poder enviar un objeto incrustado.
+
+00:01:36.186 --> 00:01:37.906 align:middle
+Si volvemos a intentarlo...
+
+00:01:39.746 --> 00:01:42.356 align:middle
+¡obtenemos un error 500!
+
+00:01:42.796 --> 00:01:48.676 align:middle
+Se ha encontrado una nueva entidad a través de la
+relación User#dragonTreasures ¡Esto es genial!
+
+00:01:49.326 --> 00:01:54.236 align:middle
+Ya sabemos que cuando envías un
+objeto incrustado, si incluyes @id,
+
+00:01:54.586 --> 00:01:58.716 align:middle
+el serializador recuperará primero
+ese objeto y luego lo actualizará.
+
+00:01:59.296 --> 00:02:04.296 align:middle
+Pero si no tienes un @id, creará
+un objeto totalmente nuevo.
+
+00:02:04.886 --> 00:02:07.656 align:middle
+En este momento, está
+creando un objeto nuevo,...
+
+00:02:07.986 --> 00:02:11.376 align:middle
+pero nada le ha dicho al gestor
+de entidades que lo persista.
+
+00:02:11.856 --> 00:02:13.496 align:middle
+Por eso obtenemos este error.
+
+00:02:14.346 --> 00:02:18.526 align:middle
+Para solucionarlo, necesitamos
+persistir en cascada esta propiedad.
+
+00:02:19.266 --> 00:02:26.156 align:middle
+En User, en la opción OneToMany para $dragonTreasures,
+añade una opción cascade establecida en ['persist'].
+
+00:02:26.956 --> 00:02:29.796 align:middle
+Esto significa que si estamos
+guardando un objeto User,
+
+00:02:30.126 --> 00:02:33.836 align:middle
+debería persistir mágicamente cualquier
+$dragonTreasures que haya dentro.
+
+00:02:34.626 --> 00:02:35.936 align:middle
+Y si lo probamos ahora...
+
+00:02:37.356 --> 00:02:39.856 align:middle
+¡funciona! ¡Es increíble!
+
+00:02:39.856 --> 00:02:43.296 align:middle
+Y aparentemente, nuestro nuevo tesoro id es 43.
+
+00:02:43.946 --> 00:02:47.326 align:middle
+Abramos una nueva pestaña del
+navegador y naveguemos hasta esa URL...
+
+00:02:47.756 --> 00:02:48.896 align:middle
+más .json...
+
+00:02:49.226 --> 00:02:51.396 align:middle
+en realidad, hagamos .jsonld.
+
+00:02:52.086 --> 00:02:52.866 align:middle
+¡Estupendo!
+
+00:02:53.256 --> 00:02:57.266 align:middle
+Vemos que el owner está configurado para
+el nuevo usuario que acabamos de crear.
+
+00:02:58.216 --> 00:02:59.966 align:middle
+Pero... ¡aguanta!
+
+00:03:00.396 --> 00:03:03.696 align:middle
+No enviamos el campo owner
+en los datos del tesoro...
+
+00:03:04.106 --> 00:03:06.466 align:middle
+¿cómo se ha establecido ese campo?
+
+00:03:07.066 --> 00:03:11.996 align:middle
+Bueno, en primer lugar, tiene sentido
+que no enviáramos un campo owner
+
+00:03:11.996 --> 00:03:13.366 align:middle
+para el nuevo DragonTreasure...
+
+00:03:13.836 --> 00:03:17.876 align:middle
+ya que el usuario que lo poseerá
+¡ni siquiera existía todavía!
+
+00:03:18.726 --> 00:03:21.246 align:middle
+Vale, entonces, ¿pero
+quién estableció el owner ?
+
+00:03:22.046 --> 00:03:26.396 align:middle
+Entre bastidores, el serializador
+crea primero un nuevo objeto User.
+
+00:03:26.786 --> 00:03:29.556 align:middle
+Después, crea un nuevo objeto
+DragonTreasure. Finalmente,
+
+00:03:30.256 --> 00:03:35.206 align:middle
+ve que el nuevo DragonTreasure
+aún no está asignado al User,
+
+00:03:35.206 --> 00:03:37.596 align:middle
+y llama a addDragonTreasure().
+
+00:03:38.256 --> 00:03:44.156 align:middle
+Cuando lo hace, el código de aquí abajo
+establece el owner: tal y como vimos antes.
+
+00:03:44.986 --> 00:03:49.946 align:middle
+Así que nuestro código bien escrito se está
+ocupando de todos esos detalles por nosotros. De
+
+00:03:50.686 --> 00:03:54.166 align:middle
+todos modos, quizá recuerdes
+de antes que en cuanto
+
+00:03:54.166 --> 00:03:57.456 align:middle
+permitamos que un campo de relación
+envíe datos incrustados...
+
+00:03:57.746 --> 00:03:59.566 align:middle
+tenemos que añadir una pequeña cosa.
+
+00:04:00.086 --> 00:04:06.666 align:middle
+No lo haré, pero si enviáramos un campo
+name vacío, se crearía un DragonTreasure...
+
+00:04:06.916 --> 00:04:10.366 align:middle
+con un name vacío, aunque, por aquí,
+
+00:04:10.816 --> 00:04:14.806 align:middle
+si nos desplazamos hasta la
+propiedad name, ¡es obligatorio!
+
+00:04:15.666 --> 00:04:21.416 align:middle
+Recuerda: cuando el sistema valide el objeto
+User, se detendrá en $dragonTreasures.
+
+00:04:21.726 --> 00:04:24.816 align:middle
+No validará también esos objetos.
+
+00:04:25.376 --> 00:04:29.596 align:middle
+Si quieres validarlos, añade #[Assert\Valid].
+
+00:04:30.406 --> 00:04:35.496 align:middle
+Ahora que ya lo tengo, para comprobar
+que funciona, pulsa "Ejecutar" y...
+
+00:04:35.926 --> 00:04:41.546 align:middle
+¡impresionante! Obtenemos un código de estado
+422 que nos dice que name no debería estar vacío.
+
+00:04:41.546 --> 00:04:43.576 align:middle
+Voy a volver a ponerlo.
+
+00:04:44.586 --> 00:04:49.896 align:middle
+Ahora sabemos que podemos enviar cadenas IRI u
+objetos incrustados para una propiedad de relación,
+
+00:04:50.286 --> 00:04:53.636 align:middle
+suponiendo que hayamos configurado los
+grupos de serialización para permitirlo.
+
+00:04:54.326 --> 00:04:57.126 align:middle
+E incluso podemos mezclarlos.
+
+00:04:57.856 --> 00:05:02.186 align:middle
+Digamos que queremos crear un nuevo objeto
+DragonTreasure, pero también vamos a
+
+00:05:02.186 --> 00:05:06.006 align:middle
+robar, tomar prestado, un
+tesoro de otro dragón.
+
+00:05:06.456 --> 00:05:08.126 align:middle
+Esto está totalmente permitido.
+
+00:05:08.826 --> 00:05:11.076 align:middle
+¡Fíjate! Cuando pulsamos "Ejecutar"...
+
+00:05:11.986 --> 00:05:14.426 align:middle
+obtenemos un código de estado 201.
+
+00:05:14.956 --> 00:05:22.236 align:middle
+Esto devuelve los identificadores de tesoro 44 (que
+es el nuevo) y 7, que es el que acabamos de robar.
+
+00:05:23.156 --> 00:05:27.116 align:middle
+Bien, ya sólo nos queda un capítulo
+sobre el manejo de las relaciones.
+
+00:05:27.676 --> 00:05:32.406 align:middle
+Veamos cómo podemos quitar un tesoro
+a un usuario para eliminar ese tesoro.
+
+00:05:32.866 --> 00:05:33.836 align:middle
+Eso a continuación.

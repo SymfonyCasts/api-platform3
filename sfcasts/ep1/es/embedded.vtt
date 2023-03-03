@@ -1,0 +1,321 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:03.876 align:middle
+Así, cuando dos recursos están
+relacionados en nuestra API,
+
+00:00:04.196 --> 00:00:07.966 align:middle
+aparecen como una cadena I
+RI , o colección de cadenas.
+
+00:00:08.386 --> 00:00:14.186 align:middle
+Pero podrías preguntarte: Oye, ¿podríamos incluir
+los datos de DragonTreasure aquí mismo en lugar
+
+00:00:14.186 --> 00:00:17.586 align:middle
+del IRI para que no tenga
+que hacer una segunda,
+
+00:00:17.586 --> 00:00:19.866 align:middle
+tercera o cuarta petición
+para obtener esos datos?
+
+00:00:20.466 --> 00:00:21.446 align:middle
+Por supuesto que sí
+
+00:00:21.446 --> 00:00:25.236 align:middle
+Y, de nuevo, también puedes hacer
+algo realmente genial con Vulcain...
+
+00:00:25.526 --> 00:00:28.196 align:middle
+pero aprendamos a incrustar datos.
+
+00:00:28.896 --> 00:00:32.896 align:middle
+Cuando se serializa el objeto User,
+utiliza los grupos de normalización
+
+00:00:33.166 --> 00:00:35.236 align:middle
+para determinar qué campos incluir.
+
+00:00:35.856 --> 00:00:38.536 align:middle
+En este caso, tenemos un
+grupo llamado user:read.
+
+00:00:39.056 --> 00:00:43.636 align:middle
+Por eso se devuelven email,
+username y dragonTreasures.
+
+00:00:44.326 --> 00:00:50.736 align:middle
+Para transformar la propiedad dragonTreasures en datos
+incrustados, tenemos que entrar en DragonTreasure
+
+00:00:51.056 --> 00:00:56.206 align:middle
+y añadir este mismo grupo
+user:read al menos a un campo.
+
+00:00:56.756 --> 00:00:59.836 align:middle
+Observa: encima de name, añade user:read.
+
+00:01:00.416 --> 00:01:03.156 align:middle
+Luego... baja y añade
+también esto para value.
+
+00:01:03.956 --> 00:01:08.686 align:middle
+Sí, en cuanto tengamos aunque sólo sea una
+propiedad dentro de DragonTreasure que esté
+
+00:01:08.686 --> 00:01:11.436 align:middle
+en el grupo de normalización user:read,
+
+00:01:11.986 --> 00:01:16.116 align:middle
+el aspecto del campo dragonTreasures
+cambiará totalmente.
+
+00:01:16.806 --> 00:01:18.876 align:middle
+Observa: cuando ejecutemos eso...
+
+00:01:19.646 --> 00:01:27.406 align:middle
+¡impresionante! En lugar de una matriz de cadenas
+IRI, es una matriz de objetos, con name y value...
+
+00:01:27.576 --> 00:01:31.016 align:middle
+y, por supuesto, los campos
+normales @id y @type.
+
+00:01:31.566 --> 00:01:33.866 align:middle
+Así que: cuando tengas un campo de relación,
+
+00:01:34.176 --> 00:01:39.086 align:middle
+se representará como una
+cadena IRI o como un objeto...
+
+00:01:39.546 --> 00:01:43.696 align:middle
+y esto depende totalmente de
+tus grupos de normalización.
+
+00:01:44.406 --> 00:01:46.736 align:middle
+Intentemos esto mismo en el otro sentido.
+
+00:01:47.356 --> 00:01:49.546 align:middle
+Tenemos un treasure cuyo id es 2.
+
+00:01:50.226 --> 00:01:52.706 align:middle
+Dirígete a la ruta GET un único tesoro...
+
+00:01:53.046 --> 00:01:55.326 align:middle
+pruébalo... e introduce 2 como id.
+
+00:01:56.266 --> 00:01:59.966 align:middle
+Sin sorpresa, vemos owner como una cadena IRI.
+
+00:02:00.516 --> 00:02:04.236 align:middle
+¿Podríamos convertirla
+en un objeto incrustado?
+
+00:02:04.756 --> 00:02:05.436 align:middle
+¡Por supuesto!
+
+00:02:06.076 --> 00:02:10.546 align:middle
+Sabemos que DragonTreasure utiliza el
+grupo de normalización treasure:read.
+
+00:02:11.236 --> 00:02:17.036 align:middle
+Así que, entra en User y añade eso a
+la propiedad username: treasure:read.
+
+00:02:17.686 --> 00:02:19.306 align:middle
+Sólo con ese cambio...
+
+00:02:19.626 --> 00:02:20.976 align:middle
+cuando lo probemos...
+
+00:02:21.556 --> 00:02:26.106 align:middle
+¡sí! ¡El campo owner acaba de
+transformarse en un objeto incrustado!
+
+00:02:27.086 --> 00:02:31.806 align:middle
+Bien, vamos a obtener también una colección
+de treasures: basta con solicitarlos todos.
+
+00:02:32.726 --> 00:02:38.646 align:middle
+Gracias al cambio que acabamos de hacer, la
+propiedad owner de cada tesoro es ahora un objeto.
+
+00:02:39.366 --> 00:02:41.656 align:middle
+Esto me da una idea descabellada.
+
+00:02:42.256 --> 00:02:47.296 align:middle
+¿Y si tener toda la información de owner cuando
+obtengo un único DragonTreasure está bien ?
+
+00:02:47.686 --> 00:02:53.816 align:middle
+pero tal vez te parezca exagerado que esos datos
+se devuelvan desde la ruta de recolección.
+
+00:02:54.406 --> 00:02:58.066 align:middle
+¿Podríamos incrustar el owner
+al obtener un único treasure...
+
+00:02:58.526 --> 00:03:02.666 align:middle
+¿pero utilizar la cadena IRI
+al obtener una colección?
+
+00:03:03.396 --> 00:03:04.106 align:middle
+La respuesta es...
+
+00:03:04.516 --> 00:03:07.496 align:middle
+¡no! Estoy bromeando, ¡por supuesto!
+
+00:03:07.846 --> 00:03:09.646 align:middle
+¡Podemos hacer las locuras que queramos!
+
+00:03:10.056 --> 00:03:14.766 align:middle
+Aunque, cuantas más cosas raras añadas a
+tu API, más complicada se vuelve la vida.
+
+00:03:15.146 --> 00:03:17.496 align:middle
+¡Así que elige bien tus aventuras!
+
+00:03:18.356 --> 00:03:20.256 align:middle
+Hacer esto es un proceso de dos pasos.
+
+00:03:20.656 --> 00:03:24.366 align:middle
+Primero, en DragonTreasure,
+busca la operación Get,
+
+00:03:24.756 --> 00:03:27.936 align:middle
+que es la operación para
+obtener un único tesoro.
+
+00:03:28.726 --> 00:03:33.806 align:middle
+Una de las opciones que puedes pasar a
+una operación es normalizationContext...
+
+00:03:34.036 --> 00:03:36.366 align:middle
+que anulará la opción por defecto.
+
+00:03:37.036 --> 00:03:42.156 align:middle
+Añade normalizationContext, luego groups
+ajustado al estándar treasure:read.
+
+00:03:42.756 --> 00:03:49.436 align:middle
+Luego añade un segundo grupo específico
+para esta operación: treasure:item:get.
+
+00:03:50.386 --> 00:03:51.906 align:middle
+Puedes llamarlo como quieras...
+
+00:03:52.216 --> 00:03:56.866 align:middle
+pero a mí me gusta esta convención:
+nombre del recurso seguido de item
+
+00:03:56.866 --> 00:04:01.466 align:middle
+o collection y luego el
+método HTTP, como get o post.
+
+00:04:02.056 --> 00:04:06.636 align:middle
+Y sí, olvidé la clave groups:
+lo arreglaré en un momento. En
+
+00:04:07.316 --> 00:04:13.676 align:middle
+cualquier caso, si hubiera codificado esto correctamente,
+significaría que cuando se utilice esta operación,
+
+00:04:14.046 --> 00:04:20.086 align:middle
+el serializador incluirá todos los campos que
+estén al menos en uno de estos dos grupos.
+
+00:04:20.566 --> 00:04:22.076 align:middle
+Ahora podemos aprovechar eso.
+
+00:04:22.786 --> 00:04:23.936 align:middle
+Copia el nuevo nombre del grupo.
+
+00:04:24.356 --> 00:04:31.276 align:middle
+Luego, en User, encima de username, en lugar
+de treasure:read, pega ese nuevo grupo.
+
+00:04:32.186 --> 00:04:32.946 align:middle
+¡Vamos a comprobarlo!
+
+00:04:33.386 --> 00:04:35.476 align:middle
+Prueba de nuevo con la ruta GET.
+
+00:04:37.146 --> 00:04:40.566 align:middle
+¡Sí! Volvemos a owner que es una cadena IRI.
+
+00:04:41.376 --> 00:04:44.016 align:middle
+Y si probamos con el punto final GET uno..
+
+00:04:45.816 --> 00:04:47.636 align:middle
+oh, el propietario es...
+
+00:04:47.686 --> 00:04:49.426 align:middle
+¿también es un IRI?
+
+00:04:50.056 --> 00:04:50.856 align:middle
+Es culpa mía.
+
+00:04:51.186 --> 00:04:54.936 align:middle
+Volviendo a normalization_context
+olvidé decir groups.
+
+00:04:55.406 --> 00:04:59.966 align:middle
+Básicamente estaba poniendo dos opciones
+sin sentido en normalization_context.
+
+00:05:00.846 --> 00:05:01.696 align:middle
+Intentémoslo de nuevo.
+
+00:05:02.326 --> 00:05:02.926 align:middle
+Esta vez...
+
+00:05:03.366 --> 00:05:08.746 align:middle
+¡lo conseguí! Cuando te pones
+así, es un poco más difícil saber
+
+00:05:08.746 --> 00:05:12.296 align:middle
+qué grupos de serialización
+se están utilizando y cuándo.
+
+00:05:12.916 --> 00:05:15.446 align:middle
+Aunque puedes utilizar el
+Perfilador para ayudarte con eso.
+
+00:05:16.096 --> 00:05:20.036 align:middle
+Por ejemplo, ésta es nuestra petición
+más reciente para el tesoro único.
+
+00:05:20.666 --> 00:05:22.826 align:middle
+Si abrimos el perfilador para esa petición...
+
+00:05:23.126 --> 00:05:27.746 align:middle
+y bajamos a la sección Serializador, vemos
+los datos que se están serializando...
+
+00:05:27.966 --> 00:05:31.326 align:middle
+pero lo que es más importante,
+el contexto de normalización...
+
+00:05:31.526 --> 00:05:34.616 align:middle
+incluyendo groups establecido
+en los dos que esperamos.
+
+00:05:35.426 --> 00:05:41.796 align:middle
+Esto también es genial porque puedes ver otras
+opciones de contexto que establece la API Platform.
+
+00:05:42.326 --> 00:05:45.066 align:middle
+Éstas controlan ciertos
+comportamientos internos.
+
+00:05:45.886 --> 00:05:52.176 align:middle
+Siguiente: vamos a volvernos locos con nuestras
+relaciones utilizando una ruta DragonTreasure
+
+00:05:52.436 --> 00:05:56.226 align:middle
+para cambiar el campo username
+del propietario de ese tesoro.
+
+00:05:56.656 --> 00:05:57.066 align:middle
+Woh.

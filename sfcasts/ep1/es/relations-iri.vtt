@@ -1,0 +1,194 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:03.736 align:middle
+Cuando intentamos crear un
+DragonTreasure con este owner,
+
+00:00:04.056 --> 00:00:06.046 align:middle
+establecimos el campo con el id de
+la base de datos del propietario.
+
+00:00:06.046 --> 00:00:10.556 align:middle
+Y descubrimos que a API
+Platform no le gustaba eso.
+
+00:00:10.926 --> 00:00:12.926 align:middle
+Decía "IRI esperado".
+
+00:00:13.806 --> 00:00:15.886 align:middle
+Pero, ¿qué es un IRI ?
+
+00:00:16.796 --> 00:00:19.396 align:middle
+Ya mencionamos este término
+una vez en el tutorial.
+
+00:00:19.876 --> 00:00:24.046 align:middle
+Vuelve al punto final de la
+colección GET /api/users.
+
+00:00:24.656 --> 00:00:30.696 align:middle
+Sabemos que cada recurso tiene un campo @id
+establecido en la URL donde puedes obtener ese recurso.
+
+00:00:31.426 --> 00:00:36.036 align:middle
+Esto es el IRI o "Identificador
+Internacional de Recursos".
+
+00:00:36.506 --> 00:00:43.496 align:middle
+Está pensado para ser un identificador único
+en toda tu API, como en todos los recursos.
+
+00:00:44.186 --> 00:00:48.296 align:middle
+Piénsalo: el número "1" no
+es un identificador único
+
+00:00:48.556 --> 00:00:51.936 align:middle
+-podríamos tener un DragonTreasure
+con ese id y un User.
+
+00:00:52.496 --> 00:00:54.626 align:middle
+Pero el IRI es único.
+
+00:00:54.946 --> 00:01:00.196 align:middle
+Y, además, una URL es mucho más
+manejable que un número entero.
+
+00:01:00.756 --> 00:01:10.196 align:middle
+Así que cuando queramos establecer una propiedad de relación,
+tendremos que utilizar también el IRI , como /api/users/1.
+
+00:01:10.986 --> 00:01:14.256 align:middle
+Cuando pulsamos Ejecutar, ¡funciona!
+
+00:01:14.256 --> 00:01:16.146 align:middle
+Un código de estado 201.
+
+00:01:16.666 --> 00:01:22.716 align:middle
+En el JSON devuelto, no es de extrañar, el
+campo owner también aparece como un IRI.
+
+00:01:23.756 --> 00:01:27.166 align:middle
+Las conclusiones de todo esto
+son deliciosamente sencillas.
+
+00:01:27.596 --> 00:01:30.046 align:middle
+Las relaciones son campos normales...
+
+00:01:30.226 --> 00:01:34.366 align:middle
+pero los obtenemos y establecemos
+a través de su cadena IRI.
+
+00:01:34.916 --> 00:01:38.346 align:middle
+Es una forma muy bonita
+y limpia de manejar esto.
+
+00:01:39.266 --> 00:01:42.586 align:middle
+Bien, hablemos del otro lado de esta relación.
+
+00:01:43.416 --> 00:01:47.186 align:middle
+Actualiza toda la página y ve
+a la ruta GET one user endpoint.
+
+00:01:47.946 --> 00:01:51.236 align:middle
+Inténtalo con un ID de usuario
+real, como el 1 para mí.
+
+00:01:52.236 --> 00:01:54.196 align:middle
+Y... ahí están los datos.
+
+00:01:54.956 --> 00:01:59.966 align:middle
+Así que la pregunta que me hago ahora es:
+¿podríamos añadir un campo dragonTreasures
+
+00:02:00.126 --> 00:02:03.416 align:middle
+que muestre todos los tesoros
+que posee este usuario?
+
+00:02:04.036 --> 00:02:05.346 align:middle
+Bueno, vamos a pensarlo.
+
+00:02:05.816 --> 00:02:11.456 align:middle
+Sabemos que el serializador funciona cogiendo
+todas las propiedades accesibles de un objeto
+
+00:02:11.616 --> 00:02:13.616 align:middle
+que están en el grupo de normalización.
+
+00:02:14.096 --> 00:02:18.096 align:middle
+Y... tenemos una propiedad
+dragonTreasures en User.
+
+00:02:18.366 --> 00:02:20.246 align:middle
+Así que... ¡debería funcionar!
+
+00:02:21.056 --> 00:02:25.826 align:middle
+Para exponer el campo a la API, añádelo
+al grupo de serialización user:read.
+
+00:02:26.486 --> 00:02:30.226 align:middle
+Más adelante, hablaremos de cómo podemos
+escribir en un campo de colección...
+
+00:02:30.546 --> 00:02:32.456 align:middle
+pero por ahora, basta con hacerlo legible.
+
+00:02:33.466 --> 00:02:34.756 align:middle
+Vale Actualiza...
+
+00:02:35.416 --> 00:02:37.406 align:middle
+y mira la misma ruta GET.
+
+00:02:37.996 --> 00:02:39.386 align:middle
+Aquí abajo, ¡genial!
+
+00:02:39.736 --> 00:02:43.426 align:middle
+Muestra un nuevo campo dragonTreasures
+en la respuesta del ejemplo.
+
+00:02:44.386 --> 00:02:48.296 align:middle
+Vamos a probarlo: utiliza el
+mismo id, pulsa "Ejecutar" y...
+
+00:02:48.846 --> 00:02:54.086 align:middle
+oh, estupendo: ¡nos devuelve
+una matriz de cadenas IRI!
+
+00:02:54.406 --> 00:02:55.396 align:middle
+¡Me encanta!
+
+00:02:55.886 --> 00:03:01.296 align:middle
+Y, por supuesto, si necesitamos más información
+sobre ellos, podemos hacer una petición a cualquiera
+
+00:03:01.296 --> 00:03:04.686 align:middle
+de estas URL para obtener
+todos los detalles brillantes.
+
+00:03:05.216 --> 00:03:11.686 align:middle
+Y para ponerte realmente elegante, podrías utilizar Vulcain
+para que los usuarios puedan "precargar" esas relaciones...
+
+00:03:11.936 --> 00:03:15.056 align:middle
+lo que significa que el servidor enviará
+los datos directamente al cliente.
+
+00:03:15.726 --> 00:03:19.666 align:middle
+Pero por muy genial que sea
+esto, me lleva a una pregunta:
+
+00:03:20.186 --> 00:03:27.696 align:middle
+¿y si necesitar los datos de DragonTreasure para un usuario
+es tan habitual que, para evitar peticiones adicionales,
+
+00:03:27.956 --> 00:03:34.716 align:middle
+queremos incrustar los datos aquí mismo,
+como objetos JSON en lugar de cadenas IRI ?
+
+00:03:35.296 --> 00:03:35.926 align:middle
+¿Podemos hacerlo?
+
+00:03:36.496 --> 00:03:37.466 align:middle
+Por supuesto que sí.
+
+00:03:37.836 --> 00:03:39.606 align:middle
+Averigüemos cómo a continuación.
