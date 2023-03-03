@@ -1,4 +1,4 @@
-# Documentation & Production
+# API Docs on Production?
 
 Welcome back you wonderful JSON-returning people, to API platform episode two. In
 part 1, we got busy! We created a pretty killer API to store dragon treasures,
