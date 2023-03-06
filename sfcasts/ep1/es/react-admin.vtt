@@ -1,0 +1,510 @@
+WEBVTT
+
+00:00:01.026 --> 00:00:02.056 align:middle
+¡Vaya! ¡Cuidado!
+
+00:00:02.386 --> 00:00:03.316 align:middle
+¡Capítulo extra!
+
+00:00:03.716 --> 00:00:09.216 align:middle
+Sabemos que nuestra API está completamente
+descrita mediante la especificación Open API.
+
+00:00:09.316 --> 00:00:13.556 align:middle
+Incluso podemos verla visitando /api/docs.json.
+
+00:00:14.046 --> 00:00:16.886 align:middle
+Esto muestra todas nuestras
+diferentes rutas y sus campos.
+
+00:00:17.406 --> 00:00:23.716 align:middle
+Obtiene esta deliciosa información leyendo
+nuestro código, PHPdoc y otras cosas.
+
+00:00:24.296 --> 00:00:27.656 align:middle
+Y sabemos que esto se utiliza para alimentar
+la página de documentos Swagger UI.
+
+00:00:28.416 --> 00:00:31.996 align:middle
+Nuestra API también se describe
+mediante JSON-LD e Hydra.
+
+00:00:32.566 --> 00:00:36.916 align:middle
+Y ambos tipos de documentación de la
+API pueden utilizarse para otras cosas.
+
+00:00:37.406 --> 00:00:43.656 align:middle
+Por ejemplo, busca "react admin" para encontrar un sistema
+de administración de código abierto basado en React.
+
+00:00:44.176 --> 00:00:46.356 align:middle
+Es súper potente y genial...
+
+00:00:46.706 --> 00:00:48.386 align:middle
+y existe desde hace mucho tiempo.
+
+00:00:48.986 --> 00:00:50.486 align:middle
+Y la forma en que funciona es...
+
+00:00:50.726 --> 00:00:55.426 align:middle
+increíble: lo apuntamos a la
+documentación de nuestra API y entonces...
+
+00:00:55.686 --> 00:00:57.576 align:middle
+¡se construye sola!
+
+00:00:57.656 --> 00:00:59.756 align:middle
+Creo que deberíamos probarlo.
+
+00:01:00.466 --> 00:01:06.286 align:middle
+Busca "api platform react admin" para encontrar la página de
+documentación de la API Platform que trata sobre este tema.
+
+00:01:06.796 --> 00:01:08.216 align:middle
+Esto tiene algo de información...
+
+00:01:08.436 --> 00:01:10.826 align:middle
+pero lo que realmente buscamos está aquí.
+
+00:01:11.246 --> 00:01:12.386 align:middle
+Haz clic en "Empezar".
+
+00:01:13.086 --> 00:01:18.246 align:middle
+Esto nos guía a través de todos los detalles, incluyendo
+incluso la configuración CORS si tienes ese problema.
+
+00:01:19.046 --> 00:01:20.906 align:middle
+Así que... ¡hagámoslo!
+
+00:01:21.736 --> 00:01:27.516 align:middle
+Si utilizas la distribución Docker de API Platform,
+esta área de administración viene preinstalada.
+
+00:01:28.146 --> 00:01:30.586 align:middle
+Pero también es bastante
+fácil de añadir manualmente.
+
+00:01:31.196 --> 00:01:36.316 align:middle
+Ahora mismo, nuestra aplicación no tiene
+JavaScript, así que tenemos que arrancarlo todo.
+
+00:01:37.126 --> 00:01:42.756 align:middle
+Busca tu terminal y ejecuta: composer require
+encore Esto instala WebpackEncoreBundle...
+
+00:01:43.146 --> 00:01:46.296 align:middle
+y su receta nos proporciona una
+configuración básica del frontend.
+
+00:01:46.806 --> 00:01:55.926 align:middle
+Una vez hecho esto, instala los activos de Node
+con: npm install Bien, vuelve a los documentos.
+
+00:01:56.446 --> 00:02:00.986 align:middle
+API Platform tiene su propio paquete Node
+que ayuda a integrarse con el administrador.
+
+00:02:01.366 --> 00:02:02.726 align:middle
+Así que vamos a instalarlo.
+
+00:02:03.216 --> 00:02:07.266 align:middle
+Copia la línea npm install -también
+puedes usar yarn si quieres-,
+
+00:02:07.726 --> 00:02:11.936 align:middle
+pégala en el terminal y añade un -D al final.
+
+00:02:11.936 --> 00:02:16.656 align:middle
+Ese -D no es súper importante, pero yo suelo
+instalar mis activos como devDependencies.
+
+00:02:17.586 --> 00:02:19.886 align:middle
+Para que todo esto funcione,
+en última instancia, vamos a
+
+00:02:20.106 --> 00:02:23.526 align:middle
+renderizar un único componente
+React en una página.
+
+00:02:24.116 --> 00:02:28.116 align:middle
+Para ayudarte con eso, voy a
+instalar un paquete UX que es...
+
+00:02:28.276 --> 00:02:31.266 align:middle
+es realmente bueno
+renderizando componentes React.
+
+00:02:31.786 --> 00:02:33.376 align:middle
+Es opcional, pero bueno.
+
+00:02:33.876 --> 00:02:40.116 align:middle
+Ejecuta: composer require
+symfony/ux-react Perfecto.
+
+00:02:40.776 --> 00:02:45.656 align:middle
+Ahora, gira y busca "symfony ux react"
+para encontrar su documentación.
+
+00:02:46.906 --> 00:02:50.766 align:middle
+Copia este código de configuración: tenemos
+que añadirlo a nuestro archivo app.js...
+
+00:02:52.236 --> 00:02:53.846 align:middle
+aquí en assets/.
+
+00:02:55.606 --> 00:02:59.076 align:middle
+Pégalo... y no necesitamos
+todos estos comentarios.
+
+00:02:59.796 --> 00:03:02.236 align:middle
+También moveré este código
+debajo de las importaciones.
+
+00:03:02.916 --> 00:03:10.026 align:middle
+¡Fantástico! Esto básicamente dice que buscará
+en un directorio assets/react/controllers/
+
+00:03:10.326 --> 00:03:15.066 align:middle
+y hará que cada componente React que haya
+dentro sea súper fácil de renderizar en Twig.
+
+00:03:15.706 --> 00:03:21.946 align:middle
+Así que vamos a crearlo: en assets/, añade
+dos nuevos directorios: react/controllers/.
+
+00:03:22.686 --> 00:03:27.126 align:middle
+Y luego crea un nuevo archivo
+llamado ReactAdmin.jsx.
+
+00:03:27.906 --> 00:03:31.446 align:middle
+Para el contenido, vuelve a los
+documentos de la API Platform...
+
+00:03:31.746 --> 00:03:34.886 align:middle
+y nos da casi exactamente lo que necesitamos.
+
+00:03:35.306 --> 00:03:36.136 align:middle
+Copia esto...
+
+00:03:36.496 --> 00:03:38.146 align:middle
+y pégalo dentro de nuestro nuevo archivo.
+
+00:03:38.936 --> 00:03:44.676 align:middle
+Pero antes, no lo parece, pero gracias a
+la sintaxis JSX, estamos utilizando React,
+
+00:03:45.086 --> 00:03:47.796 align:middle
+así que necesitamos un
+import React from 'react'.
+
+00:03:48.586 --> 00:03:54.346 align:middle
+Y... asegurémonos de que lo tenemos instalado:
+npm install react -D En segundo lugar, echa un
+
+00:03:54.816 --> 00:03:56.716 align:middle
+vistazo a la prop entrypoint.
+
+00:03:57.176 --> 00:03:58.786 align:middle
+Esto es genial.
+
+00:03:59.336 --> 00:04:02.676 align:middle
+Pasamos la URL a nuestra
+página de inicio de la API...
+
+00:04:03.066 --> 00:04:06.156 align:middle
+y React admin se encarga del resto.
+
+00:04:06.676 --> 00:04:11.606 align:middle
+Para nosotros, esta URL sería algo
+como https://localhost:8000/api.
+
+00:04:12.316 --> 00:04:16.286 align:middle
+Pero... Prefiero no codificar
+"localhost" en mi JavaScript.
+
+00:04:16.916 --> 00:04:20.516 align:middle
+En lugar de eso, vamos a
+pasarlo como una propiedad.
+
+00:04:21.146 --> 00:04:23.336 align:middle
+Para ello, añade un argumento props...
+
+00:04:24.446 --> 00:04:26.446 align:middle
+y luego di props.entrypoint.
+
+00:04:27.276 --> 00:04:29.046 align:middle
+¿Cómo lo introducimos?
+
+00:04:29.526 --> 00:04:31.236 align:middle
+Lo veremos en un minuto.
+
+00:04:31.946 --> 00:04:34.546 align:middle
+Muy bien, veamos si el
+sistema llega a construirse.
+
+00:04:35.016 --> 00:04:39.186 align:middle
+Enciéndelo: npm run watch Y...
+
+00:04:39.586 --> 00:04:40.876 align:middle
+¡error de sintaxis!
+
+00:04:41.256 --> 00:04:43.986 align:middle
+Ve esta sintaxis .jsx y...
+
+00:04:44.116 --> 00:04:46.246 align:middle
+¡no tiene ni idea de qué hacer con ella!
+
+00:04:46.806 --> 00:04:50.846 align:middle
+Eso es porque aún no hemos activado
+React dentro de WebpackEncore.
+
+00:04:51.376 --> 00:04:52.766 align:middle
+Pulsa Ctrl+C para detenerlo...
+
+00:04:53.176 --> 00:04:56.086 align:middle
+luego gira y abre webpack.config.js.
+
+00:04:57.176 --> 00:05:00.086 align:middle
+Busca un comentario que
+diga .enableReactPreset().
+
+00:05:00.676 --> 00:05:01.226 align:middle
+Ahí lo tienes.
+
+00:05:01.706 --> 00:05:02.626 align:middle
+Descomenta eso.
+
+00:05:03.496 --> 00:05:06.286 align:middle
+Ahora, cuando volvamos a
+ejecutar npm run watch...
+
+00:05:07.186 --> 00:05:08.956 align:middle
+¡seguirá sin funcionar!
+
+00:05:09.336 --> 00:05:14.936 align:middle
+Pero nos da el comando que necesitamos para instalar el
+único paquete que falta para ser compatible con React
+
+00:05:15.586 --> 00:05:21.386 align:middle
+Cópialo y ejecútalo: Y ahora
+cuando probemos npm run watch...
+
+00:05:22.476 --> 00:05:26.616 align:middle
+¡funciona! Es hora de
+renderizar ese componente React.
+
+00:05:27.206 --> 00:05:28.176 align:middle
+¿Cómo lo hacemos?
+
+00:05:28.876 --> 00:05:30.436 align:middle
+Esta es la parte fácil.
+
+00:05:30.846 --> 00:05:34.696 align:middle
+En src/Controller/, crea una nueva
+clase PHP llamada AdminController.
+
+00:05:35.446 --> 00:05:39.476 align:middle
+Este será probablemente el controlador
+más aburrido que jamás hayas creado.
+
+00:05:40.276 --> 00:05:45.286 align:middle
+Haz que extienda AbstractController, y luego
+añade un public function llamado dashboard(),
+
+00:05:45.746 --> 00:05:49.056 align:middle
+que devolverá un Response,
+aunque eso es opcional.
+
+00:05:49.976 --> 00:05:52.926 align:middle
+Encima de esto, añade un Route() para /admin.
+
+00:05:53.666 --> 00:06:01.556 align:middle
+Todo lo que necesitamos dentro es return $this->render()
+y luego una plantilla: admin/dashboard.html.twig.
+
+00:06:02.746 --> 00:06:06.756 align:middle
+¡Genial! Abajo, en el directorio
+templates/, crea ese directorio admin/...
+
+00:06:07.676 --> 00:06:11.416 align:middle
+y dentro, un nuevo archivo
+llamado dashboard.html.twig.
+
+00:06:12.056 --> 00:06:16.856 align:middle
+De nuevo, ésta es probablemente una de las
+plantillas más aburridas que harás nunca,
+
+00:06:17.166 --> 00:06:18.196 align:middle
+al menos al principio.
+
+00:06:18.846 --> 00:06:24.086 align:middle
+Amplía base.html.twig y
+añade block body y endblock.
+
+00:06:25.146 --> 00:06:28.096 align:middle
+Ahora, ¿cómo renderizamos
+el componente React?
+
+00:06:28.916 --> 00:06:32.456 align:middle
+Gracias a ese paquete UX React, es superfácil.
+
+00:06:32.916 --> 00:06:34.746 align:middle
+Crea el elemento en el que debe renderizarse
+
+00:06:34.776 --> 00:06:40.266 align:middle
+y añade react_component()
+seguido del nombre del componente.
+
+00:06:40.846 --> 00:06:43.806 align:middle
+Como el archivo se llama ReactAdmin.jsx
+
+00:06:43.986 --> 00:06:48.746 align:middle
+en el directorio react/controllers/,
+su nombre será ReactAdmin.
+
+00:06:48.846 --> 00:06:52.706 align:middle
+Y aquí es donde pasamos los accesorios.
+
+00:06:53.316 --> 00:06:56.076 align:middle
+Recuerda: tenemos uno llamado entrypoint.
+
+00:06:57.776 --> 00:07:00.186 align:middle
+Ah, pero deja que arregle mi sangría...
+
+00:07:00.506 --> 00:07:02.676 align:middle
+y acuérdate de añadir el </div>.
+
+00:07:03.386 --> 00:07:05.566 align:middle
+No necesitamos nada dentro del div...
+
+00:07:06.006 --> 00:07:11.566 align:middle
+porque ahí es donde aparecerá mágicamente el área de
+administración de React, como un conejo salido de una chistera.
+
+00:07:12.336 --> 00:07:15.086 align:middle
+Pasa el prop set entrypoint
+a la función normal path().
+
+00:07:15.766 --> 00:07:22.086 align:middle
+Ahora, sólo tenemos que averiguar el nombre de ruta que
+API Platform utiliza para la página de inicio de la API.
+
+00:07:22.596 --> 00:07:23.886 align:middle
+Esta pestaña está ejecutando npm...
+
+00:07:24.056 --> 00:07:28.876 align:middle
+así que abriré una nueva pestaña de terminal y
+lo ejecutaré: php bin/console debug:router ¡Woh!
+
+00:07:29.136 --> 00:07:30.856 align:middle
+Demasiado grande. Así está mejor.
+
+00:07:31.446 --> 00:07:33.026 align:middle
+Desplázate un poco hacia arriba, y...
+
+00:07:33.576 --> 00:07:34.426 align:middle
+aquí está.
+
+00:07:34.686 --> 00:07:36.566 align:middle
+Queremos: api_entrypoint.
+
+00:07:37.446 --> 00:07:39.526 align:middle
+Vuelve y pásalo.
+
+00:07:40.416 --> 00:07:42.066 align:middle
+¡Momento de la verdad!
+
+00:07:42.416 --> 00:07:46.456 align:middle
+Busca tu navegador, cambia
+la dirección a /admin, y...
+
+00:07:46.846 --> 00:07:48.856 align:middle
+¡hola ReactAdmin!
+
+00:07:49.276 --> 00:07:54.236 align:middle
+¡Woh! Entre bastidores, eso hizo una
+petición a nuestro punto de entrada de la API,
+
+00:07:54.546 --> 00:07:59.786 align:middle
+vio todos los diferentes recursos de la
+API que tenemos, ¡y creó este admin!
+
+00:08:00.296 --> 00:08:01.816 align:middle
+Lo sé, ¿no es una locura?
+
+00:08:02.446 --> 00:08:05.906 align:middle
+No profundizaremos demasiado en
+esto, aunque puedes personalizarlo
+
+00:08:06.216 --> 00:08:09.096 align:middle
+y casi seguro que necesitarás personalizarlo.
+
+00:08:09.706 --> 00:08:11.866 align:middle
+Pero sacamos muchas cosas de la caja.
+
+00:08:12.406 --> 00:08:15.196 align:middle
+No es perfecto: parece un poco confuso
+
+00:08:15.196 --> 00:08:19.686 align:middle
+por nuestro dragonTreasures
+incrustado, pero ya es muy potente.
+
+00:08:20.176 --> 00:08:21.776 align:middle
+¡Incluso la validación funciona!
+
+00:08:22.146 --> 00:08:27.866 align:middle
+Observa: cuando envío, lee la validación
+del lado del servidor devuelta por nuestra API
+
+00:08:27.866 --> 00:08:31.116 align:middle
+y asigna cada error al campo correcto.
+
+00:08:32.336 --> 00:08:35.086 align:middle
+Y los tesoros conocen nuestros filtros.
+
+00:08:35.536 --> 00:08:36.726 align:middle
+¡Todo está aquí!
+
+00:08:37.356 --> 00:08:40.926 align:middle
+Si te parece interesante, no
+dudes en seguir investigando.
+
+00:08:41.846 --> 00:08:42.426 align:middle
+¡Muy bien, equipo!
+
+00:08:42.686 --> 00:08:43.666 align:middle
+¡Lo habéis conseguido!
+
+00:08:43.876 --> 00:08:49.306 align:middle
+Has superado el primer tutorial sobre la
+API Platform, que es fundamental para todo.
+
+00:08:49.976 --> 00:08:56.456 align:middle
+Ahora entiendes cómo se serializan los recursos, cómo
+se relacionan los recursos con otros recursos, los IRI,
+
+00:08:56.536 --> 00:09:02.356 align:middle
+etc. Todas estas cosas te van a servir
+para cualquier API que estés construyendo.
+
+00:09:03.116 --> 00:09:08.316 align:middle
+En el próximo tutorial, hablaremos de
+usuarios, seguridad, validación personalizada,
+
+00:09:08.486 --> 00:09:11.956 align:middle
+campos específicos de usuario
+y otras cosas extravagantes.
+
+00:09:12.546 --> 00:09:15.716 align:middle
+Cuéntanos qué estás construyendo
+y, si tienes alguna pregunta, estamos
+
+00:09:15.886 --> 00:09:17.886 align:middle
+a tu disposición en la
+sección de comentarios.
+
+00:09:18.486 --> 00:09:19.056 align:middle
+¡Muy bien, amigos!
+
+00:09:19.316 --> 00:09:20.026 align:middle
+¡Hasta la próxima!
