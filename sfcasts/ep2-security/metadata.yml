@@ -16,6 +16,7 @@ chapters:
     - browser
     - more-json-testing
     - test-user-login
+    - browser-default-options
     - api-token-test
     - new-put-behavior
     - acl-owner

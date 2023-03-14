@@ -1,5 +1,111 @@
 # Testing Authentication
 
-Coming soon...
+Let's create a test to post and create a new cheese listing. I'll say
+`public function testPostToCreateTreasure()` that returns `void` and we start the
+same way as before: `$this->browser()->post('/api/treasures')`.
 
-Let's create a test to post and create a new cheese listing. I'll say `public function testPostToCreateTreasure()` that returns `void` and we start the same way as before. We'll say `$this->browser()->post('/api/treasures')`. In this case we actually need to send data. So the second argument to any of these `post()` or `get()` methods is an array of options. You can pass things like headers. One of the keys you can pass is JSON that you want to send. For this process I'm actually going to send empty JSON and we'll just `->assertStatus(422)`. And then just to see what that looks like I'm going to put a little `->dump()` on the end of it. Awesome. I copied this test method. I want to focus just on this one test. So I'll do `symfony php bin/phpunit --filter=testPostToCreateTreasure` and oh, current response status code is 401 but 422 expected. By the way, when you have a test failure, browser automatically saves the last response into a file. It's actually in our `var` directory. In my terminal I can actually hold command and click and that opens that up in my browser and I actually see the full response that came back. So you're going to see me do this a bunch of times to actually help debug what happened in our test. But point is, we are getting a 401 status code. Of course, we need to log in in order to create a user. And we have two ways in our API to log in, via the `login` form in the session or via an API token. We're going to try both, but first we will log in via the login form. So if we're going to log in, we need a user. And remember at the start of each test, our database is empty. So let's create a user with `UserFactory::createOne(['password' => 'pass'])`;. And then down here, before we make our post request, we first need to actually post the login form. So we're going to `POST` to `/login`, and we're going to send JSON with email set to user arrow get email, whatever random email address it chose, and password set to pass. Then down here, just to make sure that worked okay, I can say `assertStatus(204)`. Because remember, we return a 204 status code after our authentication is successful. All right, let's give it a try. Send it back over, rerun the test, and it passes. We are getting the 422 status code, and we can see our nice validation messages right there. So logging in is just that easy. And I would recommend actually having a test that specifically `tests` your login to make sure your login is working correctly. However, in my actual tests where I'm `testing` something different, like whether or not I can `POST` to create a treasure, there's a faster way to log in. It looks like this. Instead of actually going through the manual post request, you can say `actingAs()` user. This is a sneaky way of actually taking the user object and pushing it directly into Symfony's security system without making any requests. And now I actually don't care what the password is at all. So we can just simplify it to that. Now I'm going to try it. Awesome. Still works. All right. Let's try another `POST` down here, but with real data. So we can just kind of keep chaining here. So I'll say `POST`. Actually I'll be lazy and copy my other `POST`. And this time, we'll send some real data. So I'll quickly type in some test data. This can be anything. And then the last key we need to send here is actually the owner. Right now, we are required to send the owner when you create a treasure. In the future, we're going to fix that where if you don't send the owner, it automatically assigns it to whoever you are logged in as. But we'll set this to `/api/users/` and then `user->getId()` to use the ID of the user that we are currently logged in as. And below this, we should `assertStatus(201)`. Remember, 201 status code is what is returned when an object is created. So let's try that. We run the `test` and that passes. Awesome. We're in a roll. Let's do like a really quick little sanity check down here. After we `assertJsonMatches()`, I'm going to `dump()`. You'll see why in a second. Let's `assertJsonMatches()` that `name` matches a shiny thing. Make sure we get back the right data. So we try now. It still passes. But the reason I `dump()`ed is check this out. What we got back is not JSON LD. We're getting back just standard JSON. You can actually see in the content type header up here, content type application slash JSON. That might actually be fine. But I just wanted to highlight something here. When we made our test for our `POST` request earlier, we didn't include any `Accept` headers. But the API was smart enough to send back JSON LD. I mentioned that's because JSON LD is the default format. However, when we make a `POST` request and we send JSON, that actually sets the content type header of our request as JSON. When we send JSON here, that actually sets the `Accept` header to application slash JSON. So it actually tells the server we want JSON back, not JSON LD. So I want to use JSON LD everywhere. So I'm going to fix this so that we always return JSON LD. So to do this, step one is for this second argument, this `options` argument, you can either pass an array or an object called HTTP options. So I'm actually going to pass `HttpOptions::create()`. Then you can create an object. There's a couple of shortcut methods on there. I'm going to say `json`, and then I can pass it my array of JSON. So so far, this is basically equivalent to what we had before. Oh, actually, except we don't need the `json` key anymore. We just pass the array of data, let me fix my syntax there. There we go. So `HttpOptions::create()`, we pass the JSON we want. Perfect. Now we can change the options by saying `withHeader` and we can say we `Accept` `application/ld+json`. We could have done this with just the array of options. There's actually an option called `headers`, but this object is kind of nice. All right, so now let's try this. We're looking to see that we get back JSON LD and we do. Here's our object. You can see it's got the JSON LD fields and we have the `Accept: application/ld+json` content type. So that's cool, but I mean, doing this every single time we make a request in our API is kind of lame. So I want to do this automatically. So a nice way to do this is to create a base test class. So inside of tests, I'll do it actually inside of test slash functional. I'm going to create a new PHP class called `ApiTestCase`. I'm going to make this abstract. This is just going to be a base class, and then we'll extend the KernelTestCase just like we did before. Then here, we're going to use that `HasBrowser`, but we're going to do something a little tricky here when we do this. We're actually going to alias the `browser()` function as `baseKernelBrowser`. So what that does is it imports the `browser()` function that we've been using here. It imports it into this class, but it renames it as `baseKernelBrowser`. Why the heck are we doing that? Because now I'm going to re-implement the `browser()` function. And then inside my re-implemented `browser()` function, I'm going to call `baseKernelBrowser`, pass it options and server. But then we can actually, there's a method on the `browser()` that you can call `setDefaultHttpOptions()`. Inside of here, we'll pass `HttpOptions::create()` and then we can do that same with header `Accept: application/ld+json`. So ultimately what this means now is in our test classes, we can extend from our `ApiTestCase`, get the one that's actually from our app. And down here, when we call this `browser()`, it's actually now calling, this `browser()`, it's actually now going to be calling our `browser()` function, which changes this default option for us, which means we can go back down here and remove the `withHeader()` function. All right, so we try that now. It actually failed to the strange method, `cannot override file method reset browser clients`. This is actually because I am extending `ApiTestCase`, which uses `HasBrowser`, and then we're still using `HasBrowser` here. So we're kind of importing those, the methods from that trait twice. So we don't actually need to have `use HasBrowser` in here anymore. I'll do a little cleanup on my use statements. And now when we try to test again, got it. It passes and we have JSON-LD. So that problem is solved. We can just happily make our requests like normal, and it's going to always make sure that we are asking for JSON-LD back. So I will remove that `dump()`. All right, next. Let's do something similar, but use an API token for authentication.
+In this case we actually need to *send* data. The second argument to any of these
+`post()` or `get()` methods is an array of options, which can include `headers`,
+query parameters or other stuff. One key is `json`, which you can set to an array,
+which will be JSON-encoded for you. Start by sending empty JSON... then
+`->assertStatus(422)`. To see what the response looks like, add `->dump()`.
+
+Awesome! Copy the test method name. I want to focus *just* on this one test. To
+do that, run:
+
+```terminal
+symfony php bin/phpunit --filter=testPostToCreateTreasure
+```
+
+And... oh! Current response status code is 401, but 422 expected.
+
+## Dumped Failed Responses in Browser
+
+By the way, when a test fails with browser, it automatically saves the last response
+to a file: it's actually in our `var/` directory. In my terminal, I can hold command
+and click that to open it in my browser. *That* is nice. You'll see me do this
+a bunch of times.
+
+Ok, so this returned a 401 status code. Of course: this endpoint requires authentication!
+And our app has *two* ways to authenticate: via the login form and session or via
+an API token. We're going to test both starting with the log form.
+
+## Logging in during the Test
+
+In order to log in as a user... that user *first* needs to exist in the database.
+And remember: at the start of each test, our database is empty. It's *our*
+responsibility to add whatever data we need.
+
+Create a user with `UserFactory::createOne(['password' => 'pass'])` so that we
+know what the password will be. Then, before we make the POST request, we first need
+to POST to the login form: Do that with `->post('/login')` and send `json` with
+`email` set to `$user->getEmail()` - to use whatever random email address it chose -
+then `password` set to `pass`. To make sure that worked, `assertStatus(204)`.
+
+That's the status code we return after successful authentication.
+
+Let's give this a try. Move over and re-run the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasure
+```
+
+It passes! We're getting the 422 status code and can see the nice validation messages!
+
+## Shortcut to Logging in: actingAs()
+
+So... logging in is just that easy! And I *would* recommend having a test that
+specifically POSTs to your login endpoint like we just did to make sure its
+working correctly.
+
+However, in all of my *other* tests... when I simply need to be authenticated to
+do the *real* work, there's a faster way to log in. Instead of making the POST
+request, say `actingAs($user)`.
+
+This is a sneaky way of taking the `User` object and pushing it directly into
+Symfony's security system without making any requests. It's easier, and faster.
+And now, I actually don't care what the password is at all, so we can simplify that.
+
+Let's check it:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasure
+```
+
+Still good!
+
+## Testing Successful Treasure Creation
+
+Let's try another `POST` down here, but with real data. Keep chaining and add
+`->post()`. Actually... I'm lazy. Copy the existing `->post()`... and use that.
+But this time, send real data: I'll quickly type in some, this can be anything.
+The last key we need is `owner`. Right now, we *are* required to send the `owner`
+when we create a treasure. Soon, we'll make that option - it will default to
+whoever is authenticated - but for now, set it to `/api/users/` and then
+`$user->getId()`. Finish with `assertStatus(201)`.
+
+Remember, a 201 status code is used when an object is created.
+
+Alright, go-test-go:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasure
+```
+
+Still passing! We're on a roll! Add a `->dump()` to help us debug then add a
+sanity check: `assertJsonMatches()` that `name` is `A shiny thing`.
+
+When we try that:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasure
+```
+
+## Sending the Accept: application/ld+json Header
+
+No surprise: all green. But look at the dumped response: it's *not* JSON-LD!
+We're getting back standard JSON. You can actually see it in the `Content-Type`
+header: `Content-Type: 'application/json'`.
+
+Let's find out what's going on next and fix it globally by customizing how Browser
+works across our entire test suite.
