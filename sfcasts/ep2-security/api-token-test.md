@@ -1,5 +1,80 @@
 # Testing Token Authentication
 
-Coming soon...
+What about a test like this... but where we log in with an API key? Let's do that!
+Create a new method: public function `testPostToCreateTreasureWithApiKey()`.
 
-What would it look like to have a test like this where we log in with an API key? Let's find out. Let's create a new method down here. Public function `testPostToCreateTreasureWithApiKey()` And this will start pretty much the same way as before. I'll copy the start of the previous test. Remove the acting as. And yeah, we'll do that same thing. I'm also going to add a dump right here. So we will send invalid data and expect a 422 status code. So copy that method name. Let's spin over and we'll run our test and filter for our new method. And no surprise, we get a 401 status code because we are not authenticated at all. So to start this, let's send an authorization header, but like an invalid one. So as I mentioned earlier, there is actually just a `headers` key we can pass here. And we'll pass an authorization header set to the word `Bearer` and then `foo`. This should still fail, but awesome. We're dumping out here. You can see it has a different error message here. It says invalid token, invalid credentials. So our token system is working. It's just that we don't have a real token yet. So now let's create one. So like usual, we're going to authenticate with an `API token`. We need to have one in the database. So let's start with `$token` equals `ApiTokenFactory::createOne()`. Now do we need to control any data on this? We actually do. As a reminder, if we open up the `DragonTreasure` entity, our post operation, if we scroll up here, requires a role called `role treasure create`. When we do normal authentication, thanks to our role hierarchy, when we log in via the login form, we get role full user, which means we get all of these roles by default. But when we log in with an API key, if we want to have `role treasure create`, we need to have that scope. So if I want this test to actually work and hit the validation step, we need to control the scopes. So we'll override the `scopes` property on our API token. And we'll say `ApiToken::SCOPE_TREASURE_CREATE`. All right, awesome. And then down here, we'll pass `$token->getToken()` to pass the token string. All right, let's try this thing. Run a test and, oh, I actually have an error. Expected argument type array string given at property path scopes. So you can see this actually coming from ZenStruck Foundry. And it makes sense. `scopes` here instead of API token, that's a property that holds an array. I'm passing in the string. It gets pretty mad about that. So let's try this now with passing an array of `scopes`. And got it. We see the beautiful 422 validation errors. All right, let's try one test with an API token that doesn't have this correct scope. So let's copy this method. I'll paste below. And in this case, we'll call it test post to create treasure denied without scope. So instead of this demo create token that has scope `treasure edit`, which should not allow us to create a treasure. And down here, we're going to trigger a 403. And this time, let's actually run all of our tests. So `symphony phpbin slash phpunits`. And got it. Everything passes. But we do have a couple of dumps still. You can see our 422 and then our 403 coming back. All right, so let's remove the dumps from both of those spots. By the way, if you use API tokens a lot in your tests, passing this authorization bear header can get kind of annoying. So `browser` has a way where you can add, we can create a custom `browser` where you add custom methods. So one idea might be that after you create your `browser` instance, you're maybe able to say `offWithToken`, and then you pass it the array of `scopes` that you want right here. Behind the scenes, this would create the API token in the database, and then actually set this authorization header as one of the default headers. This totally does not work right now, but if you created a custom `browser`, you could get that to work. Check out the `browser` documentation to see how to do that. All right, next, in API platform 3.1, the behavior of the put operation is changing. Let's talk about how it's changing and what we need to do in our code to prepare for it.
+This will start pretty much the same as before. I'll copy the top of the previous
+test, remove the `actingAs()`... and add a `dump()` near the bottom. So, like before,
+we're sending invalid data and expect a 422 status code.
+
+Copy that method name, then spin over and run *just* this test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasureWithApiKey
+```
+
+And... no surprise: we get a 401 status code because we're *not* authenticated.
+
+Let's send an `Authorization` header, but an invalid one to start. Pass a
+`headers` key set to an array with `Authorization` and then word `Bearer` and
+then... `foo`.
+
+This should still fail:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasureWithApiKey
+```
+
+And... it does! But with a different error message: `invalid_token`. Nice!
+
+## Using a Real Token
+
+To pass a *real* token, we need to put a real token into the database. Do that
+with `$token = ApiTokenFactory::createOne()`.
+
+Do we need to control any fields on this? We actually *do*. Open up `DragonTreasure`.
+If we scroll up, the `Post` operation requires `ROLE_TREASURE_CREATE`.
+When we authenticate via the login form, thanks to `role_hierarchy`, we always
+have that. But when using an API key, to get that role, the token needs the
+corresponding scope.
+
+To make sure we have it, back in the test, set the `scopes` property to
+`ApiToken::SCOPE_TREASURE_CREATE`.
+
+Now pass this to the header: `$token->getToken()`. Oh... and let me fix
+`scopes`: that should be an array.
+
+I think we're ready! Run that test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateTreasureWithApiKey
+```
+
+And... got it! We see the beautiful 422 validation errors!
+
+## Testing a Token with a Bad Scope
+
+Let's test to make sure we *don't* have access if our token is *missing* this
+scope. Copy the entire test method... then paste below. Call it
+`testPostToCreateTreasureDeniedWithoutScope()`.
+
+This time, set `scopes` to something else, like `SCOPE_TREASURE_EDIT`. Below, we
+now expect a 403 status code.
+
+This time, let's run *all* the tests:
+
+```terminal
+symfony php bin/phpunit
+```
+
+And... all green! A 422 then a 403. Go remove the dumps from both those  spots.
+
+By the way, if you use API tokens a lot in your tests, passing the `Authorization`
+header can get annoying. Browser has a way where we can create a *custom*
+Browser object with custom methods. For example, you could add an `authWithToken()`
+method, pass an array of scopes, and then it would create that token and set
+it into the header. This totally does *not* work right now, but check out Browser's
+docs to learn how.
+
+Next: in ApiPlatform 3.1, the behavior of the `PUT` operation is changing. Let's
+talk about how, and what we need to do in our code to prepare for it.

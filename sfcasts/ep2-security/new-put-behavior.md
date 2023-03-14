@@ -1,5 +1,91 @@
 # New PUT Behavior
 
-Coming soon...
+Find your terminal and manually clear the cache directory:
 
-Start at your terminal and manually clear the cache directory. You don't have to do this, but if you do, and maybe even if you don't, when you run all of your tests, you should see a deprecation warning down here, which is really interesting. It says, since API Platform 3.1, it says, in API Platform 4, `put` will always replace the data, use `extraProperties` standard `put` `true` on every operation to avoid breaking `put`'s behavior, use `patch` to use the old behavior. Okay, what does that mean? Well, right now it means nothing has changed. Our `put` operation acts like it always did. But in API Platform 4, the behavior of `put` is going to change dramatically. And at some point between now and then, we need to opt into that new behavior so that it doesn't suddenly break on us in API Platform 4. So what's changing? Well, if you go over to your API, let me actually refresh, use the `git` collection endpoint to see and hit execute so we can get a valid ID. Great, okay, so we have a treasure with ID 1. We know right now that if we use the `put` request and use ID 1, we can send just one of these fields to update just one thing. So I'm going to send just the description and say changed. Now before I try this, our `put` request does require us to be logged in. So my other tab, I'm going to go over and just make sure we log in first. Perfect. And then down here with execute. Awesome. So we only pass the description property. It means it kept all the other description, all the other fields the same, but it updated the one field we sent. Well, it turns out that's not how `put` is supposed to work. `Put` is supposed to be a replace. Meaning if we send only one field, if the `put` operation works correctly, it should actually replace and remove all the other fields. It means when you use the `put` operation, you're actually supposed to send every single field, even the fields that aren't changing. Now that sounds kind of crazy. There are technical reasons for that. I'll mention some of them later, but the point is that's how `put` is supposed to work. And in API Platform 4, that is how `put` is going to work. Honestly, it makes `put` in a lot of situations less useful. So you'll notice that we're going to use patch a lot more going forward. So whether we like it or not, at some point between now and API platform 4, we're going to need to tell API platform that it is now okay for it to change the behavior of `put` to the new way of doing it. So let's just do that now. The way we do this is we go into every single operation, find `put`, find our `ApiResource` in `/src/Entity/DragonTreasure.php`, and add a new option called `extraProperties` set to an array with one called `standard_put` set to `true`. So you're saying I want to use the standard behavior for `put`. So I'm going to copy that because we're going to need that down here on this `ApiResource` this one doesn't even have a `put`, but we're still going to get the deprecation warning if we don't have it there. And then also over in our `User` class in `/src/Entity/User.php`, we're going to add that to both of the `ApiResource` spots here as well. And now when we run our tests, we don't have any tests that use our `put` request. So we won't see the difference here, but we can see that that deprecation is gone. So to see the difference, let's use our `put` request again. Let's once again, just send one field and we'll execute in this time, check it out for 22 validation error because any fields we didn't send got set to null and so now we're failing validation. So as I mentioned, this kind of makes for me `put` less useful. And so we're going to use the patch request a lot more. And honestly, if you don't want to have a `put` operation at all anymore, that actually makes a lot of sense. And we're going to remove it in some cases, you could just go ahead and remove it. But `put`, but one nice thing is that `put` does now allow you to create new objects, which can be good in some edge cases, or it can actually be a nightmare from the security standpoint because now you need to worry about this `put` operation. And that can actually be used to create users as well as edit users and sometimes creating versus editing has different permissions. So this is all a little confusing to you. My recommendation might actually be to remove the `standard_put` operation and just use the patch operation, which works exactly like you've always expected it to. All right, next, let's get more complex with security by allowing a `DragonTreasure` to be edited only by its owner.
+```terminal-silent
+rm -rf var/cache/*
+```
+
+I'm doing this so that, when we run all or our tests
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+we see a deprecation warning, which is fascinating. It says:
+
+> Since API Platform 3.1: in API Platform 4, `PUT` will always replace the data.
+> set `extraProperties['standard_put']` to `true` on every operation to avoid breaking
+> PUT's behavior. Use `patch` for the old behavior.
+
+Okay... what does that mean? Right now, it means nothing has changed: our `PUT`
+operation behaves like it always has. But, in ApiPlatform 4, the behavior of `PUT`
+will change dramatically. And, at some point between now and then, we need to
+opt *into* that new behavior so that it doesn't suddenly break when we upgrade to
+version 4 in the future.
+
+## What's Changing in PUT
+
+So what's changing exactly? Head over to the API docs and refresh. Use the `GET`
+collection endpoint... and hit Execute, so we can get a valid ID.
+
+Great: we have a treasure with ID 1.
+
+Right now, if we send a PUT request with this id, we can send just *one*
+field to update just that *one* thing. For example, we can send `description`
+to change *only* that.
+
+Oh, but before we Execute this, we *do* need to be logged in. In my other tab, I'll
+fill in the login form. Perfect. *Now* execute the PUT operation.
+
+Yup: we pass only the `description` field, and it *updates* only the `description`
+field: all the other fields remain the same.
+
+Whelp, it turns out that this is *not* how `PUT` is supposed to work according
+to the HTTP Spec. PUT is *supposed* to be a "replace". What I mean is, if we send
+only one field, the `PUT` operation is supposed to take that new resource - which
+is just the one field - and *replace* the existing resource. That's a complicated
+way of saying that, when using PUT, you need to send *every* field, even the fields
+that aren't changing. Otherwise, they'll be set to `null`.
+
+If that sounds kind of crazy, I kind of agree, but there are valid technical reasons
+for why this is the case. The point is that: this is how PUT is *supposed* to work
+and in API Platform 4, this is how PUT *will* work.
+
+Honestly, it makes `PUT` less useful. So you'll notice that I'll pretty much
+exclusively use PATCH going forward.
+
+## Moving to the new PUT Behavior
+
+So whether we like it or not, at some point between now and API platform 4, we
+need to tell API Platform that it is okay for it to change the behavior
+of `PUT` to the "new" way. Let's do that now by adding some extra config to
+every `ApiResource` attribute in our app.
+
+Open `src/Entity/DragonTreasure.php`... and add a new option called `extraProperties`
+set to an array with `standard_put` set to `true`.
+
+That's it! Copy that... because we're going to need that down here on this
+`ApiResource`... even though it doesn't have a `put` operation.
+
+Then, over in `User`, add that to both of the `ApiResource` spots as well.
+
+Now when we run our tests, the deprecation is gone! We're not *using* the PUT
+operation in any tests, so everything still passes.
+
+## Seeing the New Behavior
+
+To see the new behavior, try out the `PUT` endpoint again: still sending just *one*
+field. This time... check it out! A 422 validation error! All the fields that we
+did *not* include were set to null... and that caused the validation failure.
+
+So... this makes PUT a bit less useful... and we'll lean a lot more on PATCH.
+If you don't want to have a `PUT` operation at all anymore, that makes a lot of sense.
+One *unique* thing about the new `PUT` behavior is that you could use it to create
+*new* objects... which could be useful in some edge-cases... or an absolute
+nightmare from a security standpoint as we now need to worry about objects
+being edited or *created* via the same PUT operation. For that reason, as we go
+along, you'll see me remove the `PUT` operation in some cases.
+
+Next: let's get more complex with security by making sure that a `DragonTreasure`
+can only be edited by its owner.
