@@ -1,5 +1,83 @@
-# Also Allow Admins to Edit
+# Allow Admin Users to Edit any Treasure
 
-Coming soon...
+We've got things set up so that only the owner of a treasure can edit it. Now, a
+new requirement has come down from on-high: admin users should be able to edit *any*
+treasure. That means a user that has `ROLE_ADMIN`.
 
-We've got things set up so that only the owner of a treasure can edit it. So new requirement, admin users can also edit any treasure. That's a user that has a role underscore admin. Let's create a test for this. So how about `public function testAdminCanPatchToEditTreasure()` And of course, what we need to start here is we need to create an admin user and we'll do that with `UserFactory::createOne()`. We'll pass that role as `'role_admin'`. And that will work just fine. Though if we need to create lots of admin users in our tests, we can actually use a nice feature of Foundry to clean this up a bit. So I'm going to go into `UserFactory.php`. We're going to create something called a state method. This can go anywhere inside of here. It's going to be a public function. You can call it anything you want, but it's going to be a nice function that we can call to easily modify some data about the user we're creating. So for example, we could create a new method called `withRoles()` or we pass it an array of roles and then we return self. That's just for convenience. And inside, we can say `return $this->addState(['roles' => $roles]);`. What this is going to do is when we call this, if we pass it an array of roles, `addState()` is going to basically take what we passed to `addState()` is going to become new data that's used to create this user. So when we create this, we can say, this is going to change a little bit. Now we can say `UserFactory::new()`. Instead of creating an object, that actually creates a new instance of our userFactory. And then of course, we can call any methods on what we want, like `withRoles()`, `'role_admin'`. So we're kind of crafting what we want the user to look like. And then finally, when we're done, we'll call `create()`. Not `createOne()` in this case, `createOne()` is a static method. So I'm going to call `createOne()`, that's a static method on a userFactory. Once we have an instance of userFactory, if we want to create one, it's called `create()`. So it's just a nice little way to make things a little bit more explicit. But we can go even further. For example, in `UserFactory.php`, we can create another state method called `asAdmin()`. That returns self, and then return this arrow withRoles, `roleAdmin`. So this is going to make our test even more readable, because we can just now say `UserFactory::new()->asAdmin()->create()`, and done. All right, let's actually put the test together now. So let's create a new treasure set to dragon `DragonTreasureFactory::createOne()`, because we're not passing any user that's going to be, it will create a new user in the background and assign it. So that means the admin user will not be the owner. And then this arrow browser, arrow acting as the admin user. And then we're going to patch to slash API slash treasures slash treasure arrow getID. Sending some JSON. And we'll just do that same value, one, two, three, four, five that we did before. Assert status 200 and `assertJsonMatches()` value one, two, three, four, five. All right, let's try this. I'm going to copy that test name. We're on symphony PHP bin slash PHP unit dash dash filter equals. And okay, as expected, we haven't done anything to allow this yet. So we get a 403 status code. How do we fix this? Well, at first, it's relatively easy, right? We have total control via this expression here. So we can do something like `if granted roleAdmin`, or and then put parentheses around the other use case. But this is going to work. But I know it looks a little crazy. Let's try the test first. And 500 error. Hmm, let's check out and see what's going on. I'll click to open this. The token name or value around position 26. So that was an accident, but it actually brings up a really good point. So I didn't want `or` in capitals, that's like an SQL query I wanted. `or` is lowercase. And now it still fails. Oh, of course, because I need to also put it down here. So those two mistakes I made it works now were actual real accidents just now, but it actually brings home a good point. These the security is getting complex here. These expressions are powerful, but not very readable, easy to make a mistake. So next, let's clean and centralize this with a voter.
+To the test-mobile! Add a `public function testAdminCanPatchToEditTreasure()`.
+Then create an admin user with `UserFactory::createOne()` passing roles set to
+`ROLE_ADMIN`.
+
+## Foundry State Methods
+
+That will work fine. But if we need to create a lot of admin users in our tests,
+we can add a shortcut in Foundry. Open `UserFactory`. We're going to create something
+called a "state" method. Anywhere inside, add a public function called, how about
+`withRoles()` that has an `array $roles` argument and returns `self`, which will
+make this more convenient when we use it. Inside, say
+`return $this->addState(['roles' => $roles])`.
+
+Whatever we pass to `addState()` becomes part of the data that will be used to
+make this user.
+
+To use the state method, the code changes to `UserFactory::new()`. Instead of creating
+a `User` object, this instantiates a new `UserFactory`... and then we can call
+`withRoles()` and pass `ROLE_ADMIN`.
+
+So, we're "crafting" what we want the user to look like. When we're done, call
+`create()`. `createOne()` is the shortcut static method. But since we have an
+instance of the factory, use `create()`.
+
+But we can go even further. Back in `UserFactory`, add another state method called
+`asAdmin()` that returns `self`. Inside return `$this->withRoles(['ROLE_ADMIN'])`.
+
+Thanks to that, we can simplify to `UserFactory::new()->asAdmin()->create()`.
+
+## Writing the Test
+
+*Now* let's get this test going. Create a new `$treasure` set to
+`DragonTreasureFactory::createOne()`.
+
+Because we're not passing an `owner`, this will create a new `User` in the background
+and use *that* as the `owner`. That means our admin user will *not* be the owner.
+
+Now, `$this->browser()->actingAs($adminUser)` then `->patch()` to
+`/api/treasures/` `$treasure->getId()`, sending `json` to update `value` to the
+same `12345`. `->assertStatus(200)` and `assertJsonMatches()` `value`, `12345`.
+
+Cool! Copy the method name. Let's try it:
+
+```terminal
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+And... okay! We haven't implemented this yet, so it fails as expected.
+
+## Allowing Admins to Edit Anything
+
+So, how *do* we allow admins to edit any treasure? Well, at first, it's relatively
+easy because we have total control via the `security` expression. So we can add
+something like `if is_granted("ROLE_ADMIN") OR` and then put parentheses around the
+other use-case.
+
+Let's make sure it works!
+
+```terminal-silent
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+A 500 error! Let's see what's going on. Click to open this.
+
+> Unexpected token "name" around position 26.
+
+So... that was an accident. Change `OR` to `or`. Then try the test again:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+It works! But that mess-up brings up a great point: the `security` expression is
+getting *too* complex. It's not very readable and we do *not* want to make mistakes
+when it comes to security.
+
+So next, let's centralize this logic this with a voter.
