@@ -1,5 +1,127 @@
-# Creating a Voter
+# Security Voter
 
-Coming soon...
+Our security is getting crazy, which I don't like. I want my security logic to
+be simple and centralized. The way to do that in Symfony is with a *voter*. Let's
+go create one.
 
-Our security logic is getting a little bit crazy, which is not great. We want to keep our security logic simple and centralized. So the way that we centralize security logic in Symfony is via a voter. So let's go ahead and create a voter. So over at the command line we can run `bin/console make:voter` and call this `DragonTreasureVoter`. It's pretty common if you need voters to have one voter class per entity object. This will vote and make decisions about dragon treasures. Thanks to that over in the source security directory. Source security voter we have a new `DragonTreasureVoter`. Now before we talk about this class, I'm going to show you how we use it. In dragon treasure, very simply, we're still going to use the `is_granted()` function. But for the first argument, I'm going to pass `EDIT`, which is just a string I'm making up, you'll see how that's used in the voter. And then we're going to pass this the object. So we don't normally pass `is_granted()` to arguments. But you actually pass it to a string. We normally pass `is_granted()` a role, but you can also pass it a random string like `EDIT`, as long as you have a voter set up for it. We also don't usually pass a second argument `is_granted()`. But again, if you have a voter that is legal. So we're basically saying here is that we're sort of asking the security system, whether or not we're allowed to `EDIT` this `DragonTreasure` object, and we'll have our `DragonTreasureVoter` class is going to make that decision. Let's copy this and paste it down for post you normalize. This is similar. So this is also going to check the same system, make sure that this if we change the owner, whether or not that new owner also has the ability to `EDIT` this `DragonTreasure`. Alright, so here's the deal. Anytime you call `is_granted()` anywhere in the security system, not just an API platform, symphony goes through its list of voters and tries to figure out which voter knows how to make that decision. So when we check for a role, there's a an existing voter class that knows how to handle these. In the case of `EDITs`. There's no core voter that knows how to handle that. We're going to make our `DragonTreasureVoter` handle that. So simply is going to call the supports method every time anybody calls is granted in attribute is going to be the first argument edits and subject is going to be the second argument for us a `DragonTreasure` object. So our job here is to say whether or not we know how to support that type of situation. So by default, it kind of generated voter that handles kind of an edit and also maybe can also check to see if you can view a `DragonTreasure`. We don't need that view at least right now. So I'm going to delete that. I'll delete it down below. I'm also going to change this instance of `DragonTreasure`. I'll retype the end of it and hit tab to add the use statement just to clean that up. So we're basically saying if any someone calls is granted and they pass the string `EDIT` for the attribute and they pass a `DragonTreasure` object, we know how to make that decision. So if we return true from supports, then Symphony calls a voteOnAttribute and that's where we make the actual decision. Oh, and actually, you know what? I'm going to change this to just `EDIT` instead of that post edit. It doesn't really matter, but that makes a little more sense. So down here for voteOnAttribute, we're going to return true if we have access and false if we don't. I'm going to start right now by just returning false. Which means if we have set things up correctly, it's going to call our voter whenever we use a patch request and access will always be denied. And then I'm also going to go down here and remove the case that has to do with the view. All right, let's try this. We're on Symphony `bin/console` make:voter and perfect, we actually see two failing. Both of our patch or tests are failing because both of them are being denied access. That tells me that our voter is being called. All right, so the way this works is the voteOnAttribute is past the attribute. So in our case, that's going to be the string `EDIT`. It's past subject, which we know will be a `DragonTreasure`. And then it's past this token object, which is actually just a wrapper to get the user. So first we're checking to make sure that there actually is a user. Make sure the user is actually authenticated. And then down here, I'm going to say `assert` that `subject` is an instance of `DragonTreasure`. Our method should only ever be called if `supports` return true. So it's not possible for someone to pass as a `subject` that's not a `DragonTreasure`. So mostly writing this just to help my editor with auto completion. It's going to know that `subject` is a `DragonTreasure`. Now that I'm free, we have this switch case statement. We only have one case right now, edit right here is where we're going to put the logic to determine whether or not the current user has access to edit this `DragonTreasure`. So very simply, if `subject`, that's the `DragonTreasure`, arrow get owner equals user, then return true. Otherwise, it will hit the break and it will return false. So we try to test now. We only have one failure. And actually, we need to be careful, we don't have a test for this. But if you'll remember from our API tokens, in order for your if you're using an API token to authenticate in order to be able to edit a user, you need to have this role treasure edits scope. So I don't have a test for it. But that's actually also something we need to test inside of here. And we were testing that we had that before in our `bin/console make:voter` inside of our `Security` bundle. So how do we test roles from a `Voter`? It's actually the same as any service, we're gonna go to the top, create a public function underscore underscore construct. And we can auto wire the `Security` service, the one from `SecurityBundle`. So actually, let me say private `Security` `$security`. Perfect. And then down here, right before we check the owner. And say if not, this arrow is `$security` arrow is granted. Role treasure edit. So if we don't have that role, it doesn't even matter for the owner, we're going to return false. Alright, so the last thing we need to look for in the last test that's failing is testing that an admin can patch to edit a treasure. So because we've already injected the `Security` service, this is really easy. So let's pretend that no matter like an admins can do anything they want in the system. So I can go way up here, even before before the switch case statement, we'll say if this `$this->security->isGranted('ROLE_ADMIN')`, then return true. All right, let's try this thing. We're on the tests. And got it. So our tests are once again passing. And now we have all the logic inside of our `Voter` class. The really great thing about this is that it's super easy to have our permissions here. We just have a very, very simple statement. And then we can actually write all the complex code right in PHP. And of course, you can repeat this process to create a `UserVoter` if you want it to also add some more granular controls on to the user permissions, but I'll leave that up to you. Next, let's add in some security to our `ApiResource` using the `User` entity.
+At the command line, run:
+
+```terminal
+php bin/console make:voter
+```
+
+Call it `DragonTreasureVoter`. It's pretty common to have one voter per *entity*
+that you need security logic for. So, this voter will make all decisions related
+to `DragonTreasure`: can the current user edit one, delete one, view one: whatever
+we need.
+
+Go open it up: `src/Security/Voter/DragonTreasureVoter.php`.
+
+Before we talk about this class, let me show you how we'll *use* it. In
+`DragonTreasure`, very simply, we're *still* going to use the `is_granted()` function.
+But for the first argument, pass `EDIT`... which is just a string I'm making up:
+you'll see how that's used in the voter. Then pass the object.
+
+We normally pass `is_granted()` a single argument: a role! But you can *also* pass
+it any random string like `EDIT`, as long as you have a voter set up to handle that.
+If your voter needs some extra info to make its decision, you can pass that as
+the second argument `is_granted()`.
+
+On a high level, we're asking the security system whether or not the current user
+is allowed to `EDIT` this `DragonTreasure` object. `DragonTreasureVoter` will
+make that decision.
+
+Copy this and paste it down for `securityPostDenormlaize`.
+
+## How Voters Works
+
+So here's the deal: anytime that `is_granted()` is called - from *anywhere*, not
+just from API Platform - Symfony loops through a list of "voter" classes and tries
+to figure out which voter knows how to make that decision. When we check for a
+role, there's a an existing voter that knows how to handle those. In the case
+of `EDIT`, there is *no* core voter that knows how to handle that. But we're going
+to make `DragonTreasureVoter` able to handle it.
+
+To determine who can handle an `isGranted` call, Symfony calls `supports()` on
+each voter passing the same two arguments. For our case, `$atribute` will be
+`EDIT` and `$subject` will be the `DragonTreasure` object.
+
+MakeBundle generated a voter that handles checking if we can "edit" or "view"
+a `DragonTreasure`. We don't need that "view" right now, so I'll delete it.
+Then, below, change this to an instance of `DragonTreasure` and I'll retype the end
+of that and hit tab to add the `use` statement... just to clean things up.
+
+So if someone calls `isGranted()` and pass the string `EDIT` and a `DragonTreasure`
+object, *we* know how to make that decision.
+
+Oh, and it it doesn't matter, but I'm going to change this to `EDIT` instead of
+`POST_EDIT`.
+
+If we return `true` from `supports()`, Symfony then calls a `voteOnAttribute()`.
+Very simply: we return `true` if the user should have access, `false` otherwise.
+
+To start, just `return false`.
+
+If we have things set up correctly, our voter will be called whenever we make a
+PATCH request and access will *always* be denied. Before we try that, remove
+the "view" case down here.
+
+Ok, let's make sure our tests fail! Run:
+
+```terminal
+php bin/phpunit
+```
+
+And... yes! Two tests fail; both because access is denied. Our voter *is* being
+called.
+
+Back in the class, `voteOnAttribute()` is passed the attribute - `EDIT` - the
+`$subject` - a `DragonTreasure` object and a `$token`, which is a wrapper around
+the current `User` object. So we're first checking to make sure that the user is
+*actually* authenticated.
+
+After, `assert` that `$subject` is an instance of `DragonTreasure` because this method
+should *only* ever be called when `supports()` return true.
+
+I'm mostly writing this to help my editor know that `$subject` is a `DragonTreasure`:
+`assert()` is a handy way to do that.
+
+Our `switch` statement only has one `case` right now. And *this* is where our logic
+will live. Very simply: if `$subject` - that's the `DragonTreasure` - `->getOwner()`
+equals `$user`, then return `true`. Otherwise, it will hit the `break` and return
+`false`. This isn't *all* the logic we need, but it's closer!
+
+Try the tests now.
+
+```terminal-silent
+php bin/phpunit
+```
+
+Down to one failure!
+
+What's next? Well, we don't have a test for it, but if we authenticate with an
+API token, to edit a treasure, you need to have `ROLE_TREASURE_EDIT`, which you
+can get via the token scope.
+
+So, in the voter, we need to check if the user has that role. Add a `__construct()`
+method and autowire `Security` - the one from SecurityBundle - `$security`. Then,
+below, before we check the owner, add if not
+`$this->security->isGranted('ROLE_TREASURE_EDIT')`, then *definitely* return `false`.
+
+The last test that's failing is testing that an admin can patch to edit *any*
+treasure. Yup, we need to allow admin users to do anything. Because we've already
+injected the `Security` service, this is easy.
+
+Let's pretend admin users will be able to do *anything*. So above the `switch`,
+say if this `$this->security->isGranted('ROLE_ADMIN')`, then return true.
+
+Moment of truth:
+
+```terminal-silent
+php bin/phpunit
+```
+
+We're back to green! And now our logic is centralized inside the voter. The `security`
+expression is now *dead* simple and we got to write our logic in PHP.
+
+Next: let's explore hiding certain fields in the response based on the user.
