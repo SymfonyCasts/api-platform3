@@ -64,8 +64,9 @@ However, this has some practical challenges, like the question of *where*
 you securely store the email and password in JavaScript so you can continually
 use it. This is actually a problem in *general* with JavaScript and "credentials",
 including API tokens: you need to be *very* careful where you store those so that
-other JavaScript on your page can't read them. There *are* solutions, but it adds
-complexity that you very likely don't need.
+other JavaScript on your page can't read them. There *are* solutions:
+https://bit.ly/auth0-token-storage - but it adds complexity that you very likely
+don't need.
 
 So instead, for your own JavaScript, you can use a session. When you start a session
 in Symfony, it returns an "HTTP only" cookie... and that cookie contains the session
@@ -79,8 +80,8 @@ use it to log in the user.
 So the API token in this situation is simply the "session id", which is stored
 securely in an HTTP-only cookie. Mmm. We will code through this use case.
 
-Oh, and by the way, one edge-case with this situation is if you have a single sign
-on situation - an SSO. In that case, you'll authenticate with your SSO like a normal
+Oh, and by the way, one edge-case with this situation is if you have a Single Sign
+On situation - an SSO. In that case, you'll authenticate with your SSO like a normal
 web app. When you finish, you'll have a token, which you can then use to
 either authenticate the user with a session like normal... or you can use that token
 directly from your JavaScript. That's a more advanced use case that we won't go
@@ -94,7 +95,17 @@ talk to your API... besides JavaScript from inside the browser.
 
 In this case, the API clients absolutely *will* send some sort of an API token string.
 And so, you need to make your API able to read a token that's sent on each request,
-usually sent on an `Authorization` header.
+usually sent on an `Authorization` header:
+
+```php
+$response = $thhpClient->request(
+    'GET',
+    '/api/treasures',
+    [
+        'Authorization' => 'Bearer '.$apiToken,
+    ],
+);
+```
 
 *How* the user gets this token depends: there are kind of two main cases. The first
 one is the "GitHub personal access token" case. This is where a user can browse
