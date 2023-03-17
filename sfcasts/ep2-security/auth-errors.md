@@ -3,17 +3,40 @@
 When we log in with an invalid email and password, it looks like the `json_login`
 system sends back some nice JSON with an `error` key set to "Invalid
 credentials". If we wanted to customize this, we could create a class that implements
-`AuthenticationFailureHandlerInterface` and then set its service ID onto the
-`failure_handler` option under `json_login`.
+`AuthenticationFailureHandlerInterface`:
+
+```php
+class AppAuthFailureHandler implements AuthenticationFailureHandlerInterface
+{
+    public function onAuthenticationFailure($request, $exception)
+    {
+        return new JsonResponse(
+            ['something' => 'went wrong'],
+            401
+        );
+    }
+}
+```
+
+And then set its service ID onto the `failure_handler` option under `json_login`:
+
+```yaml
+json_login:
+    failure_handler: App\Security\AppAuthFailureHandler
+```
 
 ## Showing the Error on the Form
 
 *But*, this is plenty good for us. So let's use it over in our
 `/assets/vue/LoginForm.vue`. We won't go too deeply into Vue, but I already have
-state called `error`... and if we *set* that, it will show up on the form.
+state called `error`, and if we *set* that, it will show up on the form:
+
+[[[ code('5669b565ef') ]]]
 
 After making the request, if the response is *not* okay, we're already decoding
-the JSON. Now let's say `error.value = data.error`.
+the JSON. Now let's say `error.value = data.error`:
+
+[[[ code('10d5e3295e') ]]]
 
 To see if this works, make sure you have Webpack Encore running in the background
 so it recompiles our JavaScript. Refresh. And... you can click this little
@@ -25,13 +48,19 @@ I love it! We see "Invalid credentials" on top with some red boxes!
 So the AJAX call is working great. Though, there is *one* gotcha with the `json_login`
 security mechanism: it requires you to send a `Content-Type` header set to
 `application/json`. We *are* setting this on our Ajax call and you should
-to. But... if someone forgets, we want to make sure that things don't go completely
-crazy.
+to:
 
-Comment out that `Content-Type` header so we can see what happens. Then move over,
-refresh the page... type a ridiculous password and... it clears the form? Look
-down at the Network call. The endpoint returned a 200 status code with a `user`
-key set to `null`!
+[[[ code('940652bd72') ]]]
+
+But... if someone forgets, we want to make sure that things don't go completely crazy.
+
+Comment out that `Content-Type` header so we can see what happens:
+
+[[[ code('d553c86526') ]]]
+
+Then move over, refresh the page... type a ridiculous password and... it clears
+the form? Look down at the Network call. The endpoint returned a 200 status code
+with a `user` key set to `null`!
 
 And... that makes sense! Because we're missing the header, the `json_login` mechanism
 did *nothing*. Instead, the request continued to our `SecurityController`... except
@@ -49,14 +78,20 @@ Let's include an `error` key explaining what probably went wrong: this matches t
 `error` key that `json_login` returns when the credentials fail, so our JavaScript
 will like this. Heck. I'll even fix my typo!
 
+[[[ code('19b29af00a') ]]]
+
 *Most* importantly, for the second argument, pass a 401 for the status code.
 
-Below, we can simplify... because now we know that there *will* be a user.
+Below, we can simplify... because now we know that there *will* be a user:
+
+[[[ code('01e3e58e03') ]]]
 
 Beautiful! Spin over and submit another bad password. Oh, gorgeous! The 401 status
 code triggers our error handling code, which displays the error on top. So awesome.
 
-Go back to `LoginForm.vue` and put the `Content-Type` header back.
+Go back to `LoginForm.vue` and put the `Content-Type` header back:
+
+[[[ code('a833e97c59') ]]]
 
 Next: let's login *successfully* and... figure out what we want to do when that
 happens! We're also going to talk about the session and how that authenticates our
