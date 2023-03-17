@@ -22,11 +22,11 @@ Arriba, dale un `Route` con una URL de `/login` para que coincida con la que est
 
 [[[ code('1f98df3a19') ]]]
 
-No habrá una página `/login` en nuestro sitio a la que hagamos una petición GET: sólo vamos a hacer POST a esta URL.
+No habrá una página `/login` en nuestro sitio a la que hagamos una petición GET: sólo haremos POST a esta URL.
 
 ## Devolución del ID de usuario actual
 
-Como verás dentro de un minuto, no vamos a procesar `email` y `password`en este controlador... pero esto se ejecutará después de un inicio de sesión correcto. Entonces... ¿qué deberíamos devolver después de un inicio de sesión correcto? No lo sé Y, sinceramente, depende sobre todo de lo que sería útil en nuestro JavaScript. Aún no he pensado mucho en ello, pero quizá... ¿el identificador de usuario? Empecemos por ahí.
+Como verás en un minuto, no vamos a procesar `email` y `password`en este controlador... pero esto se ejecutará después de un inicio de sesión correcto. Entonces... ¿qué deberíamos devolver después de un inicio de sesión correcto? No lo sé Y, sinceramente, depende sobre todo de lo que sería útil en nuestro JavaScript. Aún no he pensado mucho en ello, pero quizá... ¿el identificador de usuario? Empecemos por ahí.
 
 Si la autenticación se ha realizado correctamente, entonces, en este punto, el usuario habrá iniciado sesión normalmente. Para obtener el usuario autenticado actualmente, voy a aprovechar una nueva función de Symfony. Añade un argumento con un atributo PHP llamado`#[CurrentUser]`. Entonces podemos utilizar el tipo-hint normal `User`, llamarlo `$user` y por defecto `null`, en caso de que no estemos logueados por alguna razón:
 
