@@ -19,16 +19,23 @@ Anyways, let's add the ability to log out of our session-based authentication. B
 over in `SecurityController`, like before, we need a route and controller, even though
 this controller will never be called. I'll name the method `logout()` and we're
 going to return `void`. You'll see why in a second. Give this  a `Route` of
-`/logout` and `name: app_logout`.
+`/logout` and `name: app_logout`:
+
+[[[ code('6c4bf8218a') ]]]
 
 The reason I chose `void` is because we're going to throw an exception from
 inside the method. We've created this *entirely* because we need a route:
-Symfony's security system will intercept things before the controller is called.
+Symfony's security system will intercept things before the controller is called:
+
+[[[ code('9771de5dce') ]]]
 
 To activate that magic, in `security.yaml`, add a key called `logout` with `path`
-below set to that new route name: `app_logout`. This activates a listener that's
-now watching for requests to `/logout`. When there *is* a request to `/logout`,
-it will log the user out and redirect them.
+below set to that new route name: `app_logout`:
+
+[[[ code('dc308db25b') ]]]
+
+This activates a listener that's now watching for requests to `/logout`. When
+there *is* a request to `/logout`, it will log the user out and redirect them.
 
 All right, over here, our Vue app thinks we're not logged in, but we *are*: we
 can see it in the web debug toolbar. And if we manually go to `/logout`... boom!
@@ -49,7 +56,9 @@ There are two different ways to do this. The first is by setting a global variab
 For example, in `templates/base.html.twig`, it doesn't really matter where, but
 inside the body, add a `script` tag. And here say `window.user =` and then
 `{{ app.user|serialize }}`. Serialize into `jsonld` and add a `|raw` so that it
-doesn't escape the output: we want raw JSON.
+doesn't escape the output: we want raw JSON:
+
+[[[ code('f73ef8db54') ]]]
 
 How cool is that? In a minute, we'll read that from our JavaScript. If we refresh
 right now and look at the source, yea! We see `window.user = null`. And then when
@@ -74,7 +83,9 @@ and so it looks up the metadata for this class.
 
 That's cool... but it's actually *not* perfect... and I like to be explicit anyway.
 Pass a 2nd argument to serialize, which is the context and set `groups` to
-`user:read`.
+`user:read`:
+
+[[[ code('5051e5b57f') ]]]
 
 Now, watch what happens when we refresh. Like before, the correct properties on
 `User` will be exposed. But keep an eye on the embedded `dragonTreasures` property.
@@ -85,7 +96,9 @@ not  just the stuff inside the `user:read` group.
 
 Ok, let's go use this global variable over in JavaScript: in
 `TreasureConnectApp.vue`. Right now, the `user` data always starts as `null`. We
-can change that to `window.user`.
+can change that to `window.user`:
+
+[[[ code('734967ea72') ]]]
 
 When we refresh... got it!
 
