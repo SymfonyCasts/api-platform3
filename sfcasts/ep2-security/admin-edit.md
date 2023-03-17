@@ -1,8 +1,8 @@
 # Allow Admin Users to Edit any Treasure
 
-We've got things set up so that only the owner of a treasure can edit it. Now, a
-new requirement has come down from on-high: admin users should be able to edit *any*
-treasure. That means a user that has `ROLE_ADMIN`.
+We've got things set up so that only the owner of a treasure can edit it. *Now*,
+a new requirement has come down from on-high: admin users should be able to edit
+*any* treasure. That means a user that has `ROLE_ADMIN`.
 
 To the test-mobile! Add a `public function testAdminCanPatchToEditTreasure()`.
 Then create an admin user with `UserFactory::createOne()` passing roles set to
@@ -10,11 +10,11 @@ Then create an admin user with `UserFactory::createOne()` passing roles set to
 
 ## Foundry State Methods
 
-That will work fine. But if we need to create a lot of admin users in our tests,
-we can add a shortcut in Foundry. Open `UserFactory`. We're going to create something
+That'll work fine. But if we need to create a lot of admin users in our tests,
+we can add a shortcut to Foundry. Open `UserFactory`. We're going to create something
 called a "state" method. Anywhere inside, add a public function called, how about
 `withRoles()` that has an `array $roles` argument and returns `self`, which will
-make this more convenient when we use it. Inside, say
+make this more convenient when we use it. Then
 `return $this->addState(['roles' => $roles])`.
 
 Whatever we pass to `addState()` becomes part of the data that will be used to
@@ -25,13 +25,14 @@ a `User` object, this instantiates a new `UserFactory`... and then we can call
 `withRoles()` and pass `ROLE_ADMIN`.
 
 So, we're "crafting" what we want the user to look like. When we're done, call
-`create()`. `createOne()` is the shortcut static method. But since we have an
+`create()`. `createOne()` is a static shortcut method. But since we have an
 instance of the factory, use `create()`.
 
 But we can go even further. Back in `UserFactory`, add another state method called
 `asAdmin()` that returns `self`. Inside return `$this->withRoles(['ROLE_ADMIN'])`.
 
 Thanks to that, we can simplify to `UserFactory::new()->asAdmin()->create()`.
+Nice!
 
 ## Writing the Test
 
@@ -39,7 +40,8 @@ Thanks to that, we can simplify to `UserFactory::new()->asAdmin()->create()`.
 `DragonTreasureFactory::createOne()`.
 
 Because we're not passing an `owner`, this will create a new `User` in the background
-and use *that* as the `owner`. That means our admin user will *not* be the owner.
+and use *that* as the `owner`. This means that our admin user will *not* be the
+owner.
 
 Now, `$this->browser()->actingAs($adminUser)` then `->patch()` to
 `/api/treasures/` `$treasure->getId()`, sending `json` to update `value` to the
@@ -51,7 +53,7 @@ Cool! Copy the method name. Let's try it:
 symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
 ```
 
-And... okay! We haven't implemented this yet, so it fails as expected.
+And... okay! We haven't implemented this yet, so it fails.
 
 ## Allowing Admins to Edit Anything
 
@@ -76,8 +78,8 @@ So... that was an accident. Change `OR` to `or`. Then try the test again:
 symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
 ```
 
-It works! But that mess-up brings up a great point: the `security` expression is
-getting *too* complex. It's not very readable and we do *not* want to make mistakes
-when it comes to security.
+Got it! But my screw-up brings up a great point: the `security` expression is
+getting *too* complex. It's about as readable as a single-line PERL script... and
+we do *not* want to make mistakes when it comes to security.
 
-So next, let's centralize this logic this with a voter.
+So next, let's centralize this logic with a voter.
