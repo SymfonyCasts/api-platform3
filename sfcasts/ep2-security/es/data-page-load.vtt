@@ -100,10 +100,10 @@ herramientas de depuración web.
 Y si vamos manualmente a /logout...
 
 00:01:59.346 --> 00:02:02.726 align:middle
-¡boom! Ahora estamos realmente desconectados.
+¡boom! Ya hemos cerrado la sesión de verdad.
 
 00:02:03.416 --> 00:02:08.016 align:middle
-Así que hemos visto hace un momento que, aunque
+Hace un momento hemos visto que, aunque
 hayamos iniciado sesión y la actualicemos,
 
 00:02:08.246 --> 00:02:11.426 align:middle
@@ -132,15 +132,15 @@ Y hay una forma mejor: volcar la información
 del usuario en JavaScript al cargar la página.
 
 00:02:39.806 --> 00:02:41.516 align:middle
-Hay dos formas distintas de hacerlo.
+Hay dos formas diferentes de hacerlo.
 
 00:02:41.976 --> 00:02:44.126 align:middle
 La primera es estableciendo
-una variable global. Por
+una variable global. Por ejemplo,
 
 00:02:44.826 --> 00:02:50.316 align:middle
-ejemplo, en templates/base.html.twig
-, en realidad no importa dónde,
+en templates/base.html.twig,
+en realidad no importa dónde,
 
 00:02:50.846 --> 00:02:53.336 align:middle
 pero dentro del cuerpo,
