@@ -29,6 +29,10 @@ class IsValidOwnerValidator extends ConstraintValidator
             throw new \LogicException('IsOwnerValidator should only be used when a user is logged in.');
         }
 
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return;
+        }
+
         if ($value !== $user) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
