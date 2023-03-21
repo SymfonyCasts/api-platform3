@@ -1,20 +1,172 @@
-# Test Setup
+# Bootstrapping a Killer Test System
 
-Coming soon...
+Our API is getting more and more complex. And doing *manually* testing is *not* a
+great long-term plan. So let's install some tools to get a killer test setup.
 
-Our API is getting more and more complex and manually testing our API is not a great long-term plan. So let's install some tools to get a killer test set up. Step one at your terminal run composer require test. This is a flex alias for a package called Symphony Test Pack. Remember, packs are kind of shortcut packages that actually install a bunch of packages. So for example, when this finishes and we tech out Composer J S o, you can see down in required dev this added pH unit itself as well as a few other tools from Symphony to help testing it Also executed a recipe which added a number of files. We have a PHP unit to XML that disk file. To get us started, we have a test directory, a dot N test file for test specific environment variables and even a little bin slash php unit executable shortcut that we'll use to run our tests. Alright, so obviously Symphony has tools for testing and these can definitely be used to test an api. An API platform even has their own tools built on top of those to make testing and API even easier. However, we are going to use a tool that I love
+## Installing the test-pack
 
-That's built on top of Symphony's tools called Browser because it's just super fun to use. Browser gives us a nice fluid interface that can be used for testing web applications like you see here, or testing APIs. It can also can be used to um, test, uh, JavaScript. So let's get this guy install, I'll comp copy the composer choir line, we'll spin back over, run that. And while that's running it's optional, but there's one other little extension class that you can add to pH unit XML dot disk. Add it down here on the bottom. And what this is gonna do is add some extra features like when tests fail, it will automatically save the last re response that happened. And if you're using JavaScript testing, it'll actually take screenshots for you. You'll see this in terms of the API in a minute. All right, so we are ready. Let's create our first test in a test directory. Doesn't really matter how you organize things in here, but I'm gonna create a functional directory because what we're gonna be doing is making functional tests to our api. We're actually gonna be taking API client making git and post requests and then asserting that we have the correct output. I'm gonna create a class called Dragon Treasure Resource
+Step one: at your terminal run:
 
-Test, PHP Dragon Treasure Resource Test. And then kind of like a normal test, we're gonna make this extend not test case from PHB unit, but kernel test case that extends test case. But this gives us access to symphony's container, which we're gonna need. All right, so let's start simple. Let's just test the GI collection endpoint and make sure that we get back the data that we expect to use a browser. Right now this is just a normal PHB unit test To use that browser library. We're gonna add a tray called use has browser, and then down here I'll say public function. How about test get collection of treasures? This method will return void using browser is dead simple thanks to that trait. We have a new browser variable and then we can make GI post posed patch whatever request we want. So let's make a get request to slash API slash treasures and then just to see what that looks like, we can use this nifty little dump function. How cool is that? All right, let's try it. So to execute our test, we can run vendor bin PHB units. That works just fine. There's also a little shortcut that symphony at that the recipe added which has bin slash pH unit.
+```terminal
+composer require test
+```
 
-So when we run that, ooh, let's see, you can see this. The dump did happen, but look it, it says SQL State connection to server port 5, 4, 3, 2 failed. It's not talking to our database. Ah, remember how our database is working? Our database is running via Docker and thens are using the Symphony web server. When we use our browser over here, the Symphony web server is detecting Docker and setting the database U URL environment variable for us. So that's why our web, our API is talking to able to talk to the Docker database When we run commands in the command line that need to talk to the database, we've been running things like Symphony console make migration because when we execute things through Symphony, it adds the database underscore URL environment variable that talks to Docker. So when we run our test and we can't just run PIN PHB bin slash PHB unit, we need to run Symphony PHB bin slash PHB units. It's the same thing, but it's gonna allow Symphony to add that database URL environment variable. And now let's see, we see a dump. Let's go to the top. Okay, better it's talking to the database, but it says
+This is a flex alias for a package called `symfony/test-pack`. Remember: packs are
+shortcut packages that actually install a bunch of *other* packages. For example,
+when this finishes... and we check out `composer.json`, you can see down in
+`require-dev` that this added PHPUnit itself as well as a few other tools from
+Symfony  to help testing.
 
-Database app underscore test does not exist. Interesting. So let's take a little look here. If you open your config packages doctrine YAML file
+It also executed a recipe which added a number of files. We have `phpunit.xml.dist`,
+a `tests/` directory, `.env.test` for test-specific environment variables and
+even a little `bin/phpunit` executable shortcut that we'll use to run our tests.
 
-And you scroll down, there's a when at test section that's added automatically. This is really cool. So when we're in the test environment, there's a little configure called DB name Suffix. So it's automatically gonna take whatever database name you have configured normally and it's gonna add underscore test to it. This next part here is actually specific to a library called Para Test where you can run your test in parallel. That's, we're not doing that, so that's just an empty string for us. So anyways, that's how we end up with an underscore test at the end of our database name. And we want that. We don't want our development environment and our test environment to use the same database cuz it just gets annoying that they're running over each other's data. By the way, before we fix that, I do wanna mention if you're not using the Symphony Binary and Docker setup and you're configuring your database manually, be aware that in the test environment you're, if you have a dot end dot local file, it is not read. The test environment is special. It skips reading the.mt local file and only reads the DOM test file.
+## Hello browser Library
 
-So if you do have some database specific configuration that you want, don't wanna commit to your repository, you can create a DOM test dot local file and configure your database underscore URL there. There. All right. Anyways, in the test environment, we're missing our database. So we could easily fix this by running Symphony console doctrine database create dash NV equals test. But we are not going to do that cause that's way too much work. Instead we're gonna use one more trait inside of our test, say use reset database. This comes from Foundry, the library where that gives us all of our test data via the factories. And what Reset database does is it automatically makes sure that the database is cleared before every test. So if you have two tests, your second test isn't gonna mess up because it has data from the first test. It's also gonna create the database automatically for us. Check this out. Run Symphony PHP bin slash peach MUN again and check out that dump. That is our response. The beautiful J S O LD is coming back. We don't have any items inside of there yet, but it's working. And by the way, just wanna point out that right now when we make this get request, this is not passing the except header
+No surprise, Symfony has tools for testing and these can be used to
+test an API. Heck, API platform even has their *own* tools built on *top* of those
+to make testing an API even easier. And yet, I'm going to be stubborn
+and use a totally *different* tool that I've fallen in love with.
 
-That says we want, as a reminder, when we try out, when you use swagger over here, it actually pass an accept header that advertises that we want application slash LD plus jsun. We could have that here. I'm just pointing out we are not. The fact that we're, we are getting back Jasons LD is because that's the default format in our api. Anyways, next, let's actually write this test and do some assertions.
+It's called Browser, and it's *also* built on top of Symfony's testing tools: almost
+like a nicer interface above that strong base. It's just... super fun to use.
+Browser gives us a fluid interface that can be used for testing web apps, like
+you see here, or testing APIs. It can also can be used to test pages that use
+JavaScript.
 
+Let's get this guy install. Copy the `composer require` line, spin back over and
+run that:
+
+```terminal-silent
+composer require zenstruck/browser --dev
+```
+
+While that's doing its thing, it's optional, but there's an "extension" that you
+can add to `phpunit.xml.dist`. Add it down here on the bottom. In the future,
+if you're using PHPUnit 10, this will likely be replaced by some `listener` config.
+
+This adds a few extra features to browser. Like, when a test fails, it
+will automatically save the last response to a file. We'll see this soon. And if
+you're using JavaScript testing, it'll take screenshots of failures!
+
+## Creating our First Test
+
+Ok, we're ready for our first test. In the `tests/` directory, it doesn't
+matter how you organize things, but I'm going to create a `Functional/`
+directory because we're going to be making functional tests to our API. Yup,
+we'll literally create an API client, make GET or POST requests and then assert
+that we get back the correct output.
+
+Create a new class called `DragonTreasureResourceTest`. A normal test extends
+`TestCase` from PHPUnit. But make this extend `KernelTestCase`: a class from
+Symfony that extends `TestCase`... but gives us access to Symfony's engine.
+
+Let's start by testing the GET collection endpoint to make sure we get back
+the data we expect. To activate the browser library, at the top, add a trait
+with `use HasBrowser`.
+
+Next, add a new test method: `public function`, how about
+`testGetCollectionOfTreasures()`... which will return `void`. Using browser is dead
+simple thanks to that trait: `$this->browser()`. Now we can make GET, POST, PATCH
+or whatever request we want. Make a GET request to `/api/treasures` and then,
+just to see what that looks like, use this nifty `->dump()` function.
+
+## Running our Tests through the symfony Binary
+
+How cool is that? Let's see what it looks like. To execute our test, we could run:
+
+```terminal
+./vendor/bin/phpunit
+```
+
+That works just fine. But one of the recipes also added a shortcut file:
+
+```
+php bin/phpunit
+```
+
+When we run that, ooh, let's see. The `dump()` *did* happen: it dumped out the
+response... which was some sort of error. It says:
+
+> SQLSTATE: connection to server port 5432 failed.
+
+Hmm, it can't connect to our database. Our database is running via a Docker
+container... and then, because we're using the `symfony` web server, when we use
+the site via a browser, the `symfony` web server detects the Docker container and
+sets the `DATABASE_URL` environment variable *for* us. That's how our API has been
+able to talk to the Docker database.
+
+When we've run *commands* that need to talk to the database, we've been running
+them like `symfony console make:migration`... because when we execute things through
+`symfony`, it adds the `DATABASE_URL` environment variable... and *then* runs the
+command.
+
+So, when we simply run `php bin/phpunit`... the real `DATABASE_URL` is missing.
+To fix that, run:
+
+```terminal
+symfony php bin/phpunit
+```
+
+It's the same thing... except it lets `symfony` add the `DATABASE_URL`
+environment variable. And now... we see the dump again! Scroll to the top. Better!
+Now the error says:
+
+> Database `app_test` does not exist.
+
+## Test-Specific Database
+
+Interesting. To understand what's happening, open `config/packages/doctrine.yaml`.
+Scroll down to a `when@test` section. This is cool: when we're in the `test`
+environment, there's a bit of config called `dbname_suffix`. Thanks to this, Doctrine
+will take our *normal* database name and add `_test` to it.
+This next part is specific to a library called ParaTest where you can run tests
+in parallel. Since we're not using that, it's just an empty string and not something
+we need to worry about.
+
+Anyway, that's how we end up with an `_test` at the end of our database name. And
+we want that! We don't want our `dev` and `test` environments to use the same database
+because it gets annoying when they run over each other's data.
+
+By the way, if you're *not* using the `symfony` Binary and Docker
+setup... and you're configuring your database manually, be aware that in the `test`
+environment, the `.env.local` file is *not* read. The `test` environment
+is special: it skips reading `.env.local` and only reads `.env.test`.
+You can also create a `.env.local.test` for env vars that are read in the
+`test` environment but that won't be committed to your repository.
+
+## The ResetDatabaseTrait
+
+Ok, in the `test` environment, we're missing the database. We could easily fix this
+by running:
+
+```terminal
+symfony console doctrine:database:create --env=test
+```
+
+But that's *way* too much work. Instead, add one more trait to our test class:
+`use ResetDatabase`.
+
+This comes from Foundry: the library we've been using to create dummy fixtures
+via the factory classes. `ResetDatabase` is *amazing*. It automatically makes sure
+that the database is *cleared* before each test. So if you have two tests, your
+second test isn't going to mess up because of some data that the first test added.
+
+It's also going to create the database automatically for us. Check it out. Run
+
+```terminal
+symfony bin/phpunit
+```
+
+again and check out the dump. That's our response! It's our beautiful JSON-LD! We
+don't have any *items* in the collection yet, but it *is* working.
+
+And notice that, when we make this request, we are *not* sending an `Accept`
+header on the request. Remember, when we use the Swagger UI... it actually *does*
+send an `Accept` header that advertises that we want `application/ld+json`.
+
+We *can* add that to our test if we want. But if we pass nothing, we get JSON-LD
+back because that's the *default* format of our API.
+
+Next: let's properly finish this test, including seeding the database with data
+and learning about Browser's API assertions.
