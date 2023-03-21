@@ -1,5 +1,5 @@
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
-index beb0234..98ac570 100644
+index 1e2827e..f4ec419 100644
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
 @@ -2,8 +2,10 @@
@@ -12,4 +12,4 @@ index beb0234..98ac570 100644
 +#[AsDecorator('serializer')]
  class AddOwnerGroupsNormalizer implements NormalizerInterface
  {
-     public function __construct(private NormalizerInterface $decorated)
+     public function __construct(private NormalizerInterface $normalizer)
