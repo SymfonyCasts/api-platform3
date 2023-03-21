@@ -24,6 +24,7 @@ chapters:
     - access-control-voter
     - api-property
     - plain-password
+    - state-processor
     - validation-groups
     - context-builder
     - custom-normalizer
