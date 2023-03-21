@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00:01.166 --> 00:00:05.996 align:middle
+Si actualizas la página y compruebas la barra de herramientas
+de depuración web, verás que no hemos iniciado sesión.
+
+00:00:06.746 --> 00:00:08.756 align:middle
+Probemos a utilizar un correo
+electrónico y una contraseña reales.
+
+00:00:09.176 --> 00:00:11.876 align:middle
+Podemos hacer trampas haciendo clic en los
+enlaces de correo electrónico y contraseña:
+
+00:00:12.216 --> 00:00:16.226 align:middle
+este usuario existe en nuestro
+AppFixtures, así que debería funcionar.
+
+00:00:16.916 --> 00:00:18.396 align:middle
+Y... vale...
+
+00:00:18.576 --> 00:00:20.316 align:middle
+¡las casillas desaparecen!
+
+00:00:20.736 --> 00:00:22.426 align:middle
+Pero no ocurre nada más.
+
+00:00:22.806 --> 00:00:24.106 align:middle
+Lo mejoraremos en un minuto.
+
+00:00:24.416 --> 00:00:28.656 align:middle
+Pero por ahora, actualiza la página y vuelve a
+mirar la barra de herramientas de depuración web.
+
+00:00:29.046 --> 00:00:30.726 align:middle
+¡Estamos autentificados!
+
+00:00:31.216 --> 00:00:36.516 align:middle
+¡Sí! Sólo con hacer una petición AJAX
+correcta a esa ruta de inicio de sesión,
+
+00:00:36.946 --> 00:00:40.106 align:middle
+ha bastado para crear la sesión
+y mantenernos conectados.
+
+00:00:40.776 --> 00:00:45.226 align:middle
+Mejor aún, si empezáramos a hacer
+peticiones a nuestra API desde JavaScript,
+
+00:00:45.556 --> 00:00:48.366 align:middle
+esas peticiones también se autenticarían.
+
+00:00:49.016 --> 00:00:49.426 align:middle
+Así es
+
+00:00:49.716 --> 00:00:54.606 align:middle
+No necesitamos un lujoso sistema de tokens de API
+en el que adjuntemos un token a cada petición.
+
+00:00:55.086 --> 00:01:00.926 align:middle
+Sólo tenemos que hacer una petición y, gracias a la
+magia de las cookies, esa petición se autenticará.
+
+00:01:01.606 --> 00:01:03.706 align:middle
+Así que el inicio de sesión funcionó...
+
+00:01:03.936 --> 00:01:06.096 align:middle
+pero no pasó nada en la página.
+
+00:01:06.776 --> 00:01:08.916 align:middle
+¿Qué debemos hacer después
+de la autenticación?
+
+00:01:09.506 --> 00:01:11.416 align:middle
+Una vez más, en realidad no importa.
+
+00:01:11.786 --> 00:01:14.646 align:middle
+Si estás escribiendo tu sistema de
+autenticación para tu propio JavaScript,
+
+00:01:14.986 --> 00:01:18.226 align:middle
+deberías hacer lo que sea
+útil para tu frontend.
+
+00:01:18.746 --> 00:01:20.996 align:middle
+Actualmente devolvemos el id de user.
+
+00:01:21.406 --> 00:01:27.016 align:middle
+Pero podríamos, si quisiéramos,
+devolver todo el objeto user como JSON.
+
+00:01:27.506 --> 00:01:29.966 align:middle
+Pero hay un pequeño problema con eso.
+
+00:01:30.466 --> 00:01:31.956 align:middle
+No es super RESTful.
+
+00:01:32.546 --> 00:01:35.076 align:middle
+Es una de esas cosas de "pureza REST".
+
+00:01:35.586 --> 00:01:41.826 align:middle
+Cada URL de tu API, a nivel técnico,
+representa un recurso diferente.
+
+00:01:42.336 --> 00:01:48.586 align:middle
+Esto representa el recurso de la colección,
+y esta URL representa un único recurso User.
+
+00:01:49.066 --> 00:01:53.506 align:middle
+Y si tienes una URL diferente, se
+entiende que es un recurso diferente. La
+
+00:01:54.116 --> 00:01:58.416 align:middle
+cuestión es que, en un mundo perfecto,
+sólo devolverías un recurso User
+
+00:01:58.476 --> 00:02:02.856 align:middle
+desde una única URL en lugar de tener cinco
+rutas diferentes para buscar un usuario.
+
+00:02:03.746 --> 00:02:10.386 align:middle
+Si devolvemos el JSON de User desde esta ruta,
+"técnicamente" estamos creando un nuevo recurso API. De
+
+00:02:10.846 --> 00:02:15.206 align:middle
+hecho, cualquier cosa que devolvamos desde
+esta ruta , desde un punto de vista REST, se
+
+00:02:15.546 --> 00:02:17.826 align:middle
+convierte en un nuevo recurso de nuestra API.
+
+00:02:18.676 --> 00:02:21.826 align:middle
+Para ser honesto, todo
+esto es semántica técnica
+
+00:02:22.136 --> 00:02:24.746 align:middle
+y deberías sentirte libre
+de hacer lo que quieras.
+
+00:02:25.136 --> 00:02:27.456 align:middle
+Pero tengo una sugerencia divertida.
+
+00:02:28.176 --> 00:02:32.916 align:middle
+Para intentar ser útil a nuestro
+frontend y algo RESTful, tengo otra idea.
+
+00:02:33.506 --> 00:02:36.096 align:middle
+¿Y si no devolvemos nada desde la ruta....
+
+00:02:36.516 --> 00:02:41.626 align:middle
+pero colamos el IRI del usuario en
+la cabecera Location de la respuesta.
+
+00:02:42.136 --> 00:02:46.186 align:middle
+Entonces, nuestro frontend podría utilizarlo
+para saber quién acaba de iniciar sesión.
+
+00:02:47.056 --> 00:02:47.586 align:middle
+Te lo mostraré.
+
+00:02:48.096 --> 00:02:52.706 align:middle
+En primer lugar, en lugar de devolver el
+ID de usuario, vamos a devolver el IRI,
+
+00:02:52.886 --> 00:02:55.306 align:middle
+que será algo parecido a
+'/api/users/'.$user->getId().
+
+00:02:55.306 --> 00:02:56.186 align:middle
+Pero no quiero
+
+00:02:56.256 --> 00:03:02.016 align:middle
+codificarlo porque podríamos
+cambiar la URL en el futuro.
+
+00:03:02.496 --> 00:03:05.256 align:middle
+Prefiero que la API Platform
+lo genere por mí. Y
+
+00:03:05.856 --> 00:03:10.136 align:middle
+, afortunadamente, API Platform nos ofrece
+un servicio autoinstalable para hacerlo Antes
+
+00:03:10.916 --> 00:03:16.316 align:middle
+del argumento opcional, añade un nuevo
+argumento de tipo IriConverterInterface y
+
+00:03:16.596 --> 00:03:23.136 align:middle
+llámalo $iriConverter: Luego, aquí
+abajo, return new Response() (el de
+
+00:03:23.136 --> 00:03:31.086 align:middle
+HttpFoundation ) sin contenido y con un código de estado
+204: El 204 significa que ha tenido "éxito... pero
+
+00:03:31.296 --> 00:03:33.316 align:middle
+no hay contenido que devolver".
+
+00:03:34.056 --> 00:03:40.816 align:middle
+También pasaremos una cabecera Location establecida
+en $iriConverter->getIriFromResource(): Así
+
+00:03:41.036 --> 00:03:45.266 align:middle
+podrás obtener el recurso
+de un IRI o la cadena IRI
+
+00:03:45.266 --> 00:03:48.116 align:middle
+del recurso, siendo el
+recurso tu objeto. Pasa esto
+
+00:03:48.706 --> 00:03:49.856 align:middle
+$user. ¿Qué te parece
+
+00:03:50.846 --> 00:03:51.706 align:middle
+? Ahora
+
+00:03:52.336 --> 00:03:56.136 align:middle
+que devolvemos esto, ¿cómo podemos
+utilizarlo en JavaScript? Lo ideal sería que,
+
+00:03:56.856 --> 00:04:02.366 align:middle
+después de iniciar sesión, mostráramos automáticamente
+información sobre el usuario a la derecha. Esta
+
+00:04:03.086 --> 00:04:07.716 align:middle
+zona está construida por otro archivo
+Vue llamado TreasureConnectApp.vue:
+
+00:04:08.446 --> 00:04:10.486 align:middle
+no entraré en detalles, pero mientras
+
+00:04:10.486 --> 00:04:14.286 align:middle
+ese componente tenga datos de
+usuario, los imprimirá aquí. Y
+
+00:04:14.806 --> 00:04:21.916 align:middle
+LoginForm.vue ya está configurado para pasar esos
+datos de usuario a TreasureConnectApp.vue. En la parte
+
+00:04:22.706 --> 00:04:28.116 align:middle
+inferior, después de una autenticación correcta,
+aquí es donde borramos el estado de email y
+
+00:04:28.116 --> 00:04:31.856 align:middle
+password, que vacía las casillas
+después de iniciar sesión. Si
+
+00:04:32.636 --> 00:04:38.276 align:middle
+emitimos un evento llamado user-authenticated
+y le pasamos el userIri, TreasureConnectApp.vue
+
+00:04:38.866 --> 00:04:43.096 align:middle
+ya está configurado para escuchar este evento.
+
+00:04:43.596 --> 00:04:50.156 align:middle
+Entonces hará una petición AJAX a userIri, obtendrá
+el JSON de vuelta y rellenará sus propios datos. Si
+
+00:04:50.156 --> 00:04:53.346 align:middle
+no te sientes cómodo con Vue, no pasa nada. La
+
+00:04:53.746 --> 00:04:59.366 align:middle
+cuestión es que todo lo que tenemos que hacer es
+coger la cadena I RI de la cabecera Location, emitir
+
+00:04:59.616 --> 00:05:02.216 align:middle
+este evento, y todo debería funcionar. Para
+
+00:05:03.106 --> 00:05:09.466 align:middle
+leer la cabecera, di const userIri
+= response.headers.get('Location').
+
+00:05:10.216 --> 00:05:14.956 align:middle
+También descomentaré esto para que podamos
+emit: ¡Esto debería funcionar! Muévete
+
+00:05:15.386 --> 00:05:16.776 align:middle
+y actualiza.
+
+00:05:17.816 --> 00:05:21.026 align:middle
+Lo primero que quiero que notes
+es que seguimos conectados, pero
+
+00:05:21.346 --> 00:05:24.186 align:middle
+nuestra aplicación Vue no sabe
+que estamos conectados. Vamos a
+
+00:05:24.736 --> 00:05:26.056 align:middle
+arreglar eso en un minuto.
+
+00:05:26.586 --> 00:05:29.246 align:middle
+Vuelve a iniciar sesión con nuestro correo
+electrónico y contraseña válidos. Y...
+
+00:05:30.216 --> 00:05:31.726 align:middle
+¡precioso!
+
+00:05:32.056 --> 00:05:38.866 align:middle
+Hicimos la petición a POST, nos devolvió el IRI y, a
+continuación, nuestro JavaScript hizo una segunda petición a
+
+00:05:38.986 --> 00:05:43.626 align:middle
+ese IRI para obtener los datos del usuario,
+que mostró aquí. A continuación:
+
+00:05:44.516 --> 00:05:48.056 align:middle
+Hablemos de lo que significa cerrar
+sesión en una API. A continuación , te
+
+00:05:48.776 --> 00:05:54.056 align:middle
+mostraré una forma sencilla de decirle a tu JavaScript
+quién ha iniciado sesión al cargar la página. Porque,
+
+00:05:54.516 --> 00:05:57.446 align:middle
+ahora mismo, aunque estemos conectados, en
+
+00:05:57.786 --> 00:06:01.016 align:middle
+cuanto actualizo, nuestro JavaScript
+piensa que no lo estamos. Lamentable.
