@@ -1,28 +1,103 @@
-# Browser
+# JSON Test Assertions & Seeing the Database
 
-Coming soon...
+Let's make this test real with data and assertions.
 
-Let's make this test real with some data and assertions. So there are two main ways to do assertions with browser. First it comes with a bunch of built in methods to help you do assertions like assert J S O N, or you can always just grab the J S O that comes back from one of these endpoints and do the assertions with normal PHP unit assertions. It's super flexible and I'll show you how to do both. So first we can just assert that is this J S O N Y or not? Let me try that. It passes. So we're also gonna wanna assert a couple other things like we know that this, that our API responses should come back with a hydra. I should come back with a hydra. Total hydro total items property set to the number of items. Right now we don't have any items, but we can at least assert that that matches zero. So we can say assert J S O N matches. This is something specific to browser and he uses a special syntax
+There are two main ways to do assertions with Browser. First, it comes with a bunch
+of built-in methods to help, like `->assertJson()`. Or... you can always just grab
+the JSON that comes back from an endpoint and check things using the built-in
+PHPUnit assertions you know and love. We'll see both.
 
-Where
+Let's start by checking `->assertJson()`. When we run that:
 
-You can actually read different keys. I'm gonna talk more about than a second. This one's pretty simple, right? It's just grabbing a key and asserting that that equals zero. Now when you try this, it's actually gonna fail with an interesting error. It says logic exception, empty dialing JMS path at PHP is required to search jsun. So we actually need to install that. So I'm gonna copy that Comp composer require line and we'll install that. This JMS path thing is actually a bit of a tool. There is this kind of standard way,
+```terminal-silent
+symfony php bin/phpunit
+```
 
-Standard expression you can use to get different keys and json. So for example, if this is your J S O and you wanna read the key A, that just equals food simple. But you can also do deeper things like A, B, C dot D and that will give you value and it really gets kind of crazy here. You can get the first key, you can get A but that B, C and then the zero key and then keep going from there. Uh, you can even slice the AR the array in different ways. So you can actually get pretty nuts with this. And this is a really helpful page for trying out the different combinations. We're not gonna get too crazy with it. And this is a really simple example now that we have the library installed, let's run the test again and they fail. And with a really weird error, it says syntax error at character five hydra colon total items. So unfortunately the colon is a special syntax inside of this JMS path thing. So whenever you have a colon here, we actually need to quote this looks a little funny. We're actually gonna put double quotes around that little part here.
+It passes! Cool! We know that this response should  have a `hydra:totalItems`
+property set to the number of results. Right now, our database is empty... but we
+can at least assert that it matches zero.
 
-And now when we do that beautiful, it passes. Cool, but this is not a very interesting test, just testing that there's zero results because our database is empty related to make our test nice. We need data. We need to seed our database with data at the beginning of the test. Fortunately Foundry makes that super simple at the top of our test call dra, dragon treasurer factory colon calling, create many and let's create five dragon treasures. Then down here we'll assert that we get five back. It's just that simple. And actually lemme pull our dump back here just so we can keep seeing the dumped results. So now when we try it, it passes still. And check this out, if you look up, yeah, that's coming back. We got five treasures in there. Boundary makes adding that data so simple. All right, so we might also want to test that we get the exact fields back, that we get all these fields back and not more or less. So how can we do that with that special J M S J M E S syntax? Well, there's assert jsun match thing is really handy. And actually behind the scenes, if I kind of hold command or control and click into this, whenever you call, when you call assert jsun match, what this is actually doing is behind the scenes, it's calling this J S O and this creates a jsun object. And that jsun object actually has additional methods to help you
+To do that, use `->assertJsonMatches()`. This is a special method from Browser that
+uses a special syntax that allows us to read different parts off the JSON. We'll
+dig into it in a minute.
 
-Do things with jsun. So out of the box with browser, we have assert JSON matches. But if want, if we want access to that J S O object and there's other methods, we can do that, there's two ways to do that. The first is to use this handy use function inside of browser where we pass it a callback and then this is gonna receive a J S O N
+But this one is simple: assert that `hydra:totalItems` equals `0`.
 
-Object. This is a little bit magical. This used function and browser is a little bit magical. There's actually various things you can type in here. It actually reads what you're type hint in your argument and passes you what you want. So because we're type hint, this J S O, it's going to grab that J S O object for the last response and pass it to us. Now inside, let's do a little bit of kind of experimenting. Cause what we're ultimately after is we wanna be able to wanna be basically be able to check what the keys are for the first item inside of Hydra colon member. So to help kind of figure this out, we can use a function here called search. Search is just a way to kind of use a selector and then get back a result. So let's do double quotes and we'll say Hydra colon member. We'll just see what that gives us back. And I'm gonna remove my dump from up here. All right, let's try the test again. They pass, but awesome. More importantly, look at that. It actually got AC gave that gave us access to that array. Sweet. So now what we wanna do is we're gonna grab the zero index and then I really wanna just grab the keys here.
+When we try this:
 
-So to do that, and after our hydro colon member double quotes, we can say Left square bracket zero, right square bracket. So that will, now this now represents the first item inside Hydra mber. And then we can surround that entire thing with a keys function. Try that now. And beautiful. This is probably one of the more complex things that you can do, and I'll show you an easier way to do this if you don't want to use the kind of special JMS syntax. All right, let's turn this finally into an assertion. So I'll say Jsun arrow matches. So there's two things we can do here. We could just set this to a result and then do a normal PHB and an insertion on there. Or you can actually replace insert with assert matches that's going to execute this thing here. And then for the second argument, we can pass in what we expect it to match
+```terminal-silent
+symfony php bin/phpunit
+```
 
-<affirmative>.
+It fails! But with a great error:
 
-So I'm gonna quickly type in all the keys. I'm getting these from right here. We know what keys we're supposed to have. So I'll very quickly type in all the keys that we expect in our response.
+> `mtdowling/jmespath.php` is required to search JSON
 
-So we're asserting that this expression's gonna grab a result that's equal to this. And when we try it, that passes. Awesome. All right, so this is really cool. We have us assert JSON matches. We actually could have just, we didn't even really need to break out into this function. Now that we know this, we could have moved all this just into a normal assert js o matches. Um, but I also wanna show you kind of a less fancy way of doing this. So instead of the use function, what you could actually do is just say j s o equals, and you could break out a browser by saying arrow jsun. So most of the browser functions return on instance of browser. So we can keep chaining things like here, some functions return something different like jsun returns that jsun object. What's nice about that is we can remove the use function here and we can kind of get into like more normal pH unit coating where we just use that jsun object and call assert matches on it. It's over here. Oh, that airs because I have a syntax error of course, I typed over here that passes.
+## Hello JMESPath
 
-And if this is still too fancy for you, which is totally fine, you can actually just change this to a normal pH unit assertion. You can say this arrow assert same. And instead of this fancy expression here, we could say jsun arrow decoded. That gives us actually the decoded jsun array. And then we could get hydro call on member, we could grab the zero key and then we can surround this entire thing with array keys. So just the pH version of the expression that we had before and this time still passes. So use whatever you feel most comfortable with, um, a lot of flexibility to write this test how you want. Next, let's write some tests for authentication, both logging in via our login form and via an API token.
+Ah, we need to install that! Copy the `composer require` line, find your terminal,
+and run it:
 
+```terminal-silent
+composer require mtdowling/jmespath.php --dev
+```
+
+This "JMESPath" thing is actually super cool: it's a "query language" for reading
+different parts of any JSON. For example, if this is your JSON and you want to
+read the `a` key, just say `a`. Simple.
+
+But you can also do deeper, like: `a.b.c.d`. Or, get crazier: grab the `1`
+index, or grab `a.b.c`, then the `0` index, `.d`, the `1` index then the `0`
+index. You can even slice the array in different ways. Basically... you can go
+nuts.
+
+But we're *not* going to lose our minds with this. It's a handy syntax... but if
+things  get too complex, we can always test the JSON manually, which we'll do in
+a bit.
+
+Anyway, now that we have the library installed, let's run the test again.
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+It still fails! With a weird error:
+
+> Syntax error at character 5 `hydra:totalItems`.
+
+Unfortunately, the `:` is a special character inside of JMESPath. So
+whenever we have a `:`, we need to put quotes around that key.
+
+Not ideal, but not a huge inconvenience.
+
+Now when we try it:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+It passes!
+
+## Seeding the Database
+
+But... this isn't a very interesting test: we're just asserting that we get nothing
+back... because the database is empty. To make our test *real*, we need data: we
+need to *seed* the database with data at the start of the test.
+
+Fortunately, Foundry makes that dead-simple. At the top, call
+`DragonTreasureFactory::createMany()` and let's create 5 treasures. Now, below,
+assert that we get 5 results. It's just that simple. And actually, let me put
+our dump back so we can see the result.
+
+Try it now:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+It passes! And if you look up, yea! The response has 5 treasures! Dang, that was
+easy.
+
+Next: let's use JMESPath to assert something more challenging. Then we'll back up
+and see how we can dig into Browser to give us infinite flexibility - and simplicity -
+when it comes to testing JSON.
