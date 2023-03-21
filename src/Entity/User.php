@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\UserRepository;
+use App\Validator\TreasuresAllowedOwnerChange;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -104,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['user:read', 'user:write'])]
     #[Assert\Valid]
+    #[TreasuresAllowedOwnerChange]
     private Collection $dragonTreasures;
 
     #[ORM\OneToMany(mappedBy: 'ownedBy', targetEntity: ApiToken::class)]
