@@ -1,24 +1,114 @@
-# Security
+# Deny Access with The "security" Option
 
-Coming soon...
+We've just talked a lot about authentication: that's the way we tell the API
+*who* we are. Now we turn to authorization, which is all about denying access to 
+certain operations and other things *based* on who you are.
 
-All right, so we've just talked a lot about authentication. That's the way that you tell the API who you are. Now we're gonna turn to authorization, which is where we deny access to certain operations and other stuff based on who you are. So there's multiple ways to do this. The simplest ways actually in config packages, security di yamal, just like normal symphony security down here, there's this access control section. If you wanna lock down a specific URL pattern by a specific roll, use access control, this would be a great way to, for example, lock down your entire api. So in normal web apps, I do use access control somewhat, but most of the time I put my authorization rules in my controllers. But of course, with the API platform, we don't have controllers. All we have are our API resource classes, like Dragon Treasure. So instead of putting our roles and controllers, we're gonna basically attach them to our operations. For example, let's make the post request to create a new dragon treasure, require the user to be authenticated. So we do that is via this cool little security option. And then we set that to a string
+## Using access_control
 
-And inside we can say is underscore granted.
+There are multiple ways to control access to something. The simplest is in
+`config/packages/security.yaml`. Just like normal Symfony security, down here, we
+have an `access_control` section. If you want to lock down a specific URL pattern by
+a specific role, use `access_control`. You could use this, for example, to require
+that the user has a role to use *anything* in your API by targeting URLs starting
+with `/api`.
 
-And then double quotes and then roll, treasure create. Now really we could have just used roll user here, I just want to make check to make sure that the user is logged in. But as a reminder, we have a little system where if you use API token for authentication, you can choose different scopes. And we have a scope called scope treasure edit. So we actually wanna check for this specific role. Also as a reminder, inside security that YAML via rural hierarchy, if you log in via our actual login form, you get roll full user to automatically get roll treasure edit. So we're using this rural treasure create here, which you'll either have if you logged in as a real user or if you're using an API token that has that scope. All right, let's try that, see what happens. So make sure we're logged out. So I'm gonna refresh the page here. You can see I'm not logged down there and we don't have any bear token. Let's try the post endpoint. Let try it out. And I'm just going to, sure, we'll just hit execute on that. And perfect 4 0 1 status code and a type hydra error.
+## Hello "security" Option
 
-So this security key over here is actually an expression using symphony's expression language. And you can actually get a bit fancy with it though. We're gonna try to keep things simple. And later we'll learn how to offload complex rules to voters. So let's a couple other rules in here. So put and patch are both edits. And we're actually, and these are interesting because not only do we need to be logged in, we probably need to be the owner of this dragon treasure and able to be edited. We don't want people to edit other people's dragon treasures. We're gonna worry about that ownership part later. But for now, let's at least put security, we'll say is granted. And here we'll say roll treasure edit. Once again using that scope from there, I'll copy that and we'll duplicate down here for the patch method. And then earlier we remove, we removed the delete operation. Let's actually add that back now and we'll say a security option for roll underscore admin. If we decided later to add a scope that allowed you to delete treasures, we could change and use roll treasure. Delete right here. All right, so let's make sure that works. I'm going to use the GI collection endpoint.
+In a traditional web app, I *do* use `access_control` for several things. But most
+of the time I put my authorization rules inside *controllers*. But... of course,
+with API Platform, we don't *have* controllers. All we have are API resource
+classes, like `DragonTreasure`. So instead of putting security rules in controllers,
+we'll attach them to our *operations*.
 
-Oops, try that out. This still does not require authentication, so that works just fine. And we have a treasure with ID one. So I'll close up this endpoint and we'll open up the put endpoint, hit try it out, one, execute and perfect. We get the 4 0 1 there as well. So adding the security to the individual operations is probably the most common thing to do. But you can also add it to the API resource level itself to apply to the entire class. Like for example, for user, we probably want pretty much all of our operations to require authentication except for the post to create, cuz that's actually how you register. So up here we can say security roll user just to just to check for logged in. And because we have a sub resource here, and this also allows us to fetch a user, we need to make sure you put security there. So keep track of that if you have sub resources that you're including it in both spots if you need to.
+For example, let's make the POST request to create a new `DragonTreasure` require
+the user to be authenticated. Do that by adding a *very* handy `security` option.
+Set that to a string and inside, say `is_granted()`, double quotes then
+`ROLE_TREASURE_CREATE`.
 
-So
+We *could* simply use `ROLE_USER` here if we just wanted to make sure that the user
+is logged in. But we have a cool system where, if you use an API token for
+authentication, that token will have specific scopes. One possible scope is called
+`SCOPE_TREASURE_CREATE`... which maps to `ROLE_TREASURE_CREATE`. So we look for
+*that*. Also, in `security.yaml`, via `role_hierarchy`, if you log in via the
+login form, you get `ROLE_FULL_USER`... and then you automatically also get
+`ROLE_TREASURE_CREATE`.
 
-That's cool. But as I mentioned, we actually don't wanna require authentication for the post request. So to give us that flexibility, I'm gonna go up to a first a API resource and we're gonna add
+In other words, by using `ROLE_TREASURE_CREATE`, access will be granted either
+because you logged in via the login form *or* you authenticated using an API token
+that has that scope.
 
-The
+Let's try it. Make sure you're logged out. I'll refresh. Yup, you can see on
+the web debug toolbar that I'm *not* logged in... and Swagger does *not*
+currently have an API token.
 
-Operations option to this. And real quick, we're gonna put all the normal operations, new, get new, get collection, new post new put, new patch, and new delete. Now that we have those, we can customize them. So the first thing is for post. This is the one that we want to be public. So I'll say security is granted when you use a special kind of fake rule here called public access. So this is going to override the one that we're passing on the resource level. So it should allow this one to have public access. Also, while we're here for the put endpoint, we once again have an API token called roll User Edit. So we're gonna be a little more powerful than roll user. We want you to actually have that roll. And I'll repeat that down here for the patch endpoint. All right, so let's try this. I'm gonna refresh the whole page. And what I'm interested in is the post user endpoint. So I'm not authenticated, let's hit try it out. I'll just leave that default data, hit execute and awesome 2 0 1. So we did allow access on that. And as a reminder, if you ever wanna see the decisions that were made, you can always open the profiler for that request and go down to security,
+Let's test the POST endpoint. Try it out.. and... just Execute with the
+example data. And... yes! A 401 status code with type `hydra:error`!
 
-Go to access decision. And you can see here, there's, in this case, there's only one decision made. It was for our public access, and that was allowed. All right, next, our API is getting complex and it's only going to get more complex. So it's time to stop testing our endpoints manually via swagger and start testing them with automated tests.
+## More about the "security" Attribute
 
+The `security` option actually holds an *expression* using Symfony's expression
+language. And you can get pretty fancy with it. Though, we're going to try
+to keep things simple. And later, we'll learn how to offload complex rules to voters.
+
+Let's add a few more rules. `Put` and `Patch` are both edits. These are especially
+interesting because, to use these, not only do we need to be logged in, we probably
+need to be the *owner* of this `DragonTreasure`. We don't want *other* people to
+edit *our* goodies.
+
+We're going to worry about the ownership part later. But for now, let's at least
+add `security` with `is_granted` then `ROLE_TREASURE_EDIT`. Once again, I'm using
+the scope role. Copy that, and duplicate it down here for `Patch`.
+
+Oh, and earlier, we removed the `Delete` operation. Let's add that back with
+`security` set to look for `ROLE_ADMIN`. If we decided later to add a scope that
+allowed API tokens to delete treasures, we could add that and change this to
+`ROLE_TRESURE_DELETE`.
+
+Let's make sure this works! Use the GET collection endpoint... oops.
+Try that out. This operation does *not* require authentication... so it works just
+fine. And we have a treasure with ID 1. Close this up, open the PUT operation,
+hit "Try it out", 1, "Execute" and... alright! We get a 401 here too!
+
+## Adding "security" to an Entire Clas
+
+So adding the `security` option to the individual operations is probably the most
+common thing to do. But you can also add it to the `ApiResource` itself to apply
+to the entire class. For example, on `User`, we probably want *every* operation
+to require authentication... except for the `Post` to create, because that's
+how you would register a new user.
+
+So up here, add `security` and look for `ROLE_USER`... just to check that we're logged
+in. And because this class has a sub resource... and this *also* allows us to fetch
+a user, be sure to add `security` here too. Keep close track of security if you're
+using subresources.
+
+Ok, so now *every* operation on `User` requires you to be logged in. But... we
+*don't* want that for the `Post` operation. To add flexibility, go up to the first 
+`ApiResource`, add the `operations` option, and, real quick, list all the normal
+operations, `new Get()`, `new GetCollection()`, `new Post()`, `new Put()`,
+`new Patch()`, and `new Delete()`.
+
+Now that we have those, we can customize them. For `Post`, since we want this
+to *not* require authentication, say `security: 'is_granted()` passing a special
+fake role called `PUBLIC_ACCESS`.
+
+This will *override* the security rule that we're passing on the resource level. Oh,
+and while we're here, for `Put`, set `security` to look for `ROLE_USER_EDIT` since
+we have a scope role for editing users. Repeat that down here for `Patch`.
+
+I love it! Refresh the whole page. We're most interested in the `POST` users
+endpoint. We are *not* authenticated, so hit "Try it out" and I'll leave the
+default data. "Execute" and... we nailed it! A 201 status. That *did* allow
+anonymous access.
+
+## Checking the Security Decisions
+
+Oh, and super fun: if you ever want to see the security *decisions* that were made
+during a request, open the profiler for that request, go down to the "Security"
+section then "Access Decision". For this request, only one decision made by the
+security system: it was for `PUBLIC_ACCESS`, and that *was* allowed.
+
+Next: our API is getting complex... and it's only going to get *more* complex. It's
+time to stop testing our endpoints manually via Swagger and start testing them with
+automated tests.
