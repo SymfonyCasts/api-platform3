@@ -3,6 +3,7 @@
 namespace App\Tests\Functional;
 
 use App\Factory\DragonTreasureFactory;
+use App\Factory\UserFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Json;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -40,7 +41,16 @@ class DragonTreasureResourceTest extends KernelTestCase
 
     public function testPostToCreateTreasure(): void
     {
+        $user = UserFactory::createOne(['password' => 'pass']);
+
         $this->browser()
+            ->post('/login', [
+                'json' => [
+                    'email' => $user->getEmail(),
+                    'password' => 'pass',
+                ],
+            ])
+            ->assertStatus(204)
             ->post('/api/treasures', [
                 'json' => [],
             ])
