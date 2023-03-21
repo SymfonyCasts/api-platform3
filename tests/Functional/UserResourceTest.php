@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional;
 
+use App\Factory\UserFactory;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 class UserResourceTest extends ApiTestCase
@@ -31,21 +32,15 @@ class UserResourceTest extends ApiTestCase
 
     public function testPatchToUpdateUser(): void
     {
+        $user = UserFactory::createOne();
+
         $this->browser()
-            ->post('/api/users', [
+            ->actingAs($user)
+            ->patch('/api/users/' . $user->getId(), [
                 'json' => [
-                    'email' => 'draggin_in_the_morning@coffee.com',
-                    'username' => 'draggin_in_the_morning',
-                    'password' => 'password',
-                ]
+                    'username' => 'changed',
+                ],
             ])
-            ->assertStatus(201)
-            ->post('/login', [
-                'json' => [
-                    'email' => 'draggin_in_the_morning@coffee.com',
-                    'password' => 'password',
-                ]
-            ])
-            ->assertSuccessful();
+            ->assertStatus(200);
     }
 }
