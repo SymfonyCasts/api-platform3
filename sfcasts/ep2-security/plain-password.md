@@ -1,7 +1,7 @@
 # User Test + Plain Password
 
 We have a pretty nice `DragonTreasureResourceTest`, so let's bootstrap one for
-the User class.
+User.
 
 ## Bootstrapping the User Test
 
@@ -10,14 +10,14 @@ custom `ApiTestCase`, then we just need to `use ResetDatabase`. We don't need
 `HasBrowser` because that's already done in the base class.
 
 Start with `public function testPostToCreateUser()`. Make a `->post()` request to
-`/api/users`, pass in some `json` - `email` and `password` - then `assertStatus(201)`.
+`/api/users`, toss in some `json` with `email` and `password`, and `assertStatus(201)`.
 
-And now that we've created this new user, let's immediately see if we can use it
-to log in. Make another `->post()` request to `/login`, *also* pass some `json`,
-copy the `email` and `password` from above... `assertSuccessful()`.
+And now that we've created the new user, let's jump right in and test if we can log
+in with their credentials! Make another `->post()` request to `/login`, *also*
+pass some `json` - copy the `email` and `password` from above - then `assertSuccessful()`.
 
-Ok. Let's give this a go: `symfony php bin/phpunit` and run the entire
-`UserResourceTest`:
+Let's give this a go: `symfony php bin/phpunit` and run the entire
+`tests/Functional/UserResourceTest.php` file:
 
 ```terminal-silent
 symfony php bin/phpunit tests/Functional/UserResourceTest.php
@@ -37,21 +37,22 @@ symfony php bin/phpunit tests/Functional/UserResourceTest.php
 
 > expected successful status code, but got 401.
 
-So the failure is down here. We *were* able to create the user... but when we trie
+So the failure is down here. We *were* able to create the user... but when we tried
 to log in, it failed. If you were with us for episode one, you might remember why!
-We never setup our API to *hash* the password.
+We never set up our API to *hash* the password.
 
 Check it out: inside `User`, we *did* make `password` part of our API. The user
 sends the plain-text password they want... then we're saving that directly into
 the database. That's a *huge* security problem... and it makes it impossible to
-log in as this user because Symfony expects `password` to hold the *hashed* password.
+log in as this user, because Symfony expects the `password` property to hold a
+*hashed* password.
 
 ## Setting up the plainPassword Field
 
 So our goal is clear: allow the user to send a *plain* password, but then hash
 it before it's stored in the database. To do this, instead of temporarily storing
 the plain-text password on the `password` property, let's create a totally *new*
-property for this: `private ?string $plainPassword = null`.
+property: `private ?string $plainPassword = null`.
 
 This will *not* be stored in the database: it's just a temporary spot to hold the
 plain password before we hash it and set that on the *real* `password` property.
@@ -61,8 +62,8 @@ generate a getter and setter for this. Let's clean this up a bit: accept only
 a string, and the PHPDoc is redundant.
 
 Next, scroll all the way to the top and find `password`. *Remove* this from our
-API entirely. And, instead, expose `plainPassword`... but use `SerializedName` so
-that it's called `password`.
+API entirely. Instead, expose `plainPassword`... but use `SerializedName` so
+it's called `password`.
 
 So we're obviously not done yet... and if you run the tests:
 
@@ -70,12 +71,12 @@ So we're obviously not done yet... and if you run the tests:
 symfony php bin/phpunit tests/Functional/UserResourceTest.php
 ```
 
-Yea... things are worse than before: a 500 error because of a not null violation.
-We're sending `password`, that's stored onto `plainPassword`... then we're not doing
-anything with that, so the *real* `password` property stays null and explodes
+Things are worse! A 500 error because of a not null violation.
+We're sending `password`, that's stored on `plainPassword`... then we're doing
+absolutely nothing with it. So the *real* `password` property stays null and explodes
 when it hits the database.
 
-So the question is: how can we hash the `plainPassword` property? Or, more
-generally, how can we run code *after* the data is deserialized but *before*
-it's saved into the database? The answer is: state processors. Let's dive into
-this powerful concept next.
+So here's the million-dollar question: how can we hash the `plainPassword` property?
+Or, in simpler terms, how can we run code in API Platform *after* the data is deserialized
+but *before* it's saved to the database? The answer is: state processors. Let's
+dive into  this powerful concept next.
