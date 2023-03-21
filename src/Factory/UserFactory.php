@@ -57,6 +57,11 @@ final class UserFactory extends ModelFactory
         return $this->addState(['roles' => $roles]);
     }
 
+    public function asAdmin(): self
+    {
+        return $this->withRoles(['ROLE_ADMIN']);
+    }
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
