@@ -154,7 +154,10 @@ class DragonTreasureResourceTest extends ApiTestCase
     public function testPatchUnpublishedWorks()
     {
         $user = UserFactory::createOne();
-        $treasure = DragonTreasureFactory::createOne(['owner' => $user]);
+        $treasure = DragonTreasureFactory::createOne([
+            'owner' => $user,
+            'isPublished' => false,
+        ]);
 
         $this->browser()
             ->actingAs($user)
