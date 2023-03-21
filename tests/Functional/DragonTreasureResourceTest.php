@@ -77,4 +77,21 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->assertStatus(422)
         ;
     }
+
+    public function testPostToCreateTreasureDeniedWithoutScope(): void
+    {
+        $token = ApiTokenFactory::createOne([
+            'scopes' => [ApiToken::SCOPE_TREASURE_EDIT]
+        ]);
+
+        $this->browser()
+            ->post('/api/treasures', [
+                'json' => [],
+                'headers' => [
+                    'Authorization' => 'Bearer '.$token->getToken()
+                ]
+            ])
+            ->assertStatus(403)
+        ;
+    }
 }
