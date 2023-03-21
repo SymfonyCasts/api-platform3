@@ -13,6 +13,21 @@ class DragonTreasureIsPublishedExtension implements QueryCollectionExtensionInte
 {
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
+        $this->addIsPublishedWhere($resourceClass, $queryBuilder);
+    }
+
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
+    {
+        $this->addIsPublishedWhere($resourceClass, $queryBuilder);
+    }
+
+    /**
+     * @param string $resourceClass
+     * @param QueryBuilder $queryBuilder
+     * @return void
+     */
+    private function addIsPublishedWhere(string $resourceClass, QueryBuilder $queryBuilder): void
+    {
         if (DragonTreasure::class !== $resourceClass) {
             return;
         }
@@ -20,10 +35,5 @@ class DragonTreasureIsPublishedExtension implements QueryCollectionExtensionInte
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $queryBuilder->andWhere(sprintf('%s.isPublished = :isPublished', $rootAlias))
             ->setParameter('isPublished', true);
-    }
-
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
-    {
-        // TODO: Implement applyToItem() method.
     }
 }
