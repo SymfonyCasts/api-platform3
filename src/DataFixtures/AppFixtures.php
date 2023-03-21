@@ -21,6 +21,7 @@ class AppFixtures extends Fixture
         DragonTreasureFactory::createMany(40, function () {
             return [
                 'owner' => UserFactory::random(),
+                'isPublished' => rand(0, 10) > 3,
             ];
         });
 
