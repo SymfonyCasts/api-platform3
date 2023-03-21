@@ -62,6 +62,9 @@ use function Symfony\Component\String\u;
         'groups' => ['treasure:write'],
     ],
     paginationItemsPerPage: 10,
+    extraProperties: [
+        'standard_put' => true,
+    ],
 )]
 #[ApiResource(
     uriTemplate: '/users/{user_id}/treasures.{_format}',
@@ -75,6 +78,9 @@ use function Symfony\Component\String\u;
     ],
     normalizationContext: [
         'groups' => ['treasure:read'],
+    ],
+    extraProperties: [
+        'standard_put' => true,
     ],
 )]
 #[ApiFilter(PropertyFilter::class)]
