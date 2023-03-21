@@ -1,0 +1,444 @@
+WEBVTT
+
+00:00:00.056 --> 00:00:08.786 align:middle
+Bienvenidos de nuevo, maravillosos devotos
+de JSON, al episodio 2 de API Platform.
+
+00:00:09.386 --> 00:00:11.166 align:middle
+En la parte 1, ¡nos pusimos manos a la obra!
+
+00:00:11.716 --> 00:00:15.366 align:middle
+Creamos una API bastante matadora para
+almacenar tesoros de dragón, aunque...
+
+00:00:15.366 --> 00:00:18.206 align:middle
+¡nos olvidamos por completo
+de añadir seguridad!
+
+00:00:18.626 --> 00:00:22.226 align:middle
+Cualquier criatura pequeña y de pies peludos
+podría colarse por una puerta trasera...
+
+00:00:22.546 --> 00:00:25.146 align:middle
+¡y no tendríamos ni idea!
+
+00:00:25.146 --> 00:00:28.586 align:middle
+Así que esta vez hablaremos de todo
+lo relacionado con la seguridad.
+
+00:00:28.776 --> 00:00:33.186 align:middle
+Como la autenticación: ¿debo utilizar una
+sesión con un formulario de inicio de sesión...
+
+00:00:33.276 --> 00:00:35.666 align:middle
+¿o necesito tokens de API?
+
+00:00:36.176 --> 00:00:40.766 align:middle
+Y autorización, como denegar
+el acceso a rutas completas.
+
+00:00:41.206 --> 00:00:46.476 align:middle
+Luego entraremos en cosas más complicadas, como
+mostrar u ocultar resultados en función del usuario
+
+00:00:46.746 --> 00:00:50.246 align:middle
+e incluso mostrar u ocultar determinados
+campos en función del usuario.
+
+00:00:50.816 --> 00:00:56.456 align:middle
+También hablaremos de campos totalmente personalizados,
+del método HTTP PATCH y de la creación de
+
+00:00:56.456 --> 00:00:59.926 align:middle
+un sistema de pruebas de API del
+que tus amigos estarán celosos.
+
+00:01:00.716 --> 00:01:06.446 align:middle
+Ya sabes lo que hay que hacer: para profundizar
+realmente en este tema, debes codificar conmigo.
+
+00:01:07.156 --> 00:01:09.096 align:middle
+Descarga el código del curso de esta página.
+
+00:01:09.406 --> 00:01:14.196 align:middle
+Después de descomprimirlo, encontrarás un
+directorio start/ con el mismo código que ves aquí.
+
+00:01:14.936 --> 00:01:19.646 align:middle
+Abre este ingenioso archivo README.md y sigue
+todas las instrucciones de configuración.
+
+00:01:20.296 --> 00:01:23.726 align:middle
+Aquí abajo estoy iniciando el
+servidor web symfony. Así que
+
+00:01:24.536 --> 00:01:30.446 align:middle
+iré a un terminal que ya esté dentro
+del proyecto y ejecutaré symfony serve -d
+
+00:01:30.676 --> 00:01:33.406 align:middle
+para iniciar un servidor
+web local en segundo plano.
+
+00:01:34.106 --> 00:01:39.976 align:middle
+Perfecto Mantendré pulsado Cmd y haré clic
+en esa URL para abrirla en mi navegador.
+
+00:01:40.606 --> 00:01:42.766 align:middle
+¡Hola Treasure Connect!
+
+00:01:43.316 --> 00:01:45.976 align:middle
+Ésta es la aplicación que
+creamos en el episodio 1...
+
+00:01:46.446 --> 00:01:49.226 align:middle
+aunque trabajamos exclusivamente en la API.
+
+00:01:50.146 --> 00:01:55.196 align:middle
+Creamos rutas para tesoros, usuarios
+y la posibilidad de relacionarlos.
+
+00:01:55.786 --> 00:01:57.916 align:middle
+Esta página de inicio es
+totalmente nueva para el episodio 2.
+
+00:01:58.586 --> 00:02:01.046 align:middle
+Es una pequeña aplicación Vue que construí.
+
+00:02:01.746 --> 00:02:03.336 align:middle
+Tiene un formulario de inicio de sesión...
+
+00:02:03.586 --> 00:02:08.736 align:middle
+pero aún no funciona: dependerá
+de nosotros darle vida.
+
+00:02:08.816 --> 00:02:13.616 align:middle
+Ahora, antes de sumergirnos en la seguridad, una
+pregunta que me hacen a veces es: Oye Ryan, los
+
+00:02:13.796 --> 00:02:15.886 align:middle
+documentos interactivos son geniales...
+
+00:02:16.286 --> 00:02:18.686 align:middle
+¿pero podría ocultarlos en producción?
+
+00:02:19.246 --> 00:02:25.196 align:middle
+Si tu API es privada -sólo está pensada
+para tu JavaScript-, podría tener sentido
+
+00:02:25.446 --> 00:02:28.636 align:middle
+porque no quieres anunciar tus rutas al mundo.
+
+00:02:29.116 --> 00:02:32.826 align:middle
+Sin embargo, no me siento demasiado
+obligado a ocultar los documentos...
+
+00:02:33.156 --> 00:02:36.446 align:middle
+porque aunque lo hagas, las
+rutas siguen existiendo.
+
+00:02:36.736 --> 00:02:39.306 align:middle
+Así que necesitarás una
+seguridad adecuada de todos modos.
+
+00:02:39.766 --> 00:02:43.226 align:middle
+Pero sí, ocultarlos es
+posible, así que veamos cómo.
+
+00:02:43.816 --> 00:02:47.966 align:middle
+Aunque muestres tus docs,
+éste es un proceso interesante
+
+00:02:48.126 --> 00:02:51.286 align:middle
+que muestra cómo funcionan
+juntas varias partes del sistema.
+
+00:02:51.366 --> 00:02:53.366 align:middle
+Busca tu terminal y ejecuta: php ./bin/console
+
+00:02:53.476 --> 00:02:57.166 align:middle
+config:dump api_platform Recuerda: este
+
+00:02:57.456 --> 00:03:02.396 align:middle
+comando muestra toda la configuración
+posible para API Platform.
+
+00:03:02.456 --> 00:03:03.246 align:middle
+Veamos...
+
+00:03:03.246 --> 00:03:04.496 align:middle
+busca "swagger". Ya
+
+00:03:05.176 --> 00:03:05.686 align:middle
+está. Hay
+
+00:03:06.346 --> 00:03:09.906 align:middle
+una sección con cosas como enable_swagger,
+enable_swagger_ui, enable_re_doc,
+
+00:03:09.986 --> 00:03:14.426 align:middle
+enable_entrypoint, y enable_docs. ¿Qué
+
+00:03:14.566 --> 00:03:16.556 align:middle
+significa todo eso? Primero quiero
+
+00:03:16.706 --> 00:03:22.256 align:middle
+enseñarte qué es ReDoc, porque no
+hablamos de ello en el primer tutorial.
+
+00:03:22.256 --> 00:03:26.236 align:middle
+Actualmente estamos viendo la versión
+Swagger de nuestra documentación. Pero existe
+
+00:03:26.706 --> 00:03:29.896 align:middle
+un formato competidor llamado ReDoc... ¡y
+
+00:03:30.336 --> 00:03:33.666 align:middle
+puedes hacer clic en el enlace "ReDoc"
+de la parte inferior para verlo! ¡Sí!
+
+00:03:34.306 --> 00:03:37.006 align:middle
+Es la misma información de
+la documentación... ¡pero
+
+00:03:37.006 --> 00:03:39.096 align:middle
+con un diseño diferente! Si
+
+00:03:39.276 --> 00:03:42.036 align:middle
+te gusta esto, está ahí
+para ti. De todas formas,
+
+00:03:43.256 --> 00:03:48.136 align:middle
+volviendo al terminal, hay un montón
+de configuraciones "habilitadas".
+
+00:03:48.576 --> 00:03:49.496 align:middle
+Todas están relacionadas... pero
+
+00:03:49.496 --> 00:03:51.046 align:middle
+son ligeramente diferentes. Por
+
+00:03:51.106 --> 00:03:57.326 align:middle
+ejemplo, enable_swagger se refiere en realidad
+a la documentación Open API. Recuerda
+
+00:03:57.966 --> 00:04:04.936 align:middle
+que es el documento JSON que alimenta los
+documentos de las API Swagger y ReDoc. Entonces,
+
+00:04:04.936 --> 00:04:09.886 align:middle
+estos son si queremos mostrar o no esos
+dos tipos de documentación frontales. Y
+
+00:04:10.326 --> 00:04:14.236 align:middle
+aquí abajo, enable_entrypoint y enable_docs
+controlan si ciertas rutas se añaden o
+
+00:04:14.236 --> 00:04:16.796 align:middle
+no a nuestra aplicación.
+
+00:04:16.796 --> 00:04:21.046 align:middle
+Apuesto a que no ha tenido mucho sentido, así
+que vamos a jugar con esto. Imagina que queremos
+
+00:04:21.656 --> 00:04:24.286 align:middle
+desactivar la documentación
+por completo. De acuerdo
+
+00:04:24.796 --> 00:04:32.046 align:middle
+Abre config/packages/api_platform.yaml y, para
+empezar, añade enable_docs: false : En cuanto
+
+00:04:32.046 --> 00:04:35.526 align:middle
+lo hagas y actualices...
+¡bien! La documentación de
+
+00:04:36.516 --> 00:04:40.086 align:middle
+nuestra API ha desaparecido... pero
+
+00:04:40.236 --> 00:04:42.646 align:middle
+con un error 500. Cuando
+
+00:04:43.246 --> 00:04:48.796 align:middle
+enable_docs: false, elimina literalmente la
+ruta a nuestra documentación. Retrocedamos.
+
+00:04:49.636 --> 00:04:50.746 align:middle
+Ir
+
+00:04:51.186 --> 00:04:55.106 align:middle
+a /api siempre fue una especie de atajo
+para llegar a la documentación. La
+
+00:04:55.626 --> 00:05:01.426 align:middle
+ruta real era /api/docs,
+/api/docs.json o .jsonld. Y
+
+00:05:01.686 --> 00:05:06.406 align:middle
+ahora son todos 404 porque hemos
+desactivado esa ruta. Así que
+
+00:05:07.016 --> 00:05:09.916 align:middle
+, ¡viva nuestra documentación! Sin embargo,
+
+00:05:10.406 --> 00:05:16.456 align:middle
+cuando vas a /api, en realidad no es una
+página de documentación. Es lo que se
+
+00:05:16.876 --> 00:05:21.146 align:middle
+conoce como "punto de entrada": es
+nuestra página de inicio de la API. Esta
+
+00:05:21.896 --> 00:05:23.596 align:middle
+página sigue existiendo... pero
+
+00:05:24.056 --> 00:05:26.796 align:middle
+intenta enlazar con nuestra
+documentación de la API... que
+
+00:05:26.796 --> 00:05:29.846 align:middle
+no existe, y explota. Para
+
+00:05:30.676 --> 00:05:34.766 align:middle
+desactivar el punto de entrada, muévete
+y añade enable_entrypoint: false:
+
+00:05:34.766 --> 00:05:39.336 align:middle
+Ahora yendo a /api nos da... ¡hermoso!
+
+00:05:40.166 --> 00:05:40.916 align:middle
+A
+
+00:05:41.116 --> 00:05:48.036 align:middle
+404. Vale, ya sabemos que podemos ir a
+/api/treasures.json o a .jsonld. Pero,
+
+00:05:48.036 --> 00:05:52.436 align:middle
+¿y si vamos a /api/treasures? Eso...
+
+00:05:53.086 --> 00:05:56.776 align:middle
+¡desgraciadamente es un error 500! Cuando
+
+00:05:57.376 --> 00:06:03.346 align:middle
+nuestro navegador hace una petición , envía una cabecera
+Accept que dice que queremos HTML. Así que estamos pidiendo a
+
+00:06:03.656 --> 00:06:07.536 align:middle
+nuestra API la versión html
+de los tesoros. Y la versión
+
+00:06:07.976 --> 00:06:09.696 align:middle
+html es... la documentación.
+
+00:06:09.816 --> 00:06:11.456 align:middle
+Así que
+
+00:06:11.796 --> 00:06:15.436 align:middle
+intenta enlazar con la
+documentación y explota. Para
+
+00:06:16.246 --> 00:06:19.196 align:middle
+desactivar esto, podemos
+comunicar al sistema que no
+
+00:06:19.196 --> 00:06:23.106 align:middle
+tenemos Swagger ni documentación
+de la API en absoluto ... para
+
+00:06:23.576 --> 00:06:25.816 align:middle
+que deje de intentar enlazar con ella.
+
+00:06:26.626 --> 00:06:31.546 align:middle
+Hazlo configurando enable_swagger:
+false: Aunque... eso
+
+00:06:31.546 --> 00:06:35.516 align:middle
+sólo da lugar a otro error 500 que dice: ¡Eh,
+
+00:06:35.646 --> 00:06:39.466 align:middle
+no puedes activar Swagger UI
+sin activar Swagger! Arregla
+
+00:06:39.636 --> 00:06:46.356 align:middle
+eso con enable_swagger_ui:
+false: Y ahora... ¡más cerca!
+
+00:06:46.986 --> 00:06:51.796 align:middle
+No se admite la serialización
+para el formato html. El
+
+00:06:52.326 --> 00:06:57.456 align:middle
+problema es que seguimos solicitando
+la versión html de este recurso. Pero
+
+00:06:58.026 --> 00:07:02.716 align:middle
+ahora que no tenemos documentación,
+nuestra API está como: Um... no
+
+00:07:02.836 --> 00:07:06.626 align:middle
+estoy muy seguro de cómo devolver
+una versión HTML de esto. Y la
+
+00:07:07.046 --> 00:07:12.996 align:middle
+verdad es: si desactivamos totalmente nuestra
+documentación, ¡ya no necesitamos un formato HTML! Y por
+
+00:07:13.316 --> 00:07:15.156 align:middle
+tanto, podemos desactivarlo.
+
+00:07:15.836 --> 00:07:21.566 align:middle
+Hazlo, muy sencillamente,
+eliminando html de formats: Y...
+
+00:07:21.566 --> 00:07:27.516 align:middle
+en realidad tenemos otro punto donde necesitamos
+hacerlo: en src/Entity/DragonTreasure.php. Cuando
+
+00:07:28.246 --> 00:07:30.756 align:middle
+añadimos nuestro formato personalizado csv...
+
+00:07:31.346 --> 00:07:32.606 align:middle
+veámoslo aquí...
+
+00:07:33.046 --> 00:07:35.816 align:middle
+repetimos todos los formatos,
+incluido html. Así que quita
+
+00:07:36.236 --> 00:07:41.056 align:middle
+también html de ahí: Cuando
+actualicemos ahora... ¡ya está
+
+00:07:41.616 --> 00:07:46.976 align:middle
+! Como no hay formato HTML, se pone
+por defecto JSON-LD. Ahora nuestros
+
+00:07:47.556 --> 00:07:49.836 align:middle
+documentos están totalmente
+deshabilitados. Ah,
+
+00:07:50.586 --> 00:07:55.486 align:middle
+y para desactivar los documentos sólo para
+producción, crearía una variable de entorno -como
+
+00:07:55.626 --> 00:08:00.476 align:middle
+ENABLE_API_DOCS - y luego haría referencia
+a ella en mi configuración: Pero...
+
+00:08:00.476 --> 00:08:05.026 align:middle
+Me gusta la documentación, así
+que voy a deshacer este cambio.. . y
+
+00:08:05.546 --> 00:08:09.376 align:middle
+este cambio también para recuperar
+nuestros documentos. ¡ Me encanta
+
+00:08:09.916 --> 00:08:15.216 align:middle
+! A continuación, vamos a tener una
+charla informal sobre la autenticación.
+
+00:08:15.856 --> 00:08:19.726 align:middle
+Tienes una API elegante:
+¿necesitas tokens de API? ¿O
+
+00:08:20.026 --> 00:08:22.476 align:middle
+alguna otra cosa?
