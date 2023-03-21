@@ -756,6 +756,11 @@
             "description": null
         },
         {
+            "id": "autosetowner-bootstrap-state-processor",
+            "name": "AutoSetOwner: Bootstrap state processor",
+            "description": null
+        },
+        {
             "id": "autosetowner-set-up-decoration",
             "name": "AutoSetOwner: Set up decoration",
             "description": null
@@ -831,5 +836,5 @@
             "description": null
         }
     ],
-    "sha": "628fc7f85f40915f1868139f94eea5e402f799a4"
+    "sha": "4e1d1de4500e77a411cd56b9482be15744113196"
 }

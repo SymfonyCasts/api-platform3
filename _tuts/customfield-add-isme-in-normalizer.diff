@@ -1,13 +1,13 @@
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
-index 3ec6d3a..9af4d96 100644
+index 4a15646..6ea447b 100644
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
 @@ -22,7 +22,13 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareIn
              $context['groups'][] = 'owner:read';
          }
  
--        return $this->decorated->normalize($object, $format, $context);
-+        $normalized = $this->decorated->normalize($object, $format, $context);
+-        return $this->normalizer->normalize($object, $format, $context);
++        $normalized = $this->normalizer->normalize($object, $format, $context);
 +
 +        if ($object instanceof DragonTreasure && $this->security->getUser() === $object->getOwner()) {
 +            $normalized['isMine'] = true;
