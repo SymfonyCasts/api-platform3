@@ -1,20 +1,91 @@
-# Scopes
+# API Token Scopes
 
-Coming soon...
+Each `ApiToken` has an array of scopes, though we're not using that yet. The idea
+is cool: when a token is created, you can select which permissions it has. Like maybe
+a token gives the permission to create new treasures but not edit existing treasures.
+To allow that, we're going to map the scopes of a token to *roles* in Symfony.
 
-Our API tokens all have an array of scopes, though we're not using them yet. The idea is that when a token is created, you can select, you can select which per permissions it has, like maybe a token gives, uh, the permission to create new treasures but not edit existing treasures. So what the idea is, is that maybe we can map whatever scopes A token has two roles in Symphony Snow can deny or allow access A little bit more granular. Right now on our API token handler, we're just returning the user and we're logging in fully as that user. And then that user is just getting whatever rolls it has on its user object. But now I'm gonna use the scopes as the rolls. So how can we do that? Well, and talk to me a little bit tricky. Our access token security system, the actual code behind that I'll hit shift. Shift is called Access token authenticator. So for example, this is actually the thing that grabs the token off the request and actually calls our access token, get user badge from Access token. The tricky thing here is that ultimately down here in this Create token, this is actually where it figures out what roles the currently authenticated user should have. And you can see no matter what it always calls, get U user arrow get roles, and we don't really have a lot of control over this.
+## How are Roles Loaded Now?
 
-So we could create a custom authenticator so that we could implement our own create token method and do it manually. But man, that's a lot of work just for that one small detail. So instead I think we can kind of cheat. So check this out, end user.
+Right now in `ApiTokenHandler`, we're basically returning the user... and then the
+system authenticates *fully* as that user. This means we get whatever roles are
+on that `User` object. How could we *change* that so that we authenticate as
+this user... but with a *different* set of roles? A set based on the scopes from
+the token?
 
-Scroll
+We're using the `access_token` security system. Hit Shift + Shift and open a core
+class called `AccessTokenAuthenticator`. This is cool: it's the *actual* code behind
+that authentication system! For example, this is where it grabs the token off of
+the request and calls *our* token handler's `getUserBadgeFrom()` method.
 
-Up to the top where we have our properties and let's add a new property. It's gonna be a private nullable array called Access Token Scopes. And we'll initialize it to Null Notice this is not a persisted column on purpose. This is just a temporary column that will temporarily store the scopes that this user should have. If we log in via an access token, I'll show you how it's used. So down at the bottom I'm gonna create another uh, public method called Mark as token authenticated with an array scopes argument. This is something that we're gonna call during authentication inside of it, we're just gonna say this arrow access token scopes equals scopes. Easy peasy. Now here's the getting interesting. I'm gonna search for the get rolls method. So we know that no matter what, this is what's gonna be called after user authenticates and whatever roles they have in the database plus whatever, plus roll user, that's what they're gonna have. So we need to kind of sneak our scopes into that a little bit.
+The *roles* the user will have are *also* determined here: down inside
+`createToken()`. The "token" is, sort of, a "wrapper" around the `User` object in
+the security system. And *this* is where we pass it the roles it should have. As
+you can see, no matter what, the roles will be `$passport->getUser()->getRoles()`.
+In other words, we *always* get the roles by calling `getRoles()` on the `User`
+class... which just returns the `roles` property.
 
-Daddy.
+## Setting up the Custom Roles System
 
-So we're gonna rearrange this method a little bit. So first I'll say if that access Token scopes property is no, that means we're logging in like a normal user. So we're gonna do in that case is we'll set roll to this arrow roll, so we get all the roll that are on the user. Then I'm also gonna add an extra roll here called Roll Full User that we're gonna talk about in a minute. Now else if we did log in and be an access token, we'll say rolls equals this arrow access token rolls, and we'll still make sure that every roll has Roll U. We always have roll user. It's just a convenient role just to check to see if you were logged in at all. All right, thanks to this setup over in our API token handler. Right before we return the user badge, we can say Token arrow, get owned by Arrow Mark token as authenticated, and then pass it. Token arrow, get scopes. All right, let's try that back over here in API platform. I'm already like log, I'm already logged my API token. I'm just gonna re-execute this request down here you can see my authorization header. Then I'll click to open the profiler for that request. Head down to security and Okay, good.
+So there's no great hook point. We *could* create a *custom* authenticator class
+and implement our *own* `createToken()` method. But that's a bummer because we
+would need  to completely reimplement the logic form this authenticator class. So,
+instead we can... kind of cheat.
 
-Perfect. Look, we are logged in as that user, but we have roll user and then roll user edit and roll Treasure, create the two scopes from that token. But if we were to actually log in through the full mechanism, instead of having these scopes, we would have whatever roles the user normally has, plus this role full underscore user. Now we're not actually using any of these roles to protect any endpoints yet. We're gonna do that in a little while and we're gonna do that for example, by, you know, protecting the post treasures endpoint, making sure we require this role. But we wanna make sure that if a user is logged in via the normal method, that they still are able to create a treasure even though they don't have this role. So that's where this roll full user comes in handy. So I'm gonna open config packages, security that Yammel, and anywhere inside of here I'm gonna create a roll hierarchy. And I'm also gonna spell that word correctly. And we're gonna say here is roll full user. If you're logged in as a full user role, we're actually gonna give you all of the possible scopes that a token has. So I'm gonna copy these three tokens here. So roll user, edit, roll, treasure, create
+Start in `User`. Scroll up to the top where we have our properties. Add a new one:
+`private ?array` called `$accessTokenScopes` and initialize it to `null`.
 
-And roll Treasure edit. Yeah, it's ki we do have to be careful to make sure that if we add more scopes here, we add them over here. So, man, if we protect something in our system, we require rule user edit. If a user's logged in as the full user, they will get this automatically. Thanks to roll hierarchy. All right, team, we're not gonna try this yet, but we'll see it in a few minutes. All right, Tim, we are done with authentication. Woo. So next, let's start talking. Let's start into authorization by learning how to lock down certain operations so that only certain users can access them.
+Notice that this is *not* a persisted column. It's just a place to temporarily store
+the scopes that the user should have. Next, down at the bottom add a new public
+method called `markAsTokenAuthenticated()` with an `array $scopes` argument. We're
+going to call this during authentication. Inside, say
+`$this->accessTokenScopes = $scopes`.
 
+Here's where things get interesting. Search for the `getRoles()` method. We
+know that, no matter what, Symfony will call this during authentication and whatever
+this returns, that's the roles the user will have. *We're* going to "sneak in"
+our scope roles.
+
+First if the `$accessTokenScopes` property is `null`, that means we're logging in
+as a *normal* user. In this case, set `$roles` to `$this->roles` so that we get *all*
+the `$roles` on the `User`. Then add an extra role called `ROLE_FULL_USER`.
+We'll talk about that in a minute.
+
+Else, if we *did* log in via an access token, say `$roles = $this->accessTokenRoles`.
+And, in both cases, make sure that we *always* have `ROLE_USER`.
+
+With this in place, head over to `ApiTokenHandler`. Right before we return
+`UserBadge`, add `$token->getOwnedBy()->markAsTokenAuthenticated()` and pass
+`$token->getScopes()`.
+
+Done! Let's take it for a test drive! Back over on Swagger, it already has our
+API token... so we can just re-execute the request. Cool: we see the `Authorization`
+header. Did it authenticate with the correct scopes?
+
+Click to open the profiler for that request... and head down to "Security".
+It did! Look: we're logged in as that user, but with `ROLE_USER`, `ROLE_USER_EDIT`
+and `ROLE_TREASURE_CREATE`: the two scopes from the token. But if we were to log in
+via the login form, instead of these scopes, we would have whatever roles the
+user *normally* has, plus `ROLE_FULL_USER`.
+
+## Giving Normal Users sudo Access with role_hierarchy
+
+In the next chapter, we'll use these roles to protect different API operations.
+For example, to use the POST treasures endpoint, we'll require `ROLE_TREASURE_CREATE`.
+But we *also* need to make sure that if a user logs in via the login form, they
+can still use this operation, even though they won't have that exact role. That
+is where `ROLE_FULL_USER` comes in handy.
+
+Open `config/packages/security.yaml` and, anywhere, add `role_hierarchy`... I
+recommend spelling it correctly. Say `ROLE_FULL_USER`. So, if you're logged in
+as a full user, we're going to give you all possible scopes that a token could have.
+Copy the three scope roles: `ROLE_USER_EDIT`, `ROLE_TREASURE_CREATE`
+and `ROLE_TREASURE_EDIT`. We *do* need to be careful to make sure that if we add
+more scopes, we add them here too.
+
+Thanks to this, if we protect something by requiring `ROLE_USER_EDIT`, users that
+are logged in via the login form *will* have access.
+
+Ok team, we are done with authentication! Woo! Next, let's start into "authorization"
+by learning how to lock down operations so that only certain users can access
+them.
