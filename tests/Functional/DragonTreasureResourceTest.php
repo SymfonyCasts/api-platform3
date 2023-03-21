@@ -56,7 +56,7 @@ class DragonTreasureResourceTest extends KernelTestCase
                 'value' => 1000,
                 'coolFactor' => 5,
                 'owner' => '/api/users/'.$user->getId(),
-            ]))
+            ])->withHeader('Accept', 'application/ld+json'))
             ->assertStatus(201)
             ->dump()
             ->assertJsonMatches('name', 'A shiny thing')
