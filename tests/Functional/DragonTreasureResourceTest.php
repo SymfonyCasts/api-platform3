@@ -117,6 +117,19 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->patch('/api/treasures/'.$treasure->getId(), [
                 'json' => [
                     'value' => 6789,
+                    // be tricky and try to change the owner
+                    'owner' => '/api/users/'.$user2->getId(),
+                ],
+            ])
+            ->assertStatus(403)
+        ;
+
+        $this->browser()
+            ->actingAs($user)
+            ->patch('/api/treasures/'.$treasure->getId(), [
+                'json' => [
+                    // change the owner to someone else
+                    'owner' => '/api/users/'.$user2->getId(),
                 ],
             ])
             ->assertStatus(403)
