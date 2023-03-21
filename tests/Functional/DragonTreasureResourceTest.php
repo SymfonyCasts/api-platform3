@@ -135,4 +135,9 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->assertStatus(403)
         ;
     }
+
+    public function testAdminCanPatchToEditTreasure(): void
+    {
+        $admin = UserFactory::createOne(['roles' => ['ROLE_ADMIN']]);
+    }
 }
