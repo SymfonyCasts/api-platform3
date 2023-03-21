@@ -65,4 +65,18 @@ class UserResourceTest extends ApiTestCase
             ])
             ->assertStatus(422);
     }
+
+    public function testUnpublishedTreasuresNotReturned(): void
+    {
+        $user = UserFactory::createOne();
+        DragonTreasureFactory::createOne([
+            'isPublished' => false,
+            'owner' => $user,
+        ]);
+
+        $this->browser()
+            ->actingAs(UserFactory::createOne())
+            ->get('/api/users/' . $user->getId())
+            ->assertJsonMatches('length("dragonTreasures")', 0);
+    }
 }
