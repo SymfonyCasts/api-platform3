@@ -5,7 +5,7 @@ namespace App\Normalizer;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-#[AsDecorator('serializer')]
+#[AsDecorator('api_platform.jsonld.normalizer.item')]
 class AddOwnerGroupsNormalizer implements NormalizerInterface
 {
     public function __construct(private NormalizerInterface $normalizer)
