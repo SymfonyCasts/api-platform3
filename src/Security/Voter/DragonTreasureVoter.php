@@ -30,6 +30,10 @@ class DragonTreasureVoter extends Voter
             return false;
         }
 
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
         assert($subject instanceof DragonTreasure);
 
         // ... (check conditions and return true to grant permission) ...
