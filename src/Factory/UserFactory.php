@@ -52,6 +52,11 @@ final class UserFactory extends ModelFactory
         parent::__construct();
     }
 
+    public function withRoles(array $roles): self
+    {
+        return $this->addState(['roles' => $roles]);
+    }
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
