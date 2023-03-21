@@ -4,13 +4,12 @@ namespace App\Tests\Functional;
 
 use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class DragonTreasureResourceTest extends KernelTestCase
+class DragonTreasureResourceTest extends ApiTestCase
 {
     use HasBrowser;
     use ResetDatabase;
@@ -56,7 +55,7 @@ class DragonTreasureResourceTest extends KernelTestCase
                 'value' => 1000,
                 'coolFactor' => 5,
                 'owner' => '/api/users/'.$user->getId(),
-            ])->withHeader('Accept', 'application/ld+json'))
+            ]))
             ->assertStatus(201)
             ->dump()
             ->assertJsonMatches('name', 'A shiny thing')
