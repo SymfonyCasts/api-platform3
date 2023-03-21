@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:03.386 align:middle
+Cuando iniciamos sesión con un correo
+electrónico y una contraseña no válidos,
+
+00:00:03.546 --> 00:00:08.246 align:middle
+parece que el sistema json_login
+devuelve un bonito JSON
+
+00:00:08.306 --> 00:00:11.326 align:middle
+con una clave error establecida
+en "Credenciales no válidas".
+
+00:00:12.126 --> 00:00:15.016 align:middle
+Si quisiéramos personalizar
+esto, podríamos crear una clase
+
+00:00:15.016 --> 00:00:18.006 align:middle
+que implemente
+AuthenticationFailureHandlerInterface:
+
+00:00:18.286 --> 00:00:22.656 align:middle
+Y luego establecer su ID de servicio
+en la opción failure_handler
+
+00:00:22.686 --> 00:00:26.966 align:middle
+en json_login: Pero, esto nos sirve de sobra.
+
+00:00:27.236 --> 00:00:31.026 align:middle
+Así que vamos a utilizarlo en
+nuestro /assets/vue/LoginForm.vue.
+
+00:00:31.946 --> 00:00:37.826 align:middle
+No profundizaremos demasiado en Vue, pero ya tengo un
+estado llamado error, y si lo configuramos, aparecerá
+
+00:00:37.826 --> 00:00:41.686 align:middle
+en el formulario: Después
+de hacer la petición,
+
+00:00:41.986 --> 00:00:46.026 align:middle
+si la respuesta no está bien, ya
+estamos descodificando el JSON.
+
+00:00:46.756 --> 00:00:53.106 align:middle
+Ahora digamos error.value =
+data.error: Para ver si funciona,
+
+00:00:53.216 --> 00:00:58.126 align:middle
+asegúrate de que tienes Webpack Encore ejecutándose
+en segundo plano para que recompile nuestro JavaScript.
+
+00:00:59.436 --> 00:01:01.726 align:middle
+Actualiza. Y...
+
+00:01:01.726 --> 00:01:05.016 align:middle
+puedes hacer clic en este pequeño enlace para hacer
+trampas e introducir un correo electrónico válido.
+
+00:01:05.506 --> 00:01:08.766 align:middle
+Pero luego escribe una
+contraseña ridícula y...
+
+00:01:08.766 --> 00:01:09.696 align:middle
+¡Me encanta!
+
+00:01:09.936 --> 00:01:14.256 align:middle
+¡Vemos "Credenciales no válidas" en la
+parte superior con unos recuadros rojos!
+
+00:01:14.976 --> 00:01:17.076 align:middle
+Así que la llamada AJAX funciona de maravilla.
+
+00:01:17.376 --> 00:01:22.786 align:middle
+Aunque hay un problema con el
+mecanismo de seguridad de json_login:
+
+00:01:23.256 --> 00:01:28.856 align:middle
+requiere que envíes una cabecera Content-Type
+configurada como application/json.
+
+00:01:29.486 --> 00:01:34.486 align:middle
+Nosotros lo establecemos en nuestra llamada
+Ajax y tú también deberías hacerlo: Pero...
+
+00:01:34.776 --> 00:01:39.126 align:middle
+si alguien se olvida, queremos asegurarnos de
+que las cosas no se vuelven completamente locas.
+
+00:01:40.006 --> 00:01:43.056 align:middle
+Comenta esa cabecera Content-Type
+para que podamos ver qué ocurre:
+
+00:01:43.726 --> 00:01:45.986 align:middle
+Luego muévete, actualiza la página...
+
+00:01:46.376 --> 00:01:48.886 align:middle
+escribe una contraseña ridícula y...
+
+00:01:49.546 --> 00:01:51.376 align:middle
+¿se borra el formulario?
+
+00:01:52.336 --> 00:01:53.496 align:middle
+Mira la llamada a la Red.
+
+00:01:54.206 --> 00:01:59.506 align:middle
+¡La ruta devolvió un código de estado
+200 con una clave user establecida en null !
+
+00:01:59.976 --> 00:02:01.846 align:middle
+Y... ¡eso tiene sentido!
+
+00:02:02.336 --> 00:02:07.606 align:middle
+Como nos falta la cabecera, el
+mecanismo json_login no hizo nada.
+
+00:02:08.126 --> 00:02:11.566 align:middle
+En su lugar, la petición continuó
+hacia nuestro SecurityController...
+
+00:02:11.746 --> 00:02:15.806 align:middle
+excepto que esta vez el
+usuario no está conectado.
+
+00:02:16.186 --> 00:02:18.336 align:middle
+Así que devolvemos user: null...
+
+00:02:18.696 --> 00:02:21.146 align:middle
+con un código de estado 200.
+
+00:02:21.826 --> 00:02:26.626 align:middle
+Esto es un problema porque hace que parezca
+que la llamada Ajax ha tenido éxito.
+
+00:02:27.476 --> 00:02:31.896 align:middle
+Para solucionarlo, si, por cualquier motivo,
+se omitiera el mecanismo json_login...
+
+00:02:32.076 --> 00:02:37.676 align:middle
+pero el usuario accede a nuestra ruta de inicio de sesión,
+devolvamos un código de estado 401 que diga: ¡Eh!
+
+00:02:37.876 --> 00:02:38.906 align:middle
+¡Tienes que iniciar sesión!
+
+00:02:39.536 --> 00:02:43.336 align:middle
+Entonces, si no es $user, entonces
+return $this->json()...
+
+00:02:43.336 --> 00:02:45.076 align:middle
+y esto podría parecerse a cualquier cosa.
+
+00:02:45.866 --> 00:02:52.326 align:middle
+Incluyamos una clave error que explique lo que
+probablemente ha ido mal: esto coincide con la clave error
+
+00:02:52.326 --> 00:02:57.926 align:middle
+que devuelve json_login cuando fallan las credenciales,
+así que a nuestro JavaScript le gustará esto.
+
+00:02:59.336 --> 00:03:01.176 align:middle
+Caramba. ¡Incluso corregiré mi errata!
+
+00:03:02.606 --> 00:03:08.426 align:middle
+Y lo más importante, para el segundo argumento,
+pasa un 401 para el código de estado.
+
+00:03:09.616 --> 00:03:11.286 align:middle
+A continuación, podemos simplificar...
+
+00:03:11.626 --> 00:03:15.586 align:middle
+porque ahora sabemos que
+habrá un usuario: ¡Hermoso!
+
+00:03:16.076 --> 00:03:18.476 align:middle
+Gira y envía otra contraseña incorrecta.
+
+00:03:20.006 --> 00:03:21.536 align:middle
+¡Precioso!
+
+00:03:21.796 --> 00:03:28.026 align:middle
+El código de estado 401 activa nuestro código de gestión
+de errores, que muestra el error en la parte superior.
+
+00:03:28.236 --> 00:03:29.546 align:middle
+Maravilloso.
+
+00:03:30.266 --> 00:03:34.266 align:middle
+Vuelve a LoginForm.vue y pon de
+nuevo la cabecera Content-Type:
+
+00:03:35.206 --> 00:03:38.676 align:middle
+Siguiente: iniciemos sesión con éxito y...
+
+00:03:38.676 --> 00:03:41.176 align:middle
+¡averigua qué queremos
+hacer cuando eso ocurra!
+
+00:03:41.546 --> 00:03:47.156 align:middle
+También vamos a hablar de la sesión y de
+cómo autentica nuestras peticiones a la API.
