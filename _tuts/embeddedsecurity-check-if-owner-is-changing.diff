@@ -1,11 +1,11 @@
 diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
-index f78f424..f44a834 100644
+index b2a48c6..9975f5e 100644
 --- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 +++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 @@ -30,12 +30,16 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
              assert($dragonTreasure instanceof DragonTreasure);
  
-             $originalData = $this->entityManager->getUnitOfWork()->getOriginalEntityData($dragonTreasure);
+             $originalData = $unitOfWork->getOriginalEntityData($dragonTreasure);
 -            dd($dragonTreasure, $originalData);
 -        }
 +            $originalOwnerId = $originalData['owner_id'];
