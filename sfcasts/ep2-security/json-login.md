@@ -1,18 +1,123 @@
-# Json Login
+# API Login Form with json_login
 
-Coming soon...
+On the homepage, which is built in Vue, we have a login form. The goal is that,
+when we submit this, it will send an AJAX request with the email & password to and
+endpoint that will validate it.
 
-So on this homepage, which is built in view, we have a login form. The idea is when we submit this, it will send an `AJAX` request with an email password. This is built over here in `assets/vue/LoginForm.vue` down here and near the bottom. Here we go. You can see we're making a post request to slash login and we're gonna send the `email` and `password` as JSON. So we need a security endpoint where we can send this, they'll read this and login our user. Fortunately, `Symfony` is a built-in mechanism just for this to start, even though this controller won't do much, we need a new controller. So in the source controller directory, create a new `PHP` class, I'll call it security controller. And this will look very traditional, more extends `AbstractController`. Okay, public function login. That would return response, the one from H T D P Foundation. And the really important thing is actually is actually this route above. So I'll do a `Route` annotation `Route` statement. We'll make this slash login to match what our JavaScript is already going to be sending to and we'll give it a name. How about app_login? Login.
+The form itself is built over here in `assets/vue/LoginForm.vue`:
 
-And we don't need to do this. We can also say methods post endpoint `POST` endpoint `/login` is really only meant to match `POST` requests. So as you'll see, we're not gonna process the `email` and `password` in this `controller`, but this controller will be executed after a successful login. So what should we return after I successful login? I don't know. And honestly it just depends on what would be useful in our JavaScript. I haven't thought about it much yet, but maybe the user id. Let's start there. So to get the `current user`, I'm actually gonna use a cool new trick from `Symfony` where you use an attribute called current user and then I can type in my normal user entity and say `User` and then I'll say `$user = null` in case the user is not logged in for some reason. We'll talk about that in a little while and then we'll return `$this->json` and we'll pass. How about user set two? If we have a user, $user->getId() No. Cool. So this doesn't do anything yet, but it's ready. The really important thing here is that we have a route because now over in `/config/packages/security.yaml`, we can go into our main firewall and we can add `json_login` and then below that `check_path`
+[[[ code('551206aaca') ]]]
 
-And we're gonna set it to the name of the route we just created. app_login. This activates a security listener. Basically it's a bit of code that's gonna be watching for us to send a post request to this url, which is slash login. It will then automatically grab the email and password off. Uh, it will decode the jsun from that request. Read the email and password off of it and log us in. No, we need to tell it what keys in the jsun are email and password gonna be. As a reminder, we are actually literally sending email and password keys. So below this set `username_path` to `email` and `password_path` to `password`, path to password done. But if we post an email and password to this endpoint, how does the system even know how to query the database for that user? Well, in episode one we ran the 
+If you're not familiar with Vue, don't worry. We *will* do some light coding in it,
+but I'm mostly using it as an example to make some API requests.
+
+Down near the bottom, on submit, we make a POST request to `/login` sending the
+`email` and `password` as JSON. So our *first* goal is to create *this* endpoint:
+
+[[[ code('6504d10ca8') ]]]
+
+## Creating the Login Controller
+
+Fortunately, Symfony has a built-in mechanism *just* for this. To start, even though
+it won't do much, we need a new controller! In `src/Controller/`, create a new PHP
+class. Let's call it `SecurityController`. This will look very traditional: extend
+`AbstractController`, then add a `public function login()` that will return a
+`Response`, the one from `HttpFoundation`:
+
+[[[ code('4b4fc6f3ba') ]]]
+
+Above, give this a `Route` with a URL of `/login` to match what our JavaScript is
+sending to. Name the route `app_login`. Oh, and we don't really need to do
+this, but we can also add `methods: ['POST']`:
+
+[[[ code('1f98df3a19') ]]]
+
+There won't be a `/login` *page* on our site that we make a GET request to:
+we're only going to POST to this URL.
+
+## Returning the Current User Id
+
+As you'll see in a minute, we're not going to *process* the `email` and `password`
+in this controller... but this *will* be executed after a successful login.
+So... what *should* we return after a successful login? I don't know! And honestly
+it mostly depends on what would be useful in our JavaScript. I haven't thought about
+it much yet, but maybe... the user id? Let's start there.
+
+If authentication *was* successful, then, at this point, the user will be logged
+in like normal. To get the currently-authenticated user, I'm going to leverage
+a newer feature of Symfony. Add an argument with a PHP attribute called
+`#[CurrentUser]`. Then we can use the normal `User` type-hint, call it `$user` and
+default it to `null`, in case we're not logged in for some reason:
+
+[[[ code('51b3da5f48') ]]]
+
+We'll talk about how that's possible in a minute.
+
+Then, return `$this->json()` with a `user` key set to `$user->getId()`:
+
+[[[ code('c5022fb549') ]]]
+
+Cool! And that's *all* we need our controller to do.
+
+## Activating json_login
+
+To activate the system that will do the *real* work of reading the email & password,
+head to `config/packages/security.yaml`. Under the firewall, add `json_login` and
+below that `check_path`... which should be set to the name of the *route* that we
+just created. So, `app_login`:
+
+[[[ code('7601e1339d') ]]]
+
+This activates a security listener: it's a bit of code that will now be watching
+*every* request to see if it is a POST request to this route. So, a POST to `/login`.
+If it *is*, it will decode the JSON on that request, read the `email` and `password`
+keys *off* of that JSON, validate the password and log us in.
+
+Though, we *do* need to tell it what *keys* in the JSON we're using. Our JavaScript
+is sending `email` and `password`: super creative. So below this, set
+`username_path` to `email` and `password_path` to `password`:
+
+[[[ code('b26c7e3239') ]]]
+
+## The User Provider
+
+Done! But wait! If we POST an `email` and `password` to this endpoint... how the
+heck does the system know how to *find* that user? How is it supposed to know that
+it should query the `user` table `WHERE email = ` the email from the request?
+
+Excellent question! In episode 1, we ran:
 
 ```terminal
-php bin/console
+php ./bin/console make:user
 ```
 
-, `make:user` command that created a user entity for us with the basic security stuff that we need. And it also Security in the YAML created a user provider. This is an entity provider, which basically says if we send the security system, when we send the security system `email`, it's gonna not to query from the email property of user to get that. So this will be able to read the email key off of there, query for the user, and then it will check the password. So in other words, this is ready.
+This created a `User` entity with the basic security stuff that we need:
 
-So if we look at log inform view, this is already set up. This handle submits gonna be called and we submit the form, it's gonna make the AJAX call. So let's try this thing. I'll go over and refresh just to be sure. And let's log in. We don't need, I'm not worried about trying a real email password yet, so just try something fake and okay, nothing happened. But open up your browser's inspector and go console. Yes, look at this, you can see a 4 0 1 status code and it dumped this error invalid credentials that's coming from right here after the response finishes. If the response is not okay, meaning there is an error, we are decoding the JSON and `logging` it. So right now our endpoint is actually `returning` a `little` `object` with invalid credentials. So next, let's turn this error into something we can see on the form. `Handle` another `error` `case`, and then `think` about what to `do` on authentication success.
+[[[ code('587807fe97') ]]]
 
+In `security.yaml`, it *also* created a user provider:
+
+[[[ code('35f896a9c1') ]]]
+
+This is an entity provider: it tells the security system to find users in the database
+by querying  by the `email` property. This means our system will decode the JSON,
+fetch the `email` key, query for a `User` with a matching email, then validate
+the password. In other words... we're ready!
+
+Looking back at `LoginForm.vue`, the JavaScript is *also* ready: `handleSubmit()`
+will be called when we submit the form... and it makes the AJAX call:
+
+[[[ code('d3b718ece0') ]]]
+
+So let's try this thing! Move over and refresh just to be sure. Try it with a fake
+email and password first. Submit and... nothing happened? Open up your browser's
+inspector and go to the console. Yes! You see a 401 status code and it dumped
+this error: invalid credentials. That's coming from right here in our JavaScript:
+after the request finishes, if the response is "not okay" - meaning there was a
+4XX or 5XX status code - we decode the JSON and log it.
+
+Apparently, when we fail authentication with `json_login`, it returns a small
+bit of JSON with "Invalid Credentials".
+
+Next: let's turn this error into something we can *see* on the form, handle *another*
+error case, and then think about what to do when authentication is successful.
