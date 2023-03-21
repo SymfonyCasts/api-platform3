@@ -2,8 +2,10 @@
 
 namespace App\Normalizer;
 
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+#[AsDecorator('serializer')]
 class AddOwnerGroupsNormalizer implements NormalizerInterface
 {
     public function __construct(private NormalizerInterface $normalizer)
