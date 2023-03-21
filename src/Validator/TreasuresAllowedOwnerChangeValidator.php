@@ -30,12 +30,16 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
             assert($dragonTreasure instanceof DragonTreasure);
 
             $originalData = $unitOfWork->getOriginalEntityData($dragonTreasure);
-            dd($dragonTreasure, $originalData);
-        }
+            $originalOwnerId = $originalData['owner_id'];
+            $newOwnerId = $dragonTreasure->getOwner()->getId();
 
-        // TODO: implement the validation here
-        $this->context->buildViolation($constraint->message)
-            ->setParameter('{{ value }}', $value)
-            ->addViolation();
+            if (!$originalOwnerId || $originalOwnerId === $newOwnerId) {
+                return;
+            }
+
+            // the owner is being changed
+            $this->context->buildViolation($constraint->message)
+                ->addViolation();
+        }
     }
 }
