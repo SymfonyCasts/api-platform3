@@ -55,7 +55,6 @@ class DragonTreasureResourceTest extends ApiTestCase
                 'owner' => '/api/users/'.$user->getId(),
             ]))
             ->assertStatus(201)
-            ->dump()
             ->assertJsonMatches('name', 'A shiny thing')
         ;
     }
