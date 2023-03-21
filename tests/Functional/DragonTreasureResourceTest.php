@@ -58,4 +58,15 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->assertJsonMatches('name', 'A shiny thing')
         ;
     }
+
+    public function testPostToCreateTreasureWithApiKey(): void
+    {
+        $this->browser()
+            ->post('/api/treasures', [
+                'json' => [],
+            ])
+            ->dump()
+            ->assertStatus(422)
+        ;
+    }
 }
