@@ -64,6 +64,9 @@ class DragonTreasureResourceTest extends ApiTestCase
         $this->browser()
             ->post('/api/treasures', [
                 'json' => [],
+                'headers' => [
+                    'Authorization' => 'Bearer FOO'
+                ]
             ])
             ->dump()
             ->assertStatus(422)
