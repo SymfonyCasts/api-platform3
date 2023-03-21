@@ -44,6 +44,17 @@ class DragonTreasureResourceTest extends ApiTestCase
         ]);
     }
 
+    public function testGetOneUnpublishedTreasure404s(): void
+    {
+        $dragonTreasure = DragonTreasureFactory::createOne([
+            'isPublished' => false,
+        ]);
+
+        $this->browser()
+            ->get('/api/treasures/'.$dragonTreasure->getId())
+            ->assertStatus(404);
+    }
+
     public function testPostToCreateTreasure(): void
     {
         $user = UserFactory::createOne();
