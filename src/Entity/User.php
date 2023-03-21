@@ -214,6 +214,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->dragonTreasures;
     }
 
+    public function getPublishedDragonTreasures(): Collection
+    {
+        return $this->dragonTreasures->filter(static function (DragonTreasure $treasure) {
+            return $treasure->getIsPublished();
+        });
+    }
+
     public function addDragonTreasure(DragonTreasure $treasure): self
     {
         if (!$this->dragonTreasures->contains($treasure)) {
