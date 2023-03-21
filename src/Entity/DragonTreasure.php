@@ -39,7 +39,7 @@ use function Symfony\Component\String\u;
             security: 'is_granted("ROLE_TREASURE_CREATE")',
         ),
         new Patch(
-            security: 'is_granted("ROLE_TREASURE_EDIT")',
+            security: 'is_granted("ROLE_TREASURE_EDIT") and object.owner == user',
         ),
         new Delete(
             security: 'is_granted("ROLE_ADMIN")',
