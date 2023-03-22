@@ -1,7 +1,8 @@
 # API Docs on Production?
 
 Welcome back you wonderful JSON-returning people, to API Platform episode 2. In
-part 1, we got busy! We created a pretty killer API to store dragon treasures,
+[part 1](https://symfonycasts.com/screencast/api-platform), we got busy!
+We created a pretty killer API to store dragon treasures,
 though... we completely forgot to add security! Any small, hairy-footed creature
 could sneak in a back door... and we'd have absolutely no idea! So this time,
 we're talking *everything* related to security. Like authentication: should I
