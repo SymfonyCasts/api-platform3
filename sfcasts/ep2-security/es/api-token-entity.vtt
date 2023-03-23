@@ -1,0 +1,317 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:04.696 align:middle
+Vale, ¿y si necesitas permitir
+el acceso programático a tu API?
+
+00:00:05.676 --> 00:00:11.646 align:middle
+Cuando hablas con una API mediante código, envías un
+token de API, comúnmente conocido como token de acceso:
+
+00:00:12.216 --> 00:00:14.836 align:middle
+La forma exacta de obtener ese token varía.
+
+00:00:15.126 --> 00:00:16.606 align:middle
+Pero hay dos casos principales.
+
+00:00:17.216 --> 00:00:22.736 align:middle
+En primer lugar, como usuario del sitio, como
+un dragón, quieres generar un token de API para
+
+00:00:22.886 --> 00:00:26.666 align:middle
+poder utilizarlo personalmente en
+un script que estés escribiendo.
+
+00:00:27.246 --> 00:00:30.036 align:middle
+Esto es como un token de
+acceso personal de GitHub.
+
+00:00:30.426 --> 00:00:33.506 align:middle
+Estos se crean literalmente a
+través de una interfaz web.
+
+00:00:33.826 --> 00:00:35.076 align:middle
+Vamos a mostrar esto.
+
+00:00:35.846 --> 00:00:40.706 align:middle
+El segundo caso de uso principal es cuando un
+tercero quiere hacer peticiones a tu API en
+
+00:00:41.216 --> 00:00:44.026 align:middle
+nombre de un usuario de tu sistema.
+
+00:00:44.426 --> 00:00:49.576 align:middle
+Por ejemplo, un nuevo sitio llamado
+DragonTreasureOrganizer.com quiere
+
+00:00:49.576 --> 00:00:55.566 align:middle
+hacer una petición a nuestra API en
+nombre de algunos de nuestros usuarios, por
+
+00:00:55.926 --> 00:01:01.266 align:middle
+ejemplo, buscar los tesoros de un usuario
+y mostrarlos artísticamente en su sitio.
+
+00:01:01.916 --> 00:01:06.936 align:middle
+En esta situación, en lugar de que nuestros
+usuarios generen tokens manualmente y luego...
+
+00:01:07.046 --> 00:01:11.506 align:middle
+como... introducirlos en ese
+sitio, ofrecerás OAuth. OAuth
+
+00:01:12.166 --> 00:01:18.086 align:middle
+es básicamente un mecanismo para que los usuarios
+normales den de forma segura tokens de acceso
+
+00:01:18.086 --> 00:01:20.296 align:middle
+para su cuenta a un tercero.
+
+00:01:20.816 --> 00:01:26.266 align:middle
+Y así, tu sitio, o en algún lugar de tu
+infraestructura tendrás un servidor OAuth.
+
+00:01:26.926 --> 00:01:28.936 align:middle
+Eso está fuera del alcance de este tutorial.
+
+00:01:29.346 --> 00:01:33.726 align:middle
+Pero lo importante es que, una vez hecho
+el OAuth, el cliente de la API acab ará
+
+00:01:33.726 --> 00:01:36.996 align:middle
+con, lo has adivinado, ¡un token de API!
+
+00:01:37.426 --> 00:01:41.676 align:middle
+Así que no importa en qué viaje estés,
+si estás haciendo acceso programático,
+
+00:01:41.936 --> 00:01:45.196 align:middle
+tus usuarios de la API terminarán
+con un token de acceso.
+
+00:01:45.696 --> 00:01:49.106 align:middle
+Y tu trabajo consistirá
+en leerlo y comprenderlo.
+
+00:01:49.646 --> 00:01:51.376 align:middle
+Haremos exactamente eso.
+
+00:01:52.226 --> 00:01:55.696 align:middle
+Como ya he dicho, vamos a mostrar un
+sistema que permite a los usuarios
+
+00:01:55.696 --> 00:01:57.886 align:middle
+generar sus propios tokens de acceso.
+
+00:01:58.416 --> 00:01:59.506 align:middle
+¿Cómo lo hacemos?
+
+00:02:00.096 --> 00:02:02.436 align:middle
+De nuevo, hay dos formas principales.
+
+00:02:02.756 --> 00:02:04.016 align:middle
+¡Muerte por elección!
+
+00:02:04.646 --> 00:02:09.386 align:middle
+La primera es generar algo
+llamado Token Web JSON o JWT.
+
+00:02:10.156 --> 00:02:14.436 align:middle
+Lo bueno de los JWT es que no necesitan
+almacenamiento en bases de datos.
+
+00:02:14.786 --> 00:02:18.596 align:middle
+Son cadenas especiales que en realidad
+contienen información en su interior.
+
+00:02:19.156 --> 00:02:24.446 align:middle
+Por ejemplo, puedes crear una cadena JWT que
+incluya el id de usuario y algunos ámbitos.
+
+00:02:25.146 --> 00:02:30.466 align:middle
+Una desventaja de los JWT es que no hay
+una forma fácil de "cerrar sesión"...
+
+00:02:30.956 --> 00:02:35.106 align:middle
+porque no hay una forma
+inmediata de invalidar los JWT.
+
+00:02:35.106 --> 00:02:38.676 align:middle
+Les das una caducidad cuando los creas...
+
+00:02:38.756 --> 00:02:41.636 align:middle
+pero son válidos hasta entonces...
+
+00:02:41.826 --> 00:02:45.636 align:middle
+pase lo que pase, a menos que
+añadas alguna complejidad extra...
+
+00:02:45.716 --> 00:02:47.606 align:middle
+lo que no sirve para nada.
+
+00:02:48.196 --> 00:02:51.336 align:middle
+Los JWT están de moda,
+son populares y divertidos
+
+00:02:51.886 --> 00:02:53.566 align:middle
+Pero... puede que no los necesites.
+
+00:02:54.016 --> 00:02:59.586 align:middle
+Son geniales cuando tienes un sistema de inicio
+de sesión único porque, si ese JWT se utiliza
+
+00:02:59.586 --> 00:03:07.496 align:middle
+para autenticarse con varios sistemas o API,
+cada API puede validar el JWT por sí sola:
+
+00:03:07.716 --> 00:03:12.196 align:middle
+sin necesidad de hacer una petición API
+a un sistema central de autenticación.
+
+00:03:12.746 --> 00:03:16.466 align:middle
+Así que es posible que acabes utilizando J
+WT, para lo que existe un bundle estupendo
+
+00:03:16.466 --> 00:03:20.266 align:middle
+llamado LexikJWTAuthenticationBundle.
+
+00:03:20.956 --> 00:03:26.146 align:middle
+Los JWT son también el tipo de token
+de acceso que al final te da OpenID.
+
+00:03:27.086 --> 00:03:31.066 align:middle
+En lugar de los JWT, la segunda
+opción principal es muy sencilla:
+
+00:03:31.396 --> 00:03:35.336 align:middle
+generar una cadena de token aleatoria
+y almacenarla en la base de datos.
+
+00:03:35.886 --> 00:03:39.886 align:middle
+Esto también te permite
+invalidar los tokens de acceso...
+
+00:03:40.176 --> 00:03:41.566 align:middle
+¡simplemente borrándolos!
+
+00:03:42.056 --> 00:03:43.356 align:middle
+Esto es lo que haremos.
+
+00:03:43.816 --> 00:03:45.786 align:middle
+Así que manos a la obra.
+
+00:03:46.466 --> 00:03:49.866 align:middle
+Para almacenar los tokens de la API,
+¡necesitamos una nueva entidad!
+
+00:03:50.486 --> 00:03:51.846 align:middle
+Busca tu terminal y ejecuta: php ./bin/console
+
+00:03:52.066 --> 00:03:55.866 align:middle
+make:entity Y llamémosla ApiToken.
+
+00:03:56.856 --> 00:03:59.356 align:middle
+No hagas de esto un recurso API. En
+
+00:03:59.916 --> 00:04:06.206 align:middle
+teoría, podrías permitir a los usuarios autenticarse
+mediante un formulario de inicio de sesión o HTTP básico y
+
+00:04:06.496 --> 00:04:10.966 align:middle
+luego enviar una petición POST para
+crear tokens de API si quieres... pero
+
+00:04:11.286 --> 00:04:12.266 align:middle
+no lo haremos. Añade
+
+00:04:12.946 --> 00:04:14.436 align:middle
+una propiedad ownedBy. Esto va a
+
+00:04:15.056 --> 00:04:19.276 align:middle
+ser un ManyToOne a User y no nullable. Y
+
+00:04:19.686 --> 00:04:21.776 align:middle
+diré "sí" a la inversa. Así que la
+
+00:04:22.386 --> 00:04:26.636 align:middle
+idea es que cada User pueda tener
+muchos tokens de API. Cuando
+
+00:04:27.216 --> 00:04:31.716 align:middle
+se utiliza un token de API, queremos
+saber con qué User está relacionado.
+
+00:04:32.286 --> 00:04:34.036 align:middle
+Lo utilizaremos durante la
+autenticación. Llamar a
+
+00:04:34.916 --> 00:04:39.766 align:middle
+la propiedad apiTokens está bien y decir no a la
+eliminación de huérfanos. Siguiente propiedad
+
+00:04:40.576 --> 00:04:46.836 align:middle
+: expiresAt datetime_immutable y
+diré que sí a nullable. Tal vez
+
+00:04:47.356 --> 00:04:51.706 align:middle
+permitamos que los tokens no caduquen nunca
+dejando este campo en blanco. La siguiente
+
+00:04:52.476 --> 00:04:54.956 align:middle
+es token, que será una cadena. Voy a
+
+00:04:54.956 --> 00:05:00.936 align:middle
+establecer la longitud en 68 -veremos por
+qué en un minuto- y no en nullable. Y
+
+00:05:01.486 --> 00:05:05.666 align:middle
+por último, añade una propiedad
+scopes como tipo json. Esto
+
+00:05:06.316 --> 00:05:08.986 align:middle
+va a ser bastante guay:
+almacenaremos una matriz de
+
+00:05:08.986 --> 00:05:12.356 align:middle
+"permisos" que debe tener este token de API.
+
+00:05:13.076 --> 00:05:15.436 align:middle
+En este caso, tampoco nullable. Pulsa
+
+00:05:16.286 --> 00:05:17.696 align:middle
+intro para terminar. Muy
+
+00:05:18.556 --> 00:05:20.606 align:middle
+bien, gira a tu editor. Sin
+
+00:05:21.356 --> 00:05:24.826 align:middle
+sorpresas: eso ha creado
+una entidad ApiToken... y
+
+00:05:25.256 --> 00:05:30.746 align:middle
+no hay nada muy interesante dentro de ella: Así
+que vamos a hacer la migración correspondiente:
+
+00:05:30.746 --> 00:05:35.706 align:middle
+symfony console make:migration
+Gira y echa un vistazo a
+
+00:05:35.706 --> 00:05:38.136 align:middle
+ese archivo para asegurarte
+de que se ve bien. ¡Sí!
+
+00:05:39.456 --> 00:05:43.636 align:middle
+Crea la tabla api_token:
+Ejecuta eso con: symfony
+
+00:05:43.896 --> 00:05:48.106 align:middle
+console doctrine:migrations:migrate
+Y... ¡fantástico!
+
+00:05:48.506 --> 00:05:53.736 align:middle
+A continuación: vamos a añadir una forma de
+generar la cadena de tokens aleatorios. Luego,
+
+00:05:54.356 --> 00:05:59.076 align:middle
+hablaremos de ámbitos y cargaremos nuestros
+accesorios con algunos tokens de la API.
