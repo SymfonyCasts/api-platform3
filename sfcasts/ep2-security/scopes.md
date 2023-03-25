@@ -51,7 +51,7 @@ as a *normal* user. In this case, set `$roles` to `$this->roles` so that we get 
 the `$roles` on the `User`. Then add an extra role called `ROLE_FULL_USER`.
 We'll talk about that in a minute.
 
-Else, if we *did* log in via an access token, say `$roles = $this->accessTokenRoles`.
+Else, if we *did* log in via an access token, say `$roles = $this->accessTokenScopes`.
 And, in both cases, make sure that we *always* have `ROLE_USER`.
 
 With this in place, head over to `ApiTokenHandler`. Right before we return
