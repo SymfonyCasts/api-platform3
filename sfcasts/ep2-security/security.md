@@ -65,7 +65,7 @@ Oh, and earlier, we removed the `Delete` operation. Let's add that back with
 allowed API tokens to delete treasures, we could add that and change this to
 `ROLE_TRESURE_DELETE`.
 
-Let's make sure this works! Use the GET collection endpoint... oops.
+Let's make sure this works! Use the GET collection endpoint.
 Try that out. This operation does *not* require authentication... so it works just
 fine. And we have a treasure with ID 1. Close this up, open the PUT operation,
 hit "Try it out", 1, "Execute" and... alright! We get a 401 here too!
