@@ -28,7 +28,7 @@ because we want to allow the user to filter on a boolean field.
 The second thing you need top pass is `properties` set to an array of which fields
 or properties you want to use this filter on. Set this to `isPublished`:
 
-[[[ code('75f2466630') ]]]
+[[[ code('88d9757f2c') ]]]
 
 ## Using the Filter in the Request
 
