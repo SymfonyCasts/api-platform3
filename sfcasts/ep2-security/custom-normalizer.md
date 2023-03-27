@@ -1,5 +1,93 @@
 # Custom Normalizer
 
-Coming soon...
+Copy the test method - `testOwnerCanSeeIsPublishedField`. We just added some magic
+so that *admin* users can see the `isPublished` property. This method tests for
+our next mission: that *owners* or a `DragonTreasure` can *also* see this.
 
-Let's copy this test method here, testOwnerCanSeeIsPublishedField. As we mentioned, we're working on this IsPublishedField right now. And we're doing some magic so that only admin users and owners of a `DragonTreasure` will see this property. And that's what this test looks for, it looks to make sure that the owner can see the IsPublishedField. So we'll run that with Symfony `PHP bin/phpunit --filter=testOwnerCanSeeIsPublishedField`. And it fails, expected null to be the same as false, because the field isn't showing up at all. Alright, so to fix this over in DragonTreasure, I'm going to add a third kind of special group here called `owner:read`. See where we're going with this? If we are the owner of a `DragonTreasure`, we will add this group, and this will get included. However, this is a bit tricky. As we talked about in the last video, normally, normalization groups are static, they're just up here in our configuration. The context builder allows us to make these groups dynamic per request. So if we are an admin user, then we're serializing with this extra `admin:read` group for every object for this entire request. But in this case, we need to make the group dynamic per object. Imagine returning 10 `DragonTreasure`s. The user may only own one of them. So nine of those `DragonTreasure` objects, only one of those `DragonTreasure` objects should have this extra group. To handle this level of control, we need a custom normalizer. These are a bit tricky in API Platform. Now normalizers are core to Symfony Serializer and API Platform. If you remember, a normalizer is responsible for turning a piece of data, like an object or like a API resource object or even a date time object, into an array. And it's actually kind of cool. If you go over to terminal, you can run `bin/console debug:container --tag=serializer.normalizer`. This will show you every single normalizer in the system, which is pretty sweet. So you can see stuff is responsible for normalizing UUIDs. This is actually responsible for normalizing any of our API resource objects to JSON-LD. Here's one for a date time. There's a lots of interesting stuff in inside of here. So our goal is to decorate one of these normalizers so that we can add our dynamic group and then call the core normalizer. So let's get to this. Over in the `src/` directory, it doesn't really matter how we organize this. I'm going to create a new directory called `normalizer`. Actually let me collapse a couple of things just so it's easier to look at. Inside here, we'll create a new class called how about `AddOwnerGroupsNormalizer`. Now all normalizers must implement `NormalizerInterface`. And then down here, I'll go to code generate or `command + N` and go to implement methods to implement the two methods we need. Now the way this works is as soon as we implement `NormalizerInterface`, anytime any piece of data is being normalized, it's going to call our `supportsNormalization()` method. And we can decide whether or not we know how to normalize that thing. If we return `true`, it calls `normalize()`, it passes us that data, and then we return the normalized version. And actually to avoid some deprecation errors, this is optional. Let me flip to the parent class, the return type is actually this crazy array thingy right here. So I'm actually going to copy that and add that as a return type. If you don't have that, everything would work just fine, but you get a little deprecation warning in your tests that say that the next version of `ApiPlatform` or the `serializer` might add that, so you can add that right now to be future proof. And then same thing down here, actually in the next version, there's going to be an array context argument, and this is going to return a `bool`. All right, so before we fill this in or set up decoration, we have to think about which service are we going to decorate? Because my idea is that we could replace the main core `normalizer` service with ours so we can add the group and then call the core normalizer system, so then it will use our group when it's serializing like normal. So back at the terminal, if we run `bin/console debug:container --tag=serializer.normalizer`, we get back a bunch of results, because as we mentioned, there's a top level `normalizer`, but then the `normalizer` itself has lots of normalizers inside of it to handle different types of data. So where is the top level normalizer? It's actually not even in this list. It's actually called `serializer`. `Serializer` service itself is also, but even that isn't quite the right answer, but let's see. I want to kind of see the errors that we're going to get. So let's set up our decoration. So I have `public function construct private NormalizerInterface $normalizer`. And down here, I'll do my `normalize()` and then return this arrow `normalize()`, this arrow `normalizer`, arrow `normalize()`, pass an object, format, and context. Down here for `supportsNormalization()`, same thing. We'll just call that same `supportsNormalization()` on the inner method. Now, to do the decoration, I'll remove a couple of the use statements we don't need up here. I'll say `AsDecorator`, and then we'll pass `serializer`. All right, let's try that. When we run the tests, we are greeted with a big explosion. Wow. Okay. It says something about `ValidationExceptionListener::__construct(): Argument #1 ($serializer) must be of type Symfony\Component\Serializer\SerializerInterface, App\Normalizer\AddOwnerGroupsNormalizer given`. Okay, so when we do `AsDecorator('serializer')`, it means that internally, our service becomes the new service known as `serializer`. So everyone that's depending on this service is now going to be passed us. And the original `serializer` will be passed to the first argument to our constructor. The problem is that the `serializer` service in Symfony is kind of big. It implements `NormalizerInterface`, but also `DenormalizerInterface` and also `Encoder` and `DecoderInterface`. And so now our object that only implements one of these interfaces is being passed in its place and things are exploding. So if we truly wanted to decorate the `serializer` service, we would need to implement all four of those interfaces, which we don't really want to do. That's too much work. And actually, that's fine. If we did decorate the top level `serializer`, it would mean that `supportsNormalization()` would be called for every single data, every single time it's serializing anything, whether it's objects or individual properties. So instead of decorating the top level `normalizer`, we're going to decorate one specific `normalizer` that is responsible for normalizing API resource objects into JSON-LD. This is the spot where you can rely on the documentation a little bit to give you the exact service ID that you need. It's `api_platform.jsonld.normalizer.item`. So that is the service that is responsible for normalizing an API resource item into JSON-LD. All right, try the test `testOwnerCanSeeIsPublishedField` again. And yes, we see our dump and the 400 error. So let me pop this open real quick so we can see. Oh, this is a very strange error. It says, the injected serializer must be an instance of `NormalizerInterface`. It's coming deep from inside of API platform's serializer code. As I mentioned earlier, decorating the normalizers is not a super nice, friendly thing to do inside of API platform. It's well-documented, but it's complex. So what you need to do when you decorate the normalizer is you also need to implement this `SerializerAwareInterface`. And that's going to require you to have a `setSerializer` method. And I'm going to import that class. I don't know why that didn't come automatically. There we go. And inside, we're going to say, if this arrow decorated, if this arrow decorated. Or say, if this arrow normalizer is an instance of `SerializerAwareInterface`, then we'll call this arrow normalizer arrow `setSerializer` `serializer`. I don't even really want to get into the details on this. It just happens that the serializer we're decorating implements another interface, so we actually need to implement both interfaces. Again, it's a bit ugly how the normalizer system works at this level, so it's just something we need. So let me try this. Finally, we have our dump. It's still failing, but it's not exploding anymore. We're getting the same error as before, because even though we've done all this work, we still haven't added our group. So to remember the goal here, if we own this `DragonTreasure`, we want to add this group right here. So we are, of course, going to need to get the `security` service so we can figure out who the current user is. So as a private `security`, and then down here, if object is an instance of `DragonTreasure`, because this will actually be called for any of our API resource classes, and this arrow `security` arrow `getUser` equals object arrow get owner, perfect, then we can call context left scroll bracket groups to add `owner:read`. And now when we run the `testOwnerCanSeeIsPublishedField`, we've got it, says a dynamic field on a user by user basis. Now this was just adding an owner colon read. If you also needed like an owner colon write, you would actually need to also implement a denormalizer interface. So I'm not going to do the whole thing here. What you do there is you need to make this implement denormalizer interface, and then you would implement the two methods here. You would once again call the decorated calls in the decorated service. You'd also allow this to be a `private NormalizerInterface` or `DenormalizerInterface`. And then finally, the service that you'd be decorating in that case is called `API Platform serializer dot normalizer dot item`. If you wanted to decorate both of them, you would actually need to use YAML. You can't decorate two services at once. API platform covers that in their documentation. So I won't go into it too much further. It's just a bit of ugly code to make it happen. So I'm going to undo all that and just stick with adding the owner colon read via the custom normalizer. All right. Next, we're going to do something else. I'll see you later.
+Run it with:
+
+```
+symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedField
+```
+
+And... it fails; expected `null` to be the same as `false`, because the field isn't
+showing up at all.
+
+To fix this, over in `DragonTreasure`, I'm going to add a third special group
+called `owner:read`.
+
+Can you see where we're going with this? If we are the *owner* of a `DragonTreasure`,
+we will add this group, and then the field will get included. However, this is
+tricky. As we talked about in the last video, normalization groups start *static*:
+they live up here in our config. The context builder allows us to make these groups
+dynamic *per request*. So, if we're an admin user, we can add an extra `admin:read`
+group, which will be used when serializing *every* object for this entire request.
+
+But in this situation, we need to make the group dynamic per *object*. Imagine
+if we're returning 10 `DragonTreasure`s. The user may only own *one* of them. So
+only that *one* `DragonTreasure` should have this extra group.
+
+## The Job of Normalizers
+
+To handle *this* level of control, we need a custom normalizer. Normalizers
+are core to Symfony's serializer and they're responsible for turning a piece of
+data - like an `ApiResource` object or a `DateTime` object that lives on a property -
+into a scalar value or an array. By creating a custom normalizer, you can do pretty
+much *any* weird thing you want to with your data.
+
+Actually, find your terminal and run:
+
+```terminal
+php  bin/console debug:container --tag=serializer.normalizer
+```
+
+I love this: this shows us *every* single normalizer in our app! You can see stuff
+tat's responsible for normalizing UUIDs. This is responsible for normalizing any
+of our `ApiResource` objects to `JSON-LD`, here's one for a `DateTime`.... there's
+a *ton* of interesting stuff.
+
+Our goal is to create our *own* normalizer, decorate an existing *core* normalizer,
+but then add the dynamic group before that core normalizer is called.
+
+## Creating the Normalizer Class
+
+So let's get to work! Over in `src/` - it doesn't really matter how we organize
+things - I'm going to create a new directory called `Normalizer`. Let me collapse
+a few things so it's easier to look at. Inside that, add a new class called, how
+about, `AddOwnerGroupsNormalizer`. All normalizers must implement
+`NormalizerInterface`... then go to Code -> Generate or Command + N on a Mac and
+select "Implement Methods" to add the two we need.
+
+Here's how this works: as soon as we implement `NormalizerInterface`, anytime *any*
+piece of data is being normalized, it will call our `supportsNormalization()` method.
+there, we can decide whether or not we know how to normalize that thing. If we return
+`true`, the serializer will then call `normalize()`,  pass us that data, and then
+we return the normalized version.
+
+And actually, to avoid some deprecation errors, let me pop open the parent class.
+The return type is this crazy array thingy. Copy that... and add it as the retur
+type. You don't *have* to do this - everything would work without it - but you'd
+get a deprecation warning in your tests.
+
+Down for `supportsNormalization()`, in the Symfony 7, there will be an `array $context`
+argument... and the method will return a `bool`.
+
+## Which Service do We Decorate?
+
+Before we fill this in or set up decoration, we need to think about *which* core
+service we're going to decorate. Here's my idea: if we replace the main core
+`normalizer` service with *this* class, we could add the group then call the decorated
+normalizer... so that everything works like it usually does, except that it uses
+the extra group.
+
+Back at the terminal, run
+
+```terminal
+bin/console debug:container normalizer
+```
+
+We get back a *bunch* of results. That makes sense: there's a *main* `normalizer`,
+but then the `normalizer` itself has lots of *other* normalizers inside of it to
+handle different types of data. So... where is the top level normalizer? It's actually
+not even in this list: it called `serializer`. Though, as we'll see next, even
+*that* isn't quite right.

@@ -28,6 +28,7 @@ chapters:
     - validation-groups
     - context-builder
     - custom-normalizer
+    - normalizer-aware
     - custom-field
     - custom-validator
     - unit-of-work-validator

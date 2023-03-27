@@ -1,5 +1,148 @@
-# Context Builder
+# Dynamic Groups: Context Builder
 
-Coming soon...
+In `DragonTreasure`, find the `isPublished` field. Earlier we added this `ApiProperty`
+`security` thing so that this field is only shown to admin users or owners of this
+treasure. This is a simple and 100% valid way to handle this situation.
 
-In Dragon Treasure, find the `IsPublished` field. Alright, remember earlier we added this API property security thing so that this field is only shown to admin users or owners of this object. This is a simple and 100% valid way to handle this situation. However, there is another way to handle dynamic fields based on the user and it may or may not have two advantages depending on your situation. First, check out the documentation. Open the git endpoint for a single Dragon Treasure and even without trying it, you can see down here that `IsPublished` is something that is advertised in our documentation. Depending on the field, that might be perfect or not. If `IsPublished` is truly an internal admin only field, we might not want that advertised to the world. So the fact that `IsPublished` is in the documentation is either a pro or a con of this approach depending on your situation. The second possible problem with this is that if you had this security on many different properties inside of your class, it's going to have to run that security a lot of times to return a collection of objects. It's possible, I wouldn't worry about that too much, but it's possible that could cause some performance issues. So to solve these two possible problems, I want to show you an alternative solution. We're going to replace this API property thing and instead give this field two new groups. Instead on groups, we're not going to use `TreasureRead` and `Write` because we don't want it to always be exposed. We're going to use `AdminRead` and `AdminWrite`. So this won't work yet, but the idea is that if the current user is an admin user, then when we serialize, we'll serialize with these two additional groups. Unfortunately, right now groups are static. They're something that we set way up here in our API resource and that's it. But we can make them dynamic. Internally, API Platform has a system called a context builder, which is responsible for building the normalization context or denormalization context. We can hook into that to dynamically add our own groups. Here's how it looks. Over in, how about `Source/ApiPlatform/AdminGroupsContextBuilder.php`? Let's create a new class called `AdminGroupsContextBuilder`. And we're going to make this implement `SerializerContextBuilderInterface`. Then I'll go to code generate or command N, go to implement methods to create the one we need, which is called `createFromRequest()`. So pretty simple, API Platform is going to call this, pass us the request, whether or not we're normalizing or denormalizing. And then we're going to return an array of the `context` that should be passed to the serializer. Now like we've seen with a few other things, our intention is not to replace the core `context builder`. Rather, we want the core `context builder` to run and then we will do something on top of that. So to do this, we're going to use once again, `service decoration`. So we know how this works. We add a construct method that takes a private `SerializerContextBuilderInterface`. And I'll call this decorated. Perfect. And then down here, we'll call that say `context` equals this arrow decorated arrow `createFromRequest()` passing `request`, `normalization` and extra attributes, extracted attributes. Then I'll do my classic dump message to make sure this is working. And we'll return `context`. Now to tell a symphony to use our `context builder` in place of the real one, we'll add our `AsDecorator` up here. This is where we need the service ID of whatever the core `context builder` is. That's something you can find in the documentation. It is `api_platform.serializer.context_builder`. Now two quick things if you're using be careful when you use a `SerializerContextBuilderInterface`, there's actually two of them. One of them is from GraphQL. Make sure you get the one that is just from API platform serializer. Unless you are using the GraphQL, then use that one. And if you're using GraphQL, then the service ID has a little extra GraphQL in the middle. Anyways, that should hopefully be enough to get this to work and see our dump. So actually let's run all of our tests real quick. I want to see which ones fail. And okay, cool. You see our dump message a bunch of times. And then we see two failures. So this one here we have `testAdminCanPatchToEditTreasure`. That's the one we're working on right now. We're going to worry about `testOwnerCanSeeIsPublishedField` in a minute. Like how many let me copy this test method name. And let's rerun that with `--filter` equals. And perfect. We see our dump. We actually see it three times, which is interesting. The context is actually created three times. It's created first at the start of the request. It creates the context when it's loading our `DragonTreasure` from the database. So let's actually open this test up so I can show you what we're looking at here. Perfect. So we're making a patch request to `/api/treasure/1`. So the `ContextBuilder` is actually called one time when it's querying and loading that `DragonTreasure`. It's kind of an odd situation because the context is meant to be used for the serializer. But we're not at that point. It's just querying for the `DragonTreasure`. It's not actually serializing it. And that's then called a second time when the JSON that we're sending is being denormalized into the object. And then it's called a third time when our finished `DragonTreasure` is being returned to the user as JSON. Anyways, we can now hop in here and add our dynamic groups. So we need to determine if the user is an admin or not. So step one is that we're going to need to add a second constructor argument, `private Security` from the `SecurityBundle` called `security`. And then down here. I'm first going to say `if isset context groups`. So `groups` is the key that stores the serialization groups. And this `->security->isGranted('ROLE_ADMIN')`. Then we're going to add the users so we can add them by saying `context['groups'][] =` and then we have to be careful here. We use normalization if we are normalizing right now, then we're going to add `admin:read` else we're going to add `admin:write`. So we want to make sure that our `groups` we are actually normalizing for reading it, we only add `admin:read`. If we are denormalizing, we only add `admin:write`. Now the reason I'm checking for `isset context groups`, this doesn't apply to our project right now. But if we were serializing an object that didn't have any `groups` on it, then adding these `groups` would actually cause it to return less fields. Remember, if there's no `serialization groups`, then the serializer just returns serializes every single field. But as soon as you add one `group`, then it only serializes the things in that one `group`. So if there aren't any `groups` on here, we're not going to do anything, we're going to let everything be serialized or deserialized normal. Like I said, we're using normalization `groups` on everything. So that doesn't really apply to us. All right, so now, let me try that `test`, it passes. So as I mentioned earlier, so this means that we do have an `isPublished` field that's coming back if we're an admin user. But as I mentioned earlier, if you refresh the documentation, and open the get one treasure endpoint, you're not going to see `isPublished` down here. So that might be a good thing or might be a bad thing. It is technically possible to make these docs dynamics that actually loads correctly. If you're logged in as an `admin`, it would show that field and if you're not, it wouldn't. That's not something that we're going to tackle in this tutorial. We did talk about it in our API platform two tutorial, but the configuration system changed. All right, next. Let's look down at the next method, which tests to see that an owner can see the `isPublished` field. This is also currently failing. And it's actually even trickier than the other situation, because we need to include the `isPublished` field on an object by object basis.
+However, there *is* another way to handle fields that should be dynamic based on
+the current user... and it may or may not have two advantages depending on your
+situation.
+
+## The security Options vs Dynamic Groups
+
+First, check out the documentation. Open the GET endpoint for a single `DragonTreasure`
+and, even without trying it, you can see that `isPublished` *is* a field that is
+correctly advertised in our docs.
+
+So, that's good right! Yea! Well, probably. If `isPublished` were truly an internal
+admin-only field, we might *not* want that advertised to the world. So the fact that
+`isPublished` might be good or bad depending on your situation.
+
+The second possible problem with `security` is that if you have this option on *many*
+different properties, it's going to run that security check a *lot* of times to return
+a collection of objects. Honestly, that will probably *not* cause performance issues,
+but it's something to be aware of.
+
+## Inventing New Serialization Groups
+
+To solve these two possible problems - and learn more about how API Platform works
+under the hood - I want to show you an alternative solution. Remove the `ApiProperty`
+attribute and replace it with two new groups. But we're not going to use the normal
+`treasure:read` and `treasure:write`... because then the fields would *always*
+be part of our API. Instead, use `admin:read` and `admin:write`.
+
+This won't work yet... because these groups are *never* used. But here's the idea:
+if the current user is an admin user, then when we serialize, we'll add these two
+groups.
+
+The tricky part is, right now, groups are static! They're set way up here on the
+`ApiResource` attribute - or on a specific operation - and that's it! But we *can*
+make them dynamic.
+
+## Hello ContextBuilder
+
+Internally, API Platform has a system called a context builder, which is responsible
+for building the normalization or denormalization contexts that are then passed
+into the serializer. *And*, we can hook *into* that to *change* the context, like
+adding our own groups.
+
+Let's do it! Over in `src/ApiPlatform/`, create a new class called
+`AdminGroupsContextBuilder`... and make this implement
+`SerializerContextBuilderInterface`. Then, go to Code -> Generate - or Command + N
+on a Mac - and select "Implement Methods" to create the one we need:
+`createFromRequest()`.
+
+It's pretty simple: API Platform will call this, pass us the `Request`, whether or
+not we're normalizing or denormalizing... and then *we're* going to return an array
+of the `context` that should be passed to the serializer.
+
+## Let's do some Decoration!
+
+Like we've seen a few times already, our intention is *not* to *replace* the core
+context builder. Rather, we want the core context builder to do it's thing and
+*then* we want to add a little extra after.
+
+To do this, once again, we're going to leverage service decoration. We know how this
+works: add a `__construct` method that accepts a private
+`SerializerContextBuilderInterface` and I'll call this `$decorated`.
+
+Perfect. Then, down here, say `$context = this->decorated->createFromRequest()`
+passing `$request`, `$normalization` and `$extractedAttributes`. Add a `dump`
+to make sure this is working and return `$context`.
+
+To tell a Symfony to use *our* context builder in place of the real one, add
+our `#[AsDecorator()]`. Now we need the service ID of whatever the *core* context
+builder is. And that's something you can find in the docs: it's
+`api_platform.serializer.context_builder`.
+
+Oh, but be careful when using `SerializerContextBuilderInterface`:
+there are *two* of them. One of is from GraphQL - make sure you select the one
+from `ApiPlatform\Serializer`, unless you *are* using the GraphQL.
+
+Ok! Let's see if it hits our dump! Let's run *all* of our tests: I also want to see
+which fail:
+
+```terminal
+symfony php bin/phpunit
+```
+
+And... okay! We see the dump a *bunch* of times, followed by two failures. The
+first is `testAdminCanPatchToEditTreasure`. That's the one we're working on right
+now. We're going to worry about `testOwnerCanSeeIsPublishedField` in a minute.
+
+Copy the test method name and rerun that with `--filter=`:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+## When the Context Builder is Called
+
+And... perfect! We see the dump - actually *three* times, which is interesting.
+Let's open up that test so we can see what's going on. Yup! We're making a single
+`PATCH` request to `/api/treasure/1`. So, the context builder is called 3 times
+during just one request?
+
+Yup! The `ContextBuilder` is called one time when it's querying and loading that
+`DragonTreasure` from the database. It's kind of an odd situation because the context
+is meant to be used for the serializer... but we're simply querying for the
+`DragonTreasure`: not serializing it. But anyways, that's the first time.
+
+The next two make sense: it's called again when the JSON we're sending is
+denormalized into the object... and a third time when the final `DragonTreasure`
+is being normalized back into JSON.
+
+Anyways, let's hop in an add our dynamic groups. To determine if the user is an
+admin, add a second constructor argument - `private Security` from `SecurityBundle`
+called `$security`. Then down here, `if` `isset($context['groups'])`
+and `$this->security->isGranted('ROLE_ADMIN')`, then we're going to add the groups:
+`context['groups'][] =`. but we need to be careful: if we're currently normalizing,
+add `admin:read` else add `admin:write`.
+
+Now, you might be wondering why we're check if `isset($context['groups'])`. Well,
+it doesn't apply to our project, but imagine if we were serializing an object that
+didn't have *any* `groups` on it - like we never set the `normalizationContext`
+on our `ApiResource`. In that case, adding these `groups` would cause it to return
+*less* fields. Remember, if there are *no* serialization groups, the serializer
+returns *every* accessible field. But as soon as you add *one* group, it only
+serializes the things *in* that one group. So if there aren't any `groups`, do
+nothing and let *everything* be serialized or deserialized like normal.
+
+Ok! Let's try the test now!
+
+```terminal-silent
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+And... it passes! The `isPublished` field *is* being returned if we're an admin
+user. But... go refresh the docs... and open the GET one treasure endpoint. Now
+we do *not* see `isPublished` advertised as a field that will be returned! That might
+be a good or bad thing. It *is* possible to make the docs load dynamics based on
+*who* is logged in, but that's not something we're going to tackle in this tutorial.
+We *did* talk about it in our API platform 2 tutorial... but the config system
+has changed.
+
+Let's dig into the next method, which tests that an *owner* can see the
+`isPublished` field. This is currently failing... and it's even trickier than the
+admin situation because we need to include or *not* include the `isPublished` field
+on an object-by-object basis.
