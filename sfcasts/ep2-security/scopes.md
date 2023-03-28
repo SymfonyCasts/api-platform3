@@ -70,7 +70,7 @@ With this in place, head over to `ApiTokenHandler`. Right before we return
 `UserBadge`, add `$token->getOwnedBy()->markAsTokenAuthenticated()` and pass
 `$token->getScopes()`:
 
-[[[ code('6252d9ba606252d9ba60') ]]]
+[[[ code('6252d9ba60') ]]]
 
 Done! Let's take it for a test drive! Back over on Swagger, it already has our
 API token... so we can just re-execute the request. Cool: we see the `Authorization`
