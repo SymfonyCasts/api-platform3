@@ -13,7 +13,7 @@ on that `User` object. How could we *change* that so that we authenticate as
 this user... but with a *different* set of roles? A set based on the scopes from
 the token?
 
-We're using the `access_token` security system. Hit Shift + Shift and open a core
+We're using the `access_token` security system. Hit `Shift`+`Shift` and open a core
 class called `AccessTokenAuthenticator`. This is cool: it's the *actual* code behind
 that authentication system! For example, this is where it grabs the token off of
 the request and calls *our* token handler's `getUserBadgeFrom()` method.
@@ -33,13 +33,17 @@ would need  to completely reimplement the logic form this authenticator class. S
 instead we can... kind of cheat.
 
 Start in `User`. Scroll up to the top where we have our properties. Add a new one:
-`private ?array` called `$accessTokenScopes` and initialize it to `null`.
+`private ?array` called `$accessTokenScopes` and initialize it to `null`:
+
+[[[ code('984789ddcc') ]]]
 
 Notice that this is *not* a persisted column. It's just a place to temporarily store
 the scopes that the user should have. Next, down at the bottom add a new public
 method called `markAsTokenAuthenticated()` with an `array $scopes` argument. We're
 going to call this during authentication. Inside, say
-`$this->accessTokenScopes = $scopes`.
+`$this->accessTokenScopes = $scopes`:
+
+[[[ code('c440abb92d') ]]]
 
 Here's where things get interesting. Search for the `getRoles()` method. We
 know that, no matter what, Symfony will call this during authentication and whatever
@@ -48,15 +52,25 @@ our scope roles.
 
 First if the `$accessTokenScopes` property is `null`, that means we're logging in
 as a *normal* user. In this case, set `$roles` to `$this->roles` so that we get *all*
-the `$roles` on the `User`. Then add an extra role called `ROLE_FULL_USER`.
+the `$roles` on the `User`. Then add an extra role called `ROLE_FULL_USER`:
+
+[[[ code('de96bd3d3e') ]]]
+
 We'll talk about that in a minute.
 
-Else, if we *did* log in via an access token, say `$roles = $this->accessTokenScopes`.
-And, in both cases, make sure that we *always* have `ROLE_USER`.
+Else, if we *did* log in via an access token, say `$roles = $this->accessTokenScopes`:
+
+[[[ code('21516fc3ad') ]]]
+
+And, in both cases, make sure that we *always* have `ROLE_USER`:
+
+[[[ code('dae0e07190') ]]]
 
 With this in place, head over to `ApiTokenHandler`. Right before we return
 `UserBadge`, add `$token->getOwnedBy()->markAsTokenAuthenticated()` and pass
-`$token->getScopes()`.
+`$token->getScopes()`:
+
+[[[ code('6252d9ba60') ]]]
 
 Done! Let's take it for a test drive! Back over on Swagger, it already has our
 API token... so we can just re-execute the request. Cool: we see the `Authorization`
@@ -80,8 +94,12 @@ Open `config/packages/security.yaml` and, anywhere, add `role_hierarchy`... I
 recommend spelling it correctly. Say `ROLE_FULL_USER`. So, if you're logged in
 as a full user, we're going to give you all possible scopes that a token could have.
 Copy the three scope roles: `ROLE_USER_EDIT`, `ROLE_TREASURE_CREATE`
-and `ROLE_TREASURE_EDIT`. We *do* need to be careful to make sure that if we add
-more scopes, we add them here too.
+and `ROLE_TREASURE_EDIT`:
+
+[[[ code('4e9ecb4ca6') ]]]
+
+We *do* need to be careful to make sure that if we add more scopes, we add
+them here too.
 
 Thanks to this, if we protect something by requiring `ROLE_USER_EDIT`, users that
 are logged in via the login form *will* have access.
