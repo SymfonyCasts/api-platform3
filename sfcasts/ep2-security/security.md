@@ -8,10 +8,13 @@ certain operations and other things *based* on who you are.
 
 There are multiple ways to control access to something. The simplest is in
 `config/packages/security.yaml`. Just like normal Symfony security, down here, we
-have an `access_control` section. If you want to lock down a specific URL pattern by
-a specific role, use `access_control`. You could use this, for example, to require
-that the user has a role to use *anything* in your API by targeting URLs starting
-with `/api`.
+have an `access_control` section:
+
+[[[ code('a2d625bb58') ]]]
+
+If you want to lock down a specific URL pattern by a specific role, use
+`access_control`. You could use this, for example, to require that the user
+has a role to use *anything* in your API by targeting URLs starting with `/api`.
 
 ## Hello "security" Option
 
@@ -24,7 +27,9 @@ we'll attach them to our *operations*.
 For example, let's make the POST request to create a new `DragonTreasure` require
 the user to be authenticated. Do that by adding a *very* handy `security` option.
 Set that to a string and inside, say `is_granted()`, double quotes then
-`ROLE_TREASURE_CREATE`.
+`ROLE_TREASURE_CREATE`:
+
+[[[ code('6bab6481ec') ]]]
 
 We *could* simply use `ROLE_USER` here if we just wanted to make sure that the user
 is logged in. But we have a cool system where, if you use an API token for
@@ -57,13 +62,22 @@ need to be the *owner* of this `DragonTreasure`. We don't want *other* people to
 edit *our* goodies.
 
 We're going to worry about the ownership part later. But for now, let's at least
-add `security` with `is_granted` then `ROLE_TREASURE_EDIT`. Once again, I'm using
-the scope role. Copy that, and duplicate it down here for `Patch`.
+add `security` with `is_granted()` then `ROLE_TREASURE_EDIT`:
+
+[[[ code('af8f4a3858') ]]]
+
+Once again, I'm using the scope role. Copy that, and duplicate it down here
+for `Patch`:
+
+[[[ code('f2f97de93e') ]]]
 
 Oh, and earlier, we removed the `Delete` operation. Let's add that back with
-`security` set to look for `ROLE_ADMIN`. If we decided later to add a scope that
-allowed API tokens to delete treasures, we could add that and change this to
-`ROLE_TRESURE_DELETE`.
+`security` set to look for `ROLE_ADMIN`:
+
+[[[ code('d12dd05079') ]]]
+
+If we decided later to add a scope that allowed API tokens to delete treasures,
+we could add that and change this to `ROLE_TRESURE_DELETE`.
 
 Let's make sure this works! Use the GET collection endpoint.
 Try that out. This operation does *not* require authentication... so it works just
@@ -78,24 +92,37 @@ to the entire class. For example, on `User`, we probably want *every* operation
 to require authentication... except for the `Post` to create, because that's
 how you would register a new user.
 
-So up here, add `security` and look for `ROLE_USER`... just to check that we're logged
-in. And because this class has a sub resource... and this *also* allows us to fetch
-a user, be sure to add `security` here too. Keep close track of security if you're
-using subresources.
+So up here, add `security` and look for `ROLE_USER`... just to check that we're
+logged in:
+
+[[[ code('1ec8cd9b2b') ]]]
+
+And because this class has a sub resource... and this *also* allows us to fetch
+a user, be sure to add `security` here too:
+
+[[[ code('ee66b2b5bd') ]]]
+
+Keep close track of security if you're using subresources.
 
 Ok, so now *every* operation on `User` requires you to be logged in. But... we
 *don't* want that for the `Post` operation. To add flexibility, go up to the first 
 `ApiResource`, add the `operations` option, and, real quick, list all the normal
 operations, `new Get()`, `new GetCollection()`, `new Post()`, `new Put()`,
-`new Patch()`, and `new Delete()`.
+`new Patch()`, and `new Delete()`:
+
+[[[ code('fa32d92a7c') ]]]
 
 Now that we have those, we can customize them. For `Post`, since we want this
 to *not* require authentication, say `security: 'is_granted()` passing a special
-fake role called `PUBLIC_ACCESS`.
+fake role called `PUBLIC_ACCESS`:
+
+[[[ code('b31cf9c0e4') ]]]
 
 This will *override* the security rule that we're passing on the resource level. Oh,
 and while we're here, for `Put`, set `security` to look for `ROLE_USER_EDIT` since
-we have a scope role for editing users. Repeat that down here for `Patch`.
+we have a scope role for editing users. Repeat that down here for `Patch`:
+
+[[[ code('842da233ab') ]]]
 
 I love it! Refresh the whole page. We're most interested in the `POST` users
 endpoint. We are *not* authenticated, so hit "Try it out" and I'll leave the
