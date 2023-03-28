@@ -1,5 +1,69 @@
-# Custom Field
+# Totally Custom Fields
 
-Coming soon...
+Let's get wild. I want to add a totally custom, crazy new field to
+our `DragonTreasure` API that does *not* correspond to any property in our class.
+Well, actually, we learned in part 1 of this series that adding custom fields is
+possible by creating a getter method and adding a serialization group above it.
+*But*, that solution only works if we can calculate the field's value solely from
+the data on the object. If, for example, we need to call a *service* to get the
+data, then we're out of luck.
 
-Let's do something fun. I want to create a totally custom, crazy new field to `DragonTreasure`, a `DragonTreasure` API that doesn't exist in our class at all. This is something else that you can do with a custom normalizer. And since we already have one set up, I thought we'd use it to also add a completely custom field. So, go to `DragonTreasureResourceTest`. And on `testOwnerCanSeeIsPublishedAndIsMineFields()`: void we can see `$isPublished` field. Let's also add `$isPublished` and `$isMine` fields. This is really silly, but literally if we own a `DragonTreasure`, we're going to add a new Boolean property called `$isMine` set to true. So down here at the bottom, we'll say `$isMine` and we'll expect it to be true. So let me copy that method name. We'll spin over and run our test with `assertJsonMatches('isMine', true)` and perfect. It's null because it's not there and we expected it to be true. So how can we add this? Now that we've gone through all the pain to get this normalizer set up just right, it's pretty easy. So what we're going to do is we're going to allow the normalizer system to run. That is going to return to us the normalized data. Then if we want to, between that and the `return` statement, we can just mess with it. So I'm going to copy this if statement from up here. I could be more clever and reuse code here, but not too worried about that. So if we're a `DragonTreasure` and we own this `DragonTreasure`, we will say `$normalized`, and we'll say `isMine` equals true. That's it. When we run our test, it passes. Now a practical downside to this is that totally custom fields like this are not going to be something that's documented in our API. Our API documentation have no idea that something like that exists. If you do need a super duper custom field like this that requires some service logic to figure out its value, and you need it to be documented in your API, you could also solve this with a custom data provider and a non-persisted property on your class. So we could add like a new property to our `DragonTreasure` called `isMine`, and then a custom provider, `DragonTreasureFactory::createMany()`, we could populate that. Now we have not talked about providers yet. That's how data is loaded, and that's something that we're going to talk about a little bit more later, but mostly in a future tutorial. I just wanted to mention that now if you're wondering how you could get a custom field that is also documented. All right. Next, if a user is allowed to edit something, but there are certain changes to the data that they are not allowed to make, how do we handle that? Well, that's where security meets validation.
+Adding a new field whose data is calculated from a service is another trick up the
+custom normalizer's sleeve. And since we already have one set up, I
+thought we'd use it to see how this works.
+
+# Testing for the IsMe Field
+
+Go to `DragonTreasureResourceTest` and find
+`testOwnerCanSeeIsPublishedField()`. Rename this to
+`testOwnerCanSeeIsPublishedAndIsMineFields()`.
+
+This is a bit silly, but if we own a `DragonTreasure`, we're going to add a new
+boolean property called `$isMine` set to `true`. So, down at the bottom, we'll 
+say `isMine` and expect it to be `true`.
+
+Copy that method name, then spin over and run this test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedAndIsMineFields
+```
+
+Tada! It's `null` because the field doesn't exist yet.
+
+## Returning the Custom Field
+
+So how can we add this? Now that we've gone through the pain of getting the
+normalizer set up, it's easy! The normalizer system will do its thing,
+return the normalized data, then, between that and the `return` statement,
+we can... just mess with it! Copy the if statement from up here. I could be more
+clever and reuse code, but it's fine. If the object is a `DragonTreasure` and we
+own this `DragonTreasure`, we will say `$normalized['isMine'] = true`.
+
+That's it! When we run the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedAndIsMineFields
+```
+
+All green!
+
+## Custom Fields Missing in the Docs
+
+But there's a practical downside to these custom fields: they will *not* be
+documented in our API. Our API docs have *no* idea that this exists!
+
+If you *do* need a super-duper custom field that requires service logic...
+and you *do* need it to be documented, you have two options. First, you could add
+a non-persisted `isMe` property to your class then populate it with a state provider.
+We haven't talked about state providers yet, but they're how data is loaded. For
+example, our classes are *already* using a *Doctrine* state provider behind the
+scenes to query the database. We'll cover state providers in part 3 of this series.
+
+The second solution would be to use the custom normalizer like we did, then try
+to add the field to the OpenAPI docs manually via the OpenAPI factory trick that
+we showed earlier.
+
+Next: suppose a user *is* allowed to edit something... but there are certain changes
+to the data that they are *not* allowed to make - like they could set a field to
+`foo` but they aren't allowed to change it to `bar` because they don't have enough
+permissions. How should we handle that? It's security meets validation.

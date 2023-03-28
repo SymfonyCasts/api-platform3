@@ -1,5 +1,155 @@
 # Custom Validator
 
-Coming soon...
+If you need to control *how* a field like `isPublished` is *set* based on *who*
+is logged in, you have two different situations.
 
-If you need to control behavior around how a field, for example, is published, is set based on who's logged in, you have two options. First, if you need to prevent certain users from writing to this field entirely, that's what `Security` is for. The easiest option is to use that API property `Security` option that we used earlier above the property. Or you can get fancier like we did and add a DynamicAdmin right group with a ContextBuilder. Either way, we're preventing this field from being written entirely. We're determining entirely whether or not this field is allowed to be written. But the second situation is when a field should be, a user should be allowed to write to a field, but the data that's allowed depends on the user. Like maybe the user can set, maybe a user could set isPublished to false, but they're not allowed to set it to true unless they are an `admin:write`. Let me give you a different example. Currently, when you create a `DragonTreasure`, we force you to pass an `OwnerField`. We can actually see this in our `testPatchToUpdateTreasure` test. We're going to fix that in a minute so that you can leave this off and it's set automatically. But right now, the `OwnerField` is allowed and it's actually required. But who the API client assigns as the owner, who they are allowed to assign as the owner, depends on who's logged in. For normal users, they can only assign themselves as a user. Here's the goal. As a normal user, they can only assign themselves as an owner. But if for admins, they can assign anyone as an owner. Heck, maybe in the future we even get crazier and there are clans of dragons. Maybe a user, userA, can create a treasure and set the owner to a different user that's in their clan. So the point is, it's not just whether or not you can set this field, it actually depends on... The valid data depends on who you're logged in. I forgot to mention earlier. The best way to solve this type of problem is actually validation. We actually solved this in the past up here on the patch operation with `Security`. It's actually this `securityPostDenormalize` part. That's fine, but I want to show you what this looks like with validation. First, I'm going to remind you what this was actually doing. So over here in our test, `testPatchToUpdateTreasure()`. And let's go ahead and run this. Run just that test. And it currently passes. Now, as a reminder, what we're doing here is we're first logging in as the user that owns the `DragonTreasure`. And we are updating the user and that was allowed. Then we are trying to log in as a different user and edit the first user's `DragonTreasure` and that wasn't allowed. This is a proper use of security. Since we do not own this `DragonTreasure`, we are not at all allowed to edit it. And that's what this first security line is protecting. It's checking to see if the current `DragonTreasure` object is allowed to be edited by the current user. This last thing here was a little bit trickier. This is actually where we log in as the owner of this `DragonTreasure`. But then we try to change the owner to someone else. And that's also not allowed. This is the situation we're talking about. We shouldn't be allowed to change the owner to someone else as a normal user. This is what I want to handle in validation. This is currently being fixed by this security `postDenormalize()` here. Where it checks to see what the `DragonTreasure` looks like after the new data is put on it to see if we are still the owner. Anyways, long way of saying, I'm going to remove the security `postDenormalize()`. And to prove what I was just saying is true, when we run our tests. Perfect, it failed on line 132. Which is this one down here. So we're going to rewrite this security check here in validation. And the solution is actually a lot nicer. So first, because this is going to fail via validation when we're done, we're going to change this to `assertStatus(422)`. So basically, we are allowed to patch to this user, but this is invalid data. We can't set this owner to someone other than ourselves. So to handle this, we're going to handle validation. We're going to build our own custom validator. So go to the command line and run `make validator`. We'll create a new one called `IsValidOwnerValidator`. Now in Symfony, validators are actually two different classes. So we'll go over and look in `src/Validator/IsValidOwner.php`. First, you have this very lightweight class, which is going to be used as the attribute. And it just has options on it. And we just have a current message option, which is enough. And actually, while I'm here, I'll just kind of change this default message to something a little more helpful for our situation. Like, you are not allowed to set the `owner` to this value. The second class is the one that will actually be executed to handle the validation logic. And we'll look at that in a second. First, let's use this. So over in `DragonTreasure`, down on the `owner` property, there we go. Here we'll add a new attribute, and we'll say `isValidOwner`. We're actually referring to that new class that we had right there. And if we wanted to, we could. All right, so now that we have this, when our object is validated, it's going to call `isValidOwnerValidator`. And it's going to pass us the value, which should be the `User` object. And then it's going to pass us the constraint, which is actually going to be our `isValidOwner`. So let's do a little bit of cleanup here. I'm going to take this `var` out and replace it with an `assert.Constraint` instance of `isValidOwner`. And that's basically, once again, just to help my editor. We know Symfony is always going to pass us that value. And then here, notice that it's checking to see if the value is null or blank. And if it does, it does nothing. That's because if the `owner` property is empty, that's kind of the job of a different validation constraint to catch that. So basically what I mean is what I include on here is a `notNull` constraint. So if they forget to send the `owner`, this will handle that validation error. And then inside of our code, we don't have to handle that here. We can just return and we know that it's handled elsewhere. And then down here, I'm going to add one more `assert`. That value is an instance of `User`. So we're going to be passed whatever value is attached to this property. We know that's always going to be a `User`. So basically if for some reason the value is not an instance of `User`, it means we messed something up and we put this `constraint` above a property that was unexpected. Cool. Then down here for `setParameter()`, this is a little wild card you can have in the message. We don't need that. And then we're reading `constraint` error message to get the validation message. So right now we have a functional validator, except it's going to fail in all situations. So we can at least see if it's being called. So let's run our `test`. And perfect. OK, 422, 200 expected. This is coming from `DragonTreasureResourceTest` line 110. So basically it's now failing way up here on top because our `IsValidOwner` `constraint` is being called and it's always failing. All right, so let's get to work inside of our `validator`. We're going to need the currently logged in. The goal is basically to make sure that the `owner` value is equal to the currently logged in user. So to get the currently logged in user, we'll add a construct method, we'll auto wire our favorite `security` class. I'll put `private` in front of that. So it turns into a property. And then down here. We'll say `user` equals this arrow `security` arrow get user. And I'm at a little `if` not `user` here, we're going to throw a new logic exception. And I'll just put a message inside of there. We could just have a valid validation failure if this happens, but really this is a misconfiguration situation. This valid this. We know that you have to be logged in to modify or create users. So if. Great `DragonTreasure`s. So for somehow we're not logged in, something weird is happening here. Then finally, down here, it's pretty simple. If `value` doesn't equal `user`. So if the `owner` is not the `user`, then we are going to add that validation failure. Nice. All right, let's try the `test`. And got it. It passes. We're no longer allowed, whether we're creating or editing a `DragonTreasure` to set the `owner`, someone that's not us. And if in the future, this got more complex like that `clan` idea said earlier, we could handle that in here. For example, we even add admin users right now. So we can say `if` this arrow `security` arrow is granted role `admin`. Then we could say return. So just like that, admin users are allowed to assign owners to anyone. So thanks to validation, a normal user can now only set themselves as the owner of a `DragonTreasure` when creating or editing. But there is still one big security hole that will allow any user to steal any other users `DragonTreasure`s. Not cool. Let's find out what that is next and fix it.
+## Protecting a Field vs Protecting its Data
+
+First, if you need to prevent certain users from writing to this field *entirely*,
+that's what security is for. The easiest option is to use the `ApiProperty` `security`
+option that we used earlier above the property. Or you could get fancier and add
+a dynamic `admin:write` group via a context builder. Either way, we're preventing
+this field from being written *entirely*.
+
+The second situation is when a user *should* be allowed to write to a field... but
+the valid data they're allowed to *set* depends on who they are. Like maybe a user
+is allowed to set `isPublished` to `false`... but they're not allowed to set it
+to `true` unless they're an admin.
+
+Let me give you a different example. Right now, when you create a `DragonTreasure`,
+we force the client to pass an `owner`. We can see this in
+`testPostToCreateTreasure()`. We're going to fix this in a few minutes so that
+we can leave this field *off*... and then it'll be set automatically to whoever
+is authenticated.
+
+But right now, the `owner` field is allowed and required. But *who* they are allowed
+to *assign* as the `owner` depends on who is logged in. For normal users, they should
+only be allowed to assign *themselves* as a user. But for admins, they should be
+able to assign *anyone* as the `owner`. Heck, maybe in the future we get crazier
+and there are clans of dragons... and you can create treasures and assign them
+to anyone in your clan  The point is: the question isn't *if* we can set this field,
+but *what* data we're *allowed* to set it to. And that depends on *who* we are.
+
+## Solving with Security or Validation?
+
+Ok, actually, we solved this problem earlier for the `Patch` operation. Let me
+show you. Find `testPatchToUpdateTreasure()`. Then... let's run just that test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateTreasure
+```
+
+And... it passes. This test checks 3 things. First, we log in as the user that
+owns the `DragonTreasure` and make an update. That's the happy case!
+
+Next, we log in as a *different* user and try to edit the first user's
+`DragonTreasure`. That is *not* allowed. And *that* is a proper use of `security`:
+we don't own this `DragonTreasure`, so we are not *at all* allowed to edit it. That's
+what the `security` line is protecting.
+
+For the last part, we log in again as the owner of this `DragonTreasure`. But then
+we try to change the owner to someone else. That's also *not* allowed and *this*
+is the situation we're talking about. It's currently handled by
+`securityPostDenormalize()`. But I want to handle it instead with *validation*.
+Why? Because the question we're answering is this: "is the `owner` data that's
+sent valid?" And... validating data is... the job of validation!
+
+Remove the  `securityPostDenormalize()`... and to prove this was important, run
+the test again:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateTreasure
+```
+
+Yup! It failed on line 132... which is this one down here. Let's rewrite this
+with a custom validator, which is actually a lot nicer.
+
+## Creating the Custom Validation
+
+Oh but because this will fail via validation when we're done, change to
+`assertStatus(422)`. The idea is that we *are* allowed to PATCH this user, but we
+sent invalid data: we can't set this owner to someone *other* than ourselves.
+
+Ok, head to the command line and run
+
+```terminal
+php bin/console make:validator
+```
+
+Give it a cool name like `IsValidOwnerValidator`. In Symfony, validators are *two*
+different classes. Open `src/Validator/IsValidOwner.php` first. This lightweight
+class will be used as the *attribute*... and it just holds options that we can
+configure, like `$message`, which is enough. Let's change the default message to
+something a bit more helpful.
+
+The second class is the one that will be executed to handle the logic. We'll
+look at that in a moment... but let's *use* the new constraint first. Over in
+`DragonTreasure`, down on the `owner` property... there we go... add the new attribute:
+`IsValidOwner`.
+
+## Filling in the Validator Logic
+
+Now that we have this, when our object is validated, Symfony will call
+`IsValidOwnerValidator` and pass us the `$value` - which will be the `User` object -
+and the constraint, which will be `IsValidOwner`.
+
+Let's do some clean up. Remove the `var` and replace it with
+`assert($constraint instanceof IsValidOwner)`.
+
+That's just to help my editor: we know that Symfony will always pass us that.
+Next, notice that it's checking to see if the `$value` is null or blank. And if
+is, it does nothing. If the `$owner` property is empty, that should really be
+handled by a *different* constraint.
+
+Back in `DragonTreasure`, add `#[Assert\NotNull]`.
+
+So if they forget to send `owner`, *this* will handle that validation error. Back
+inside *our* validator, if we have that situation, we can just return.
+
+Below this, add one more `assert()` that `$value` is an `instanceof User`.
+
+Really, Symfony will pass us whatever value is attached to this property... but
+*we* know that this will *always* be a `User`.
+
+Finally, delete `setParameter()` - that's not needed in our case - and
+`$constraint->message` is reading the `$message` property.
+
+At this point, we have a functional validator! Except... it's going to fail in all
+situations. Ah, let's at least make sure it's being called. Run our test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateTreasure
+```
+
+Beautiful failure! A 422 coming from `DragonTreasureResourceTest` line 110...
+because our constraint is *never* satisfied.
+
+## Checking for Ownership in the Validator
+
+*Finally* we can add our business logic. To do the owner check, we need to know
+who's logged in. Add a `__construct` method, autowire our favorite `Security`
+class... and I'll put `private` in front of that, so it becomes a property.
+
+Below, set `$user = $this->security->getUser()`. And if there is *no* user for
+some reason, throw a `LogicException` to make things explode. Why not trigger
+a validation error? We could... but in our app, if an anonymous user is somehow
+successfully *changing* a `DragonTreasure`... we have some sort of misconfiguration.
+
+Finally, if `$value` does not equal `$user` - so if the `owner` is *not* the
+`User` - add that validation failure.
+
+That's it! Let's try this thing!
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateTreasure
+```
+
+And... bingo! Whether we're creating or editing a `DragonTreasure`, we are
+not allowed to set the owner to someone that is *not* us.
+
+And we can add whatever other fanciness we want. Like if the user is an admin,
+return so that admin users are allowed to assign the `owner` to *anyone*.
+
+I love this. But... there's still one big security hole: a hole that will allow
+a user to *steal* the treasures of someone else! Not cool! Let's find out what
+that is next and crush it.
