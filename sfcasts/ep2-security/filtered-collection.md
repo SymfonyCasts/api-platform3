@@ -1,5 +1,103 @@
-# Filtered Collection
+# Filtering Relation Collection
 
-Coming soon...
+Hey, we've made a pretty fancy API! We've got a few subresources and embedded
+relation data, which is readable and writable. This is all super awesome... but
+it sure does crank up the complexity of our API, especially when it comes to security.
 
-We've made a pretty fancy API. We've got a couple of sub-resources. We have embedded data, which is readable and writable. This is all really cool, but it does start to make our API more complex, especially when it comes to security. For example, you can no longer see unpublished treasures from the Collection endpoint or the GetSingle endpoint. But you can still see unpublished treasures if you fetch a user and read its `DragonTreasures` field. Watch. Let's write a test for this real quick to expose it. So open our `UserResourceTest`. And down at the bottom, we'll do a public function. `testUnpublishedTreasuresNotReturned()` Inside here, we need to create a user with `user="userFactory"`, colon, colon, `createOne()`. And then `DragonTreasureFactory`. Actually, I don't need that. Actually, I don't need that. That's pretty good. And then `DragonTreasureFactory.createOne()`. And here, we'll say this is going to be `isPublished` false. And let's make sure the owner is set to that user, so we know who the owner of that user is. And then down here, we'll say this arrow browser. And we do need to log in to use the endpoint, but it doesn't matter who we log in as. So I'm going to say `actingAs()`, and we'll say `userFactory.createOne()`. So I'm logging in as someone else. But then I'm going to get `/api/users/` and then `user->getID()`. And down here, we're going to `assertJsonMatches()`. And we'll use a cool thing with the syntax. We can say that the length of the `DragonTreasures` field is zero. Cool. Let's try that. I'll copy the test method name. We will run our test with `--filter=` equals that test method name. And yeah, it fails. So it expected one to be the same as zero. So we are returning that one unpublished item there, and we don't want to. So why? Why is that being returned? Well, an important thing to understand about these query extension interfaces is that these are used for the original query. So `queryCollectionExtensionInterface`, that applies to the collection endpoint only when we're querying for a collection of treasures. But when you use a user endpoint, what it's first going to do is query for that user. And once it's queried for that user, in order to get this `DragonTreasure` here, it doesn't make another query for `DragonTreasures`. Instead, if you open the source entity user class, all it does is call `getDragonTreasures()`. So queries for the user, it calls `getDragonTreasures()`, and whatever this returns is going to be what is set onto that field. And since this is going to return all `DragonTreasures`, that's what we get, including the unpublished ones. So the way to fix this is to add a new method that only returns the unpublished ones. So `public function getPublishedDragonTreasures(): Collection`. And inside, we can just kind of get fancy here. We can say `this->DragonTreasures`, and we can use a filter function. And then pass that a callback. That will get a `DragonTreasure` `treasure` argument. And inside, we can say `return treasure->getIsPublished()`. So that's just a really fancy way to loop over all the `DragonTreasures` and return a new collection that only has the published ones. By the way, one downside to this approach is that if a user has 100 `DragonTreasures`, but only 10 of them are published, internally, Doctrine is first going to need to query for all 100 treasures simply to return only 10 of them. So if you have possibly have large collections of `DragonTreasures`, this can be a performance problem. In our Doctrine tutorial, we talk about using something called the criteria system. Criteria like this. And that's a way where you can actually create, do the same thing, but use an efficient query to only return the unpublished ones. Anyways, just creating this getter method is not enough. This is not going to be part of our API. What we can do now is we can go up to the `DragonTreasures` property. Here we go. And it's currently readable and writable. Let's make that property only writable. But then down here on our new method, we will say `groups user:read` will make this writable. And then we'll control its name with `SerializedName('dragonTreasures')`. So we should still get that field back, but it's not going to be calling this method. All right. Try the test. It explodes because I have a syntax error. All right. Try the test. All right. Try the test. And we're green. All right, everyone. Thank you for joining me in this gigantic, cool journey with API platform and security. So this is pretty complicated because I wanted you to be able to solve real complex security use cases. In the next tutorial, we're going to look at even more custom and cool things you can do with the API platform, including how to use classes for API resources that are not entities. And we'll see how that up front can cause a little bit more work, but I can also make your API easier to control and your code easier to read. Our friends, if there's something that we haven't covered yet that you want to make sure is covered in future tutorial, let us know. As always, we're here for you in the comment section. See ya.
+For example, we can no longer see unpublished treasures from the GET collection
+or GET single endpoints. But we *can* still see unpublished treasures if you fetch
+a user and read its `dragonTreasures` field.
+
+## Writing the Test
+
+Let's whip up a test real quick to expose this problem. Open our `UserResourceTest`.
+At the bottom, add a public function `testUnpublishedTreasuresNotReturned()`.
+Inside that, create a user with `UserFactory::createOne()`. Then use `DragonTreasureFactory`
+to create a treasure that's `isPublished` false and has its `owner` set to the
+`$user`... just so we know *who* the owner is.
+
+For the action, say `$this->browser()`... and we *do* need to log in to use the
+endpoint... but we don't care *who* we're logged in as... so say `actingAs()`
+`UserFactory::createOne()` to log in as someone else.
+
+Then `->get()` `/api/users/` `$user->getId()`. Finish with `assertJsonMatches()`
+that the `length()` of `dragonTreasures` is zero - using a cool `length()` function
+from that JMESPath syntax.
+
+Let's try it! Copy the method... and run it with `--filter=` that name:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testUnpublishedTreasuresNotReturned
+```
+
+Ok! It expected 1 to be the same as 0 because we *are* returning the unpublished
+treasure... but we don't want to!
+
+## How Relations are Loaded
+
+First... why *is* this unpublished `DragonTreasure` being returned? Didn't we
+build query extension classes to prevent *exactly* this?
+
+Well.... an important thing to understand is that these query extension classes
+are used for the *main* query on an endpoint only. For example, if we use the
+GET collection endpoint for treasures, the "main" query is for those treasures
+and the query collection extension *is* called.
+
+But when we make a call to a *user* endpoint - like to GET a single `User` - 
+API Platform is *not* making a query for any treasures: it's making a query for
+that *one* `User`. Once it has that `User`, to get this `dragonTreasures` field,
+it does *not* make another query for those, at least not directly. Instead, 
+if you open the `User` entity, API Platform - via the serializer - simply calls
+`getDragonTreasures()`.
+
+So it queries for the `User`, calls `->getDragonTreasures()`... and whatever *that*
+returns is set onto the `dragonTreasures` field. And since this returns *all*
+related treasures, that's what we get: including the unpublished ones.
+
+## Adding a Filtered Getter Method
+
+How can we fix this? By adding a *new* method that only returns the *published*
+treasures. Say `public function getPublishedDragonTreasures()`, which returns a
+`Collection`. Inside, we can get fancy: return `$this->dragonTreasures->filter()`
+passing that a callback with a `DragonTreasure $treasure` argument. *Then*, return
+`$treasure->getIsPublished()`.
+
+That's a nifty trick for looping through all the treasures and getting a shiny
+*new* collection with just the *published* ones.
+
+Side note: one downside to this approach is that if a user has 100 treasures...
+but only 10 of them are published, internally, Doctrine will first query for all
+100... even though we'll only return 10. If you have *large* collections,
+this can be a performance problem. In our Doctrine tutorial, we talk about fixing
+this with something called the [Criteria system](https://symfonycasts.com/screencast/doctrine-relations/collection-criteria).
+But with both approaches, the result is the same: a method that returns a subset
+of the collection.
+
+## Swapping the Getter into our API
+
+At this point, the new method will work, but it's not *yet* part of our API.
+Scroll up to the `dragonTreasures` property. It's currently readable and writable
+in our API. Make the property only writable.
+
+Then, down on the new method, add `#[Groups('user:read')]` to make this part of
+our API and `#[SerializedName('dragonTreasures')]` to give it the original name.
+
+Drumroll! Try the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testUnpublishedTreasuresNotReturned
+```
+
+It explodes! Because... I have a syntax error. Try it again. All green!
+
+And... we're done! You did it! Thank you *so* much for joining me on this gigantic,
+cool, challenging journey into API Platform and security. Parts of this tutorial
+were pretty complex... because I want you to be able to solve *real*, tough security
+problems.
+
+In the next tutorial, we're going to look at even *more* custom and powerful things
+that you can do with API Platform, including how to use classes for API resources
+that are *not* entities.
+
+In the meantime, let us know what you're building and, as always, we're here for
+you in the comments section. Alright friends, see ya next time!
