@@ -1,4 +1,4 @@
-# JSON Test Assertions & Seeing the Database
+# JSON Test Assertions & Seeding the Database
 
 Let's make this test real with data and assertions.
 
