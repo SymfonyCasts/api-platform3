@@ -74,7 +74,7 @@ That's it! Copy that... because we're going to need that down here on this
 
 Then, over in `User`, add that to both of the `ApiResource` spots as well:
 
-[[[[ code('d2d3f33582') ]]]]
+[[[ code('d2d3f33582') ]]]
 
 Now when we run our tests, the deprecation is gone! We're not *using* the `PUT`
 operation in any tests, so everything still passes.
