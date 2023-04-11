@@ -72,7 +72,9 @@ A 500 error! Let's see what's going on. Click to open this.
 
 > Unexpected token "name" around position 26.
 
-So... that was an accident. Change `OR` to `or`. Then try the test again:
+
+So... that was an accident. Change `OR` to `or`. And... also move this new logic
+into `securityPostDenormalize`. Then try the test again:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure

@@ -54,8 +54,8 @@ and hit tab to add the `use` statement... just to clean things up.
 So if someone calls `isGranted()` and passes the string `EDIT` and a `DragonTreasure`
 object, *we* know how to make that decision.
 
-Oh, and it doesn't matter, but I'm going to change this to `EDIT` instead of
-`POST_EDIT`.
+Oh, and I need to change the constant value to `EDIT` to match the `EDIT` string
+we're passing to `is_granted()`.
 
 If we return `true` from `supports()`, Symfony will then call `voteOnAttribute()`.
 Very simply: we return `true` if the user should have access, `false` otherwise.
