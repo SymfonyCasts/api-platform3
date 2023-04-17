@@ -7,7 +7,7 @@ Let's go create one.
 At the command line, run:
 
 ```terminal
-php bin/console make:voter
+php ./bin/console make:voter
 ```
 
 Call it `DragonTreasureVoter`. It's pretty common to have one voter per *entity*
@@ -15,12 +15,16 @@ that you need security logic for. So this voter will make all decisions related
 to `DragonTreasure`: can the current user edit one, delete one, view one: whatever
 we eventually need.
 
-Go open it up: `src/Security/Voter/DragonTreasureVoter.php`.
+Go open it up: `src/Security/Voter/DragonTreasureVoter.php`:
+
+[[[ code('7292be53c6') ]]]
 
 Before we talk about this class, let me show you how we'll *use* it. In
 `DragonTreasure`, we're *still* going to use the `is_granted()` function.
 But for the first argument, pass `EDIT`... which is just a string I'm making up:
-you'll see how that's used in the voter. Then pass `object`.
+you'll see how that's used in the voter. Then pass `object`:
+
+[[[ code('9a8585b8fc') ]]]
 
 We normally pass `is_granted()` a single argument: a role! But you can *also* pass
 it any random string like `EDIT`... as long as you have a voter set up to handle
@@ -31,7 +35,9 @@ On a high level, we're asking the security system whether or not the current use
 is allowed to `EDIT` this `DragonTreasure` object. `DragonTreasureVoter` will
 make that decision.
 
-Copy this and paste it down for `securityPostDenormalize`.
+Copy this and paste it down for `securityPostDenormalize`:
+
+[[[ code('c9c6106770') ]]]
 
 ## How Voters Works
 
@@ -44,12 +50,16 @@ make `DragonTreasureVoter` able to handle it.
 
 To determine who can handle an `isGranted` call, Symfony calls `supports()` on
 each voter passing the same two arguments. For our case, `$attribute` will be
-`EDIT` and `$subject` will be the `DragonTreasure` object.
+`EDIT` and `$subject` will be the `DragonTreasure` object:
+
+[[[ code('66bcad11c0') ]]]
 
 MakeBundle generated a voter that handles checking if we can "edit" or "view"
 a `DragonTreasure`. We don't need that "view" right now, so I'll delete it.
 Below, change this to an instance of `DragonTreasure` and I'll retype the end
-and hit tab to add the `use` statement... just to clean things up.
+and hit tab to add the `use` statement... just to clean things up:
+
+[[[ code('3061682697') ]]]
 
 So if someone calls `isGranted()` and passes the string `EDIT` and a `DragonTreasure`
 object, *we* know how to make that decision.
@@ -60,11 +70,15 @@ we're passing to `is_granted()`.
 If we return `true` from `supports()`, Symfony will then call `voteOnAttribute()`.
 Very simply: we return `true` if the user should have access, `false` otherwise.
 
-To start, just `return false`.
+To start, just `return false`:
+
+[[[ code('7b72c7feb7') ]]]
 
 If we've played our cards right, our voter will swoop in like an overactive
 superhero every time we make a PATCH request and slam the access door shut.
-Before we try test that theory, remove the "view" case down here.
+Before we try test that theory, remove the "view" case down here:
+
+[[[ code('b783f0106f') ]]]
 
 Ok, let's make sure our tests fail! Run:
 
@@ -82,8 +96,10 @@ Back in the class, `voteOnAttribute()` is passed the attribute - `EDIT` - the
 the current `User` object. So we're first checking to make sure that the user is
 *actually* authenticated.
 
-After that, `assert` that `$subject` is an instance of `DragonTreasure` because
-this method  should *only* ever be called when `supports()` return true.
+After that, `assert()` that `$subject` is an instance of `DragonTreasure` because
+this method  should *only* ever be called when `supports()` return `true`:
+
+[[[ code('a7f395b935') ]]]
 
 I'm mostly writing this to help my editor know that `$subject` is a `DragonTreasure`:
 `assert()` is a handy way to do that.
@@ -91,7 +107,11 @@ I'm mostly writing this to help my editor know that `$subject` is a `DragonTreas
 The `switch` statement only has one `case` right now. And *this* is where our logic
 will live. Very simply: if `$subject` - that's the `DragonTreasure` - `->getOwner()`
 equals `$user`, then return `true`. Otherwise, it will hit the `break` and return
-`false`. This isn't *all* the logic we need, but it's a good start!
+`false`:
+
+[[[ code('b8196c0110') ]]]
+
+This isn't *all* the logic we need, but it's a good start!
 
 Try the tests now:
 
@@ -108,15 +128,23 @@ API token, in order to edit a treasure, you need to `ROLE_TREASURE_EDIT`, which
 you can get via the token scope.
 
 So, in the voter, we need to check if the user has that role. Add a `__construct()`
-method and autowire `Security` - the one from SecurityBundle - `$security`. Then,
-below, before we check the owner, if not
-`$this->security->isGranted('ROLE_TREASURE_EDIT')`, then *definitely* return `false`.
+method and autowire `Security` - the one from SecurityBundle - `$security`:
+
+[[[ code('e475fdfaf0') ]]]
+
+Then, below, before we check the owner, if not
+`$this->security->isGranted('ROLE_TREASURE_EDIT')`, then *definitely* return
+`false`:
+
+[[[ code('971ba34699') ]]]
 
 The last test that's failing is testing that an admin can patch to edit *any*
 treasure. Because we've already injected the `Security` service, this is easy.
 
 Let's pretend admin users will be able to do *anything*. So above the `switch`,
-if `$this->security->isGranted('ROLE_ADMIN')`, then return true.
+if `$this->security->isGranted('ROLE_ADMIN')`, then return `true`:
+
+[[[ code('e3e67e67cf') ]]]
 
 Moment of truth:
 
