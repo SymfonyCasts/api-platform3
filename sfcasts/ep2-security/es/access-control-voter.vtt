@@ -1,0 +1,315 @@
+WEBVTT
+
+00:00:01.036 --> 00:00:04.896 align:middle
+Nuestra seguridad se está convirtiendo en
+una casa de locos, cosa que no me gusta.
+
+00:00:05.216 --> 00:00:08.476 align:middle
+Quiero que mi lógica de seguridad
+sea sencilla y centralizada.
+
+00:00:09.116 --> 00:00:11.666 align:middle
+La forma de hacerlo en
+Symfony es con un votante.
+
+00:00:12.116 --> 00:00:13.056 align:middle
+Vamos a crear uno.
+
+00:00:13.456 --> 00:00:14.746 align:middle
+En la línea de comandos,
+ejecuta: php ./bin/console
+
+00:00:14.816 --> 00:00:19.756 align:middle
+make:voter Llámalo DragonTreasureVoter. Es
+
+00:00:20.996 --> 00:00:25.766 align:middle
+bastante común tener un votante por entidad para la que
+necesites lógica de seguridad. Así que este votante
+
+00:00:26.186 --> 00:00:32.066 align:middle
+tomará todas las decisiones relacionadas con
+DragonTreasure: puede el usuario actual editar una, borrarla
+
+00:00:32.256 --> 00:00:35.826 align:middle
+, verla: lo que eventualmente
+necesitemos. Ve a abrirlo
+
+00:00:36.506 --> 00:00:40.446 align:middle
+: src/Security/Voter/DragonTreasureVoter.php:
+Antes de
+
+00:00:41.516 --> 00:00:44.976 align:middle
+hablar de esta clase, déjame
+mostrarte cómo la utilizaremos. En
+
+00:00:45.566 --> 00:00:49.496 align:middle
+DragonTreasure, vamos a seguir
+utilizando la función is_granted(). Pero
+
+00:00:49.986 --> 00:00:52.176 align:middle
+para el primer argumento, pasa EDIT... que
+
+00:00:52.486 --> 00:00:57.196 align:middle
+es sólo una cadena que me estoy inventando: ya verás
+cómo se utiliza en el votante. A continuación, pasa
+
+00:00:57.646 --> 00:01:03.466 align:middle
+object: Normalmente pasamos a is_granted()
+un único argumento: ¡un papel! Pero
+
+00:01:03.986 --> 00:01:08.046 align:middle
+también puedes pasarle cualquier
+cadena aleatoria como EDIT...
+
+00:01:08.416 --> 00:01:11.476 align:middle
+siempre que tengas un votante
+configurado para manejarlo. Si
+
+00:01:12.116 --> 00:01:15.936 align:middle
+tu votante necesita información
+adicional para tomar su decisión,
+
+00:01:16.326 --> 00:01:18.616 align:middle
+puedes pasársela como segundo argumento. A un
+
+00:01:19.356 --> 00:01:22.326 align:middle
+alto nivel, estamos preguntando al sistema de
+seguridad si el usuario actual está autorizado o
+
+00:01:22.326 --> 00:01:26.726 align:middle
+no a EDIT este objeto
+DragonTreasure. DragonTreasureVoter
+
+00:01:27.256 --> 00:01:29.736 align:middle
+tomará esa decisión. Copia
+
+00:01:30.586 --> 00:01:35.596 align:middle
+esto y pégalo abajo para securityPostDenormalize:
+Así que el asunto es el siguiente: cada vez que
+
+00:01:36.046 --> 00:01:41.226 align:middle
+se llama a is_granted() -desde cualquier
+lugar, no sólo desde API Platform- Symfony
+
+00:01:41.556 --> 00:01:45.166 align:middle
+recorre una lista de clases
+"votantes" e intenta averiguar
+
+00:01:45.166 --> 00:01:48.336 align:middle
+cuál de ellas sabe cómo
+tomar esa decisión. Cuando
+
+00:01:49.026 --> 00:01:54.136 align:middle
+comprobamos un rol, hay un votante
+existente que sabe cómo manejarlo. En el
+
+00:01:54.896 --> 00:01:59.296 align:middle
+caso de EDIT, no hay ningún votante
+principal que sepa cómo manejarlo. Así que
+
+00:01:59.616 --> 00:02:02.826 align:middle
+haremos que DragonTreasureVoter
+pueda manejarlo. Para
+
+00:02:03.586 --> 00:02:08.256 align:middle
+determinar quién puede manejar una llamada
+a isGranted, Symfony llama a supports() en
+
+00:02:08.256 --> 00:02:11.276 align:middle
+cada votante pasándole los
+mismos dos argumentos. En
+
+00:02:11.886 --> 00:02:17.906 align:middle
+nuestro caso, $attribute será EDIT y $subject
+será el objeto DragonTreasure: MakeBundle
+
+00:02:18.816 --> 00:02:22.296 align:middle
+generó un votante que se encarga
+de comprobar si podemos "editar"
+
+00:02:22.386 --> 00:02:25.296 align:middle
+o "ver" un DragonTreasure.
+
+00:02:26.226 --> 00:02:29.106 align:middle
+Ahora mismo no necesitamos esa "vista",
+así que la borraré. A continuación,
+
+00:02:30.326 --> 00:02:35.126 align:middle
+cámbialo por una instancia de DragonTreasure
+y volveré a escribir el final y
+
+00:02:35.126 --> 00:02:37.506 align:middle
+le daré al tabulador para añadir
+la declaración use... sólo
+
+00:02:37.796 --> 00:02:43.046 align:middle
+para limpiar las cosas: Así, si alguien
+llama a isGranted() y le pasa la cadena EDIT y
+
+00:02:43.216 --> 00:02:47.396 align:middle
+un objeto DragonTreasure, sabremos
+cómo tomar esa decisión. Ah,
+
+00:02:47.876 --> 00:02:50.446 align:middle
+y tengo que cambiar el valor
+de la constante a EDIT para
+
+00:02:50.706 --> 00:02:53.356 align:middle
+que coincida con la cadena EDIT que
+estamos pasando a is_granted(). Si
+
+00:02:53.986 --> 00:02:59.276 align:middle
+devolvemos true desde supports(), Symfony
+llamará entonces a voteOnAttribute(). Muy
+
+00:02:59.816 --> 00:03:06.166 align:middle
+sencillo: devolvemos true si el usuario debe
+tener acceso, false en caso contrario. Para
+
+00:03:06.866 --> 00:03:13.616 align:middle
+empezar, sólo return false: Si hemos jugado bien
+nuestras cartas, nuestro votante se abalanzará
+
+00:03:13.616 --> 00:03:17.796 align:middle
+como un superhéroe hiperactivo cada
+vez que hagamos una petición PATCH y
+
+00:03:18.146 --> 00:03:20.396 align:middle
+cerrará de golpe la puerta de acceso. Antes de
+
+00:03:21.446 --> 00:03:25.056 align:middle
+probar esa teoría, elimina el
+caso "vista" de aquí abajo: Bien,
+
+00:03:26.026 --> 00:03:28.006 align:middle
+¡asegurémonos de que nuestras
+pruebas fallan! Ejecuta:
+
+00:03:28.596 --> 00:03:33.356 align:middle
+symfony php bin/phpunit Y... ¡sí!
+
+00:03:34.126 --> 00:03:38.786 align:middle
+Fallan dos pruebas: ambas porque se
+deniega el acceso. Se llama a nuestro
+
+00:03:39.566 --> 00:03:41.566 align:middle
+votante. De vuelta
+
+00:03:42.426 --> 00:03:49.536 align:middle
+a la clase, a voteOnAttribute() se le
+pasa el atributo - EDIT - el $subject - un
+
+00:03:50.126 --> 00:03:56.706 align:middle
+objetoDragonTreasure y un $token, que es una
+envoltura alrededor del objeto User actual. Así que
+
+00:03:57.436 --> 00:04:01.696 align:middle
+primero comprobamos que el usuario
+está autenticado. Después
+
+00:04:02.296 --> 00:04:07.016 align:middle
+, assert() que $subject es una
+instancia de DragonTreasure porque
+
+00:04:07.286 --> 00:04:11.496 align:middle
+este método sólo debería llamarse
+cuando supports() devuelve true:
+
+00:04:12.286 --> 00:04:17.136 align:middle
+sobre todo escribo esto para que mi editor sepa
+que $subject es un DragonTreasure: assert()
+
+00:04:17.726 --> 00:04:19.446 align:middle
+es una forma práctica de hacerlo. La
+
+00:04:20.356 --> 00:04:23.536 align:middle
+declaraciónswitch sólo tiene
+un case en este momento. Y
+
+00:04:24.026 --> 00:04:26.316 align:middle
+aquí es donde vivirá nuestra lógica. Muy
+
+00:04:27.236 --> 00:04:30.836 align:middle
+sencillo: si $subject - que es el
+DragonTreasure - ->getOwner()
+
+00:04:31.226 --> 00:04:35.436 align:middle
+es igual a $user, entonces devuelve
+true. De lo contrario, será igual a
+
+00:04:36.186 --> 00:04:39.406 align:middle
+break y devolverá false: ¡Ésta
+
+00:04:40.106 --> 00:04:43.346 align:middle
+no es toda la lógica que necesitamos,
+pero es un buen comienzo! Prueba
+
+00:04:44.046 --> 00:04:49.256 align:middle
+ahora las pruebas: ¡Un
+fallo menos! ¿Y ahora qué
+
+00:04:50.036 --> 00:04:50.726 align:middle
+? Bueno,
+
+00:04:51.266 --> 00:04:56.026 align:middle
+no tenemos una prueba para ello, pero si nos
+autentificamos con un token de la API, para
+
+00:04:56.396 --> 00:04:59.876 align:middle
+editar un tesoro, necesitas
+ROLE_TREASURE_EDIT, que
+
+00:05:00.156 --> 00:05:02.446 align:middle
+puedes obtener a través del
+ámbito del token. Así que,
+
+00:05:03.326 --> 00:05:07.176 align:middle
+en el votante, tenemos que comprobar
+si el usuario tiene ese rol. Añade
+
+00:05:09.016 --> 00:05:18.696 align:middle
+un método __construct() y autowire Security - el
+del SecurityBundle - $security: Entonces, abajo,
+
+00:05:18.956 --> 00:05:21.006 align:middle
+antes de comprobar el propietario, si
+
+00:05:21.416 --> 00:05:25.676 align:middle
+no $this->security->isGranted('ROLE_TREASURE_EDIT'),
+entonces devuelve definitivamente
+
+00:05:27.286 --> 00:05:33.006 align:middle
+false: La última prueba que
+está fallando es comprobar que un
+
+00:05:33.006 --> 00:05:35.696 align:middle
+admin puede parchear para
+editar cualquier tesoro. Como
+
+00:05:36.246 --> 00:05:39.736 align:middle
+ya hemos inyectado el servicio Security,
+esto es fácil. Hagamos como si
+
+00:05:40.386 --> 00:05:43.266 align:middle
+los usuarios administradores pudieran hacer
+cualquier cosa. Así que por encima de
+
+00:05:43.686 --> 00:05:48.526 align:middle
+switch, si $this->security->isGranted('ROLE_ADMIN'),
+entonces devuelve
+
+00:05:49.046 --> 00:05:55.516 align:middle
+true: Momento de la verdad:
+¡Voilà! Nuestra lógica
+
+00:05:56.086 --> 00:06:01.296 align:middle
+ha encontrado un hogar acogedor dentro del votante,
+la expresión security es ahora tan sencilla
+
+00:06:01.296 --> 00:06:05.776 align:middle
+que casi da miedo, y hemos conseguido escribir
+nuestra lógica en PHP. A continuación: vamos a
+
+00:06:05.776 --> 00:06:12.636 align:middle
+explorar la posibilidad de ocultar determinados
+campos en la respuesta en función del usuario.
