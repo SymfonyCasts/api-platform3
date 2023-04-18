@@ -79,7 +79,7 @@ After I add a `dump()` to see if this is working, we'll do step 2: call the deco
 service method: `$this->innerProcessor->process()` passing `$data`, `$operation`,
 `$uriVariables` and... yes, `$context`:
 
-[[[ code('7808a5a047') ]]]
+[[[ code('3345ce9992') ]]]
 
 Love it: our *class* is set up for decoration. *Now* we need to tell Symfony
 to *use* it. Internally, `PersistProcessor` from API Platform is a service.
