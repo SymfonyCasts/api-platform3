@@ -288,18 +288,18 @@ editar cualquier tesoro. Como
 
 00:05:36.246 --> 00:05:39.736 align:middle
 ya hemos inyectado el servicio Security,
-esto es fácil. Hagamos como si
+esto es fácil.
 
 00:05:40.386 --> 00:05:43.266 align:middle
-los usuarios administradores pudieran hacer
-cualquier cosa. Así que por encima de
+Hagamos como si los usuarios administradores 
+pudieran hacer cualquier cosa.
 
 00:05:43.686 --> 00:05:48.526 align:middle
-switch, si $this->security->isGranted('ROLE_ADMIN'),
-entonces devuelve
+Así que por encima de switch, si
+$this->security->isGranted('ROLE_ADMIN'),
 
 00:05:49.046 --> 00:05:55.516 align:middle
-true: Momento de la verdad:
+entonces devuelve true: Momento de la verdad:
 ¡Voilà! Nuestra lógica
 
 00:05:56.086 --> 00:06:01.296 align:middle
