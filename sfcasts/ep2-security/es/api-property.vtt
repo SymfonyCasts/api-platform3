@@ -90,7 +90,7 @@ Si esta expresión devuelve false,
 isPublished no se incluirá en la API:
 
 00:01:41.686 --> 00:01:43.996 align:middle
-no será legible ni escribible.
+no se podrá leer ni escribir.
 
 00:01:44.686 --> 00:01:52.726 align:middle
 Y cuando ahora ejecutamos las pruebas: Siguen pasando,
