@@ -190,13 +190,13 @@ symfony php bin/phpunit Y... ¡sí!
 
 00:03:34.126 --> 00:03:38.786 align:middle
 Fallan dos pruebas: ambas porque se
-deniega el acceso. Se llama a nuestro
+deniega el acceso.
 
 00:03:39.566 --> 00:03:41.566 align:middle
-votante. De vuelta
+Nuestro votante está siendo llamado.
 
 00:03:42.426 --> 00:03:49.536 align:middle
-a la clase, a voteOnAttribute() se le
+De vuelta a la clase, a voteOnAttribute() se le
 pasa el atributo - EDIT - el $subject - un
 
 00:03:50.126 --> 00:03:56.706 align:middle
@@ -205,10 +205,10 @@ envoltura alrededor del objeto User actual. Así que
 
 00:03:57.436 --> 00:04:01.696 align:middle
 primero comprobamos que el usuario
-está autenticado. Después
+está autenticado. Después,
 
 00:04:02.296 --> 00:04:07.016 align:middle
-, assert() que $subject es una
+assert() que $subject es una
 instancia de DragonTreasure porque
 
 00:04:07.286 --> 00:04:11.496 align:middle
