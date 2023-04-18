@@ -18,7 +18,7 @@ Esto hace que falle una prueba: `testGetCollectionOfTreasures` ve que se devuelv
 
 ## Hola ApiProperty
 
-Bueno, ¡sorpresa! No solemos necesitarlo, pero podemos añadir un atributo `ApiProperty` encima de cualquier propiedad para ayudar a configurarla mejor. Incluso hay uno llamado `readable`. Si dijéramos `readable: false`:
+Bueno, ¡sorpresa! No solemos necesitarlo, pero podemos añadir un atributo `ApiProperty` encima de cualquier propiedad para ayudar a configurarla mejor. Tiene un montón de cosas, como una descripción que ayuda con tu documentación y muchos casos extremos. Incluso hay uno llamado `readable`. Si dijéramos `readable: false`:
 
 [[[ code('be66f00679') ]]]
 
