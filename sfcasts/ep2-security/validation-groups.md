@@ -2,7 +2,9 @@
 
 Now that the `plainPassword` property is a legitimate part of our API, let's add
 some validation... because you can't create a new user without a password! Add
-`Assert\NotBlank`.
+`Assert\NotBlank`:
+
+[[[ code('3c58a50bac') ]]]
 
 Piece of cake! Well, that just created a new problem... but let's blindly move
 forward and pretend that everything is fine.
@@ -13,7 +15,9 @@ new user - `$user = UserFactory::createOne()`, add `actingAs($user)` then `->pat
 to `/api/users/` then `$user->getId()` to edit ourselves.
 
 For the `json`, just send `username`, add `assertStatus(200)`.... then we don't
-need  any of this other stuff.
+need  any of this other stuff:
+
+[[[ code('2255e56fb9') ]]]
 
 As a reminder, up on the `Patch` operation for `User`... here it is, we're
 requiring that the user has `ROLE_USER_EDIT`. Because we're logging in as a "full"
@@ -30,7 +34,7 @@ symfony php bin/phpunit --filter=testPatchToUpdateUser
 And... oh! 200 expected, got 415. That's a new one! Click to open the last response...
 then I'll View Source to make it more clear. Interesting:
 
-> `Content-Type: application/json` is not supported. Supported MIME types are
+> The content-Type: `application/json` is not supported. Supported MIME types are
 > `application/merge-patch+json`.
 
 Let's unpack this. We're making a `PATCH` request... and `PATCH` requests are
@@ -57,7 +61,11 @@ to `application/merge-patch+json`... so that you're *explicitly* telling API pla
 *which* format your JSON is using.
 
 In other words, to fix our error, pass a `headers` key with `Content-Type` set
-to `application/merge-patch+json`. Try this now:
+to `application/merge-patch+json`:
+
+[[[ code('d055fac9e6') ]]]
+
+Try this now:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPatchToUpdateUser
@@ -70,8 +78,11 @@ But wait! We did a bunch of `PATCH` requests over in `DragonTreasureResourceTest
 and those worked fine *without* the header! What the what?
 
 That... was kind of on accident. Inside `DragonTreasure`, in the first tutorial...
-here it is, we added a `formats` key so that we could add CSV support. It turns out
-that, for some complex internal reasons, by adding `formats`, we
+here it is, we added a `formats` key so that we could add CSV support:
+
+[[[ code('18f2b56f4b') ]]]
+
+It turns out that, for some complex internal reasons, by adding `formats`, we
 *removed* the requirement for needing that header. So we were "getting away" with
 *not* setting the header in `DragonTreasureResourceTest`... even though we *should*
 be setting it. It may have been better to set `formats` on the `GetCollection`
@@ -100,18 +111,25 @@ groups, which is very similar to serialization groups.
 Find the `Post` operation and pass a new option called
 `validationContext` with, you guessed it, `groups`! Set this to an array with a
 group called `Default` with a capital D. Then invent a second group:
-`postValidation`.
+`postValidation`:
+
+[[[ code('18f2b56f4b') ]]]
 
 When the validator validates an object, by default, it validates everything that's
 in a group called `Default`. And any time you have a constraint, by default that
-constraint is *in* that `Default` group. So what we're saying here is: we want to
-validate all the *normal* constraints *plus* any constraints that are in the
-`postValidation` group.
+constraint is *in* that `Default` group. So what we're saying here is:
+
+> We want to validate all the *normal* constraints *plus* any constraints
+> that are in the `postValidation` group.
 
 Now we can take that `postValidation`, go down to `plainPassword` and set
-`groups` to `postValidation`. That *removes* this constraint from the `Default`
-group and *only* includes it in the `postValidation` group. Thanks to this, other
-operations like `Patch` will *not* run this, but the `Post` operation *will*.
+`groups` to `postValidation`:
+
+[[[ code('3cd32444f9') ]]]
+
+That *removes* this constraint from the `Default` group and *only* includes
+it in the `postValidation` group. Thanks to this, other operations like `Patch`
+will *not* run this, but the `Post` operation *will*.
 
 Run the test now:
 

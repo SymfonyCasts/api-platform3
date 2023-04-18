@@ -1,6 +1,6 @@
 # Dynamic Groups: Context Builder
 
-In `DragonTreasure`, find the `isPublished` field. Earlier we added this `ApiProperty`
+In `DragonTreasure`, find the `$isPublished` field. Earlier we added this `ApiProperty`
 `security` thing so that the field is only returned for admin users or owners of
 this treasure. This is a simple and 100% valid way to handle this situation.
 
@@ -26,10 +26,15 @@ issues, but it's something to be aware of.
 
 To solve these two possible problems - and, honestly, just to learn more about how
 API Platform works under the hood - I want to show you an alternative solution.
-Remove the `ApiProperty` attribute and replace it with two new groups. We're
-not going to use the normal `treasure:read` and `treasure:write`... because then
-the fields would *always* be part of our API. Instead, use `admin:read` and
-`admin:write`.
+Remove the `ApiProperty` attribute:
+
+[[[ code('1af325ec1d') ]]]
+
+And replace it with two new groups. We're not going to use the normal
+`treasure:read` and `treasure:write`... because then the fields would *always*
+be part of our API. Instead, use `admin:read` and `admin:write`:
+
+[[[ code('341802f8ff') ]]]
 
 This won't work yet... because these groups are *never* used. But here's the idea:
 if the current user is an admin, then when we serialize, we'll *add* these two
@@ -48,9 +53,14 @@ to add extra groups.
 
 Let's do it! Over in `src/ApiPlatform/`, create a new class called
 `AdminGroupsContextBuilder`... and make this implement
-`SerializerContextBuilderInterface`. Then, go to Code -> Generate - or Command + N
-on a Mac - and select "Implement Methods" to create the one we need:
-`createFromRequest()`.
+`SerializerContextBuilderInterface`:
+
+[[[ code('549590dd51') ]]]
+
+Then, go to "Code"->"Generate" - or `Command`+`N` on a Mac - and select
+"Implement methods" to create the one we need: `createFromRequest()`:
+
+[[[ code('b5da790e95') ]]]
 
 It's pretty simple: API Platform will call this, pass us the `Request`, whether or
 not we're normalizing or denormalizing... and then *we* return the `context` array
@@ -63,17 +73,24 @@ context builder. Nope, we want the core context builder to do its thing... and
 *then* we'll add our own stuff.
 
 To do this, once again, we'll use service decoration. We know how this
-works: add a `__construct` method that accepts a private
-`SerializerContextBuilderInterface` and I'll call this `$decorated`.
+works: add a `__construct()` method that accepts a private
+`SerializerContextBuilderInterface` and I'll call this `$decorated`:
+
+[[[ code('4cc69fe354') ]]]
 
 Then, down here, say `$context = this->decorated->createFromRequest()`
-passing `$request`, `$normalization` and `$extractedAttributes`. Add a `dump`
-to make sure this is working and return `$context`.
+passing `$request`, `$normalization` and `$extractedAttributes`. Add a `dump()`
+to make sure this is working and return `$context`:
+
+[[[ code('fc65eabe4b') ]]]
 
 To tell Symfony to use *our* context builder in place of the real one, add
-our `#[AsDecorator()]`. Here, we need the service ID of whatever the *core* context
-builder is. That's something you can find in the docs: it's
-`api_platform.serializer.context_builder`.
+our `#[AsDecorator()]`.
+
+Here, we need the service ID of whatever the *core* context builder is. That's
+something you can find in the docs: it's `api_platform.serializer.context_builder`:
+
+[[[ code('2b4a37c6b8') ]]]
 
 Oh, but be careful when using `SerializerContextBuilderInterface`:
 there are *two* of them. One of is from GraphQL: make sure you select the one
@@ -88,7 +105,7 @@ symfony php bin/phpunit
 
 And... okay! We see the dump a *bunch* of times, followed by two failures. The
 first is `testAdminCanPatchToEditTreasure`. That's the case we're working on right
-now. We'll worry about `testOwnerCanSeeIsPublishedField` in a minute.
+now. We'll worry about `testOwnerCanSeeIsPublishedFieldI` in a minute.
 
 Copy the test method name and rerun that with `--filter=`:
 
@@ -114,10 +131,16 @@ is normalized back into JSON.
 
 Anyway, let's hop in and add the dynamic groups. To determine if the user is an
 admin, add a second constructor argument - `private Security` from `SecurityBundle`
-called `$security`. Then down here, if `isset($context['groups'])`
-and `$this->security->isGranted('ROLE_ADMIN')`, then we'll add the groups:
+called `$security`:
+
+[[[ code('db6e21b050') ]]]
+
+Then down here, if `isset($context['groups'])` and
+`$this->security->isGranted('ROLE_ADMIN')`, then we'll add the groups:
 `$context['groups'][] =`. If we're currently normalizing, add `admin:read` else
-add `admin:write`.
+add `admin:write`:
+
+[[[ code('83f68aad31') ]]]
 
 Now, you might be wondering why we're checking if `isset($context['groups'])`. Well,
 it doesn't apply to our app, but imagine if we were serializing an object that
@@ -140,7 +163,8 @@ we do *not* see `isPublished` advertised as a field in our docs... even though
 it *will* be returned if we're an admin. That might be good or bad. It *is*
 possible to make the docs load dynamically based on *who* is logged in, but that's 
 not something we're going to tackle in this tutorial. We *did* talk about that in
-our API platform 2 tutorial... but the config system has changed.
+our [API platform 2](https://symfonycasts.com/screencast/api-platform2-security)
+tutorial... but the config system has changed.
 
 Let's dig into the next method, which tests that an *owner* can see the
 `isPublished` field. This is currently failing... and it's even trickier than the
