@@ -13,7 +13,9 @@ symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedField
 And... it fails: expected `null` to be the same as `false`, because the field isn't
 returned at all.
 
-To fix this, over in `DragonTreasure`, add a third special group: `owner:read`.
+To fix this, over in `DragonTreasure`, add a third special group: `owner:read`:
+
+[[[ code('329b3f6b0d') ]]]
 
 Can you see where we're going with this? If we are the *owner* of a `DragonTreasure`,
 we'll add this group and then the field will be included. However, pulling this off
@@ -25,7 +27,7 @@ dynamic *per request*. So, if we're an admin user, we can add an extra `admin:re
 group, which will be used when serializing *every* object for this entire request.
 
 But in this situation, we need to make the group dynamic per *object*. Imagine
-if we're returning 10 `DragonTreasure`s: the user may only own *one* of them, so
+if we're returning 10 `DragonTreasure`'s: the user may only own *one* of them, so
 only that *one* `DragonTreasure` should be normalized using this extra group.
 
 ## The Job of Normalizers
@@ -56,8 +58,10 @@ So let's get to work! Over in `src/` - it doesn't really matter how we organize
 things - I'm going to create a new directory called `Normalizer`. Let me collapse
 a few things... so it's easier to look at. Inside that, add a new class called, how
 about, `AddOwnerGroupsNormalizer`. All normalizers must implement
-`NormalizerInterface`... then go to Code -> Generate or Command + N on a Mac and
-select "Implement Methods" to add the two we need.
+`NormalizerInterface`... then go to "Code"->"Generate" or `Command`+`N` on a Mac and
+select "Implement methods" to add the two we need:
+
+[[[ code('48fec8afe0') ]]]
 
 Here's how this works: as soon as we implement `NormalizerInterface`, anytime *any*
 piece of data is being normalized, it will call our `supportsNormalization()` method.
@@ -71,7 +75,9 @@ type. You don't *have* to do this - everything would work without it - but you'd
 get a deprecation warning in your tests.
 
 Down for `supportsNormalization()`, in Symfony 7, there will be an `array $context`
-argument... and the method will return a `bool`.
+argument... and the method will return a `bool`:
+
+[[[bb1f7028c4]]]
 
 ## Which Service do We Decorate?
 

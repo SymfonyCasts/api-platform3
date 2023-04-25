@@ -7,15 +7,21 @@ the decorated normalizer.
 ## Setting up for Decoration
 
 And we know decoration! Add `public function __construct()` with
-`private NormalizerInterface $normalizer`.
+`private NormalizerInterface $normalizer`:
 
-Below in `normalize()`, add a `dump()` then return `$this->normalizer->normalize()`
+[[[ code('8f09b8488a') ]]]
+
+Below in `normalize()`, add a `dump()` then `return $this->normalizer->normalize()`
 passing `$object` `$format`, and `$context`. For `supportsNormalization()`, do the
-same thing: call `supportsNormalization()` on the decorated class and pass the args.
+same thing: call `supportsNormalization()` on the decorated class and pass the args:
+
+[[[ code('5ac7677c6a') ]]]
 
 To complete decoration, head to the top of the class. I'll remove a few
 old `use` statements...  then say `#[AsDecorator]` passing `serializer`, which I
-mentioned  is the service id for the top-level, main normalizer.
+mentioned  is the service id for the top-level main normalizer:
+
+[[[ code('86157b284a') ]]]
 
 Ok! We haven't made any changes yet... so we should still see the one failing
 test. Try it:
@@ -26,7 +32,7 @@ symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedField
 
 Woh! An explosion! Wow.
 
-> `ValidationExceptionListener::__construct()` Argument #1 (`$serializer`) must be
+> `ValidationExceptionListener::__construct()`: Argument #1 (`$serializer`) must be
 > of type `SerializerInterface`, `AddOwnerGroupsNormalizer` given.
 
 Okay? When we add `#[AsDecorator('serializer')]`, it means that our service
@@ -50,7 +56,9 @@ fine!
 Instead of decorating the *top* level `normalizer`, let's decorate one *specific*
 normalizer: the one that's responsible for normalizing `ApiResource` objects into
 `JSON-LD`. This is another spot where you can rely on the documentation to give you
-the exact service ID you need. It's `api_platform.jsonld.normalizer.item`.
+the exact service ID you need. It's `api_platform.jsonld.normalizer.item`:
+
+[[[ code('a3303e22eb') ]]]
 
 Try the test again: `testOwnerCanSeeIsPublishedField`
 
@@ -68,14 +76,20 @@ decorating normalizers is *not* a very friendly process. It's well-documented, b
 weird. When you decorate this specific normalizer, you also need to implement
 `SerializerAwareInterface`. And that's going to require you to have a `setSerializer()`
 method. Oh, let me import that `use` statement: I don't know why that didn't come
-automatically. There we go.
+automatically:
+
+[[[ code('8eb3bf4bb7') ]]]
+
+There we go.
 
 Inside, say, if `$this->normalizer` is an `instanceof SerializerAwareInterface`,
-then call `$this->normalizer->setSerializer($serializer)`.
+then call `$this->normalizer->setSerializer($serializer)`:
 
-I don't even want to get into the details of this: it just happens that the normalizer
-we're decorating implements another interface... so we need to *also* implement
-it.
+[[[ code('302a2e580a') ]]]
+
+I don't even want to get into the details of this: it just happens that
+the normalizer we're decorating implements another interface... so we need
+to *also* implement it.
 
 Let's try this again.
 
@@ -89,11 +103,16 @@ haven't added the group yet. Let's do that!
 ## Adding the Dynamic Group
 
 Remember the goal: if we own this `DragonTreasure`, we want to add the `owner:read`
-group. On the constructor, autowire the `Security` service as a property... then
-down here, if `$object` is an `instanceof DragonTreasure` - because this method
+group. On the constructor, autowire the `Security` service as a property:
+
+[[[ code('2e16840661') ]]]
+
+Then, down here, if `$object` is an `instanceof DragonTreasure` - because this method
 will be called for *all* of our API resource classes - *and* `$this->security->getUser()`
 equals `$object->getOwner()`, then call `$context['groups'][]` to add
-`owner:read`.
+`owner:read`:
+
+[[[ code('0bca035734') ]]]
 
 Phew! Try that test one more time:
 
