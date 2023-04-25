@@ -77,7 +77,7 @@ get a deprecation warning in your tests.
 Down for `supportsNormalization()`, in Symfony 7, there will be an `array $context`
 argument... and the method will return a `bool`:
 
-[[[bb1f7028c4]]]
+[[[ code('bb1f7028c4') ]]]
 
 ## Which Service do We Decorate?
 
