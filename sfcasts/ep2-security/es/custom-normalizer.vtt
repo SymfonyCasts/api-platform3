@@ -1,0 +1,235 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:04.756 align:middle
+Copia el método de prueba -
+testOwnerCanSeeIsPublishedField.
+
+00:00:05.516 --> 00:00:09.876 align:middle
+Acabamos de añadir algo de magia para que los usuarios
+administradores puedan ver la propiedad isPublished.
+
+00:00:10.656 --> 00:00:17.626 align:middle
+Este método prueba nuestra próxima misión: que los
+propietarios de un DragonTreasure también puedan verlo.
+
+00:00:18.406 --> 00:00:21.306 align:middle
+Ejecútalo con: symfony
+
+00:00:21.506 --> 00:00:32.776 align:middle
+php bin/phpunit --filter=testOwnerCanSeeIsPublishedField Y...
+falla: esperaba que null fuera igual que false, porque el campo
+
+00:00:33.556 --> 00:00:39.596 align:middle
+no se devuelve en absoluto. Para
+solucionarlo, en DragonTreasure, añade un
+
+00:00:40.456 --> 00:00:42.936 align:middle
+tercer grupo especial: owner:read:
+¿Ves adónde queremos llegar
+
+00:00:43.436 --> 00:00:47.416 align:middle
+con esto? Si somos propietarios
+de un DragonTreasure,
+
+00:00:47.816 --> 00:00:50.066 align:middle
+añadiremos este grupo y entonces
+
+00:00:50.616 --> 00:00:53.666 align:middle
+se incluirá el campo. Sin embargo , conseguir
+
+00:00:54.256 --> 00:00:56.226 align:middle
+esto es complicado. Como hablamos
+
+00:00:56.456 --> 00:01:00.836 align:middle
+en el último vídeo, los grupos de
+normalización empiezan siendo estáticos: viven
+
+00:01:01.366 --> 00:01:06.786 align:middle
+aquí arriba, en nuestra configuración. El constructor
+de contexto nos permite hacer que estos grupos sean
+
+00:01:07.416 --> 00:01:13.826 align:middle
+dinámicos por petición. Así, si somos un usuario
+administrador, podemos añadir un grupo admin:read adicional,
+
+00:01:13.826 --> 00:01:18.026 align:middle
+que se utilizará al serializar cada objeto
+
+00:01:18.656 --> 00:01:22.726 align:middle
+para toda esta petición. Pero en esta situación,
+necesitamos que el grupo sea dinámico por
+
+00:01:23.356 --> 00:01:29.096 align:middle
+objeto. Imagina que devolvemos 10
+DragonTreasure's: puede que el usuario sólo
+
+00:01:29.496 --> 00:01:34.576 align:middle
+sea propietario de uno de ellos, por lo que
+sólo ese DragonTreasure debería normal izarse
+
+00:01:35.286 --> 00:01:39.456 align:middle
+utilizando este grupo extra. Para
+manejar este nivel de control,
+
+00:01:40.026 --> 00:01:43.096 align:middle
+necesitamos un normalizador
+personalizado. Los normalizadores son el
+
+00:01:43.686 --> 00:01:49.096 align:middle
+núcleo del serializador de Symfony. Son
+los responsables de convertir un dato
+
+00:01:49.436 --> 00:01:55.396 align:middle
+-como un objeto ApiResource o un objeto
+DateTime que vive en una propiedad- en un
+
+00:01:56.056 --> 00:02:00.746 align:middle
+valor escalar o de matriz. Creando un normalizador
+personalizado, ¡puedes hacer prácticamente cualquier
+
+00:02:01.716 --> 00:02:04.516 align:middle
+cosa rara que quieras!
+Busca tu terminal y ejecuta:
+
+00:02:05.386 --> 00:02:15.846 align:middle
+php bin/console debug:container --tag=serializer.normalizer
+Esto me encanta: ¡nos muestra todos y cada uno de los
+
+00:02:16.456 --> 00:02:20.026 align:middle
+normalizadores de nuestra
+aplicación! Podemos ver cosas que
+
+00:02:20.346 --> 00:02:24.526 align:middle
+se encargan de normalizar UUIDs....
+esto es lo que normaliza cualquiera
+
+00:02:24.526 --> 00:02:28.086 align:middle
+de nuestros objetos ApiResource
+a JSON-LD y aquí hay
+
+00:02:28.626 --> 00:02:30.866 align:middle
+uno para un DateTime . Hay un
+
+00:02:31.646 --> 00:02:36.986 align:middle
+montón de cosas interesantes. Nuestro objetivo
+es crear nuestro propio normalizador, decorar
+
+00:02:37.356 --> 00:02:41.836 align:middle
+un normalizador central existente y, a continuación,
+añadir el grupo dinámico antes de que se llame a ese
+
+00:02:42.526 --> 00:02:43.866 align:middle
+normalizador central. Así que ¡manos a la
+
+00:02:44.326 --> 00:02:48.546 align:middle
+obra! En src/ -en realidad no importa cómo
+
+00:02:48.956 --> 00:02:51.596 align:middle
+organicemos las cosas- voy a crear un
+
+00:02:52.286 --> 00:02:53.976 align:middle
+nuevo directorio llamado Normalizer. Permíteme
+
+00:02:53.976 --> 00:02:55.426 align:middle
+colapsar algunas cosas ... para que sea
+
+00:02:56.266 --> 00:03:01.606 align:middle
+más fácil verlo. Dentro de eso,
+añade una nueva clase llamada
+
+00:03:03.216 --> 00:03:06.476 align:middle
+, qué tal, AddOwnerGroupsNormalizer. Todos los
+
+00:03:06.986 --> 00:03:11.966 align:middle
+normalizadores deben implementar NormalizerInterface...
+luego ve a "Código"->"Generar" o Command + N en un Mac
+
+00:03:11.966 --> 00:03:18.456 align:middle
+y selecciona "Implementar métodos" para añadir los dos
+que necesitamos: Esto funciona así: en cuanto implementemos
+
+00:03:18.896 --> 00:03:25.166 align:middle
+NormalizerInterface, cada vez que
+se normalice cualquier dato, se
+
+00:03:25.786 --> 00:03:30.626 align:middle
+llamará a nuestro método supportsNormalization().
+Allí, podemos decidir si sabemos o no
+
+00:03:31.416 --> 00:03:36.806 align:middle
+normalizar esa cosa. Si devolvemos true, el
+serializador llamará entonces a normalize(),
+
+00:03:37.236 --> 00:03:39.676 align:middle
+nos pasará esos datos, y entonces
+
+00:03:39.676 --> 00:03:44.986 align:middle
+devolveremos la versión normalizada. Y en realidad,
+para evitar algunos errores de desaprobación,
+
+00:03:46.426 --> 00:03:49.296 align:middle
+abre la clase padre. El tipo de retorno es
+
+00:03:50.116 --> 00:03:50.756 align:middle
+esta
+
+00:03:51.476 --> 00:03:53.206 align:middle
+cosa loca de matriz. Cópialo... y añádelo
+
+00:03:53.756 --> 00:03:56.886 align:middle
+como tipo de retorno. No
+hace falta que lo hagas -todo
+
+00:03:57.266 --> 00:03:59.946 align:middle
+funcionaría sin ello-, pero recibirías un
+
+00:04:00.826 --> 00:04:06.616 align:middle
+aviso de obsoleto en tus pruebas. Abajo para
+supportsNormalization(), en Symfony 7, habrá
+
+00:04:07.156 --> 00:04:12.816 align:middle
+un argumento array $context... y el método
+devolverá un bool: Antes de rellenar esto
+
+00:04:13.246 --> 00:04:16.776 align:middle
+o configurar la decoración, tenemos que
+pensar qué servicio del núcleo vamos a
+
+00:04:17.586 --> 00:04:24.426 align:middle
+decorar. Ésta es mi idea: si sustituimos
+el servicio principal del núcleo normalizer
+
+00:04:24.806 --> 00:04:28.326 align:middle
+por esta clase, podríamos
+añadir el grupo y luego
+
+00:04:28.866 --> 00:04:33.676 align:middle
+llamar al normalizador decorado... para que
+todo funcione entonces como siempre, excepto que
+
+00:04:34.456 --> 00:04:41.816 align:middle
+tiene el grupo extra. De vuelta al terminal,
+Ejecuta: bin/console debug:container normalizer
+
+00:04:41.816 --> 00:04:42.486 align:middle
+Obtenemos
+
+00:04:42.956 --> 00:04:49.496 align:middle
+un montón de resultados. Eso tiene sentido:
+hay un normalizer principal, pero luego el
+
+00:04:49.496 --> 00:04:53.786 align:middle
+propionormalizer tiene montones de otros
+normalizadores dentro de él para manejar
+
+00:04:54.766 --> 00:04:57.716 align:middle
+distintos tipos de datos. Entonces...
+¿dónde está el normalizador de
+
+00:04:58.296 --> 00:05:02.956 align:middle
+nivel superior? En realidad,
+ni siquiera está en esta
+
+00:05:03.416 --> 00:05:07.266 align:middle
+lista: se llama serializer. Aunque,
+como veremos a continuación, incluso
