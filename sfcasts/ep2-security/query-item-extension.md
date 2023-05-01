@@ -75,7 +75,7 @@ Now, to keep our fixture data interesting, when we create the 40 dragon treasure
 let's override `isPublished` and manually add some randomness: if a random number
 from 0 to 10 is greater than 3, then make it published.
 
-That *should* fix most of our tests. Though search for `unpublished`. Ah yea,
+That *should* fix most of our tests. Though search for `isPublished`. Ah yea,
 we're testing that an admin can `PATCH` to edit a treasure. We created an *unpublished*
 `DragonTreasure`... just so we could assert that this was in the response.
 Let's change this to `true` in both places.
