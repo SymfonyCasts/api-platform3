@@ -20,7 +20,7 @@ for taking the ID and querying the database. There's also a `CollectionProvider`
 to load a collection of items.
 
 So if we want to automatically hide unpublished treasures, one option would be to
-*decorate* this `CollectionProvider`, very much like we did with the `PersistProvider`.
+*decorate* this `CollectionProvider`, very much like we did with the `PersistProcessor`.
 Except... that won't *quite* work. Why? The `CollectionProvider` from Doctrine executes
 the query and returns the results. So all *we* would be able to do is *take* those
 results... then hide the ones we don't want. That's... not ideal for performance -
