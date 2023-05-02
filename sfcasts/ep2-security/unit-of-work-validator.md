@@ -33,7 +33,7 @@ by this user, it will call `addDragonTreasure()`... which then calls `setOwner($
 So, by the time validation runs, it's going to look like we *are* the owner of the
 treasure... even though we originally weren't!
 
-# Using Previous Data?
+## Using Previous Data?
 
 What can we do? Well, API Platform *does* have a concept of "previous data".
 API Platform *clones* the data before deserializing the new JSON onto it, which
