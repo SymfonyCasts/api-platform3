@@ -12,7 +12,7 @@ Adding a new field whose data is calculated from a service is another trick up t
 custom normalizer's sleeve. And since we already have one set up, I
 thought we'd use it to see how this works.
 
-# Testing for the IsMe Field
+## Testing for the IsMe Field
 
 Go to `DragonTreasureResourceTest` and find
 `testOwnerCanSeeIsPublishedField()`. Rename this to
