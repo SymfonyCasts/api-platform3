@@ -29,7 +29,7 @@ onto this `dragonTreasures` property. And importantly, the `owner` on those
 treasures has already been updated to *this* `User`!
 
 Remember: when the serializer sees a `DragonTreasure` that is not already owned
-by this user, it will call `addDragonTreasure`... which then calls `setOwner($this)`.
+by this user, it will call `addDragonTreasure()`... which then calls `setOwner($this)`.
 So, by the time validation runs, it's going to look like we *are* the owner of the
 treasure... even though we originally weren't!
 
@@ -50,16 +50,20 @@ class from Doctrine called the `UnitOfWork`.
 
 Alrighty, let's whip up a test to shine a light on this pesky bug. Inside
 `tests/Functional/`,  open `UserResourceTest`. Copy the previous test, paste, and
-call it `testTreasuresCannotBeStolen`. Create a second user with
+call it `testTreasuresCannotBeStolen()`. Create a second user with
 `UserFactory::createOne()`... and we need a `DragonTreasure` that we're going to
-try to steal. Assign its `owner` to `$otherUser`.
+try to steal. Assign its `owner` to `$otherUser`:
+
+[[[ code('ebf845a5f4') ]]]
 
 Let's do this! We log in as `$user`, update ourselves - which is allowed -
 then, for the JSON, sure, maybe we still send `username`... but we also send
 `dragonTreasures` set to an array with `/api/treasures/` and
 `$dragonTreasure->getId()`.
 
-At the bottom, assert that this returns a 422.
+At the bottom, assert that this returns a 422:
+
+[[[ code('c8465cbf77') ]]]
 
 Ok! Copy the method name. We're expecting this to fail:
 
@@ -67,26 +71,30 @@ Ok! Copy the method name. We're expecting this to fail:
 symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
 ```
 
-And... it does! Status code 200, which means we *are* allowing treasure to be stolen!
-Gasp!
+And... it does! Status code 200, which means we *are* allowing treasure
+to be stolen! Gasp!
 
 ## Creating the Validator
 
 Ok, let's cook up a new validator class:
 
 ```terminal
-php bin/console make:validator
+php ./bin/console make:validator
 ```
 
 Call it `TreasuresAllowedOwnerChange`.
 
 Go use this immediately. Above the `dragonTreasures` property, add
-`#[TreasuresAllowedOwnerChange]`.
+`#[TreasuresAllowedOwnerChange]`:
+
+[[[ code('a64b9af672') ]]]
 
 Next, over in `src/Validator/`, open up the validator class. We'll do some basic
 cleanup: use the `assert()` function to assert that `$constraint` is an instance
 of `TreasuresAllowedOwnerChange`. And also assert that `value` is an instance of
-`Collection` from Doctrine.
+`Collection` from Doctrine:
+
+[[[ code('5aded32ea9') ]]]
 
 We know that this will be used above this property... so it will be some sort
 of collection of `DragonTreasures`.
@@ -98,13 +106,19 @@ been modified. We need to ask Doctrine what each `DragonTreasure` looked like
 when it was *originally* queried from the database. To do that, we need to grab an
 internal object from Doctrine called the `UnitOfWork`.
 
-On top, add a constructor, autowire `EntityManagerInterface $entityManager`.. and
-make that's a private property. Below, grab the unit of work with
-`$unitOfWork = $this->entityManager->getUnitOfWork()`.
+On top, add a constructor, autowire `EntityManagerInterface $entityManager`... and
+make that's a private property:
 
-This is a powerful object that keeps track of *how* entity objects are changing and is
-responsible for knowing which objects need to be inserted, updated or deleted 
-from the database when the entity manger flushes.
+[[[ code('efa324fbbe') ]]]
+
+Below, grab the unit of work with
+`$unitOfWork = $this->entityManager->getUnitOfWork()`:
+
+[[[ code('a23a860f57') ]]]
+
+This is a powerful object that keeps track of *how* entity objects are changing
+and is responsible for knowing which objects need to be inserted, updated or
+deleted from the database when the entity manger flushes.
 
 Next, `foreach` over `$value` - which will be a collection - `as $dragonTreasure`.
 To help my editor, I'll assert that `$dragonTreasure` is an instance of
@@ -112,7 +126,9 @@ To help my editor, I'll assert that `$dragonTreasure` is an instance of
 `$originalData = $unitOfWork->getOriginalEntityData($dragonTreasure)`.
 
 Pretty sweet right? Let's `dd($dragonTreasure)` and `$originalData` so we can
-see what they look like.
+see what they look like:
+
+[[[ code('64058ab5d3') ]]]
 
 Go test go:
 
@@ -136,10 +152,16 @@ So if there is no `$originalOwnerId` or the `$originalOwnerId` is
 equal to the `$newOwnerId`, we're good!
 
 Else... there's some plundering happening! Move the `$violationBuilder` up,
-but remove `setParameter()`. That's it!
+but remove `setParameter()`:
+
+[[[ code('523944607a') ]]]
+
+That's it!
 
 Oh, but I never customized the error message. In the `Constraint` class, give
-the `$message` property a better default message.
+the `$message` property a better default message:
+
+[[[ code('90869e58e8') ]]]
 
 All right team, moment of truth! Run that test:
 

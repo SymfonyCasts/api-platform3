@@ -2,8 +2,11 @@
 
 Every `DragonTreasure` must have an `owner`... and to set that, when you `POST`
 to create a treasure, we *require* that field. I think we should make that
-optional. So, in the test, *stop* sending the `owner` field. When this happens,
-let's automatically set it to the currently-authenticated user.
+optional. So, in the test, *stop* sending the `owner` field:
+
+[[[ code('9940b47918') ]]]
+
+When this happens, let's automatically set it to the currently-authenticated user.
 
 Make sure the test fails. Copy the method name... and run it:
 
@@ -16,7 +19,9 @@ property: this value should not be null.
 
 ## Removing the Owner Validation
 
-If we're going to make it optional, we need to remove that `Assert\NotNull`.
+If we're going to make it optional, we need to remove that `Assert\NotNull`:
+
+[[[ code('b2c1c12e9c') ]]]
 
 And now when we try the test:
 
@@ -45,19 +50,27 @@ Like before, start by running:
 php bin/console make:state-processor
 ```
 
-Call it `DragonTreasureSetOwnerProcessor`.
+Call it `DragonTreasureSetOwnerProcessor`:
+
+[[[ code('fdf8a18e84') ]]]
 
 Over in `src/State/`, open that up. Ok, let's decorate! Add the construct method
-with `private ProcessorInterface $innerProcessor`.
+with `private ProcessorInterface $innerProcessor`:
+
+[[[ code('b66e1324b2') ]]]
 
 Then down in `process()`, call that! This method doesn't return anything - it has
 a `void` return - so we just need `$this->innerProcessor` - don't forget that
 part like I am - `->process()` passing `$data`, `$operation`, `$uriVariables` and
-`$context`.
+`$context`:
+
+[[[ code('63f6998dee') ]]]
 
 Now, to make Symfony *use* our state processor instead of the *normal* one from
 Doctrine, add `#[AsDecorator]`... and the id of the service is
-`api_platform.doctrine.orm.state.persist_processor`.
+`api_platform.doctrine.orm.state.persist_processor`:
+
+[[[ code('08ff7fd147') ]]]
 
 Cool! Now, everything that uses that service in the system will be passed *our*
 service instead... and then the original will be passed into us.
@@ -70,10 +83,15 @@ We're decorating the *same* thing there! Yea, we're decorating that service
 of, *chain* of decorated services.
 
 Ok, let's get to work setting the owner. Autowire our favorite `Security` service
-so we can figure out who is logged in. Then, before we do the saving, if `$data`
-is an `instanceof DragonTreasure` and `$data->getOwner()` is null *and*
-`$this->security->getUser()` - making sure the user is logged in - then
-`$data->setOwner($this->security->getUser())`.
+so we can figure out who is logged in:
+
+[[[ code('b183c1fa93') ]]]
+
+Then, before we do the saving, if `$data` is an `instanceof DragonTreasure`
+and `$data->getOwner()` is null *and* `$this->security->getUser()` - making
+sure the user is logged in - then `$data->setOwner($this->security->getUser())`:
+
+[[[ code('338882358b') ]]]
 
 That should do it! Run that test:
 
@@ -82,13 +100,18 @@ symfony php bin/phpunit --filter=testPostToCreateTreasure
 ```
 
 Yikes! Allowed memory size exhausted. I smell recursion! Because... I'm calling
-`process()` on myself: I need `$this->innerProcessor->process()`. Now:
+`process()` on myself: I need `$this->innerProcessor->process()`:
+
+[[[ code('fcbf2eb93f') ]]]
+
+Now:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPostToCreateTreasure
 ```
 
-A passing test is *so* much cooler than recursion. And the owner field *is* now optional!
+A passing test is *so* much cooler than recursion. And the owner field *is* now
+optional!
 
 Next: we currently return *all* treasures from our GET collection endpoint,
 including *unpublished* treasures. Let's fix that by modifying the query behind

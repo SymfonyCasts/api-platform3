@@ -16,11 +16,15 @@ thought we'd use it to see how this works.
 
 Go to `DragonTreasureResourceTest` and find
 `testOwnerCanSeeIsPublishedField()`. Rename this to
-`testOwnerCanSeeIsPublishedAndIsMineFields()`.
+`testOwnerCanSeeIsPublishedAndIsMineFields()`:
+
+[[[ code('29adb7037b') ]]]
 
 This is a bit silly, but if we own a `DragonTreasure`, we're going to add a new
 boolean property called `$isMine` set to `true`. So, down at the bottom, we'll 
-say `isMine` and expect it to be `true`.
+say `isMine` and expect it to be `true`:
+
+[[[ code('034f0a0bc7') ]]]
 
 Copy that method name, then spin over and run this test:
 
@@ -35,9 +39,15 @@ Tada! It's `null` because the field doesn't exist yet.
 So how can we add this? Now that we've gone through the pain of getting the
 normalizer set up, it's easy! The normalizer system will do its thing,
 return the normalized data, then, between that and the `return` statement,
-we can... just mess with it! Copy the if statement from up here. I could be more
-clever and reuse code, but it's fine. If the object is a `DragonTreasure` and we
-own this `DragonTreasure`, we will say `$normalized['isMine'] = true`.
+we can... just mess with it!
+
+[[[ code('8a60aaf853') ]]]
+
+Copy the if statement from up here. I could be more clever and reuse code,
+but it's fine. If the object is a `DragonTreasure` and we own this
+`DragonTreasure`, we will say `$normalized['isMine'] = true`:
+
+[[[ code('aaeeb43eb3') ]]]
 
 That's it! When we run the test:
 
