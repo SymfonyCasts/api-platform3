@@ -1,6 +1,6 @@
 # Filtering Relation Collection
 
-Hey, we've made a pretty fancy API! We've got a few subresources and embedded
+Hey, we've made a pretty fancy API! We've got a few sub-resources and embedded
 relation data, which is readable and writable. This is all super awesome... but
 it sure does crank up the complexity of our API, especially when it comes to security.
 
@@ -22,7 +22,9 @@ endpoint... but we don't care *who* we're logged in as... so say `actingAs()`
 
 Then `->get()` `/api/users/` `$user->getId()`. Finish with `assertJsonMatches()`
 that the `length()` of `dragonTreasures` is zero - using a cool `length()` function
-from that JMESPath syntax.
+from that JMESPath syntax:
+
+[[[ code('1c405c7deb') ]]]
 
 Let's try it! Copy the method... and run it with `--filter=` that name:
 
@@ -60,7 +62,9 @@ How can we fix this? By adding a *new* method that only returns the *published*
 treasures. Say `public function getPublishedDragonTreasures()`, which returns a
 `Collection`. Inside, we can get fancy: return `$this->dragonTreasures->filter()`
 passing that a callback with a `DragonTreasure $treasure` argument. *Then*, return
-`$treasure->getIsPublished()`.
+`$treasure->getIsPublished()`:
+
+[[[ code('5a89ba2e38') ]]]
 
 That's a nifty trick for looping through all the treasures and getting a shiny
 *new* collection with just the *published* ones.
@@ -77,10 +81,14 @@ of the collection.
 
 At this point, the new method will work, but it's not *yet* part of our API.
 Scroll up to the `dragonTreasures` property. It's currently readable and writable
-in our API. Make the property only writable.
+in our API. Make the property only writable:
+
+[[[ code('e01049a325') ]]]
 
 Then, down on the new method, add `#[Groups('user:read')]` to make this part of
-our API and `#[SerializedName('dragonTreasures')]` to give it the original name.
+our API and `#[SerializedName('dragonTreasures')]` to give it the original name:
+
+[[[ code('1f1b8dce19') ]]]
 
 Drumroll! Try the test:
 

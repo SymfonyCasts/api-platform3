@@ -5,13 +5,15 @@ but you *can* still fetch them from the GET one endpoint. That's
 because these `QueryCollectionExtensionInterface` classes are only called when
 we are fetching a *collection* of items: not when we're selecting a *single* item.
 
-To prove this, go into our test. Duplicate the collection test, paste and
-call it `testGetOneUnpublishedTreasure404s`. Inside, create just one `DragonTreasure`
+To prove this, go into our test. Duplicate the collection test, paste, and
+call it `testGetOneUnpublishedTreasure404s()`. Inside, create just one `DragonTreasure`
 that's unpublished... and make a `->get()` request to `/api/treasures/`... oh!
 I need a `$dragonTreasure` variable. That's better. Now add `$dragonTreasure->getId()`.
 
 At the bottom, assert that the status is 404... and we don't need any of these assertions,
-or this `$json` variable.
+or this `$json` variable:
+
+[[[ code('a31ba8979e') ]]]
 
 Very simple! Grab that method name and, you know the drill. Run *just*
 that test:
@@ -31,19 +33,31 @@ How do we fix this? Well... just like how there's a
 
 You can create a totally separate class for this... but you can also combine them.
 Add a second interface for `QueryItemExtensionInterface`. Then, scroll down and go
-to Code -> Generate - or command + N on a Mac - to add the one method we're
-missing: `applyToItem()`.
+to "Code"->"Generate" - or `Command`+`N` on a Mac - to add the one method we're
+missing: `applyToItem()`:
+
+[[[ code('a9ee1338af') ]]]
 
 Yea, it's almost identical to the collection method.... it works the same way...
 and we even need the same logic! So, copy the code we need, then go to the
-Refactor menu and say "Refactor this", which is also control + T on a Mac. Select
-to extract this to a method... and call it `addIsPublishedWhere()`.
+Refactor menu and say "Refactor this", which is also `Control`+`T` on a Mac. Select
+to extract this to a method... and call it `addIsPublishedWhere()`:
+
+[[[ code('9397761819') ]]]
 
 Awesome! I'll clean things up... and, you know what? I should have added this
-`if` statement inside there too. So let's move that... which means we need a
-`string $resourceClass` argument. Above, pass `$resourceClass` to the method.
+`if` statement inside there too. So let's move that:
 
-Perfect! Now, in `applyToItem()`, call that same method.
+[[[ code('5f93da2d6c') ]]]
+
+Which means we need a `string $resourceClass` argument. Above, pass
+`$resourceClass` to the method:
+
+[[[ code('3e2c1bbd9c') ]]]
+
+Perfect! Now, in `applyToItem()`, call that same method:
+
+[[[ code('6fafed8656') ]]]
 
 Ok, we're ready! Try the test now:
 
@@ -69,18 +83,26 @@ randomly in our factory.
 
 To fix this, we could be explicit by controlling the `isPublished` field whenever
 we create a treasure. Or... we can be lazier and, in `DragonTreasureFactory`, set
-`isPublished` to true by default.
+`isPublished` to true by default:
+
+[[[ code('0f5260ae7c') ]]]
 
 Now, to keep our fixture data interesting, when we create the 40 dragon treasures,
 let's override `isPublished` and manually add some randomness: if a random number
-from 0 to 10 is greater than 3, then make it published.
+from 0 to 10 is greater than 3, then make it published:
+
+[[[ code('62a3502630') ]]]
 
 That *should* fix most of our tests. Though search for `unpublished`. Ah yea,
 we're testing that an admin can `PATCH` to edit a treasure. We created an *unpublished*
 `DragonTreasure`... just so we could assert that this was in the response.
-Let's change this to `true` in both places.
+Let's change this to `true` in both places:
 
-There's one other similar test: change `isPublished` to `true` here as well.
+[[[ code('f4fcf30cce') ]]]
+
+There's one other similar test: change `isPublished` to `true` here as well:
+
+[[[ code('f844fbec05') ]]]
 
 *Now* try the tests:
 
@@ -94,7 +116,9 @@ They're happy! I'm happy! Well, *mostly*. We still have one teensie problem. Fin
 the first `PATCH` test. We're creating a *published* `DragonTreasure`, updating
 it... and it works just fine. Copy this entire test... paste it.. but delete the
 bottom part: we only need the top. Call this method `testPatchUnpublishedWorks()`...
-then  make sure the `DragonTreasure` is *unpublished*.
+then  make sure the `DragonTreasure` is *unpublished*:
+
+[[[ code('697545bb53') ]]]
 
 Think about it: if I have a `DragonTreasure` with `isPublished` `false`,
 I *should* be able to update it, right? This is *my* treasure... I created it and
@@ -127,7 +151,9 @@ to be returned from the collection endpoint if the current user is the owner of
 that treasure.
 
 Let's give this a shot. Add the `public function __construct()`... and autowire
-the amazing `Security` service.
+the amazing `Security` service:
+
+[[[ code('81501ca583') ]]]
 
 Below... life gets a bit trickier. Start with `$user = $this->security->getUser()`.
 *If* we have a user, we're going to modify the `QueryBuilder` in a similar...
@@ -136,7 +162,9 @@ my if statement. Now, if the user is logged in, add `OR %s.owner = :owner`...
 then pass in one more `rootAlias`... followed by `->setParameter('owner', $user)`.
 
 Else, if there is no user, use the original query. And we need the `isPublished`
-parameter in both cases... so keep that at the bottom.
+parameter in both cases... so keep that at the bottom:
+
+[[[ code('6dd8b1fc43') ]]]
 
 I think I like that! Let's see what the test thinks:
 

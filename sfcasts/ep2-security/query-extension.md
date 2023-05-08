@@ -8,7 +8,7 @@ solution. Really, we need to *not* return unpublished treasures at all.
 Find the [API Platform Upgrade Guide](https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730)...
 and search for the word "state" to find a section that talks about "providers" and
 "processors". We talked about state processors earlier, like the `PersistProcessor`
-on the `Put` and `Post`operations, which is responsible for saving the item to the
+on the `Put` and `Post` operations, which is responsible for saving the item to the
 database.
 
 ## State Providers
@@ -35,10 +35,17 @@ lets us do *exactly* that.
 
 Before we dive in, let's update a test to show the behavior we want. Find
 `testGetCollectionOfTreasures()`. Take control of these 5 treasures and
-make them all `isPublished => true`... because right now, in `DragonTreasureFactory`,
-`isPublished` is set to a random value.
+make them all `isPublished => true`:
 
-*Then* add one more with `createOne` and `isPublished` false.
+[[[ code('59f527158c') ]]]
+
+because right now, in `DragonTreasureFactory`, `isPublished` is set to a random value:
+
+[[[ code('abb96ff04e') ]]]
+
+*Then* add one more with `createOne()` and `isPublished` false:
+
+[[[ code('02d071cd43') ]]]
 
 Awesome! And we *still* want to assert that this returns just 5 items. So...
 let's make sure it fails:
@@ -54,8 +61,10 @@ And... yea! It returns 6 items.
 Ok, to modify the query for a collection endpoint, we're going to create something
 called a query extension. Anywhere in `src/` - I'll do it in the `ApiPlatform/`
 directory - create a new class called `DragonTreasureIsPublishedExtension`. Make
-this implement `QueryCollectionExtensionInterface`, then go to Code -> Generate or
-Command + N on a Mac - and generate the one method we need: `applyToCollection()`.
+this implement `QueryCollectionExtensionInterface`, then go to "Code"->"Generate" or
+`Command`+`N` on a Mac - and generate the one method we need: `applyToCollection()`:
+
+[[[ code('a1406d2b7a') ]]]
 
 This is pretty cool: it passes us the `$queryBuilder` and a few other pieces of
 info. Then, we can *modify* that `QueryBuilder`. The best part? The `QueryBuilder`
@@ -70,7 +79,9 @@ collection endpoint is used!
 
 In fact, it will be called for *any* resource. So the first thing we need is
 `if (DragonTreasure::class !== $resourceClass)` - fortunately it passes us the
-class name - then return.
+class name - then return:
+
+[[[ code('077038260a') ]]]
 
 Below, *this* is where we get to work. Now, every `QueryBuilder` object has a
 *root alias* that refers to the class or table that you're querying. Usually,
@@ -80,11 +91,15 @@ use that in other parts of the query.
 
 However, in *this* situation, *we* didn't create the `QueryBuilder`, so *we* never
 chose that root alias. It was chosen for us. What is it? It's: "banana". Actually,
-I have no idea what it is! But we can get it with `$queryBuilder->getRootAliases()[0]`.
+I have no idea what it is! But we can get it with `$queryBuilder->getRootAliases()[0]`:
+
+[[[ code('7071d70c4e') ]]]
 
 *Now* it's just normal query logic: `$queryBuilder->andWhere()` passing `sprintf()`.
 This looks a little weird: `%s.isPublished = :isPublished`, then pass `$rootAlias`
-followed by `->setParameter('isPublished', true)`.
+followed by `->setParameter('isPublished', true)`:
+
+[[[ code('b31000a557') ]]]
 
 Cool! Spin over to try this thing!
 
@@ -96,7 +111,7 @@ Mission accomplished! It's just that easy.
 
 ## Query Extensions on SubResources?
 
-By the way, will this also work for subresources? For example, over in our
+By the way, will this also work for sub-resources? For example, over in our
 docs, we can *also* fetch a collection of treasures by going to
 `/api/users/{user_id}/treasures`. Will this *also* hide the unpublished treasures?
 The answer is... *yes*! So, it's not something you need to worry about. I won't
