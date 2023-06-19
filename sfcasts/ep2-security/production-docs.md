@@ -163,7 +163,7 @@ Instead, you could disable docs in production only, via:
 ```yaml
 when@prod:
     api_platform:
-        enable_swagger_ui: '%env(bool:ENABLE_API_DOCS)%'
+        enable_swagger_ui: false
 ```
 ***
 
