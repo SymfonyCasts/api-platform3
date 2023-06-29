@@ -1,5 +1,179 @@
-# Query Item Extension
+# 404 On Unpublished Items
 
-Coming soon...
+We've stopped returning unpublished treasures from the treasure *collection* endpoint,
+but you *can* still fetch them from the GET one endpoint. That's
+because these `QueryCollectionExtensionInterface` classes are only called when
+we are fetching a *collection* of items: not when we're selecting a *single* item.
 
-We no longer return unpublished treasures from the `TreasureCollection` endpoint, but we are still allowing them to be returned from the `GetOne` endpoint. That's because these `QueryCollectionExtensionInterface` classes, this is only called when we are fetching a collection of items, not when we're selecting a single item. So, to prove this, let's go into our test class. I'm going to duplicate my `GetCollection` test, let's paste that, call it `TestGetOneUnpublishedTreasure404s`. And here we're just going to create the one `DragonTreasure` that is unpublished, and we'll make a GET request to `api.treasures/`. And then `DragonTreasure`. And then, oh, I need to set a `DragonTreasure` variable. Perfect. Now down here we'll use `DragonTreasure->getID()`. This is pretty easy, we're just going to assert that status here is 404. And I don't need any of these assertions down there. Or this JSON variable. Very simple test. Alright, let's copy that method name, y'all know the drill. Run our test for just, run just that test, and yep, it is currently returning a 200 status code. Alright, so time to fix that. How? Well, you may have guessed, just like how you can create a `QueryCollectionExtensionInterface`, there is also a `QueryItemExtensionInterface` that's used when we're querying for just one item. You can create a totally separate class for this, but you can also combine it. So we can add a second interface here for `QueryItemExtensionInterface`. And then down at the bottom you can go to code generate or command N on a Mac. And create the one we need, which is `applyToItem`. And you can see it's almost identical to the other method. It does the same thing, it's just used on different endpoints. And so pretty much like all of this logic here, we're going to need that again. So I'm going to copy that. And then you can go to the refactor menu and say refactor this. Or control T on a Mac, and I'm going to extract this to a method. And we'll call it `addIsPublishedWhere`. Awesome. So down here. We have this new function which adds that query. And actually, you know what? I should have also added this little if statement inside of there. That's going to be handy as well. So let me move that part down as well. Which means we'll need the `string` resource class as an argument. Excellent. And then we'll pass `resourceClass` up here as well. Perfect. So really down here in `applyToItem()`, we can do the exact same thing. We're applying the exact same query. So now if we try to fetch a single item that is unpublished, it shouldn't be returned by that query. And sure enough, when we spin over and run the test, it passes. So we just made a bunch of changes to our important changes to our code. So let's run all of our tests. And oh, we've got three failures. All coming from `DragonTreasureResource`. So the problem is that in a lot of cases when we are creating treasures, we search for a `DragonTreasureFactory`. We weren't explicit about whether we wanted a published or unpublished one. So we might get a published one. We might get an unpublished one. And this happens because inside `DragonTreasureFactory`, `isPublished` is currently returning a random true or false. So to fix this in our test, we could always be explicit. We could say, look, I want this `isPublished` true in all these cases. Or what I'm going to do is be a little lazier. I'm going to say, hey, by default in `DragonTreasureFactory`, let's set these two `isPublished` true. That's really the default mode. If I'm creating a dragon treasure, I probably want it to be published. Now to make our fixture data a little bit better and add fixtures when we create our 40 dragon treasures, we can override the `isPublished` and kind of manually do a little bit of randomness here. So I'll say we have a random number from zero to 10 and it's greater than three. Then we will be published. So this will publish most dragon treasures, leaving us with a few unpublished dragon treasures to make our data more realistic. That should fix most of our tests and `DragonResourceTest`. There are also a couple of spots if we search for `unpublished` where when we were testing that an admin can `patch` to edit a treasure, we created an unpublished dragon treasure just so we could assert that that was in the response and it was false. I'm actually going to change this now to `true`. So that this creates a published treasure and there's one other spot down here where I will also set that to `true`. Didn't intend for those to be unpublished. So when we run the test now. They're happy. Though we do still have one problem. If you find the first `patch` test that we have here. We are creating a published dragon treasure and then we are updating it and it works just fine. Cool. Let's copy this entire test. And really I just need that first part of the test. I'm going to delete this bottom part here. Awesome. And I'll call it `testPatchUnpublishedWorks`. So think about it. If we have a `dragonTreasure` and it is `isPublished` `false`. That shouldn't create any problems. This is my treasure. I created it. I created it unpublished and now I'm just trying to modify some data on it. Right. So it shouldn't cause any problems. We want this to work. So when we go over and try it. Unfortunately, we get a 404. So this is kind of a little gotcha. You need to be aware of. When you create a query `CollectionExtensionInterface` that's only used on this one collection endpoint. But when you create an `ItemExtensionInterface` that's used when we fetch a single treasure. But it's also used for delete, patch, and put. And that was. So. When an owner tries to patch their own dragon treasure, thanks to our query extension, it can't be found. So there are two solutions for this. The first are that the `applyToItem` is past the `operation`. So you can actually use this to figure out is this a `get` request or a `patch` request or a `delete` request. And if you want to, you could apply this filter to only the `get` request. And this might make sense because if you're able to edit or edit or delete a treasure, that means you have already passed a security check to do it. So we don't necessarily need to lock it down via the query extension. The other solution is that inside of our `extension` class, we can inject the `security` service to and see who's logged in. And we actually change the query down here to allow owners to see all treasures. The cool thing about this solution is it's also going to allow unpublished treasures to be returned from the collection endpoint. If the current user is the owner of that treasure. So that's the solution I want to do. It's a little trickier. So let's add a public function __construct(). We will auto wire our favorite security service. Perfect. And then down here, we just got to get a little trickier here. So first thing I'm going to say is this `$user = $this->security->getUser()`. And then if we have a user. We're going to modify that query builder in a similar but slightly different way. So it's going to be `queryBuilder->andWhere()`. Oh, actually, let me also bring the root alias up above my if statement. Anyways, we have where the item is published. Or where `%s.owner = :owner`. I'll need to pass in one more root alias for this. And then we can say `setParameter('owner', $user)`. And then I'll put an else if there is no user, we're actually just going to use the original query here. Easy. And then down here, we're going to need the `isPublished` parameter in both cases. So we can kind of just finish with `queryBuilder->setParameter('isPublished', true)`. All right. I think I like that. Let's try it. Run that test and it passes. So we've fixed. And in fact, all of our test passes. All right. Final topic. We know that when we fetch a user object, we return its dragon treasures. Does that collection also include unpublished treasures? Answer is yep. Let's talk about why next and how to fix it.
+To prove this, go into our test. Duplicate the collection test, paste, and
+call it `testGetOneUnpublishedTreasure404s()`. Inside, create just one `DragonTreasure`
+that's unpublished... and make a `->get()` request to `/api/treasures/`... oh!
+I need a `$dragonTreasure` variable. That's better. Now add `$dragonTreasure->getId()`.
+
+At the bottom, assert that the status is 404... and we don't need any of these assertions,
+or this `$json` variable:
+
+[[[ code('a31ba8979e') ]]]
+
+Very simple! Grab that method name and, you know the drill. Run *just*
+that test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testGetOneUnpublishedTreasure404s
+```
+
+And... yep! It currently returns a 200 status code.
+
+## Hello Query Item Extensions
+
+How do we fix this? Well... just like how there's a
+`QueryCollectionExtensionInterface` for the collection endpoint, there's also a
+`QueryItemExtensionInterface` that's used whenever API Platform queries for a
+*single* item.
+
+You can create a totally separate class for this... but you can also combine them.
+Add a second interface for `QueryItemExtensionInterface`. Then, scroll down and go
+to "Code"->"Generate" - or `Command`+`N` on a Mac - to add the one method we're
+missing: `applyToItem()`:
+
+[[[ code('a9ee1338af') ]]]
+
+Yea, it's almost identical to the collection method.... it works the same way...
+and we even need the same logic! So, copy the code we need, then go to the
+Refactor menu and say "Refactor this", which is also `Control`+`T` on a Mac. Select
+to extract this to a method... and call it `addIsPublishedWhere()`:
+
+[[[ code('9397761819') ]]]
+
+Awesome! I'll clean things up... and, you know what? I should have added this
+`if` statement inside there too. So let's move that:
+
+[[[ code('5f93da2d6c') ]]]
+
+Which means we need a `string $resourceClass` argument. Above, pass
+`$resourceClass` to the method:
+
+[[[ code('3e2c1bbd9c') ]]]
+
+Perfect! Now, in `applyToItem()`, call that same method:
+
+[[[ code('6fafed8656') ]]]
+
+Ok, we're ready! Try the test now:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testGetOneUnpublishedTreasure404s
+```
+
+And... it passes!
+
+## Fixing our Test Suite
+
+We've been tinkering with our code quite a bit, so it's time for a test-a-palooza!
+Run all the tests:
+
+```terminal
+symfony php bin/phpunit
+```
+
+And... whoops! 3 failures - all coming from `DragonTreasureResourceTest`. The
+problem is that, when we created treasures in our tests, we weren't explicit about
+whether we wanted a published or unpublished treasure... and that value is set
+randomly in our factory.
+
+To fix this, we could be explicit by controlling the `isPublished` field whenever
+we create a treasure. Or... we can be lazier and, in `DragonTreasureFactory`, set
+`isPublished` to true by default:
+
+[[[ code('0f5260ae7c') ]]]
+
+Now, to keep our fixture data interesting, when we create the 40 dragon treasures,
+let's override `isPublished` and manually add some randomness: if a random number
+from 0 to 10 is greater than 3, then make it published:
+
+[[[ code('62a3502630') ]]]
+
+That *should* fix most of our tests. Though search for `isPublished`. Ah yea,
+we're testing that an admin can `PATCH` to edit a treasure. We created an *unpublished*
+`DragonTreasure`... just so we could assert that this was in the response.
+Let's change this to `true` in both places:
+
+[[[ code('f4fcf30cce') ]]]
+
+There's one other similar test: change `isPublished` to `true` here as well:
+
+[[[ code('f844fbec05') ]]]
+
+*Now* try the tests:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+## Allowing Updates to an Unpublished Item
+
+They're happy! I'm happy! Well, *mostly*. We still have one teensie problem. Find
+the first `PATCH` test. We're creating a *published* `DragonTreasure`, updating
+it... and it works just fine. Copy this entire test... paste it.. but delete the
+bottom part: we only need the top. Call this method `testPatchUnpublishedWorks()`...
+then  make sure the `DragonTreasure` is *unpublished*:
+
+[[[ code('697545bb53') ]]]
+
+Think about it: if I have a `DragonTreasure` with `isPublished` `false`,
+I *should* be able to update it, right? This is *my* treasure... I created it and
+I'm still working on it. We want this to be allowed.
+
+Will it? You can probably guess:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchUnpublishedWorks
+```
+
+Nope! We get a 404! This is both a feature... and a "gotcha"! When we
+create a `QueryCollectionExtensionInterface`, that's only used for this *one*
+collection endpoint. But when we create an `ItemExtensionInterface`, that's used
+*whenever* we fetch a single treasure: *including* for the `Delete`, `Patch` and
+`Put` operations. So, when an owner tries to `Patch` their own `DragonTreasure`,
+thanks to our query extension, it can't be found.
+
+There are two solutions for this. First, in `applyToItem()`, API Platform passes
+us the `$operation`. So we could use this to determine if this a `Get`,
+`Patch` or `Delete` operation and only apply the logic for *some* of those.
+
+And... this might make sense. After all, if you're *allowed* to edit or delete a
+treasure... that means you've already passed a security check... so we don't
+necessarily need to lock things down via this query extension.
+
+The other solution is to change the query to allow owners to see their *own* treasures.
+One cool thing about this solution is that it will also allow unpublished treasures
+to be returned from the collection endpoint if the current user is the owner of
+that treasure.
+
+Let's give this a shot. Add the `public function __construct()`... and autowire
+the amazing `Security` service:
+
+[[[ code('81501ca583') ]]]
+
+Below... life gets a bit trickier. Start with `$user = $this->security->getUser()`.
+*If* we have a user, we're going to modify the `QueryBuilder` in a similar...
+but slightly different way. Oh, actually, let me bring the `$rootAlias` up above
+my if statement. Now, if the user is logged in, add `OR %s.owner = :owner`...
+then pass in one more `rootAlias`... followed by `->setParameter('owner', $user)`.
+
+Else, if there is no user, use the original query. And we need the `isPublished`
+parameter in both cases... so keep that at the bottom:
+
+[[[ code('6dd8b1fc43') ]]]
+
+I think I like that! Let's see what the test thinks:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchUnpublishedWorks
+```
+
+It likes it too! In fact, *all* of our tests seem happy.
+
+Ok team: final topic. When we fetch a `User` resource, we return its dragon treasures.
+Does that collection *also* include *unpublished* treasures? Ah... yep it does! Let's
+talk about why and how to fix it next.
