@@ -1,0 +1,420 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:03.766 align:middle
+En DragonTreasure, busca el campo $isPublished.
+
+00:00:05.016 --> 00:00:10.276 align:middle
+Antes añadimos esto de ApiProperty
+security para que el campo sólo se devuelva
+
+00:00:10.276 --> 00:00:12.966 align:middle
+a los usuarios administradores
+o propietarios de este tesoro.
+
+00:00:13.456 --> 00:00:18.096 align:middle
+Ésta es una forma sencilla y 100%
+válida de manejar esta situación.
+
+00:00:18.716 --> 00:00:21.796 align:middle
+Sin embargo, hay otra
+forma de manejar los campos
+
+00:00:21.796 --> 00:00:24.636 align:middle
+que deben ser dinámicos en
+función del usuario actual...
+
+00:00:24.986 --> 00:00:29.366 align:middle
+y puede tener o no dos ventajas
+dependiendo de tu situación.
+
+00:00:30.156 --> 00:00:31.766 align:middle
+En primer lugar, consulta la documentación.
+
+00:00:32.256 --> 00:00:34.966 align:middle
+Abre la ruta GET para un único DragonTreasure.
+
+00:00:36.186 --> 00:00:41.106 align:middle
+E, incluso sin probarlo, puedes
+ver que isPublished es un campo
+
+00:00:41.106 --> 00:00:43.676 align:middle
+que se anuncia correctamente
+en nuestra documentación.
+
+00:00:44.276 --> 00:00:45.576 align:middle
+Entonces, eso es bueno, ¿no?
+
+00:00:46.086 --> 00:00:48.056 align:middle
+Sí Bueno, probablemente.
+
+00:00:48.666 --> 00:00:53.046 align:middle
+Si isPublished fuera realmente un campo
+interno, sólo para administradores,
+
+00:00:53.426 --> 00:00:56.206 align:middle
+quizá no quisiéramos
+que se anunciara al mundo.
+
+00:00:57.086 --> 00:01:01.676 align:middle
+El segundo posible problema con
+security es que, si tienes esta opción
+
+00:01:01.676 --> 00:01:06.446 align:middle
+en muchas propiedades, va a ejecutar esa
+comprobación de seguridad muchas veces
+
+00:01:06.446 --> 00:01:08.546 align:middle
+al devolver una colección de objetos.
+
+00:01:09.116 --> 00:01:14.296 align:middle
+Sinceramente, eso probablemente no cause problemas
+de rendimiento, pero es algo a tener en cuenta.
+
+00:01:15.256 --> 00:01:20.476 align:middle
+Para resolver estos dos posibles problemas
+-y, sinceramente, sólo para aprender más
+
+00:01:20.476 --> 00:01:26.436 align:middle
+sobre cómo funciona la API Platform bajo el
+capó- quiero mostrarte una solución alternativa.
+
+00:01:27.086 --> 00:01:31.986 align:middle
+Elimina el atributo ApiProperty: Y
+sustitúyelo por dos nuevos grupos.
+
+00:01:32.416 --> 00:01:36.066 align:middle
+No vamos a utilizar los normales
+treasure:read y treasure:write...
+
+00:01:36.186 --> 00:01:39.806 align:middle
+porque entonces los campos siempre
+formarían parte de nuestra API.
+
+00:01:39.806 --> 00:01:45.746 align:middle
+En su lugar, utiliza admin:read y
+admin:write: Esto aún no funcionará...
+
+00:01:46.046 --> 00:01:48.156 align:middle
+porque estos grupos no se utilizan nunca.
+
+00:01:48.666 --> 00:01:51.756 align:middle
+Pero ésta es la idea: si el
+usuario actual es un administrador,
+
+00:01:51.996 --> 00:01:55.556 align:middle
+cuando serialicemos,
+añadiremos estos dos grupos.
+
+00:01:56.086 --> 00:02:00.366 align:middle
+La parte complicada es que, ahora
+mismo, ¡los grupos son estáticos!
+
+00:02:00.786 --> 00:02:04.176 align:middle
+Los establecemos aquí arriba,
+en el atributo ApiResource
+
+00:02:04.616 --> 00:02:07.306 align:middle
+-o en una operación específica- ¡y ya está!
+
+00:02:07.686 --> 00:02:09.736 align:middle
+Pero podemos hacerlos dinámicos.
+
+00:02:10.426 --> 00:02:15.986 align:middle
+Internamente, API Platform tiene un sistema
+llamado constructor de contextos, que se encarga
+
+00:02:15.986 --> 00:02:20.156 align:middle
+de construir los contextos de
+normalización o desnormalización
+
+00:02:20.386 --> 00:02:22.626 align:middle
+que luego se pasan al serializador.
+
+00:02:23.146 --> 00:02:29.196 align:middle
+Y podemos conectarnos a él para cambiar el contexto:
+por ejemplo, para añadir grupos adicionales.
+
+00:02:30.026 --> 00:02:30.636 align:middle
+Hagámoslo
+
+00:02:31.216 --> 00:02:36.526 align:middle
+En src/ApiPlatform/, crea una nueva clase
+llamada AdminGroupsContextBuilder...
+
+00:02:37.816 --> 00:02:42.826 align:middle
+y haz que implemente
+SerializerContextBuilderInterface: Luego,
+
+00:02:43.016 --> 00:02:47.746 align:middle
+ve a "Código"->"Generar" -o Command + N
+en un Mac- y selecciona "Implementar métodos"
+
+00:02:48.156 --> 00:02:55.486 align:middle
+para crear el que necesitamos: createFromRequest():
+Es bastante sencillo: API Platform lo llamará,
+
+00:02:55.756 --> 00:03:00.736 align:middle
+nos pasará el Request, si estamos
+normalizando o desnormalizando...
+
+00:03:01.026 --> 00:03:05.896 align:middle
+y entonces devolvemos el array context
+que debe pasarse al serializador.
+
+00:03:06.856 --> 00:03:10.436 align:middle
+Como ya hemos visto varias
+veces, nuestra intención no
+
+00:03:10.436 --> 00:03:13.126 align:middle
+es sustituir al núcleo
+constructor de contextos.
+
+00:03:13.746 --> 00:03:17.526 align:middle
+No, queremos que el constructor de
+contextos principal haga lo suyo...
+
+00:03:17.686 --> 00:03:20.106 align:middle
+y luego añadiremos nuestras propias cosas.
+
+00:03:20.526 --> 00:03:24.336 align:middle
+Para ello, una vez más, utilizaremos
+la decoración de servicios.
+
+00:03:24.796 --> 00:03:27.576 align:middle
+Sabemos cómo funciona: añade
+un método __construct()
+
+00:03:28.156 --> 00:03:31.826 align:middle
+que acepte un
+SerializerContextBuilderInterface privado
+
+00:03:32.256 --> 00:03:36.946 align:middle
+y lo llamaré $decorated: Luego, aquí abajo,
+
+00:03:37.386 --> 00:03:42.086 align:middle
+digamos $context =
+this->decorated->createFromRequest() pasando
+
+00:03:42.086 --> 00:03:45.776 align:middle
+$request, $normalization
+y $extractedAttributes.
+
+00:03:46.916 --> 00:03:51.966 align:middle
+Añade un dump() para asegurarte de
+que funciona y devuelve $context:
+
+00:03:52.846 --> 00:03:59.236 align:middle
+Para decirle a Symfony que utilice nuestro constructor de
+contexto en lugar del real, añade nuestro #[AsDecorator()].
+
+00:03:59.956 --> 00:04:04.926 align:middle
+Aquí, necesitamos el ID de servicio de lo que
+sea el constructor de contexto principal. Eso es
+
+00:04:05.326 --> 00:04:12.396 align:middle
+algo que puedes encontrar en la documentación:
+es api_platform.serializer.context_builder: Oh,
+
+00:04:12.506 --> 00:04:13.446 align:middle
+pero ten cuidado
+
+00:04:13.446 --> 00:04:17.896 align:middle
+al usar SerializerContextBuilderInterface:
+hay dos.
+
+00:04:18.456 --> 00:04:22.046 align:middle
+Uno de ellos es de GraphQL:
+asegúrate de seleccionar el
+
+00:04:22.046 --> 00:04:27.176 align:middle
+de ApiPlatform\Serializer, a menos
+que estés utilizando GraphQL.
+
+00:04:28.916 --> 00:04:30.866 align:middle
+De acuerdo ¡Veamos si
+funciona nuestro volcado!
+
+00:04:31.396 --> 00:04:39.566 align:middle
+Ejecuta todas nuestras pruebas: También quiero
+ver cuáles fallan: symfony php bin/phpunit Y...
+
+00:04:40.056 --> 00:04:44.396 align:middle
+¡bien! Vemos el volcado un montón
+de veces, seguido de dos fallos.
+
+00:04:44.856 --> 00:04:48.296 align:middle
+El primero es testAdminCanPatchToEditTreasure.
+
+00:04:48.816 --> 00:04:50.926 align:middle
+Es el caso en el que estamos trabajando ahora.
+
+00:04:51.446 --> 00:04:55.176 align:middle
+Nos preocuparemos de
+testOwnerCanSeeIsPublishedFieldI dentro de un minuto.
+
+00:04:56.086 --> 00:05:02.866 align:middle
+Copia el nombre del método de prueba y
+vuelve a ejecutarlo con --filter=: ¡Perfecto!
+
+00:05:03.466 --> 00:05:08.226 align:middle
+Vemos el volcado: en realidad tres
+veces, lo cual es interesante.
+
+00:05:08.816 --> 00:05:11.216 align:middle
+Abre esa prueba para que
+podamos ver qué está pasando.
+
+00:05:12.786 --> 00:05:18.796 align:middle
+¡Sí! Estamos haciendo una única
+petición PATCH a /api/treasure/1.
+
+00:05:19.386 --> 00:05:24.036 align:middle
+Entonces, ¿se llama al constructor de
+contexto 3 veces durante una sola petición?
+
+00:05:24.686 --> 00:05:29.216 align:middle
+¡Pues sí! Se llama una vez cuando
+la API Platform está consultando
+
+00:05:29.216 --> 00:05:31.926 align:middle
+y cargando el DragonTreasure
+desde la base de datos. Es..
+
+00:05:32.486 --> 00:05:36.546 align:middle
+. una situación un poco extraña,
+porque el contexto está pensado para
+
+00:05:36.546 --> 00:05:38.496 align:middle
+ser utilizado por el serializador...
+
+00:05:38.846 --> 00:05:41.696 align:middle
+pero nosotros simplemente
+estamos consultando el objeto.
+
+00:05:41.966 --> 00:05:43.996 align:middle
+Pero en fin, ésa es la primera vez.
+
+00:05:44.786 --> 00:05:46.866 align:middle
+Las dos siguientes tienen sentido: se llama
+
+00:05:46.866 --> 00:05:50.926 align:middle
+cuando el JSON que enviamos se
+desnormaliza en el objeto...
+
+00:05:51.296 --> 00:05:56.726 align:middle
+y una tercera vez cuando el DragonTreasure
+final se normaliza de nuevo en JSON.
+
+00:05:57.476 --> 00:06:00.646 align:middle
+En fin, vamos a añadir los grupos dinámicos.
+
+00:06:01.096 --> 00:06:05.606 align:middle
+Para determinar si el usuario es un administrador,
+añade un segundo argumento constructor -
+
+00:06:05.916 --> 00:06:12.516 align:middle
+private Security de SecurityBundle
+llamado $security: Luego aquí abajo,
+
+00:06:13.156 --> 00:06:21.266 align:middle
+si isset($context['groups']) y
+$this->security->isGranted('ROLE_ADMIN'),
+
+00:06:21.956 --> 00:06:30.896 align:middle
+entonces añadiremos los grupos: $context['groups'][]
+=. Si actualmente estamos normalizando,
+
+00:06:31.016 --> 00:06:36.616 align:middle
+añade admin:read si no,
+añade admin:write: Ahora,
+
+00:06:36.616 --> 00:06:41.506 align:middle
+puede que te estés preguntando por qué
+comprobamos si isset($context['groups']).
+
+00:06:42.256 --> 00:06:47.566 align:middle
+Bueno, no es aplicable a nuestra aplicación,
+pero imagina que serializáramos un objeto
+
+00:06:47.756 --> 00:06:49.776 align:middle
+que no tuviera ningún groups
+
+00:06:50.116 --> 00:06:54.996 align:middle
+-como si nunca hubiéramos establecido el
+normalizationContext en ese ApiResource.
+
+00:06:55.686 --> 00:07:00.366 align:middle
+En ese caso, ¡añadir estos groups
+haría que devolviera menos campos!
+
+00:07:00.926 --> 00:07:07.536 align:middle
+Recuerda que si no hay grupos de serialización, el
+serializador devuelve todos los campos accesibles.
+
+00:07:08.056 --> 00:07:14.086 align:middle
+Pero en cuanto añades un solo grupo,
+sólo serializa las cosas de ese grupo.
+
+00:07:14.606 --> 00:07:17.226 align:middle
+Así que si no hay ningún
+groups, no hagas nada
+
+00:07:17.486 --> 00:07:21.666 align:middle
+y deja que todo se serialice
+o deserialice normalmente.
+
+00:07:22.416 --> 00:07:24.466 align:middle
+¡De acuerdo! ¡Probemos ahora la prueba!
+
+00:07:25.426 --> 00:07:26.736 align:middle
+¡Pasa!
+
+00:07:27.366 --> 00:07:31.396 align:middle
+El campo isPublished se devuelve
+si somos un usuario administrador.
+
+00:07:31.886 --> 00:07:33.926 align:middle
+Pero... ve a actualizar los documentos...
+
+00:07:34.286 --> 00:07:36.886 align:middle
+y abre la ruta GET un tesoro.
+
+00:07:39.216 --> 00:07:44.726 align:middle
+Ahora no vemos isPublished anunciado
+como campo en nuestros document os...
+
+00:07:45.046 --> 00:07:47.966 align:middle
+a pesar de que será devuelto
+si somos administradores.
+
+00:07:48.666 --> 00:07:50.596 align:middle
+Eso puede ser bueno o malo.
+
+00:07:51.226 --> 00:07:56.826 align:middle
+Es posible hacer que los documentos se carguen
+dinámicamente en función de quién haya iniciado sesión,
+
+00:07:57.166 --> 00:08:00.396 align:middle
+pero no es algo que vayamos
+a abordar en este tutorial.
+
+00:08:00.986 --> 00:08:04.496 align:middle
+Sí hablamos de ello en nuestro
+tutorial sobre la API Platform 2...
+
+00:08:04.746 --> 00:08:06.836 align:middle
+pero el sistema de configuración ha cambiado.
+
+00:08:07.776 --> 00:08:12.696 align:middle
+Analicemos el siguiente método, que comprueba
+que un propietario puede ver el campo isPublished.
+
+00:08:13.396 --> 00:08:15.096 align:middle
+Esto falla actualmente...
+
+00:08:15.356 --> 00:08:20.106 align:middle
+y es incluso más complicado que la situación
+del administrador, porque tenemos que incluir
+
+00:08:20.186 --> 00:08:25.426 align:middle
+o no el campo isPublished objeto por objeto.
