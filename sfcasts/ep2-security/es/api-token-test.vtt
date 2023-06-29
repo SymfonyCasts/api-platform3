@@ -1,0 +1,167 @@
+WEBVTT
+
+00:00:01.126 --> 00:00:02.476 align:middle
+¿Qué tal una prueba como ésta...
+
+00:00:02.476 --> 00:00:04.696 align:middle
+pero en la que nos
+conectamos con una clave API?
+
+00:00:05.106 --> 00:00:05.706 align:middle
+¡Hagámoslo!
+
+00:00:06.076 --> 00:00:11.226 align:middle
+Crea un nuevo método: función pública
+testPostToCreateTreasureWithApiKey():
+
+00:00:12.716 --> 00:00:15.176 align:middle
+Esto empezará más o menos igual que antes.
+
+00:00:16.256 --> 00:00:21.476 align:middle
+Copiaré la parte superior de la prueba
+anterior, quitaré el actingAs()...
+
+00:00:21.476 --> 00:00:25.336 align:middle
+y añadiré un dump() cerca de la
+parte inferior: Así, como antes,
+
+00:00:25.436 --> 00:00:29.266 align:middle
+estamos enviando datos no válidos y
+esperamos un código de estado 422.
+
+00:00:29.866 --> 00:00:35.236 align:middle
+Copia ese nombre de método, luego
+gira y ejecuta sólo esta prueba: Y...
+
+00:00:35.526 --> 00:00:39.796 align:middle
+ninguna sorpresa: obtenemos un código de
+estado 401 porque no estamos autenticados.
+
+00:00:40.356 --> 00:00:44.016 align:middle
+Enviemos una cabecera Authorization,
+pero una no válida para empezar.
+
+00:00:44.016 --> 00:00:51.066 align:middle
+Pasa una clave headers configurada en una matriz con
+Authorization y luego la palabra Bearer y luego...
+
+00:00:51.336 --> 00:00:54.936 align:middle
+foo. Esto debería seguir fallando: Y...
+
+00:00:54.936 --> 00:00:59.506 align:middle
+¡lo hace! Pero con un mensaje de
+error diferente: invalid_token.
+
+00:00:59.916 --> 00:01:04.906 align:middle
+¡Qué bien! Para pasar un token real, tenemos
+que poner un token real en la base de datos.
+
+00:01:05.326 --> 00:01:09.846 align:middle
+Hazlo con $token =
+ApiTokenFactory::createOne():
+
+00:01:10.296 --> 00:01:13.226 align:middle
+¿Necesitamos controlar algún campo de esto?
+
+00:01:13.836 --> 00:01:15.116 align:middle
+En realidad sí.
+
+00:01:15.616 --> 00:01:16.946 align:middle
+Abre DragonTreasure.
+
+00:01:16.946 --> 00:01:22.836 align:middle
+Si nos desplazamos hacia arriba, la
+operación Post requiere ROLE_TREASURE_CREATE:
+
+00:01:23.346 --> 00:01:29.316 align:middle
+Cuando nos autenticamos a través del formulario de
+acceso, gracias a role_hierarchy, siempre tenemos eso.
+
+00:01:30.086 --> 00:01:35.496 align:middle
+Pero cuando utilizamos una clave API, para obtener
+ese rol, el token necesita el ámbito correspondiente.
+
+00:01:35.986 --> 00:01:39.846 align:middle
+Para asegurarnos de que lo tenemos, en
+la prueba, establece la propiedad scopes
+
+00:01:39.846 --> 00:01:48.496 align:middle
+en ApiToken::SCOPE_TREASURE_CREATE: Ahora pasa
+esto a la cabecera: $token->getToken().
+
+00:01:49.176 --> 00:01:54.796 align:middle
+Ah... y déjame arreglar scopes: que debería
+ser una matriz: ¡Creo que ya estamos listos!
+
+00:01:55.086 --> 00:01:57.516 align:middle
+Ejecuta la prueba: Y...
+
+00:01:57.826 --> 00:02:01.876 align:middle
+¡ya está! ¡Vemos los bonitos
+errores de validación 422!
+
+00:02:02.486 --> 00:02:07.046 align:middle
+Hagamos una prueba para asegurarnos de que no tenemos
+acceso si nuestro token no está en este ámbito.
+
+00:02:08.066 --> 00:02:09.856 align:middle
+Copia todo el método de prueba...
+
+00:02:10.116 --> 00:02:11.206 align:middle
+y pégalo a continuación.
+
+00:02:12.356 --> 00:02:16.226 align:middle
+Llámalo
+testPostToCreateTreasureDeniedWithoutScope().
+
+00:02:17.586 --> 00:02:21.716 align:middle
+Esta vez, cambia scopes por otra
+cosa, como SCOPE_TREASURE_EDIT.
+
+00:02:23.096 --> 00:02:27.936 align:middle
+A continuación, ahora esperamos un
+código de estado 403: Esta vez, vamos a
+
+00:02:28.086 --> 00:02:33.786 align:middle
+ejecutar todas las pruebas:
+symfony php bin/phpunit Y...
+
+00:02:34.086 --> 00:02:35.286 align:middle
+¡todo verde!
+
+00:02:35.286 --> 00:02:39.836 align:middle
+Un 422 y luego un 403.
+
+00:02:41.206 --> 00:02:45.026 align:middle
+Ve a eliminar los volcados de ambos puntos. Por
+
+00:02:45.066 --> 00:02:48.876 align:middle
+cierto, si utilizas mucho los
+tokens de la API en tus pruebas,
+
+00:02:49.226 --> 00:02:52.096 align:middle
+pasar la cabecera Authorization
+puede resultar molesto.
+
+00:02:52.586 --> 00:02:57.576 align:middle
+Browser tiene una forma en la que podemos crear un
+objeto Browser personalizado con métodos personalizados.
+
+00:02:57.616 --> 00:03:03.076 align:middle
+Por ejemplo, podrías añadir un método
+authWithToken(), pasarle una matriz de ámbitos,
+
+00:03:03.456 --> 00:03:06.136 align:middle
+y entonces crearía ese token y lo pondría
+
+00:03:06.136 --> 00:03:11.986 align:middle
+en la cabecera Esto no funciona en absoluto ahora mismo, pero
+consulta la documentación de Browser para aprender cómo hacerlo.
+
+00:03:12.986 --> 00:03:19.056 align:middle
+Siguiente: en la API Platform 3.1, el
+comportamiento de la operación PUT está cambiando.
+
+00:03:19.496 --> 00:03:23.636 align:middle
+Hablemos de cómo, y de lo que tenemos que hacer
+en nuestro código para prepararnos para ello.
