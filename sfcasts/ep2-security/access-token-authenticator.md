@@ -1,14 +1,25 @@
 # Access Token Authenticator
 
 To authenticate with a token, an API client will send an `Authorization` header
-set to the word `Bearer` then the token string... which is just a standard practice.
+set to the word `Bearer` then the token string... which is just a standard practice:
+
+```php
+$client->request('GET', '/api/treasures', [
+    'headers' => [
+        'Authorization' => 'Bearer TOKEN',
+    ],
+]);
+```
+
 Then something in our app will *read* that header, make sure the token is valid,
 authenticate the user and throw a big party to celebrate.
 
 ## Activating access_token
 
 Fortunately, Symfony has the perfect system *just* for this! Spin over and open up
-`config/packages/security.yaml`. Anywhere under your firewall add `access_token`.
+`config/packages/security.yaml`. Anywhere under your firewall add `access_token`:
+
+[[[ code('2a1d1371f6') ]]]
 
 This activates a listener that will watch every request to see if it has an
 `Authorization` header. If it does, it will read that and try to authenticate
@@ -18,7 +29,9 @@ Though, it requires a helper class... because even though it knows where to
 *find* the token on the request... it has no idea what to do with! It doesn't
 know if it's a JWT that it should decode... or, in our case, that it can query the
 database for the matching record. So, to help it, add a `token_handler` option set
-to the id of a service we'll create: `App\Security\ApiTokenHandler`.
+to the id of a service we'll create: `App\Security\ApiTokenHandler`:
+
+[[[ code('92fa27cb33') ]]]
 
 ## Stateless Firewall
 
@@ -33,9 +46,11 @@ remove that, because we *do* have a way to log in that relies on the session.
 Ok, let's go create that handler class. In the `src/` directory create a new
 sub-directory called `Security/` and inside of that a new PHP class called
 `ApiTokenHandler`. This is a beautifully simple class. Make it implement
-`AccessTokenHandlerInterface` and then go to Code -> Generate or Command + N on a
+`AccessTokenHandlerInterface` and then go to "Code"->"Generate" or `Command`+`N` on a
 Mac and select "Implement Methods" to generate the one we need:
-`getUserBadgeFrom()`.
+`getUserBadgeFrom()`:
+
+[[[ code('f1a055ac76') ]]]
 
 The `access_token` system knows how to *find* the token: it knows it will live
 on an `Authorization` header with the word `Bearer` in front of it. So it grabs
@@ -46,27 +61,37 @@ shown in the stacktrace.
 
 Our job here is to query the database using the `$accessToken` and then return
 which *user* it relates to. To do that, we need the `ApiTokenRepository`! Add
-a construct method with a
-`private ApiTokenRepository $apiTokenRepository` argument. Below, say
-`$token = $this->apiTokenRepository` and then call `findOneBy()` passing it an
-array, so it will query where the `token` field equals `$accessToken`.
+a construct method with a `private ApiTokenRepository $apiTokenRepository`
+argument:
+
+[[[ code('b18ccc3694') ]]]
+
+Below, say `$token = $this->apiTokenRepository` and then call `findOneBy()`
+passing it an array, so it will query where the `token` field equals `$accessToken`:
+
+[[[ code('169e984841') ]]]
 
 If authentication should fail for *any* reason, we need to throw a type of
 *security* exception. For example, if the token doesn't exist, throw a new
-`BadCredentialsException`: the one from Symfony components. That will cause
-authentication to fail... but we don't need to pass a message. This will return
-a "Bad Credentials." message to the user.
+`BadCredentialsException`: the one from Symfony components:
+
+[[[ code('59738c2cf9') ]]]
+
+That will cause authentication to fail... but we don't need to pass a message.
+This will return a "Bad Credentials." message to the user.
 
 At this point, we *have* found the `ApiToken` entity. But, ultimately our security
-system  wants to authenticate a *user*... not an "Api Token". We do that by returning
+system  wants to authenticate a *user*... not an "API Token". We do that by returning
 a `UserBadge` that, sort of, wraps the `User` object. Watch: return a `new UserBadge()`.
 The first argument is the "user identifier". Pass `$token->getOwnedBy()` to get the
-`User` and then `->getUserIdentifier()`.
+`User` and then `->getUserIdentifier()`:
+
+[[[ code('ac86d6a501') ]]]
 
 ## How the User Object is Loaded
 
 Notice that we're not *actually* returning the `User` object. That's mostly
-because... we don't need to! Let me explain. Hold command or ctrl and click
+because... we don't need to! Let me explain. Hold `Command` or `Ctrl` and click
 `getUserIdentifier()`. What this *really* returns is the user's `email`. So we're
 returning a `UserBadge` with the user's `email` inside. What happens next is the
 same thing that happens when we send an `email` to the `json_login` authentication
@@ -82,7 +107,9 @@ Oh, and it's probably a good idea to check and make sure the token is valid! If 
 `$token->isValid()`, then we could throw another `BadCredentialsException`.
 But if you want to customize the message, you can also throw a new
 `CustomUserMessageAuthenticationException` with "Token expired" to
-return *that* message to the user.
+return *that* message to the user:
+
+[[[ code('1a581349e2') ]]]
 
 ## Using the Token in Swagger?
 
@@ -99,7 +126,9 @@ Open up `config/packages/api_platform.yaml`. And a new key called `swagger`,
 though we're *actually* configuring the OpenAPI docs. To add a new way of
 authenticating, set `api_keys` to activate that type, then `access_token`... which
 can be anything you want. Below this, give this authentication mechanism a name...
-and `type: header` because we want to pass the token as a header.
+and `type: header` because we want to pass the token as a header:
+
+[[[ code('e3440097b3') ]]]
 
 This will tell Swagger - via our OpenAPI docs - that we can send API tokens
 via the `Authorization` header. *Now* when we click the "Authorize" button...
