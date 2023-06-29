@@ -9,7 +9,9 @@ The `Browser` instance itself gives us access to `assertJsonMatches()`. But if w
 want to use any of its other methods, we need to do a bit more work.
 
 The first way to use the `Json` object is via Browser's `use()` method. Pass this
-a callback with a `Json $json` argument.
+a callback with a `Json $json` argument:
+
+[[[ code('db1f653785') ]]]
 
 This is a magic feature of browser: it reads the type-hint of the argument, and
 knows to pass us the `Json` object. You could also type-hint a `CookieJar` object,
@@ -21,7 +23,9 @@ experimenting. We want to check what the *keys* are for the first item
 inside of `hydra:member`. To help figure the expression we need, let's use a method
 called `search()`. This allows us to use a `JMESPath` expression and get back the
 result. Do double quotes then `hydra:member` to see what it returns. And... remove
-the other dump.
+the other dump:
+
+[[[ code('ced732216b') ]]]
 
 Ok! Run that test again:
 
@@ -31,9 +35,11 @@ symfony php bin/phpunit
 
 It passes... but more importantly, look at the dump! It's the array of 5 items.
 Ok... let's grab the `0` index. After the `hydra:member` double quotes, add
-`[0]`. Then surround the *entire* thing with a `keys()` function from JMESPath.
+`[0]`. Then surround the *entire* thing with a `keys()` function from JMESPath:
 
-Try that now.
+[[[ code('7a62bc21e6') ]]]
+
+Try that now:
 
 ```terminal-silent
 symfony php bin/phpunit
@@ -43,7 +49,9 @@ Oh that's lovely. And it's probably one of the more complex things that you'll d
 Now that we've got the path right, turn that into an assertion. You can do that
 by setting this to a variable - like `$keys` - and using a normal assertion. Or
 you can change `search` to `assertMatches()` and pass a second argument: the array
-of the expected fields.
+of the expected fields:
+
+[[[ code('e0389f65ab') ]]]
 
 We should be good! Try it:
 
@@ -65,10 +73,18 @@ all the fun chaining. But a few, like `->json()` let us "break out" of browser
 so we can do something  custom.
 
 This allows us to remove the `use()` function here and replace the assertions
-with more traditional PHPUnit code. We could *still* use the `Json` object directly...
-that passes... or to remove all fanciness, change to `$this->assertSame()`
-that `$json->decoded()['hydra:member'][0]` - `array_keys()` around everything - matches
-our array. And of course... that passes to!
+with more traditional PHPUnit code:
+
+[[[ code('761a3f0758') ]]]
+
+We could *still* use the `Json` object directly... that passes... or to remove
+all fanciness, change to `$this->assertSame()` that
+`$json->decoded()['hydra:member'][0]` - `array_keys()` around everything - matches
+our array:
+
+[[[ code('f2b6f026c3') ]]]
+
+And of course... that passes to!
 
 So, a lot of power... but also a lot of flexibility to write tests how you want.
 
