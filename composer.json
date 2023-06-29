@@ -32,7 +32,7 @@
         "symfony/ux-react": "^2.6",
         "symfony/ux-vue": "^2.7",
         "symfony/validator": "6.3.*",
-        "symfony/webpack-encore-bundle": "^1.16",
+        "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "6.3.*"
     },
     "config": {
