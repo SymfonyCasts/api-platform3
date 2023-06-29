@@ -14,10 +14,14 @@ that we want plain JSON back, not JSON-LD.
 I want to use JSON-LD everywhere. How can we do that? The second argument to
 `->post()` can be an array *or* an object called `HttpOptions`. Say
 `HttpOptions::json()`... and then pass the array directly. Let me... get my syntax
-right.
+right:
+
+[[[ code('cf8cc7f669') ]]]
 
 So far, this is equivalent to what we had before. But now we can *change* some
-options by saying `->withHeader()` passing `Accept` and `application/ld+json`.
+options by saying `->withHeader()` passing `Accept` and `application/ld+json`:
+
+[[[ code('3a9ebfc976') ]]]
 
 We *could* have also done this with the *array* of options: it has a key called
 `headers`. But the object is kind of nice.
@@ -38,17 +42,28 @@ in the tests is... mega lame. We need this to happen automatically.
 
 A nice way to do that is to leverage a base test class. Inside of `tests/`, actually
 inside of `tests/Functional/`, create a new PHP class called `ApiTestCase`. I'm going
-to make this `abstract` and extend `KernelTestCase`. Inside, add the `HasBrowser`
-trait.  But we're going to do something sneaky: we're going to import the `browser()`
-method but *call* it `baseKernelBrowser`.
+to make this `abstract` and extend `KernelTestCase`:
+
+[[[ code('96aa441725') ]]]
+
+Inside, add the `HasBrowser` trait.  But we're going to do something sneaky:
+we're going to import the `browser()` method but *call* it `baseKernelBrowser`:
+
+[[[ code('5db39e1696') ]]]
 
 Why the heck are we doing that? Re-implement the `browser()` method... then
 call `$this->baseKernelBrowser()` passing it `$options` and `$server`.  But *now*
 call *another* method: `->setDefaultHttpOptions()`. Pass this
-`HttpOptions::create()` then `->withHeader()`, `Accept`, `application/ld+json`.
+`HttpOptions::create()` then `->withHeader()`, `Accept`, `application/ld+json`:
+
+[[[ code('a45b3d0438') ]]]
 
 Done! Back in our real test class, extend `ApiTestCase`: get the one that's
-from *our* app. That's it! When we say `$this->browser()`, it now calls *our*
+from *our* app:
+
+[[[ code('d0abc5cd64') ]]]
+
+That's it! When we say `$this->browser()`, it now calls *our*
 `browser()` method, which changes that default option. Celebrate by removing
 `withHeader()`... and you could revert back to the array of options with a
 `json` key if you want.
@@ -65,6 +80,9 @@ And... uh oh. That's a strange error:
 
 This... is because we're importing the trait from the parent class *and* our
 class... which makes the trait go bananas. Remove the one inside our test class:
+
+[[[ code('f4b285053a') ]]]
+
 we don't need it anymore. I'll also do a little cleanup on my `use` statements.
 
 And now:
@@ -73,6 +91,8 @@ And now:
 symfony php bin/phpunit --filter=testPostToCreateTreasure
 ```
 
-Got it! We get back JSON-LD with zero extra work. Remove that `dump()`.
+Got it! We get back JSON-LD with zero extra work. Remove that `dump()`:
+
+[[[ code('17978acdfa') ]]]
 
 Next: let's write another test that uses our API token authentication.
