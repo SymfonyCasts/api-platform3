@@ -24,7 +24,7 @@ index 51e308e..a44b163 100644
              'plunderedAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-1 year')),
              'value' => self::faker()->numberBetween(1000, 1000000),
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index 83e413b..962b00a 100644
+index 792531b..2478a7a 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -155,7 +155,7 @@ class DragonTreasureResourceTest extends ApiTestCase
@@ -47,7 +47,7 @@ index 83e413b..962b00a 100644
  
 @@ -175,7 +175,7 @@ class DragonTreasureResourceTest extends ApiTestCase
      {
-         $user = UserFactory::new()->create();
+         $user = UserFactory::createOne();
          $treasure = DragonTreasureFactory::createOne([
 -            'isPublished' => false,
 +            'isPublished' => true,
