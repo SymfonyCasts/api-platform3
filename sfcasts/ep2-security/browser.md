@@ -1,4 +1,4 @@
-# JSON Test Assertions & Seeing the Database
+# JSON Test Assertions & Seeding the Database
 
 Let's make this test real with data and assertions.
 
@@ -7,7 +7,11 @@ of built-in methods to help, like `->assertJson()`. Or... you can always just gr
 the JSON that comes back from an endpoint and check things using the built-in
 PHPUnit assertions you know and love. We'll see both.
 
-Let's start by checking `->assertJson()`. When we run that:
+Let's start by checking `->assertJson()`:
+
+[[[ code('6d27846281') ]]]
+
+When we run that:
 
 ```terminal-silent
 symfony php bin/phpunit
@@ -17,11 +21,14 @@ It passes! Cool! We know that this response should  have a `hydra:totalItems`
 property set to the number of results. Right now, our database is empty... but we
 can at least assert that it matches zero.
 
-To do that, use `->assertJsonMatches()`. This is a special method from Browser that
-uses a special syntax that allows us to read different parts off the JSON. We'll
-dig into it in a minute.
+To do that, use `->assertJsonMatches()`.
 
-But this one is simple: assert that `hydra:totalItems` equals `0`.
+This is a special method from Browser that uses a special syntax that allows
+us to read different parts off the JSON. We'll dig into it in a minute.
+
+But this one is simple: assert that `hydra:totalItems` equals `0`:
+
+[[[ code('732b364ada') ]]]
 
 When we try this:
 
@@ -66,7 +73,9 @@ It still fails! With a weird error:
 > Syntax error at character 5 `hydra:totalItems`.
 
 Unfortunately, the `:` is a special character inside of JMESPath. So
-whenever we have a `:`, we need to put quotes around that key.
+whenever we have a `:`, we need to put quotes around that key:
+
+[[[ code('a1e5a46dba') ]]]
 
 Not ideal, but not a huge inconvenience.
 
@@ -86,8 +95,14 @@ need to *seed* the database with data at the start of the test.
 
 Fortunately, Foundry makes that dead-simple. At the top, call
 `DragonTreasureFactory::createMany()` and let's create 5 treasures. Now, below,
-assert that we get 5 results. It's just that simple. And actually, let me put
-our dump back so we can see the result.
+assert that we get 5 results:
+
+[[[ code('2ce69e5a6f') ]]]
+
+It's just that simple. And actually, let me put our dump back so we can see
+the result:
+
+[[[ code('d6551be2e2') ]]]
 
 Try it now:
 
