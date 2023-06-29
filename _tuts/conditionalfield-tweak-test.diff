@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
-index c173cd0..431ab1e 100644
+index c173cd0..30d7eb4 100644
 --- a/tests/Functional/DragonTreasureResourceTest.php
 +++ b/tests/Functional/DragonTreasureResourceTest.php
 @@ -158,13 +158,14 @@ class DragonTreasureResourceTest extends ApiTestCase
@@ -7,7 +7,7 @@ index c173cd0..431ab1e 100644
      public function testOwnerCanSeeIsPublishedField(): void
      {
 -        $admin = UserFactory::new()->asAdmin()->create();
-+        $user = UserFactory::new()->create();
++        $user = UserFactory::createOne();
          $treasure = DragonTreasureFactory::createOne([
              'isPublished' => false,
 +            'owner' => $user,
