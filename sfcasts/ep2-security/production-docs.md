@@ -1,7 +1,8 @@
 # API Docs on Production?
 
 Welcome back you wonderful JSON-returning people, to API Platform episode 2. In
-part 1, we got busy! We created a pretty killer API to store dragon treasures,
+[part 1](https://symfonycasts.com/screencast/api-platform), we got busy!
+We created a pretty killer API to store dragon treasures,
 though... we completely forgot to add security! Any small, hairy-footed creature
 could sneak in a back door... and we'd have absolutely no idea! So this time,
 we're talking *everything* related to security. Like authentication: should I
@@ -154,6 +155,17 @@ Our docs are now totally disabled.
 
 Oh, and to disable the docs *just* for production, I would create an environment
 variable - like `ENABLE_API_DOCS` - then reference that in my config:
+
+***TIP
+Actually, due to how the config is loaded, environment variables won't work here!
+Instead, you could disable docs in production only, via:
+
+```yaml
+when@prod:
+    api_platform:
+        enable_swagger_ui: false
+```
+***
 
 ```yaml
 # config/packages/api_platform.yaml
