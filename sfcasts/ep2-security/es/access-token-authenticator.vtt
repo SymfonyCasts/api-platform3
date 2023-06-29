@@ -1,0 +1,468 @@
+WEBVTT
+
+00:00:01.116 --> 00:00:05.666 align:middle
+Para autenticarse con un token, un cliente API
+enviará una cabecera Authorization configurada
+
+00:00:05.666 --> 00:00:08.766 align:middle
+con la palabra Bearer y, a
+continuación, la cadena del token...
+
+00:00:08.926 --> 00:00:14.126 align:middle
+que no es más que una práctica estándar: Entonces
+algo en nuestra aplicación leerá esa cabecera, se
+
+00:00:14.286 --> 00:00:19.896 align:middle
+asegurará de que el token es válido, autenticará
+al usuario y montará una gran fiesta para celebrarlo.
+
+00:00:20.586 --> 00:00:24.496 align:middle
+Afortunadamente, ¡Symfony tiene
+el sistema perfecto para esto!
+
+00:00:25.086 --> 00:00:28.466 align:middle
+Gira y abre config/packages/security.yaml. En
+
+00:00:29.376 --> 00:00:35.096 align:middle
+cualquier lugar bajo tu cortafuegos
+añade access_token: Esto activa un oyente
+
+00:00:35.156 --> 00:00:40.166 align:middle
+que observará cada petición para ver
+si tiene una cabecera Authorization.
+
+00:00:40.736 --> 00:00:44.656 align:middle
+Si la tiene, la leerá e
+intentará autenticar al usuario.
+
+00:00:45.126 --> 00:00:47.566 align:middle
+Sin embargo, requiere una clase ayudante...
+
+00:00:47.786 --> 00:00:51.196 align:middle
+porque aunque sabe dónde encontrar
+el token en la petición...
+
+00:00:51.486 --> 00:00:53.586 align:middle
+¡no tiene ni idea de qué hacer con él!
+
+00:00:53.586 --> 00:00:58.236 align:middle
+No sabe si es un JWT que debe decodificar...
+
+00:00:58.526 --> 00:01:02.596 align:middle
+o, en nuestro caso, que puede consultar la base
+de datos en busca del registro correspondiente.
+
+00:01:03.316 --> 00:01:10.276 align:middle
+Así que, para ayudarle, añade una opción token_handler
+configurada con el id de un servicio que crearemos:
+
+00:01:10.866 --> 00:01:14.496 align:middle
+App\Security\ApiTokenHandler: Por cierto,
+
+00:01:14.946 --> 00:01:19.426 align:middle
+si tu sistema de seguridad sólo permite
+la autenticación mediante un token de API,
+
+00:01:19.796 --> 00:01:21.726 align:middle
+entonces no necesitas
+almacenamiento de sesión.
+
+00:01:22.336 --> 00:01:27.676 align:middle
+En ese caso, puedes establecer una bandera
+stateless: true que indique al sistema de seguridad
+
+00:01:27.786 --> 00:01:33.096 align:middle
+que, cuando un usuario se autentique, no se moleste en
+almacenar la información del usuario en la sesión.
+
+00:01:33.786 --> 00:01:38.696 align:middle
+Voy a eliminar eso, porque tenemos una forma
+de iniciar sesión que depende de la sesión.
+
+00:01:39.626 --> 00:01:42.306 align:middle
+Bien, vamos a crear esa clase manejadora.
+
+00:01:42.986 --> 00:01:48.256 align:middle
+En el directorio src/ crea un nuevo
+subdirectorio llamado Security/ y
+
+00:01:48.256 --> 00:01:51.466 align:middle
+dentro de él una nueva clase
+PHP llamada ApiTokenHandler.
+
+00:01:52.386 --> 00:01:54.676 align:middle
+Esta es una clase muy sencilla.
+
+00:01:55.186 --> 00:02:01.116 align:middle
+Haz que implemente AccessTokenHandlerInterface y
+luego ve a "Código"->"Generar" o Command + N
+
+00:02:01.116 --> 00:02:07.566 align:middle
+en un Mac y selecciona "Implementar métodos" para
+generar el que necesitamos: getUserBadgeFrom():
+
+00:02:08.686 --> 00:02:14.396 align:middle
+El sistema access_token sabe cómo
+encontrar el token: sabe que vivirá
+
+00:02:14.396 --> 00:02:18.706 align:middle
+en una cabecera Authorization
+con la palabra Bearer delante.
+
+00:02:19.246 --> 00:02:25.016 align:middle
+Así que coge esa cadena, llama a
+getUserBadgeFrom() y nos la pasa.
+
+00:02:25.696 --> 00:02:30.926 align:middle
+Por cierto, este atributo #[\SensitiveParameter]
+es una nueva característica de PHP. Está
+
+00:02:30.926 --> 00:02:36.466 align:middle
+bien, pero no es importante: sólo
+asegura que si se lanza una excepción,
+
+00:02:36.826 --> 00:02:39.386 align:middle
+este valor no se mostrará en el stacktrace.
+
+00:02:40.056 --> 00:02:43.496 align:middle
+Nuestro trabajo aquí es consultar la
+base de datos utilizando el $accessToken
+
+00:02:43.906 --> 00:02:46.946 align:middle
+y luego devolver a qué usuario se refiere.
+
+00:02:47.646 --> 00:02:50.966 align:middle
+Para ello, ¡necesitamos
+el ApiTokenRepository !
+
+00:02:51.586 --> 00:02:58.276 align:middle
+Añade un método construct con un argumento
+private ApiTokenRepository $apiTokenRepository:
+
+00:02:58.896 --> 00:03:06.816 align:middle
+A continuación, digamos $token = $this->apiTokenRepository y
+luego llamemos a findOneBy() pasándole un array, para que consulte
+
+00:03:07.156 --> 00:03:13.946 align:middle
+donde el campo token sea igual a
+$accessToken: Si la autenticación fallara
+
+00:03:13.946 --> 00:03:18.096 align:middle
+por cualquier motivo, necesitamos lanzar
+un tipo de excepción de seguridad.
+
+00:03:18.526 --> 00:03:24.196 align:middle
+Por ejemplo, si el token no existe,
+lanzar una nueva BadCredentialsException:
+
+00:03:24.516 --> 00:03:29.396 align:middle
+la de los componentes Symfony: Eso
+hará que falle la autenticación...
+
+00:03:29.866 --> 00:03:31.646 align:middle
+pero no necesitamos pasar un mensaje.
+
+00:03:32.086 --> 00:03:34.646 align:middle
+Esto devolverá un mensaje
+"Credenciales incorrectas"
+
+00:03:34.646 --> 00:03:35.686 align:middle
+al usuario.
+
+00:03:36.436 --> 00:03:39.956 align:middle
+Llegados a este punto, hemos
+encontrado la entidad ApiToken.
+
+00:03:40.386 --> 00:03:45.696 align:middle
+Pero, en última instancia, nuestro sistema
+de seguridad quiere autenticar a un usuario...
+
+00:03:45.826 --> 00:03:47.596 align:middle
+no un "Token API".
+
+00:03:48.356 --> 00:03:54.146 align:middle
+Lo hacemos devolviendo un UserBadge que,
+en cierto modo, envuelve al objeto User.
+
+00:03:54.656 --> 00:03:56.986 align:middle
+Mira: devuelve un new UserBadge().
+
+00:03:57.556 --> 00:04:00.686 align:middle
+El primer argumento es el
+"identificador de usuario".
+
+00:04:01.216 --> 00:04:07.936 align:middle
+Pasa $token->getOwnedBy() para obtener
+el User y luego ->getUserIdentifier():
+
+00:04:08.786 --> 00:04:12.026 align:middle
+Observa que en realidad no estamos
+devolviendo el obje to User.
+
+00:04:12.546 --> 00:04:14.326 align:middle
+Esto se debe principalmente a que...
+
+00:04:14.616 --> 00:04:15.556 align:middle
+¡no lo necesitamos!
+
+00:04:16.256 --> 00:04:16.856 align:middle
+Deja que te lo explique.
+
+00:04:17.356 --> 00:04:20.826 align:middle
+Mantén pulsado Command o Ctrl y
+haz clic en getUserIdentifier().
+
+00:04:21.586 --> 00:04:24.286 align:middle
+Lo que esto devuelve realmente
+es el email del usuario .
+
+00:04:24.676 --> 00:04:28.286 align:middle
+Así que estamos devolviendo un UserBadge con el email
+del usuario dentro. Lo que ocurre a continuación es lo
+
+00:04:28.916 --> 00:04:34.106 align:middle
+mismo que ocurre cuando enviamos un email
+
+00:04:34.106 --> 00:04:37.116 align:middle
+al punto final de autenticación json_login.
+
+00:04:37.716 --> 00:04:43.336 align:middle
+El sistema de seguridad de Symfony toma ese correo
+electrónico y, como tenemos este proveedor de usuario,
+
+00:04:43.646 --> 00:04:47.326 align:middle
+sabe que debe consultar la base de
+datos en busca de un User con ese email.
+
+00:04:48.126 --> 00:04:51.936 align:middle
+Así que volverá a consultar la base de datos en
+busca del User a través del correo electrónico...
+
+00:04:52.026 --> 00:04:54.686 align:middle
+lo cual es un poco
+innecesario, pero está bien.
+
+00:04:55.326 --> 00:04:58.656 align:middle
+Si quieres evitarlo, podrías pasar un callable
+
+00:04:58.656 --> 00:05:02.186 align:middle
+al segundo argumento y devolver
+$token->getOwnedBy().
+
+00:05:02.726 --> 00:05:05.026 align:middle
+Pero esto funcionará bien tal como está.
+
+00:05:05.666 --> 00:05:10.456 align:middle
+Ah, ¡y probablemente sea buena idea comprobar
+y asegurarnos de que el token es válido!
+
+00:05:11.016 --> 00:05:15.616 align:middle
+Si no lo es $token->isValid(), entonces
+podríamos lanzar otro BadCredentialsException.
+
+00:05:16.056 --> 00:05:17.746 align:middle
+Pero si quieres personalizar el mensaje,
+
+00:05:18.156 --> 00:05:22.056 align:middle
+también puedes lanzar un nuevo
+CustomUserMessageAuthenticationException
+
+00:05:22.446 --> 00:05:27.626 align:middle
+con "Token caducado" para devolver
+ese mensaje al usuario: Y...
+
+00:05:27.956 --> 00:05:29.516 align:middle
+¡listo! Entonces...
+
+00:05:29.686 --> 00:05:30.826 align:middle
+¿cómo probamos esto?
+
+00:05:31.296 --> 00:05:34.676 align:middle
+Bueno, lo ideal sería probarlo
+en nuestros documentos Swagger.
+
+00:05:35.056 --> 00:05:36.466 align:middle
+Voy a abrir una nueva pestaña...
+
+00:05:36.766 --> 00:05:37.936 align:middle
+y luego cerraré la sesión.
+
+00:05:38.316 --> 00:05:40.896 align:middle
+Pero mantendré abierta mi pestaña original...
+
+00:05:41.046 --> 00:05:43.356 align:middle
+¡para poder robar estos tokens válidos!
+
+00:05:44.096 --> 00:05:45.576 align:middle
+Dirígete a los documentos de la API.
+
+00:05:46.286 --> 00:05:51.926 align:middle
+¿Cómo podemos decirle a esta interfaz que
+envíe un token de API cuando haga las peticiones?
+
+00:05:52.586 --> 00:05:55.586 align:middle
+Bueno, habrás notado que
+hay un botón "Autorizar".
+
+00:05:56.046 --> 00:05:57.346 align:middle
+Pero cuando lo pulsamos...
+
+00:05:57.766 --> 00:05:58.766 align:middle
+¡está vacío!
+
+00:05:59.486 --> 00:06:05.606 align:middle
+Eso es porque todavía no le hemos dicho a Open
+API cómo pueden autenticarse los usuarios.
+
+00:06:06.226 --> 00:06:08.996 align:middle
+Afortunadamente, podemos hacerlo
+a través de API Platform.
+
+00:06:09.676 --> 00:06:12.626 align:middle
+Abre config/packages/api_platform.yaml.
+
+00:06:13.326 --> 00:06:19.866 align:middle
+Y una nueva clave llamada swagger, aunque en realidad
+estamos configurando los documentos de OpenAPI.
+
+00:06:20.586 --> 00:06:27.396 align:middle
+Para añadir una nueva forma de autenticarse, configura
+api_keys para activar ese tipo, luego access_token...
+
+00:06:27.646 --> 00:06:29.316 align:middle
+que puede ser lo que quieras.
+
+00:06:30.096 --> 00:06:33.546 align:middle
+Debajo de esto, dale un nombre a
+este mecanismo de autenticación...
+
+00:06:34.586 --> 00:06:40.526 align:middle
+y type: header porque queremos pasar el token
+como cabecera: Esto le dirá a Swagger -a
+
+00:06:40.786 --> 00:06:47.196 align:middle
+través de nuestros documentos OpenAPI- que podemos enviar
+tokens de API a través de la cabecera Authorization.
+
+00:06:47.886 --> 00:06:49.726 align:middle
+Ahora, cuando pulsemos el botón "Autorizar"...
+
+00:06:50.086 --> 00:06:53.546 align:middle
+¡sí! Dice "Nombre:
+Autorización", "En cabecera".
+
+00:06:53.546 --> 00:06:58.496 align:middle
+Para utilizarlo, tenemos que empezar con
+la palabra Bearer y luego un espacio...
+
+00:06:58.786 --> 00:07:01.196 align:middle
+porque no lo rellena por nosotros.
+
+00:07:01.486 --> 00:07:03.006 align:middle
+Más sobre esto en un minuto.
+
+00:07:03.836 --> 00:07:05.766 align:middle
+Probemos primero con un token no válido.
+
+00:07:06.316 --> 00:07:07.296 align:middle
+Pulsa "Autorizar".
+
+00:07:07.726 --> 00:07:12.846 align:middle
+En realidad, aún no se ha realizado ninguna petición:
+sólo se ha almacenado el código en JavaScript.
+
+00:07:13.586 --> 00:07:15.876 align:middle
+Probemos con la ruta get treasure collection.
+
+00:07:16.416 --> 00:07:17.746 align:middle
+Cuando ejecutamos...
+
+00:07:18.566 --> 00:07:20.856 align:middle
+¡impresionante! ¡A 401!
+
+00:07:21.456 --> 00:07:24.846 align:middle
+No necesitamos autenticarnos
+para utilizar este punto final,
+
+00:07:25.296 --> 00:07:30.086 align:middle
+pero como pasamos una cabecera
+Authorization con Bearer y luego un token,
+
+00:07:30.516 --> 00:07:36.096 align:middle
+el nuevo sistema access_token lo captó,
+pasó la cadena a nuestro manejador...
+
+00:07:36.496 --> 00:07:39.636 align:middle
+pero entonces no pudimos encontrar un
+token coincidente en la base de datos,
+
+00:07:39.796 --> 00:07:44.936 align:middle
+así que lanzamos el BadCredentialsException
+Puedes verlo aquí abajo:
+
+00:07:45.386 --> 00:07:50.896 align:middle
+la API devolvió una respuesta vacía, pero
+con una cabecera que contenía invalid_token
+
+00:07:51.056 --> 00:07:56.396 align:middle
+y error_description: "Credenciales no
+válidas". Así que el caso malo funciona.
+
+00:07:56.816 --> 00:07:58.396 align:middle
+¡Probemos el caso feliz!
+
+00:07:59.156 --> 00:08:01.776 align:middle
+En la otra pestaña, copia
+uno de los tokens válidos.
+
+00:08:02.586 --> 00:08:06.346 align:middle
+Luego vuelve a deslizarte hacia arriba,
+pulsa "Autorizar" y luego "Cerrar sesión".
+
+00:08:07.026 --> 00:08:10.626 align:middle
+Cerrar sesión sólo significa que "olvida" el token
+de la API que hemos establecido hace un minuto.
+
+00:08:11.466 --> 00:08:15.596 align:middle
+Vuelve a escribir Bearer , pega,
+pulsa "Autorizar", cierra...
+
+00:08:16.096 --> 00:08:18.456 align:middle
+y volvamos a probar esta ruta.
+
+00:08:19.056 --> 00:08:20.156 align:middle
+Y... ¡woohoo!
+
+00:08:20.156 --> 00:08:24.726 align:middle
+¡A 200! Así que parece que ha funcionado...
+
+00:08:25.106 --> 00:08:26.386 align:middle
+¿pero cómo podemos saberlo?
+
+00:08:27.216 --> 00:08:32.096 align:middle
+En la barra de herramientas de depuración web,
+haz clic para abrir el perfilador de esa petición.
+
+00:08:32.846 --> 00:08:34.056 align:middle
+En la pestaña Seguridad...
+
+00:08:34.856 --> 00:08:37.526 align:middle
+¡sí! Hemos iniciado sesión como Bernie.
+
+00:08:37.716 --> 00:08:41.436 align:middle
+¡Éxito! Lo único que no me
+gusta es tener que escribir
+
+00:08:41.436 --> 00:08:44.556 align:middle
+esa cadena Bearer en el
+cuadro de autorización.
+
+00:08:44.886 --> 00:08:47.156 align:middle
+No es muy fácil de usar. Así
+
+00:08:48.046 --> 00:08:53.876 align:middle
+que, a continuación, vamos a solucionarlo aprendiendo cómo
+podemos personalizar el documento de especificaciones OpenAPI
+
+00:08:53.956 --> 00:08:55.326 align:middle
+que utiliza Swagger.
