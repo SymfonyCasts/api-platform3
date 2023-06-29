@@ -1,0 +1,386 @@
+WEBVTT
+
+00:00:01.076 --> 00:00:06.796 align:middle
+Nueva búsqueda de seguridad: Quiero permitir que
+sólo el propietario de un tesoro pueda editarlo.
+
+00:00:07.346 --> 00:00:10.966 align:middle
+Ahora mismo, puedes editar un
+tesoro siempre que tengas este rol.
+
+00:00:11.486 --> 00:00:14.036 align:middle
+Pero eso significa que puedes
+editar el tesoro de cualquiera.
+
+00:00:14.586 --> 00:00:18.496 align:middle
+Alguien sigue cambiando el coolFactor
+de mi cuadro de Velvis a 0.
+
+00:00:18.946 --> 00:00:20.196 align:middle
+Eso no mola nada.
+
+00:00:20.846 --> 00:00:22.426 align:middle
+Escribamos una prueba para esto.
+
+00:00:23.116 --> 00:00:26.916 align:middle
+En la parte inferior diremos public
+function testPatchToUpdateTreasure():
+
+00:00:28.966 --> 00:00:29.866 align:middle
+Y empezaremos como siempre:
+
+00:00:29.866 --> 00:00:37.036 align:middle
+$user = UserFactory::createOne() luego
+$this->browser->actingAs($user).
+
+00:00:37.716 --> 00:00:43.966 align:middle
+Como estamos editando un tesoro, vamos
+a ->patch() a /api/treasures/...
+
+00:00:44.396 --> 00:00:46.346 align:middle
+¡y luego necesitamos un tesoro para editar!
+
+00:00:46.846 --> 00:00:51.746 align:middle
+Crea uno encima: $treasure =
+DragonTreasureFactory::createOne().
+
+00:00:51.746 --> 00:00:57.266 align:middle
+Y para esta prueba, queremos asegurarnos de
+que el owner es definitivamente este $user.
+
+00:00:58.576 --> 00:01:01.306 align:middle
+Termina la URL con $treasure->getId().
+
+00:01:02.376 --> 00:01:11.836 align:middle
+Para los datos, envía algo de json para actualizar
+sólo el campo value a 12345, luego assertStatus(200)
+
+00:01:12.816 --> 00:01:17.726 align:middle
+y assertJsonMatches('value',
+12345): ¡Excelente!
+
+00:01:18.046 --> 00:01:20.426 align:middle
+Esto debería estar permitido
+porque somos el owner.
+
+00:01:20.956 --> 00:01:26.836 align:middle
+Copia el nombre del método, busca tu
+terminal y ejecútalo: symfony php bin/phpunit
+
+00:01:26.836 --> 00:01:31.986 align:middle
+--filter=testPatchToUpdateTreasure
+No te sorprendas, pasa.
+
+00:01:32.586 --> 00:01:37.866 align:middle
+Ahora probemos el otro caso: iniciemos sesión como
+otra persona e intentemos actualizar este tesoro.
+
+00:01:38.686 --> 00:01:40.396 align:middle
+Copia toda la sección $browser.
+
+00:01:40.756 --> 00:01:44.366 align:middle
+Podríamos crear otro método de prueba,
+pero esto funcionará bien todo en uno.
+
+00:01:45.266 --> 00:01:50.266 align:middle
+Antes de esto, añade $user2
+= UserFactory::createOne() -
+
+00:01:50.586 --> 00:01:52.766 align:middle
+y luego inicia sesión como ese usuario.
+
+00:01:53.716 --> 00:02:00.226 align:middle
+Esta vez, cambia el value por 6789 y,
+como esto no debería estar permitido,
+
+00:02:00.486 --> 00:02:07.286 align:middle
+afirma que el código de estado es 403:
+Cuando intentemos la prueba ahora ¡Falla!
+
+00:02:07.516 --> 00:02:11.436 align:middle
+Esto está permitido: ¡la API devuelve un 200!
+
+00:02:11.986 --> 00:02:16.076 align:middle
+Entonces, ¿cómo podemos hacer que sólo
+el propietario de un tesoro pueda editarlo?
+
+00:02:16.526 --> 00:02:21.406 align:middle
+Bueno, en DragonTreasure, la respuesta
+está en la opción security:
+
+00:02:22.056 --> 00:02:27.486 align:middle
+Una cosa que resulta complicada con Put() y Patch()
+es que ambos se utilizan para editar usuarios.
+
+00:02:27.916 --> 00:02:32.536 align:middle
+Así que si vas a tener ambos, necesitas
+mantener sus opciones security sincronizadas.
+
+00:02:33.126 --> 00:02:36.916 align:middle
+De hecho, voy a eliminar Put() para
+que podamos centrarnos en Patch().
+
+00:02:37.786 --> 00:02:40.766 align:middle
+La cadena dentro de security
+es una expresión...
+
+00:02:40.896 --> 00:02:42.896 align:middle
+y podemos ponernos un poco elegantes.
+
+00:02:43.226 --> 00:02:51.296 align:middle
+Podemos conceder acceso si tienes
+ROLE_TREASURE_EDIT y si object.owner == user:
+
+00:02:51.996 --> 00:02:55.506 align:middle
+Dentro de la expresión de seguridad,
+Symfony nos da unas cuantas variables.
+
+00:02:55.916 --> 00:02:58.996 align:middle
+Una es user, que es el objeto actual User.
+
+00:02:59.626 --> 00:03:04.666 align:middle
+Otra es object, que será el
+objeto actual para esta operación.
+
+00:03:04.936 --> 00:03:07.116 align:middle
+Así que el objeto DragonTreasure. Así que
+
+00:03:07.646 --> 00:03:13.406 align:middle
+estamos diciendo que se debe permitir el
+acceso si el DragonTreasure s owner es igual
+
+00:03:13.406 --> 00:03:15.496 align:middle
+al user autenticado actualmente.
+
+00:03:15.986 --> 00:03:17.966 align:middle
+Eso es... ¡exactamente lo que queremos!
+
+00:03:18.436 --> 00:03:20.096 align:middle
+Así que, ¡vuelve a intentar la prueba!
+
+00:03:20.686 --> 00:03:22.096 align:middle
+Y... ¡oh!
+
+00:03:22.426 --> 00:03:24.666 align:middle
+¡Bajamos a un error 500!
+
+00:03:25.486 --> 00:03:28.666 align:middle
+Aquí es donde resulta útil ese
+archivo de registro guardado.
+
+00:03:29.156 --> 00:03:30.406 align:middle
+Haré clic para abrirlo.
+
+00:03:31.406 --> 00:03:34.126 align:middle
+Si esto es difícil de leer,
+mira la fuente de la página.
+
+00:03:35.556 --> 00:03:36.066 align:middle
+Mucho mejor.
+
+00:03:36.356 --> 00:03:41.016 align:middle
+Dice No se puede acceder a la propiedad
+privada DragonTreasure::$owner.
+
+00:03:41.016 --> 00:03:43.586 align:middle
+Y viene de la página de
+Symfony ExpressionLanguage.
+
+00:03:44.186 --> 00:03:45.366 align:middle
+Ah, ya sé lo que pasa.
+
+00:03:45.846 --> 00:03:48.296 align:middle
+El lenguaje de expresión es como Twig...
+
+00:03:48.586 --> 00:03:50.366 align:middle
+pero no exactamente igual.
+
+00:03:51.026 --> 00:03:55.666 align:middle
+No podemos hacer cosas extravagantes como
+.owner cuando owner es una propiedad privada.
+
+00:03:56.256 --> 00:04:03.956 align:middle
+Tenemos que llamar al método público: Redoble
+de tambores, por favor: ¡Pasa con éxito!
+
+00:04:04.586 --> 00:04:07.866 align:middle
+Pero ya me conoces, tengo
+que hacerlo más difícil.
+
+00:04:08.716 --> 00:04:10.026 align:middle
+Copia parte de la prueba.
+
+00:04:11.446 --> 00:04:15.896 align:middle
+Esta vez, inicia sesión como propietario
+y edita nuestro propio tesoro.
+
+00:04:16.356 --> 00:04:18.196 align:middle
+Hasta aquí, todo bien.
+
+00:04:18.816 --> 00:04:24.966 align:middle
+Pero ahora intenta cambiar el
+owner por otro: $user2->getId():
+
+00:04:25.686 --> 00:04:28.366 align:middle
+Ahora puede que esto sea
+algo que quieras permitir.
+
+00:04:28.876 --> 00:04:34.466 align:middle
+Tal vez digas Si puedes editar un DragonTreasure,
+entonces eres libre de asignarle un propietario diferente.
+
+00:04:35.086 --> 00:04:37.556 align:middle
+Pero supongamos que queremos impedirlo.
+
+00:04:37.856 --> 00:04:40.206 align:middle
+Entonces assertStatus(403).
+
+00:04:41.086 --> 00:04:43.366 align:middle
+¿Crees que la prueba pasará?
+
+00:04:43.846 --> 00:04:47.076 align:middle
+Inténtalo: ¡Falla!
+
+00:04:47.606 --> 00:04:50.046 align:middle
+¡Nos ha permitido cambiar el owner!
+
+00:04:50.686 --> 00:04:52.166 align:middle
+Gira de nuevo a DragonTreasure.
+
+00:04:53.066 --> 00:04:58.606 align:middle
+La expresión security se ejecuta antes de que
+los nuevos datos se deserialicen en el objeto. En
+
+00:04:59.276 --> 00:05:03.586 align:middle
+otras palabras, object será el
+DragonTreasure de la base de datos,
+
+00:05:03.886 --> 00:05:07.186 align:middle
+antes de que se le aplique nada del nuevo JSON.
+
+00:05:07.886 --> 00:05:13.526 align:middle
+Esto significa que se está comprobando que el owner
+actual es igual al usuario conectado en ese momento,
+
+00:05:13.756 --> 00:05:16.236 align:middle
+que es el caso principal que queremos proteger.
+
+00:05:16.916 --> 00:05:22.006 align:middle
+Pero a veces quieres ejecutar la seguridad después de
+que los nuevos datos se hayan introducido en el objeto.
+
+00:05:22.476 --> 00:05:27.306 align:middle
+En ese caso, utiliza una opción
+llamada securityPostDenormalize.
+
+00:05:27.956 --> 00:05:33.296 align:middle
+Recuerda que desnormalizar es el proceso
+de tomar los datos y ponerlos en el objeto.
+
+00:05:33.956 --> 00:05:35.966 align:middle
+Así que security seguirá
+ejecutándose primero...
+
+00:05:36.426 --> 00:05:39.036 align:middle
+y se asegurará de que somos
+el propietario original.
+
+00:05:39.996 --> 00:05:46.696 align:middle
+Ahora también podemos decir object.getOwner()
+== user: Eso parece idéntico...
+
+00:05:46.916 --> 00:05:51.346 align:middle
+pero esta vez object será el
+DragonTreasure con los nuevos datos.
+
+00:05:51.916 --> 00:05:57.166 align:middle
+Así que estamos comprobando que el nuevo propietario
+también es igual al usuario actualmente conectado. Por
+
+00:05:57.986 --> 00:06:04.496 align:middle
+cierto, en securityPostDenormalize, también
+tienes una variable previous_object,
+
+00:06:04.826 --> 00:06:08.436 align:middle
+que es igual al objeto antes
+de la desnormalización.
+
+00:06:08.876 --> 00:06:13.026 align:middle
+Por tanto, es idéntica a
+object en la opción security.
+
+00:06:13.386 --> 00:06:14.506 align:middle
+Pero, no necesitamos eso.
+
+00:06:15.486 --> 00:06:19.336 align:middle
+Haz la prueba ahora: ¡Lo hemos conseguido!
+
+00:06:19.916 --> 00:06:24.136 align:middle
+Este último ejemplo pone de manifiesto dos
+tipos diferentes de comprobaciones de seguridad.
+
+00:06:24.746 --> 00:06:30.456 align:middle
+La primera comprobación determina si el
+usuario puede o no realizar esta operación.
+
+00:06:30.996 --> 00:06:35.866 align:middle
+Por ejemplo: ¿puede el usuario actual
+hacer una petición a PATCH a este tesoro?
+
+00:06:36.596 --> 00:06:41.486 align:middle
+Eso depende del usuario actual y del
+TesoroDragón actual en la base de datos.
+
+00:06:42.116 --> 00:06:47.806 align:middle
+Pero la segunda comprobación es decir: Vale, ahora
+que sé que puedo hacer una petición a PATCH, ¿puedo
+
+00:06:48.196 --> 00:06:52.166 align:middle
+cambiar los datos exactamente de esta manera?
+
+00:06:52.816 --> 00:06:58.056 align:middle
+Esto depende del usuario conectado en ese
+momento y de los datos que se estén enviando.
+
+00:06:58.876 --> 00:07:04.816 align:middle
+Traigo a colación esta diferencia porque,
+para mí, el primer caso -en el que intentas
+
+00:07:04.816 --> 00:07:07.826 align:middle
+averiguar si una operación
+está permitida en absoluto,
+
+00:07:08.176 --> 00:07:12.696 align:middle
+independientemente de los datos que
+se envíen- es tarea de la seguridad.
+
+00:07:13.096 --> 00:07:15.946 align:middle
+Y así es exactamente como
+yo lo implementaría. Sin
+
+00:07:16.656 --> 00:07:22.056 align:middle
+embargo, en el segundo caso, en el que intentas
+averiguar si el usuario está autorizado
+
+00:07:22.056 --> 00:07:28.196 align:middle
+a enviar esos datos exactos -por ejemplo, si puede
+cambiar la dirección owner o no- , creo que es
+
+00:07:28.626 --> 00:07:31.536 align:middle
+mejor que se encargue de
+ello la capa de validación.
+
+00:07:31.536 --> 00:07:34.856 align:middle
+Por ahora voy a mantener
+esto en la capa de seguridad.
+
+00:07:35.516 --> 00:07:40.026 align:middle
+Pero más adelante, cuando hablemos de la
+validación personalizada, lo trasladaremos a ella.
+
+00:07:41.136 --> 00:07:48.126 align:middle
+Próximamente: ¿podemos flexibilizar la opción security lo suficiente como para
+permitir también a los usuarios administradores editar el tesoro de cualquiera?
+
+00:07:48.586 --> 00:07:49.326 align:middle
+¡Permanece atento!
