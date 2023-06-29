@@ -156,6 +156,17 @@ Our docs are now totally disabled.
 Oh, and to disable the docs *just* for production, I would create an environment
 variable - like `ENABLE_API_DOCS` - then reference that in my config:
 
+***TIP
+Actually, due to how the config is loaded, environment variables won't work here!
+Instead, you could disable docs in production only, via:
+
+```yaml
+when@prod:
+    api_platform:
+        enable_swagger_ui: false
+```
+***
+
 ```yaml
 # config/packages/api_platform.yaml
 api_platform:
