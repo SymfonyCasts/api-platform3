@@ -1,5 +1,153 @@
-# Validation Groups
+# Validation Groups & Patch Formats
 
-Coming soon...
+Now that the `plainPassword` property is a legitimate part of our API, let's add
+some validation... because you can't create a new user without a password! Add
+`Assert\NotBlank`:
 
-Ok, so now that the `plainPassword` property is a legitimate part of our API via the `plainPassword` field, let's add some validation because you can't create a new user without a `password`. So `assert\NotBlank`. Actually is going to cause a problem which we're going to discover in a second, but let's blindly move forward and pretend that everything is fine. Copy our first test because I'm going to create a second test here to make sure that we can update users. So in this case we'll call it `testPatchToUpdateUser()`. And this will be a bit simpler here. I'll start by creating a user, `$user = UserFactory::createOne()`. And then I'll say `actingAs($user)`, we're going to log in as that user because we need to be logged in in order to edit users. And then we will `patch` to `/api/users/` and we will edit our own user record. Down here for the `JSON` I'm just going to send `email`, I mean `username`, we'll say changed. And we'll `assertStatus(200)`. And I don't, I don't need any of these other spots. All right, that looks good. Just to remind you on our user endpoints up on `patch`, here we go. We're just requiring that the `role`, we have `roleUserEdit` because we're logging in as a full user, we should have that. Everything should work just fine. So let's run `symfony php bin/phpunit --filter=theNameOfOurMethod`. And oh, 200 expected to get 415. That's a new one for us. So I'm gonna click to open the logs here. And then I'll view source to make this a little more clear. We get 415. The error we get is the `Content-Type: application/json` is not supported. Supported MIME types are `application/merge-patch+json`. Okay, let's unpack this a little bit. We are sending a `patch` request. And we understand that `patch` is quite simple, right? You can send a subset of fields and only those fields will be updated. Well, it turns out the topic of `patch` request is actually quite complex. And there are actually different competing formats of data that you can send to a `patch` request that mean different things. Currently an API platform only one format is supported and its application slash merge patch JSON. Application slash merge patch JSON is for the most part what you'd think it means. That format basically says, if you send a single field, then only that single field will be changed. But also has like other rules how you could send `email` set to null and that should actually remove the `email` field that doesn't really apply here. But the point is, this defines the rules about what it means to kind of patch or update from a partial set of JSON. And if you want to know more about it, there's a little there's a document that describes exactly what it does. It's actually very short and very readable and kind of cool. So the point is that there in theory, API platform only supports one at the moment only supports one way one format for a JSON for our patch request. But in theory, in the future, they might support more. The format they support is this application merge patch JSON. And so when you send a patch request, they require you to set the `Content-Type` header to `application/merge-patch+json` so that you're explicitly telling API platform which how you want it to handle your JSON. So in other words, if we go down here and pass a `headers` key with `Content-Type` set to `application/merge-patch+json`. If we try this now, it still fails, but now it's failing with a validation error. So that fixes the `Content-Type` problem. So the takeaway is your patch method actually requires this `Content-Type` header. Now you might be wondering, wait a second, we did a bunch of patch requests over here inside of the `DragonTreasure` and we didn't need it then like what's going on. That was kind of on accident inside of our `DragonTreasure` class. In our first tutorial. Let's see, here we go. We actually added a `formats` key and we did this so that we can add CSV support to our `DragonTreasure` resource. Well it turns out for kind of some complex internal reasons by adding this `formats` key that actually removed the requirement for needing that header. So we were kind of getting away with without setting the header in our `DragonTreasure` test even though we should be setting it. So since I was adding CSV format here, I maybe should have added these formats just to the `git collection` endpoint because that's really the one where we wanted that CSV export. Anyways, we really should need it everywhere. That's why we didn't need it for `DragonTreasure` resource, but we do need it for `UserResource` treasure. Now if adding this header is really annoying every time you call `patch`, that's another situation where you could add a custom method to `browser` and you could maybe have a method called `API patch` which looks the same but then adds that `header` automatically for you. Alright so that's the little important thing you need to know about `patch`. Now let's go back and see what happened to our test because it's still not passing. We're getting a 422 and if we open the error now, it's our validation `plainPassword`. This field should not be blank. This was an accident. Outside of `User`, our `plainPassword` property is not persistent to the database. So this is always going to be empty to start. When we're creating a `User`, we absolutely do want this field to be required. But when we're editing a `User`, the `plainPassword` field is going to be required but that doesn't mean we need the user to send us a password. They want to change the password, they can, but if they don't need to change the password, they don't need to send a `plainPassword`. This is the first spot where we have conditional validation. It should happen on some operations but not on other operations. So the way to fix this is with validation groups, which is very similar to serialization groups. So check this out. I'm going to go up and find my `post` operation. In here we can pass a new thing called `validationContext` with, you guessed it, groups. In here I'm going to pass a group called `Default` with a capital D. And then I'm going to make up a new one called `postValidation`. So when the validator validates an object, it by default validates everything that's in the `Default` group. And any time you have a constraint, by default that constraint is in the `Default` group. So what we're saying up here is we want to validate everything that is in the `Default` group and everything that is in the `postValidation` group. And we can take that `postValidation` and go down to `plainPassword`. And here on that we can say `groups` set to `postValidation`. So now other endpoints like `patch` will not run this, but the `post` endpoint will run this. So I'm going to run it now. Got it. That test passes. And in fact, all of our tests are passing. Now one quick note about this validation here. In my user operation, I still do have `put` and `patch`. I haven't really played with it much yet, but as I mentioned earlier, technically the new `put` does support creating objects. So it's a little weird. `Put` this could be used to create or edit an object. So it's a little tricky. Do you need to run validation on the `password`? Do you not need to? So this might be another reason that you delete the `put` operation for simplicity so that you can have one operation for create and one operation for edit. All right, next we're going to talk about making our serialization groups dynamic as another way to be able to conditionally include or not include fields in your API based on who's logged in. So I'm going to try somewhere else.
+[[[ code('3c58a50bac') ]]]
+
+Piece of cake! Well, that just created a new problem... but let's blindly move
+forward and pretend that everything is fine.
+
+Copy the first test and paste to create a second method that will make sure we can
+*update* users. Call it `testPatchToUpdateUser()`. This one is simple: make a
+new user - `$user = UserFactory::createOne()`, add `actingAs($user)` then `->patch()`
+to `/api/users/` then `$user->getId()` to edit ourselves.
+
+For the `json`, just send `username`, add `assertStatus(200)`.... then we don't
+need  any of this other stuff:
+
+[[[ code('2255e56fb9') ]]]
+
+As a reminder, up on the `Patch` operation for `User`... here it is, we're
+requiring that the user has `ROLE_USER_EDIT`. Because we're logging in as a "full"
+user, we should have that... and everything should work fine... famous last words.
+
+Run:
+
+```terminal
+symfony php bin/phpunit --filter=testPatchToUpdateUser
+```
+
+## PATCH: The Most Interesting HTTP Method in the World
+
+And... oh! 200 expected, got 415. That's a new one! Click to open the last response...
+then I'll View Source to make it more clear. Interesting:
+
+> The content-Type: `application/json` is not supported. Supported MIME types are
+> `application/merge-patch+json`.
+
+Let's unpack this. We're making a `PATCH` request... and `PATCH` requests are
+quite simple: we send a subset of fields, and only *those* fields are updated.
+
+Whelp, it turns out that the `PATCH` HTTP method can get a whole heck of a lot
+more interesting than this. In the greater interwebs, there are competing *formats*
+for how the data should look when using a PATCH request and each format *means*
+something different.
+
+Currently, API Platform supports only one of these formats: `application/merge-patch+json`.
+This format is... kind of what you expect. It says: if you send a single field,
+only that single field will be changed. But it also has other rules, like how you
+could set `email` to `null`... and that would actually *remove* the `email` field.
+That doesn't really make sense in our API, but the point is: the format defines
+rules about how your JSON should look for a `PATCH` request and what that means.
+If you want to know more, there's a [document that describes everything](https://www.rfc-editor.org/rfc/rfc7386):
+it's quite short and readable.
+
+So, API platform only supports *one* format for PATCH requests at the
+moment. But, in the future, they might support more. And so, when you make a
+`PATCH` request, API Platform requires you to send a `Content-Type` header set
+to `application/merge-patch+json`... so that you're *explicitly* telling API platform
+*which* format your JSON is using.
+
+In other words, to fix our error, pass a `headers` key with `Content-Type` set
+to `application/merge-patch+json`:
+
+[[[ code('d055fac9e6') ]]]
+
+Try this now:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateUser
+```
+
+It *still* fails, but now it's a validation error! The takeaway is simple: PATCH
+requests require this `Content-Type` header.
+
+But wait! We did a bunch of `PATCH` requests over in `DragonTreasureResourceTest`
+and those worked fine *without* the header! What the what?
+
+That... was kind of on accident. Inside `DragonTreasure`, in the first tutorial...
+here it is, we added a `formats` key so that we could add CSV support:
+
+[[[ code('18f2b56f4b') ]]]
+
+It turns out that, for some complex internal reasons, by adding `formats`, we
+*removed* the requirement for needing that header. So we were "getting away" with
+*not* setting the header in `DragonTreasureResourceTest`... even though we *should*
+be setting it. It may have been better to set `formats` on the `GetCollection`
+operation only... since that's the only spot we need CSV.
+
+Anyway, that's why we didn't need it before, but we *do* need it now. By the way,
+if adding this header every time you call `->patch` is annoying, this is another
+situation where you could add a custom method to browser - like `->apiPatch()` -
+which would work the same, but add that header automatically.
+
+## Fixing the Validation Groups
+
+Ok, back to the test! It's failing with a 422. Open the
+error response. Ah, it's from `plainPassword`: this field should not be blank!
+
+The `plainPassword` property is *not* persisted to the database. So, it's always
+empty at the start of an API request. When we create a `User`, we absolutely *do*
+want this field to be required. But when we're editing a `User`, we *don't* need
+this field to be set. They *can* set it in order to change their password, but
+that's optional.
+
+This is the first spot where we need *conditional* validation: validation should
+happen on one operation, but not on others. The way to fix this is with validation
+groups, which is very similar to serialization groups.
+
+Find the `Post` operation and pass a new option called
+`validationContext` with, you guessed it, `groups`! Set this to an array with a
+group called `Default` with a capital D. Then invent a second group:
+`postValidation`:
+
+[[[ code('c95494bea0') ]]]
+
+When the validator validates an object, by default, it validates everything that's
+in a group called `Default`. And any time you have a constraint, by default that
+constraint is *in* that `Default` group. So what we're saying here is:
+
+> We want to validate all the *normal* constraints *plus* any constraints
+> that are in the `postValidation` group.
+
+Now we can take that `postValidation`, go down to `plainPassword` and set
+`groups` to `postValidation`:
+
+[[[ code('3cd32444f9') ]]]
+
+That *removes* this constraint from the `Default` group and *only* includes
+it in the `postValidation` group. Thanks to this, other operations like `Patch`
+will *not* run this, but the `Post` operation *will*.
+
+Run the test now:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateUser
+```
+
+We're unstoppable! In fact, *all* of our tests are passing!
+
+## Careful: PUT Can Create Objects
+
+But head's up! In `User`, we still have both `Put` and `Patch`. I haven't
+played with it much yet, but the new `Put` behavior, in theory, *does* support
+*creating* objects. This can make things tricky: do we need to require the password
+or not? It depends! This might be another reason for removing the `Put` operation
+to keep life  simple. That gives us one operation for creating and one operation
+for editing.
+
+Next: let's explore making our serialization groups *dynamic* based on the user.
+This will give us another way to include or not include fields based on who
+is logged in. And it'll lead us towards adding super custom fields.
