@@ -1,5 +1,106 @@
-# Plain Password
+# User Test + Plain Password
 
-Coming soon...
+We have a pretty nice `DragonTreasureResourceTest`, so let's bootstrap one for
+User.
 
-We have a pretty nice `DragonTreasureFactory::createMany()`, so let's create one for the User class. I'll create a new PHP class called UserResourceTest. Then we'll make that extend our custom API test case. And then we just need to `useResetDatabase`. You don't need to use HasBrowser because that's already done for us in our base class. We'll start with `public function testPostToCreateUser()`. This is going to be pretty simple. It's actually going to be a pretty cool test. We are going to make a post request to `/api/users` to create a new user. So I'll pass JSON with an email and a `password`. Then we'll do some basic things. We'll `assertStatus(201)` And then now that we've created that new user, let's immediately see if logging in works. So we can create a post request to `/login`. And here we're also going to have a JSON key. And I'll just copy the email and `password` from above. And then here we'll say `assertSuccessful()`. All right. Let's give that a try in theory. That might work. Say symphony bin, symphony PHP bin slash piece of unit. This time I'll run the entire user resource test. And OK, 422 `status code`, but 201 expected. So if you look here, that means that something went wrong with creating our user. And you know what? I know what it was. I forgot to pass the `username` field. That was an accident. Let's pass the `username` set to a `username`. All right. Now I'm going to try it. OK, that's what I expected. Expected successful `status code`, but got 401. So the failure is actually down here. So we were able to create the user successfully. But then when we try to log in with it, that failed. And the reason is that we never set up our database, our API, to `hash passwords`. So in our user class, above the `password` property, we did make that part of our API, but the plain text `password` is going directly into the database, which is a no-no. And also, it just won't work, because our login system, when we use our login system, it will `hash` this `password` and compare that to what's in the database, and those will never match. So we forgot to `hash` the `password`. So let's fix this. One of the things I like to do is I like to leave the `password` field as just the hash `password`. So instead of temporarily storing the plain text `password` there, I'm going to create a totally new property called `private ?string $plainPassword = null`. This is not going to be stored in the database. It's just a temporary property that will hold the plain text `password`, and then we will `hash` it and store it on the real property. Down at the bottom, I'll go to code generator, `Command + N` on a Mac, and we can generate plain `password`. I'm going to use a second setter just to match my other ones, and perfect. We can clean that up as much as we want to. All right, so now here's the idea. If we scroll all the way to the top and find the `password` field, we're going to remove this from our API. This will no longer be directly modifiable in our API, and instead `plainPassword` will, but we are going to also use `SerializedName` so that this is called `password`. The user is going to send a `password` field. It's actually going to populate `plainPassword`. So this isn't going to work yet, and if you run the tests now, things are actually worse than they were before. We have 500 error, and the reason is because not null violation, the `password` on `password`. So we're sending the `password`. It's getting saved on `plainPassword`, but we're not doing anything with that, and so the `password` property is staying null, and it's exploding when it gets in the database. So the question is how can we `hash` the `password`? Is there... Well, just like we did in Foundry, `hashing` a `password` is actually pretty easy. You just need the `UserPasswordHashInterface` service, and then you can just call a method on that. What we need is a hook in the API platform to do it, something after the user, our data has been deserialized under the user object, we need to be able to run some code before the user object is saved. In the episode, in API platform version two version of this tutorial, I used a doctrine listener for this. That solution is a bit magical, and it does have one downside where if only the plain `password` is set when editing a user, your doctrine listener doesn't run at all, and you have to do some weird workarounds to get it to work. So in API platform three, there's kind of a new spot for us to do that that I want to take advantage of. It's called a `state processor`. And in fact, our user class is already using a `state processor`. If you look for an upgrade guide on API platform and search for `processor`, let's see here, here we go. There's a section down here called providers and processors, we're going to talk about providers later. What it's actually saying here is that if you have an `ApiResource` entity, right now, your put request already has a `processor` called a `PersistProcessor` on it. Post also uses that `PersistProcessor` and delete has a different one called `remove processor`. These `PersistProcessors` are things that happen after you send data. After we send data, that data is deserialized into the object, and then something needs to happen. If our API resource is an entity like in our project, what we need to happen is we need to persist that those changes to the database. That's actually what the `PersistProcessor` does. So what we're going to do is hook into this `PersistProcessor` status with our own. So check this out. Step one, we can run a new `bin/console make:state-processor` from API platform. Let's create one called `UserHashPasswordProcessor`. Perfect. Then we'll spin over, go to source, and it creates a new `state` directory with `UserHashPasswordProcessor` inside. It's pretty simple. API platform will just call this method, pass us data, tell us what operations on there, has some other information. We just do whatever we need to. Now using this `processor` is really simple in theory. We could actually go up to our, for example, post endpoint, and we could say `processor` equals, and we can just point it to that service ID app slash state slash `UserHashPasswordProcessor`. Unfortunately, if we did that, that would replace the `PersistProcessor` that's already on there. We don't want to replace that `processor`. We want that `PersistProcessor` to run, and we want our new `processor` to run. So due to that, we're not going to change the processor and the config. We're going to use service decoration. This is something we did earlier. So decoration always follows the same pattern. We're going to have a construct function that takes an argument, which is the same interface that we have. So we're going to say private `processor` interface, and I'll call it `innerProcessor`. And down here, I'm going to put a little dump, so we can see if this is working. And then we're just going to call this here `innerProcessor->errorProcess()` and pass a `data`, `operation`, `uriVariables`, let's see what else, and `context`, so all the arguments that we got. Perfect. So this is now set up for decoration, but to tell Symfony to, so what we're going to basically do is tell Symfony that internally in Symfony, in API Platform, this persist processor is a service. We're going to tell Symfony that whenever it needs this `persistProcessor` service to use our service instead, but then pass us the original `persistProcessor` to our constructor. So we do that is we say as decorator, let me pass the ID of that core service, which is something you can find in the documentation. That's `api-platform.doctrine.orm.state.persistProcessor`. And that's it. So we're not doing anything yet, but if everything's working, we should be able to run our test and see our dump. Let's try it. And got it. Still the same 500, but it's using our processor now. Now we can get to work. So first here, the way we've written this processor, it's going to be called when any object is being processed, whether it's a `User`, `Dragon`, `Treasure`, or something else. So the first thing I'm going to check here is if `data` is an instance of `User` and `User` and `data->getPlainPassword()`, that's when we want to do our work. I should mention if you follow the core way of doing this declaration, it's slightly different. Then actually has the `password`. We're going to have a second argument to the constructor, private `UserHashPasswordProcessor`, `PasswordHasherInterface`. That's what we want. We'll call that `userPasswordHasher`. And down here, data arrow set password set to this arrow `userPasswordHasher`, `arrowHashPassword`, passing it the user, which is going to be data, and then the plain `password`, which is going to be stored on data arrow get plain `password`. So this is all happening before we call the inner processor that actually saves it. So we're going to set the `password` first, and then we are going to process it. All right, so let's try this. Spin over, try that test and got it. By the way, it's really minor, but once you have that plain `password` property inside of user, there's a method called `eraseCredentials`. And you can just uncomment a this arrow plain `password` equals null there. This just makes sure that if this object ever gets, for example, serialized to the session, if there's any sensitive data on it, like the plain `password` property, we make sure we get rid of that before it goes into our session storage. All right, next, let's fix some issues with `validationGroups` and discover something about the `patch` method.
+## Bootstrapping the User Test
+
+Create a new PHP class called, how about, `UserResourceTest`. Make it extend our
+custom `ApiTestCase`, then we just need to `use ResetDatabase`:
+
+[[[ code('b369ad30a9') ]]]
+
+We don't need `HasBrowser` because that's already done in the base class.
+
+Start with `public function testPostToCreateUser()`:
+
+[[[ code('1b64258c5d') ]]]
+
+Make a `->post()` request to `/api/users`, toss in some `json` with `email` and
+`password`, and `assertStatus(201)`.
+
+And now that we've created the new user, let's jump right in and test if
+we can log in with their credentials! Make another `->post()` request to
+`/login`, *also* pass some `json` - copy the `email` and `password` from
+above - then `assertSuccessful()`:
+
+[[[ code('ee7b25b647') ]]]
+
+Let's give this a go: `symfony php bin/phpunit` and run the entire
+`tests/Functional/UserResourceTest.php` file:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/UserResourceTest.php
+```
+
+And... ok! A 422 status code, but 201 expected. Let's see: this means something went
+wrong creating the user. Let's pop open the last response. Ah! My bad: I forgot
+to pass the required `username` field: we're failing validation!
+
+Pass `username`... set to anything:
+
+[[[ code('205e2a6f79') ]]]
+
+Try that again:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/UserResourceTest.php
+```
+
+*That's* what I wanted:
+
+> Expected successful status code, but got 401.
+
+So the failure is down here. We *were* able to create the user... but when we tried
+to log in, it failed. If you were with us for [episode one](https://symfonycasts.com/screencast/api-platform),
+you might remember why! We never set up our API to *hash* the password.
+
+Check it out: inside `User`, we *did* make `password` part of our API. The user
+sends the plain-text password they want... then we're saving that directly into
+the database. That's a *huge* security problem... and it makes it impossible to
+log in as this user, because Symfony expects the `password` property to hold a
+*hashed* password.
+
+## Setting up the plainPassword Field
+
+So our goal is clear: allow the user to send a *plain* password, but then hash
+it before it's stored in the database. To do this, instead of temporarily storing
+the plain-text password on the `password` property, let's create a totally *new*
+property: `private ?string $plainPassword = null`:
+
+[[[ code('8b66503faa') ]]]
+
+This will *not* be stored in the database: it's just a temporary spot to hold the
+plain password before we hash it and set that on the *real* `password` property.
+
+Down at the bottom, I'll go to "Code"->"Generate", or `Command`+`N` on a Mac, and
+generate a "Getter and setter" for this. Let's clean this up a bit: accept only
+a string, and the PHPDoc is redundant:
+
+[[[ code('23c26e6fc6') ]]]
+
+Next, scroll all the way to the top and find `password`. *Remove* this from our
+API entirely:
+
+[[[ code('583934746d') ]]]
+
+Instead, expose `plainPassword`... but use `SerializedName` so it's called
+`password`:
+
+[[[ code('fb55688523') ]]]
+
+So we're obviously not done yet... and if you run the tests:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/UserResourceTest.php
+```
+
+Things are worse! A 500 error because of a not null violation.
+We're sending `password`, that's stored on `plainPassword`... then we're doing
+absolutely nothing with it. So the *real* `password` property stays null and
+explodes when it hits the database.
+
+So here's the million-dollar question: how can we hash the `plainPassword` property?
+Or, in simpler terms, how can we run code in API Platform *after* the data is
+deserialized but *before* it's saved to the database? The answer is: *state
+processors*. Let's dive into  this powerful concept next.
