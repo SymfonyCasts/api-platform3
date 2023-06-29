@@ -1,5 +1,131 @@
-# Api Property
+# Conditional Fields by User: ApiProperty
 
-Coming soon...
+We control which fields are readable and writable via serialization groups.
+But what if you have a field that should be included in the API... but *only*
+for certain users? Sadly, groups can't pull off that kind of magic on their own.
 
-We control which fields are readable and writable inside of our code via the `serialization groups`. But what if you have a field that should be included in the API ONLY for certain users? It's not something we can do out of the box with groups. For example, find the `isPublished` field and let's expose this to the groups `treasure:read` and `treasure:write` to make that part of our API. Now if we spin over and try the tests, this makes one test fail. Our `GET` collection of treasures because it sees that there is now a new `isPublished` field being returned that wasn't there a second ago. So the idea is that we only want this field to be returned for admin users or owners of the dragon treasure. How can we do this? Well say hello to a new attribute that you can use above your properties called `ApiProperty`. There is actually a bunch of things that you can do with this including a description that helps with your documentation and also a whole bunch of more advanced things inside of here. But there's even one called `readable` so you'd say `readable: false`. This is kind of the serialization groups are sort of making this part of our API and then we're saying but it's not readable so then if you try the tests I'll actually do that actually does make the test pass it hides that field. Though it's not what we want. One of these super cool options inside of `ApiProperty` is `security`. So for example we can set this to `is_granted("ROLE_ADMIN")`. And this is really simple. When this object is serialized if this expression fails then `isPublished` is going to be removed from the end result. So now when we do it now when you run the tests they still pass meaning that `isPublished` field is not being returned from our normal test. All right so let me open up my dragon treasure resource test again. And let me show you here so this is the original test `testGetCollectionOfTreasures` and when we're just anonymous you can see that it's not returning `isPublished` this test is passing. Now scroll down to test admin can patch to edit resource and what we can do here is when we create the `TreasureFactory` let's actually control this and make sure that it always comes with `isPublished` false. And then down here I'll `assertJsonMatches('isPublished', false)` so make sure that in this situation we do have that field. So I'll copy that test name run over and use dash dash filter to just run that test and that passes so it is being returned when we are an admin user. So one last thing I want to test here which is for the owner so I'm going to duplicate that test. I'll say test owner can see `isPublished` field and then we'll change a couple things here which I'm going to rename admin to user for clarity and then we can actually simplify this to create one and then we create the `DragonTreasureFactory::createOne()` we'll make sure that owner is set to our new user. So cool so we're and I could change this to a GET request but this is fine we're going to show it as a PATCH request and when it's serialized we're gonna make sure that it is `isPublished` field comes back. We don't expect this to pass yet we haven't done anything for this and it so let's copy that method name run just that test and yeah it does fail. So we know the drill here over here on this security thing we could inline it like we did before we could say or object dot own get owner like that but this is the whole point we created the voter we don't need to do that we can say is granted edits and then we can pass the object we still have access to that nice object variable inside of these property securities. So I try to test now got it. Notice also I haven't used it very many times but there's also a `securityPostDenormalize` and what's interesting just like with the other security post denormalize on our operations this is run after the new data is serialized onto the object. What's interesting about it here is if this expression returns false the sent data would actually be reverted. So for example if the `isPublished` field started as `false` and then the user changed it to `true` and then `securityPostDenormalize` returned `false` it would actually reverse that `isPublished` field back it up and change it back to its original value. The one thing about `securityPostDenormalize` that doesn't happen on `GET` request it only happens when data is being deserialized. So next let's finally fix our user endpoints so that they hash the password before they store in the database. This will involve a new topic called data state processors.
+For example, find the `$isPublished` field and let's make this part of our API by
+adding the `treasure:read` and `treasure:write` groups:
+
+[[[ code('c28ce9037f') ]]]
+
+Now if we spin over and try the tests:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+This makes one test fail: `testGetCollectionOfTreasures` sees that `isPublished`
+is being returned... and it's not expecting it.
+
+Here's the plan: we'll sneak the field into our API but *only* for admin
+users *or* owners of this `DragonTreasure`. How can we pull that off?
+
+## Hello ApiProperty
+
+Well, surprise! We don't often need it, but we can add an `ApiProperty` attribute
+above any property to help *further* configure it. It has a bunch of stuff,
+like a description that helps with your documentation and many edge-case things.
+There's even one called `readable`. If we said `readable: false`:
+
+[[[ code('be66f00679') ]]]
+
+Then the serialization groups would say that this *should* be included in the
+response... but then this would override that. Watch: if we try the tests:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+They pass because the field is gone.
+
+## The security Option
+
+For *our* mission, we can leverage a super cool option called `security`. Set it
+to `is_granted("ROLE_ADMIN")`:
+
+[[[ code('d62a931a94') ]]]
+
+That's it! If this expression return false, `isPublished` will *not* be included
+in the API: it won't be readable *or* writable.
+
+And when we run the tests now:
+
+```terminal-silent
+symfony php bin/phpunit
+```
+
+They still pass, which means `isPublished` is *not* being returned. 
+
+Now let's go test the "happy" path where this field *is* returned. Pop open
+`DragonTreasureResourceTest`. Here's the original test: `testGetCollectionOfTreasures()`.
+We're anonymous, so `isPublished` isn't returned.
+
+Now scroll down to `testAdminCanPatchToEditTreasure()`. When we create the
+`DragonTreasure`, let's make sure it always starts with `isPublished => false`:
+
+[[[ code('8b20a16c96') ]]]
+
+Then, down here, `assertJsonMatches('isPublished', false)` to test that the
+field *is* returned:
+
+[[[ code('fc9330ddee') ]]]
+
+Copy the test name, spin over and add `--filter` to run *just* that test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testAdminCanPatchToEditTreasure
+```
+
+And... it passes! The field *is* being returned when we're an admin.
+
+## Also Returning isPublished for the Owner
+
+What about if we're the *owner* of the treasure? Copy the test... rename it
+to `testOwnerCanSeeIsPublishedField()`... and let's tweak a few things.
+Rename `$admin` to `$user`, simplify this to `DragonTreasureFactory::createOne()`
+and make sure the `owner` is set to our new `$user`:
+
+[[[ code('ed6dba3c3e') ]]]
+
+We *could* change this to a GET request... but PATCH is fine. In either situation,
+we want to make sure the `isPublished` field is returned.
+
+Since we haven't *implemented* this yet... let's make sure it fails. Copy the
+method name and try it:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedField
+```
+
+Failure achieved! And we know how to solve this! On the `security` option,
+we *could* inline the logic with `or object.getOwner() === user`. But remember:
+we created the voter so that we don't need to do crazy stuff like that! Instead,
+say `is_granted()`, `EDIT` then `object`:
+
+[[[ code('82eec19413') ]]]
+
+Try the test now:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedField
+```
+
+## The Special securityPostDenormalize
+
+Got it! Oh, and I haven't used it much, but there's also a `securityPostDenormalize`
+option. Just like with the `securityPostDenormalize` option on each operation, this
+runs *after* the new data is deserialized onto the object. What's interesting is
+that  if the expression returns `false`, the data on the object is actually *reverted*.
+
+For example, suppose the `isPublished` property started as `false` and then the user
+sent some JSON to change it to `true`. But then, `securityPostDenormalize` returned
+`false`. In that case, API Platform will *revert* the `isPublished` property *back*
+to its original value: it will change it from `false` *back* to `true`. Oh, and
+by the way, `securityPostDenormalize` is *not* executed on `GET` requests: it
+only happens when data is being deserialized. So be sure to put your main security
+logic in `security` and only use `securityPostDenormalize` if you need it.
+
+Up next on our to-do list: let's level-up our user operations to *hash* the password
+before saving to the database. We'll need a fresh, non-persisted plain password
+property to make it happen.
