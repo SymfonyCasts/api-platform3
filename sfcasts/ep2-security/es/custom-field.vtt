@@ -1,0 +1,174 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:02.066 align:middle
+Pongámonos salvajes. Quiero
+
+00:00:02.066 --> 00:00:06.976 align:middle
+añadir un nuevo campo totalmente personalizado
+y loco a nuestra API DragonTreasure
+
+00:00:07.526 --> 00:00:11.036 align:middle
+que no se corresponda con ninguna
+propiedad de nuestra clase.
+
+00:00:11.626 --> 00:00:16.866 align:middle
+Bueno, en realidad, en la parte 1 de esta serie
+aprendimos que es posible añadir campos personalizados
+
+00:00:16.986 --> 00:00:20.986 align:middle
+creando un método getter y añadiendo
+un grupo de serialización sobre él.
+
+00:00:21.826 --> 00:00:24.046 align:middle
+Pero esa solución sólo funciona
+
+00:00:24.136 --> 00:00:29.556 align:middle
+si podemos calcular el valor del campo
+únicamente a partir de los datos del objeto.
+
+00:00:30.156 --> 00:00:35.186 align:middle
+Si, por ejemplo, necesitamos llamar a un servicio
+para obtener los datos, entonces no tendremos suerte.
+
+00:00:35.716 --> 00:00:40.116 align:middle
+Añadir un nuevo campo cuyos datos se calculen
+a partir de un servicio es otro as en la
+
+00:00:40.186 --> 00:00:42.506 align:middle
+manga del normalizador personalizado.
+
+00:00:42.946 --> 00:00:47.546 align:middle
+Y como ya tenemos uno configurado, he pensado que
+podríamos utilizarlo para ver cómo funciona.
+
+00:00:48.056 --> 00:00:52.886 align:middle
+Ve a DragonTreasureResourceTest y busca
+testOwnerCanSeeIsPublishedField().
+
+00:00:53.446 --> 00:00:58.926 align:middle
+Cámbiale el nombre a
+testOwnerCanSeeIsPublishedAndIsMineFields():
+
+00:00:59.676 --> 00:01:02.756 align:middle
+Esto es un poco tonto, pero si
+tenemos un DragonTreasure , vamos a
+
+00:01:03.186 --> 00:01:07.506 align:middle
+añadir una nueva propiedad booleana
+llamada $isMine establecida en true.
+
+00:01:08.286 --> 00:01:15.266 align:middle
+Así que, abajo del todo, diremos isMine y
+esperaremos que sea true: Copia ese nombre de método,
+
+00:01:15.666 --> 00:01:21.666 align:middle
+luego gira y ejecuta esta prueba: ¡Tada!
+
+00:01:22.056 --> 00:01:24.976 align:middle
+Es null porque el campo aún no existe.
+
+00:01:25.746 --> 00:01:27.806 align:middle
+Entonces, ¿cómo podemos añadirlo?
+
+00:01:28.516 --> 00:01:33.396 align:middle
+Ahora que hemos pasado por el engorro de
+configurar el normalizador, ¡es fácil!
+
+00:01:34.126 --> 00:01:40.316 align:middle
+El sistema normalizador hará lo suyo, devolverá
+los datos normalizados y luego, entre eso
+
+00:01:40.316 --> 00:01:42.096 align:middle
+y la declaración return, podemos...
+
+00:01:42.316 --> 00:01:43.526 align:middle
+¡jugar con ello!
+
+00:01:44.406 --> 00:01:46.026 align:middle
+Copia la sentencia if de aquí arriba.
+
+00:01:46.796 --> 00:01:50.066 align:middle
+Podría ser más inteligente y
+reutilizar código, pero está bien.
+
+00:01:50.856 --> 00:01:54.696 align:middle
+Si el objeto es un DragonTreasure
+y poseemos este DragonTreasure,
+
+00:01:54.926 --> 00:01:59.976 align:middle
+diremos $normalized['isMine']
+= true : ¡Ya está!
+
+00:02:00.616 --> 00:02:03.936 align:middle
+Cuando ejecutemos la prueba: ¡Todo verde!
+
+00:02:04.546 --> 00:02:10.406 align:middle
+Pero estos campos personalizados tienen un inconveniente
+práctico: no estarán documentados en nuestra API.
+
+00:02:11.166 --> 00:02:14.776 align:middle
+¡Nuestros documentos de la API no
+tienen ni idea de que esto existe!
+
+00:02:15.496 --> 00:02:20.066 align:middle
+Si necesitas un campo súper personalizado
+que requiera lógica de servicio...
+
+00:02:20.496 --> 00:02:24.326 align:middle
+y necesitas que esté
+documentado, tienes dos opciones.
+
+00:02:25.166 --> 00:02:28.766 align:middle
+En primer lugar, podrías añadir
+una propiedad no persistente isMe
+
+00:02:28.766 --> 00:02:32.036 align:middle
+a tu clase y luego rellenarla
+con un proveedor de estado.
+
+00:02:32.716 --> 00:02:36.696 align:middle
+Aún no hemos hablado de los proveedores de estado,
+pero son la forma en que se cargan los datos.
+
+00:02:37.426 --> 00:02:43.056 align:middle
+Por ejemplo, nuestras clases ya utilizan un
+proveedor de estado Doctrine entre bastidores
+
+00:02:43.186 --> 00:02:44.296 align:middle
+para consultar la base de datos.
+
+00:02:44.816 --> 00:02:47.976 align:middle
+Hablaremos de los proveedores de
+estado en la parte 3 de esta serie.
+
+00:02:48.746 --> 00:02:52.306 align:middle
+La segunda solución sería utilizar el
+normalizador personalizado como hicimos nosotros,
+
+00:02:52.726 --> 00:02:59.696 align:middle
+y luego intentar añadir el campo a los documentos Open
+API manualmente mediante el truco de la fábrica OpenAPI
+
+00:02:59.736 --> 00:03:00.866 align:middle
+que mostramos antes.
+
+00:03:01.816 --> 00:03:05.556 align:middle
+Siguiente: supongamos que un
+usuario puede editar algo...
+
+00:03:05.986 --> 00:03:11.026 align:middle
+pero hay ciertos cambios en los
+datos que no se le permite hacer -
+
+00:03:11.516 --> 00:03:16.766 align:middle
+como que podría establecer un campo en
+foo pero no se le permite cambiarlo a bar
+
+00:03:17.086 --> 00:03:18.926 align:middle
+porque no tiene suficientes permisos.
+
+00:03:19.496 --> 00:03:20.656 align:middle
+¿Cómo debemos manejar esto?
+
+00:03:21.236 --> 00:03:23.686 align:middle
+Es la seguridad unida a la validación.
