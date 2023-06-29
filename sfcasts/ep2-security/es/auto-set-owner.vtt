@@ -1,0 +1,195 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:03.326 align:middle
+Cada DragonTreasure debe tener un owner...
+
+00:00:03.736 --> 00:00:08.576 align:middle
+y para establecerlo, cuando POST para
+crear un tesoro, requerimos ese campo.
+
+00:00:08.916 --> 00:00:10.716 align:middle
+Creo que deberíamos hacerlo opcional.
+
+00:00:10.716 --> 00:00:17.666 align:middle
+Así que, en la prueba, deja de enviar el campo owner:
+Cuando esto ocurra, configurémoslo automáticamente
+
+00:00:17.666 --> 00:00:19.706 align:middle
+para el usuario autenticado actualmente.
+
+00:00:20.426 --> 00:00:21.576 align:middle
+Asegúrate de que la prueba falla.
+
+00:00:21.856 --> 00:00:23.666 align:middle
+Copia el nombre del método...
+
+00:00:23.666 --> 00:00:26.886 align:middle
+y ejecútalo: Falló.
+
+00:00:26.886 --> 00:00:30.046 align:middle
+Obtuve un 422, 201 esperado.
+
+00:00:30.586 --> 00:00:36.456 align:middle
+Ese 422 es un error de validación de la
+propiedad owner: este valor no debe ser nulo.
+
+00:00:36.456 --> 00:00:42.006 align:middle
+Si vamos a hacerlo opcional, tenemos
+que eliminar ese Assert\NotNull:
+
+00:00:43.056 --> 00:00:49.856 align:middle
+Y ahora, cuando hagamos la prueba
+¡Hola, magnífico error 500!
+
+00:00:50.276 --> 00:00:55.316 align:middle
+Probablemente se deba a que el nulo owner_id
+hace kaboom cuando llega a la base de datos.
+
+00:00:55.946 --> 00:01:01.646 align:middle
+¡Sí! Entonces: ¿cómo podemos establecer
+automáticamente este campo cuando no se envía?
+
+00:01:02.666 --> 00:01:09.366 align:middle
+En el tutorial anterior de la API Platform 2, lo hice
+con un oyente de entidad, que es una buena solución.
+
+00:01:10.016 --> 00:01:16.206 align:middle
+Pero en la API Platform 3 , al igual que cuando hicimos el hash
+de la contraseña de usuario, ahora hay un sistema realmente bueno
+
+00:01:16.206 --> 00:01:19.066 align:middle
+para esto: el sistema de
+procesador de estado. Como
+
+00:01:19.916 --> 00:01:25.976 align:middle
+recordatorio, nuestras rutas POST y PATCH para
+DragonTreasure ya tienen un procesador de estado
+
+00:01:25.976 --> 00:01:30.696 align:middle
+que proviene de Doctrine : es el responsable
+de guardar el objeto en la base de datos.
+
+00:01:31.476 --> 00:01:36.336 align:middle
+Llegados a este punto, nuestro objetivo te
+resultará familiar: decorar ese proceso de estado
+
+00:01:36.756 --> 00:01:39.406 align:middle
+para que podamos ejecutar código
+adicional antes de guardar.
+
+00:01:40.316 --> 00:01:46.626 align:middle
+Como antes, empieza ejecutando: php
+bin/console make:state-processor Llámalo
+
+00:01:46.626 --> 00:01:53.136 align:middle
+DragonTreasureSetOwnerProcessor:
+En src/State/, ábrelo.
+
+00:01:54.246 --> 00:01:56.046 align:middle
+Vale, ¡a decorar!
+
+00:01:57.096 --> 00:02:02.236 align:middle
+Añade el método construct con private
+ProcessorInterface $innerProcessor:
+
+00:02:03.186 --> 00:02:05.706 align:middle
+Luego abajo en process(), ¡llama a eso!
+
+00:02:06.316 --> 00:02:12.796 align:middle
+Este método no devuelve nada - tiene un retorno void
+- así que sólo necesitamos $this->innerProcessor -
+
+00:02:13.156 --> 00:02:20.006 align:middle
+no te olvides de esa parte como yo - ->process()
+pasando $data, $operation, $uriVariables
+
+00:02:20.326 --> 00:02:27.356 align:middle
+y $context: Ahora, para hacer que Symfony utilice
+nuestro procesador de estado en lugar del normal
+
+00:02:27.356 --> 00:02:29.656 align:middle
+de Doctrine , añade #[AsDecorator]...
+
+00:02:29.656 --> 00:02:35.426 align:middle
+y el id del servicio es
+api_platform.doctrine.orm.state.persist_processor: ¡Genial!
+
+00:02:36.586 --> 00:02:36.956 align:middle
+Ahora, a
+
+00:02:37.686 --> 00:02:43.716 align:middle
+todo lo que utilice ese servicio en el sistema
+se le pasará nuestro servicio en su lugar... y
+
+00:02:44.056 --> 00:02:47.046 align:middle
+luego se nos pasará el original. Ah, y está
+
+00:02:47.786 --> 00:02:49.766 align:middle
+pasando algo guay.
+
+00:02:50.186 --> 00:02:53.066 align:middle
+Mira UserHashPasswordStateProcessor. ¡
+
+00:02:53.556 --> 00:02:55.636 align:middle
+Ahí estamos decorando lo
+mismo! Sí, estamos decorando
+
+00:02:56.156 --> 00:03:00.486 align:middle
+ese servicio dos veces, ¡lo que está
+totalmente permitido! Internamente,
+
+00:03:01.286 --> 00:03:05.266 align:middle
+esto creará una especie de cadena de
+servicios decorados. Bien, pongámonos a
+
+00:03:06.166 --> 00:03:08.536 align:middle
+trabajar en la configuración del
+propietario. Conecta automáticamente
+
+00:03:09.296 --> 00:03:15.236 align:middle
+nuestro servicio favorito Security para que podamos
+averiguar quién ha iniciado sesión: Entonces , antes de que
+
+00:03:15.556 --> 00:03:22.826 align:middle
+hagamos el guardado, si $data es un instanceof
+DragonTreasure y $data->getOwner() es nulo y
+
+00:03:23.556 --> 00:03:29.026 align:middle
+$this->security->getUser() -asegurándonos
+de que el usuario está conectado- entonces
+
+00:03:29.616 --> 00:03:37.146 align:middle
+$data->setOwner($this->security->getUser()):
+¡Eso debería bastar! Ejecuta
+
+00:03:37.656 --> 00:03:42.346 align:middle
+esa prueba: ¡Caramba!
+
+00:03:42.486 --> 00:03:44.576 align:middle
+Tamaño de memoria permitido agotado. ¡ Me
+
+00:03:45.216 --> 00:03:47.166 align:middle
+huele a recursión! Porque...
+
+00:03:48.786 --> 00:03:56.146 align:middle
+Me estoy llamando a process(): Necesito
+$this->innerProcessor->process(): Ahora: Una
+
+00:03:56.146 --> 00:04:01.936 align:middle
+prueba superada mola mucho
+más que la recursividad. ¡ Y
+
+00:04:02.286 --> 00:04:04.716 align:middle
+el campo propietario ahora
+es opcional! Siguiente:
+
+00:04:05.626 --> 00:04:10.176 align:middle
+actualmente devolvemos todos los tesoros de
+nuestra ruta GET de colección, incluidos
+
+00:04:10.426 --> 00:04:12.836 align:middle
+los tesoros no publicados.
+
+00:04:13.456 --> 00:04:18.296 align:middle
+Arreglémoslo modificando la consulta
+detrás de esa ruta para ocultarlos.
