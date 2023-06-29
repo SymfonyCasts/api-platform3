@@ -98,7 +98,7 @@ And so, you need to make your API able to read a token that's sent on each reque
 usually sent on an `Authorization` header:
 
 ```php
-$response = $thhpClient->request(
+$response = $httpClient->request(
     'GET',
     '/api/treasures',
     [
