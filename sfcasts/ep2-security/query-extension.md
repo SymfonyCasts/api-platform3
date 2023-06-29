@@ -1,5 +1,124 @@
-# Query Extension
+# Query Extension: Auto-Filter a Collection
 
-Coming soon...
+When we get a collection of treasures, we currently return *every*
+treasure, even unpublished treasures. Probably some of these are unpublished.
+We *did* add a filter to control this... but let's be honest, that's not the best
+solution. Really, we need to *not* return unpublished treasures at all.
 
-When we get a collection of treasures, we're currently returning all of the treasures, even if they're unpublished. So probably some of these are unpublished treasures. We did add a filter so that you could control this, but really, we need to not return the published treasures automatically. So if you look for the API Platform Upgrade Guide, we actually looked at this earlier, search for the word state. They have a really cool spot here where they talk about providers and processors. We've already talked about state processors, like the `persist` processor on the `put` and `post` endpoints, which is actually responsible for saving the item to the database. But there's also something called the provider, and this is what's responsible for loading that object. For example, when we make a `get` request for a single item, the item provider is what's responsible for taking the ID and loading that single item. So in this case, the item provider loads that from the database. There's also a collection provider to load a collection of items. So if we wanted to hide unpublished treasures, we could decorate this collection provider and make that change, just like how we've been decorating the persist processor. But one tricky problem with that is that if we decorated this collection provider, it would make the query for all of the treasures, and then we would have to filter them out. So it's not great for performance, because we might query for 100 treasures and then filter half of them out. So in that case, it's not the best extension point. Fortunately, this collection provider provides its own extension point that allows us to modify the query before it's executed. So let's first modify a test to show the behavior we want. So find `testGetCollectionOfTreasures`. And what I'm going to do here is I'm going to take control of these five treasures and say `isPublished` true, because right now in `DragonTreasureFactory`, the `isPublished` is set to just a random value. So it might be true or it might be false. So now we'll have five published Dragon Treasures. And let's create one more. So I'll say `createOne`. And this time, this time, let's say `isPublished` false. Awesome. So what we want is we want this still to just return five items. Let's make sure this fails. So `symfony php bin/console phpunit --filter=DragonTreasureResourceTest`, and awesome. So now we are currently returning all six items. All right. To modify the query for a collection endpoint, we're going to create something called a query extension. So anywhere in `src`, but I'll do it in the `ApiPlatform` directory. Create a new class called `DragonTreasureIsPublishedExtension`. We're gonna make this implement `QueryCollectionExtensionInterface`. I'll go to code generate or command and on the Mac and generate the one method we need, which is called `applyToCollection()`. So it's pretty cool. It passes us the `queryBuilder` and a couple of other pieces of information here. And we can modify that `queryBuilder`. So this `queryBuilder` is all we're going to take into account things like pagination and any filters that have been applied. So those will all be there and we just modify it to add our custom thing. Now thanks to Symfony's autoconfiguration system, just because we have this class and it implements this interface, this is automatically going to be called whenever a collection endpoint is being used. And it's going to be called for every single resource. The first thing we need to do is say `if (DragonTreasure::class !== $resourceClass)`. So it passes us the class that it's currently loading right here. Then we're just going to return. So we don't want to modify, for example, the user endpoint. All right now one of the weird things inside the `queryBuilder` is every `queryBuilder` has an alias that refers to the root table that we're working on. So usually inside of a repository class when you're creating a custom query, you'll do things like `$this->createQueryBuilder('d')` and `d` becomes your root alias. And then you need to refer to that other parts in the query whenever you're doing stuff. In this case, we didn't create the `queryBuilder`, so we don't control that root alias, but we can read the root alias by saying `$queryBuilder->getRootAliases()[0]`. There is a single one, but we want the one that's plural. And there's almost always only one root alias, so we can just use the `0` key. Now it's just normal modification. So `queryBuilder` and `where` and then I use a `sprintf` here. This is going to be a little dynamic because now we need to say `percent s.isPublished = :isPublished` and then pass in the `rootAlias`. And down here we say `setParameter('isPublished', true)` to only return the published ones. And then one more thing before we add it. All right, let's try that. Spin over, try your test. It's just that easy. We are now modifying the collection query. By the way, would this also work for sub-resources? Like for example, over in our documentation, you can see that you can also get treasures by going to `/API/users/userID/treasures`. Will this also hide the unpublished treasures there? The answer is yes. So it's not something you need to worry about. I won't show it, but you are absolutely handled in that situation as well. By the way, if you wanted admin users to be able to see unpublished items, you could add a little logic here to only add this if this is not an admin. All right, next. This query extension fixed the collection endpoint, but someone could still fetch a single unpublished treasure by SID and that would work. Same time.
+Find the [API Platform Upgrade Guide](https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730)...
+and search for the word "state" to find a section that talks about "providers" and
+"processors". We talked about state processors earlier, like the `PersistProcessor`
+on the `Put` and `Post` operations, which is responsible for saving the item to the
+database.
+
+## State Providers
+
+But each operation also has something called a state *provider*. *This* is what's
+responsible for *loading* the object or collection of objects. For example, when
+we make a GET request for a single item, the `ItemProvider` is what's responsible
+for taking the ID and querying the database. There's also a `CollectionProvider`
+to load a collection of items.
+
+So if we want to automatically hide unpublished treasures, one option would be to
+*decorate* this `CollectionProvider`, very much like we did with the `PersistProcessor`.
+Except... that won't *quite* work. Why? The `CollectionProvider` from Doctrine executes
+the query and returns the results. So all *we* would be able to do is *take* those
+results... then hide the ones we don't want. That's... not ideal for performance -
+imagine loading 50 treasures then only showing 10 - and it would confuse pagination.
+What we *really* want to do is *modify* the query itself: to add a
+`WHERE isPublished = true`.
+
+## Testing for the Behavior
+
+Luckily for us, this `CollectionProvider` "provides" its *own* extension point that
+lets us do *exactly* that.
+
+Before we dive in, let's update a test to show the behavior we want. Find
+`testGetCollectionOfTreasures()`. Take control of these 5 treasures and
+make them all `isPublished => true`:
+
+[[[ code('59f527158c') ]]]
+
+because right now, in `DragonTreasureFactory`, `isPublished` is set to a random value:
+
+[[[ code('abb96ff04e') ]]]
+
+*Then* add one more with `createOne()` and `isPublished` false:
+
+[[[ code('02d071cd43') ]]]
+
+Awesome! And we *still* want to assert that this returns just 5 items. So...
+let's make sure it fails:
+
+```terminal
+symfony php bin/console phpunit --filter=testGetCollectionOfTreasures
+```
+
+And... yea! It returns 6 items.
+
+## Collection Query Extensions
+
+Ok, to modify the query for a collection endpoint, we're going to create something
+called a query extension. Anywhere in `src/` - I'll do it in the `ApiPlatform/`
+directory - create a new class called `DragonTreasureIsPublishedExtension`. Make
+this implement `QueryCollectionExtensionInterface`, then go to "Code"->"Generate" or
+`Command`+`N` on a Mac - and generate the one method we need: `applyToCollection()`:
+
+[[[ code('a1406d2b7a') ]]]
+
+This is pretty cool: it passes us the `$queryBuilder` and a few other pieces of
+info. Then, we can *modify* that `QueryBuilder`. The best part? The `QueryBuilder`
+*already* takes into account things like pagination and any filters that have been
+applied. So those are *not* things we need to worry about.
+
+*Also*, thanks to Symfony's autoconfiguration system, *just* by creating this class
+and making it implement this interface, it will *already* be called whenever a
+collection endpoint is used!
+
+## Query Extension Logic
+
+In fact, it will be called for *any* resource. So the first thing we need is
+`if (DragonTreasure::class !== $resourceClass)` - fortunately it passes us the
+class name - then return:
+
+[[[ code('077038260a') ]]]
+
+Below, *this* is where we get to work. Now, every `QueryBuilder` object has a
+*root alias* that refers to the class or table that you're querying. Usually,
+*we* create the `QueryBuilder`... like from inside a repository we say something
+like `$this->createQueryBuilder('d')` and `d` becomes that "root alias". Then we
+use that in other parts of the query.
+
+However, in *this* situation, *we* didn't create the `QueryBuilder`, so *we* never
+chose that root alias. It was chosen for us. What is it? It's: "banana". Actually,
+I have no idea what it is! But we can get it with `$queryBuilder->getRootAliases()[0]`:
+
+[[[ code('7071d70c4e') ]]]
+
+*Now* it's just normal query logic: `$queryBuilder->andWhere()` passing `sprintf()`.
+This looks a little weird: `%s.isPublished = :isPublished`, then pass `$rootAlias`
+followed by `->setParameter('isPublished', true)`:
+
+[[[ code('b31000a557') ]]]
+
+Cool! Spin over to try this thing!
+
+```terminal-silent
+symfony php bin/console phpunit --filter=testGetCollectionOfTreasures
+```
+
+Mission accomplished! It's just that easy.
+
+## Query Extensions on SubResources?
+
+By the way, will this also work for sub-resources? For example, over in our
+docs, we can *also* fetch a collection of treasures by going to
+`/api/users/{user_id}/treasures`. Will this *also* hide the unpublished treasures?
+The answer is... *yes*! So, it's not something you need to worry about. I won't
+show it, but this *also* uses the query extension.
+
+Oh, and if you wanted admin users to be able to see unpublished treasures, you could
+add logic to *only* modify this query if the current user is *not* an admin.
+
+Next up: this query extension fixes the collection endpoint! But... someone could
+*still* fetch a *single* unpublished treasure directly by its id. Let's fix that!
