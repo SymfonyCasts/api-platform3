@@ -62,6 +62,7 @@ Encore
     // uncomment if you use React
     .enableReactPreset()
     .enableVueLoader(() => {}, { runtimeCompilerBuild: false })
+    .enableStimulusBridge('./assets/controllers.json')
     .configureDefinePlugin((options) => {
         options.__VUE_OPTIONS_API__ = false;
         options.__VUE_PROD_DEVTOOLS__ = false;
