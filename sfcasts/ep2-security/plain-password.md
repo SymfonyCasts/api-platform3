@@ -8,6 +8,11 @@ User.
 Create a new PHP class called, how about, `UserResourceTest`. Make it extend our
 custom `ApiTestCase`, then we just need to `use ResetDatabase`:
 
+***TIP
+To use Foundry factories in a test, also add a `use Factories;` trait to the top of your test class.
+Things worked without that in this case, but in the future, you'll likely get an error.
+***
+
 [[[ code('b369ad30a9') ]]]
 
 We don't need `HasBrowser` because that's already done in the base class.
