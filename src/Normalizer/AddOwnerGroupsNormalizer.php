@@ -45,6 +45,11 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareIn
 
     public function getSupportedTypes(?string $format): array
     {
-        return $this->normalizer->getSupportedTypes($format);
+        if (method_exists($this->normalizer, 'getSupportedTypes')) {
+            return $this->normalizer->getSupportedTypes($format);
+        }
+
+        // backported from next version of API Platform
+        return 'jsonld' === $format ? ['*' => true] : [];
     }
 }

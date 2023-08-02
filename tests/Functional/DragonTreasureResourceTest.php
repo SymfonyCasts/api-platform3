@@ -8,11 +8,13 @@ use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
 use Zenstruck\Browser\HttpOptions;
 use Zenstruck\Browser\Json;
+use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 class DragonTreasureResourceTest extends ApiTestCase
 {
     use ResetDatabase;
+    use Factories;
 
     public function testGetCollectionOfTreasures(): void
     {
