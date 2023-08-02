@@ -1,4 +1,5 @@
 api_platform:
+    keep_legacy_inflector: false
     formats:
         jsonld: [ 'application/ld+json' ]
         json: [ 'application/json' ]
