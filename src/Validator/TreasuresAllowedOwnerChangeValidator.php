@@ -14,7 +14,7 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
     {
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         assert($constraint instanceof TreasuresAllowedOwnerChange);
 

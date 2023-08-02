@@ -36,10 +36,15 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareIn
         return $this->normalizer->supportsNormalization($data, $format);
     }
 
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer): void
     {
         if ($this->normalizer instanceof SerializerAwareInterface) {
             $this->normalizer->setSerializer($serializer);
         }
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return $this->normalizer->getSupportedTypes($format);
     }
 }
