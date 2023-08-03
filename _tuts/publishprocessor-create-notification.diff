@@ -1,5 +1,5 @@
 diff --git a/src/State/DragonTreasureStateProcessor.php b/src/State/DragonTreasureStateProcessor.php
-index 6882207..6cfba87 100644
+index fd9319b..65d0f70 100644
 --- a/src/State/DragonTreasureStateProcessor.php
 +++ b/src/State/DragonTreasureStateProcessor.php
 @@ -5,6 +5,8 @@ namespace App\State;
@@ -9,9 +9,9 @@ index 6882207..6cfba87 100644
 +use App\Entity\Notification;
 +use Doctrine\ORM\EntityManagerInterface;
  use Symfony\Bundle\SecurityBundle\Security;
- use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
-@@ -14,7 +16,8 @@ class DragonTreasureStateProcessor implements ProcessorInterface
+ 
+@@ -13,7 +15,8 @@ class DragonTreasureStateProcessor implements ProcessorInterface
      public function __construct(
          #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
          private ProcessorInterface $innerProcessor,
@@ -21,7 +21,7 @@ index 6882207..6cfba87 100644
      )
      {
      }
-@@ -33,6 +36,11 @@ class DragonTreasureStateProcessor implements ProcessorInterface
+@@ -32,6 +35,11 @@ class DragonTreasureStateProcessor implements ProcessorInterface
              && $data->getIsPublished()
              && $previousData->getIsPublished() !== $data->getIsPublished()
          ) {

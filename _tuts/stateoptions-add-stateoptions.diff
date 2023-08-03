@@ -1,0 +1,18 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 6f00d9a..772ae76 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -2,10 +2,13 @@
+ 
+ namespace App\ApiResource;
+ 
++use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\ApiResource;
++use App\Entity\User;
+ 
+ #[ApiResource(
+     provider: 'api_platform.doctrine.orm.state.collection_provider',
++    stateOptions: new Options(entityClass: User::class),
+ )]
+ class UserApi
+ {

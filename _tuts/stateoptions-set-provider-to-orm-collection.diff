@@ -1,0 +1,15 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 092bc1f..6f00d9a 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -4,7 +4,9 @@ namespace App\ApiResource;
+ 
+ use ApiPlatform\Metadata\ApiResource;
+ 
+-#[ApiResource]
++#[ApiResource(
++    provider: 'api_platform.doctrine.orm.state.collection_provider',
++)]
+ class UserApi
+ {
+     public int $id;
