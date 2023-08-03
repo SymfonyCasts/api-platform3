@@ -41,7 +41,7 @@ Next, build the database and the schema with:
 # "symfony console" is equivalent to "bin/console"
 # but its aware of your database container
 symfony console doctrine:database:create --if-not-exists
-symfony console doctrine:migrations:migrate
+symfony console doctrine:schema:create
 symfony console doctrine:fixtures:load
 ```
 
