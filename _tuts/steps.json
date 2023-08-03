@@ -84,7 +84,62 @@
             "id": "customfieldstateprovider-updating-test",
             "name": "CustomFieldStateProvider: Updating test",
             "description": null
+        },
+        {
+            "id": "customfieldstateprovider-set-field-also-in-processor",
+            "name": "CustomFieldStateProvider: Set field also in processor",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-add-test-for-publishing",
+            "name": "PublishProcessor: Add test for publishing",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-make-field-writable",
+            "name": "PublishProcessor: make field writable",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-rename-existing-processor",
+            "name": "PublishProcessor: rename existing processor",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-change-to-autowire",
+            "name": "PublishProcessor: change to #[Autowire]",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-set-processor-on-resource",
+            "name": "PublishProcessor: set processor on resource",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-remove-conditional-code",
+            "name": "PublishProcessor: remove conditional code",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-dump-context",
+            "name": "PublishProcessor: dump($context)",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-check-for-publish-change",
+            "name": "PublishProcessor: check for publish change",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-test-for-notification",
+            "name": "PublishProcessor: Test for Notification",
+            "description": null
+        },
+        {
+            "id": "publishprocessor-create-notification",
+            "name": "PublishProcessor: Create Notification",
+            "description": null
         }
     ],
-    "sha": "da5617de4baa41f4c339b02f3f0aa37712345791"
+    "sha": "081e99b416005c8052bb9e762f17963122799105"
 }
