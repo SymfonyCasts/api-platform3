@@ -4,7 +4,87 @@
             "id": "start",
             "name": "start",
             "description": null
+        },
+        {
+            "id": "customfieldstateprovider-remove-ismine-from-normalizer",
+            "name": "CustomFieldStateProvider: remove isMine from normalizer",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-add-isownedbyauthenticateduser-property",
+            "name": "CustomFieldStateProvider: Add isOwnedByAuthenticatedUser property",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-tightening-up-getter-setter",
+            "name": "CustomFieldStateProvider: Tightening up getter\/setter",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-exposing-in-the-api",
+            "name": "CustomFieldStateProvider: Exposing in the API",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-make-state-provider",
+            "name": "CustomFieldStateProvider: make:state-provider",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-add-dd",
+            "name": "CustomFieldStateProvider: add dd()",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-activate-on-class",
+            "name": "CustomFieldStateProvider: Activate on class",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-inject-providerinterface",
+            "name": "CustomFieldStateProvider: Inject ProviderInterface",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-autowire-attribute",
+            "name": "CustomFieldStateProvider: #[Autowire] attribute",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-set-field-but-hardcoded",
+            "name": "CustomFieldStateProvider: Set field, but hardcoded",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-set-real-value",
+            "name": "CustomFieldStateProvider: Set real value",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-dd-again",
+            "name": "CustomFieldStateProvider: dd() again",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-inject-collection-provider",
+            "name": "CustomFieldStateProvider: Inject collection provider",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-dd-the-collection-result",
+            "name": "CustomFieldStateProvider: dd() the collection result",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-set-the-field-on-each-item",
+            "name": "CustomFieldStateProvider: set the field on each item",
+            "description": null
+        },
+        {
+            "id": "customfieldstateprovider-updating-test",
+            "name": "CustomFieldStateProvider: Updating test",
+            "description": null
         }
     ],
-    "sha": "e10e580988a243689fa46a31b0d44fcf4f57fb69"
+    "sha": "da5617de4baa41f4c339b02f3f0aa37712345791"
 }
