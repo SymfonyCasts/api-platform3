@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[ApiResource(
+    paginationItemsPerPage: 5,
     stateOptions: new Options(entityClass: User::class),
 )]
 class UserApi
