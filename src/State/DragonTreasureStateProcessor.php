@@ -9,7 +9,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 
 #[AsDecorator('api_platform.doctrine.orm.state.persist_processor')]
-class DragonTreasureSetOwnerProcessor implements ProcessorInterface
+class DragonTreasureStateProcessor implements ProcessorInterface
 {
     public function __construct(private ProcessorInterface $innerProcessor, private Security $security)
     {
