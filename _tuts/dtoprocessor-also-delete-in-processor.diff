@@ -1,0 +1,26 @@
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index 9eb37df..3d46bfd 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\State;
+ 
++use ApiPlatform\Metadata\DeleteOperationInterface;
+ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\ProcessorInterface;
+ use App\ApiResource\UserApi;
+@@ -25,6 +26,13 @@ class UserApiStateProcessor implements ProcessorInterface
+ 
+         $user = $this->mapDtoToEntity($data);
+ 
++        if ($operation instanceof DeleteOperationInterface) {
++            $this->entityManager->remove($user);
++            $this->entityManager->flush();
++
++            return null;
++        }
++
+         $this->entityManager->persist($user);
+         $this->entityManager->flush();
+ 
