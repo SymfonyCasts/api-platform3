@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
+use App\State\DragonTreasureStateProcessor;
 use App\State\DragonTreasureStateProvider;
 use App\Validator\IsValidOwner;
 use Carbon\Carbon;
@@ -40,9 +41,11 @@ use function Symfony\Component\String\u;
         new GetCollection(),
         new Post(
             security: 'is_granted("ROLE_TREASURE_CREATE")',
+            processor: DragonTreasureStateProcessor::class,
         ),
         new Patch(
             security: 'is_granted("EDIT", object)',
+            processor: DragonTreasureStateProcessor::class,
         ),
         new Delete(
             security: 'is_granted("ROLE_ADMIN")',
