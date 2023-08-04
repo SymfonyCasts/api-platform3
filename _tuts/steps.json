@@ -321,21 +321,6 @@
             "description": null
         },
         {
-            "id": "delete-me-1",
-            "name": "delete me 1",
-            "description": null
-        },
-        {
-            "id": "delete-me-2",
-            "name": "delete me 2",
-            "description": null
-        },
-        {
-            "id": "delete-me-3",
-            "name": "delete me 3",
-            "description": null
-        },
-        {
             "id": "controllerfields-change-patch-test-to-use-dto",
             "name": "ControllerFields: change PATCH test to use DTO",
             "description": null
@@ -343,11 +328,6 @@
         {
             "id": "controllerfields-try-to-pass-id",
             "name": "ControllerFields: Try to pass id",
-            "description": null
-        },
-        {
-            "id": "ddelete-me-6",
-            "name": "ddelete me 6",
             "description": null
         }
     ],
