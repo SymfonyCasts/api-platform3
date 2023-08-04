@@ -1,0 +1,13 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index e502f61..59c4f2b 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -12,4 +12,8 @@ use App\Entity\User;
+ class UserApi
+ {
+     public ?int $id = null;
++
++    public ?string $email = null;
++
++    public ?string $username = null;
+ }
