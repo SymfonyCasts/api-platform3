@@ -7,7 +7,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\User;
 
 #[ApiResource(
-    provider: 'api_platform.doctrine.orm.state.collection_provider',
     stateOptions: new Options(entityClass: User::class),
 )]
 class UserApi
