@@ -1,0 +1,50 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index c52ab8a..92ba6e6 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -7,7 +7,6 @@ use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
+ use App\State\UserApiStateProcessor;
+ use App\State\UserApiStateProvider;
+-use Symfony\Component\Serializer\Annotation\Ignore;
+ 
+ #[ApiResource(
+     paginationItemsPerPage: 5,
+@@ -34,9 +33,6 @@ class UserApi
+      */
+     public array $dragonTreasures = [];
+ 
+-    #[Ignore]
+-    public string $tmpProperty = '';
+-
+     public function __construct(int $id = null)
+     {
+         $this->id = $id;
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index e4375d9..a895483 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -39,7 +39,6 @@ class UserApiStateProcessor implements ProcessorInterface
+         $this->entityManager->flush();
+ 
+         $data->id = $user->getId();
+-        dump($data);
+ 
+         return $data;
+     }
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 96546c3..142493d 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -47,11 +47,9 @@ class UserResourceTest extends ApiTestCase
+             ->patch('/api/user_apis/' . $user->getId(), [
+                 'json' => [
+                     'username' => 'changed',
+-                    'tmpProperty' => 'WRITTEN',
+                 ],
+                 'headers' => ['Content-Type' => 'application/merge-patch+json']
+             ])
+-            ->dump()
+             ->assertStatus(200);
+     }
+ 
