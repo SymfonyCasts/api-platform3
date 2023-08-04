@@ -1,0 +1,34 @@
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index 1887502..80b36ef 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -7,22 +7,26 @@ use ApiPlatform\State\ProcessorInterface;
+ use App\ApiResource\UserApi;
+ use App\Entity\User;
+ use App\Repository\UserRepository;
++use Doctrine\ORM\EntityManagerInterface;
+ 
+ class UserApiStateProcessor implements ProcessorInterface
+ {
+     public function __construct(
+-        private UserRepository $userRepository
++        private UserRepository $userRepository,
++        private EntityManagerInterface $entityManager
+     )
+     {
+ 
+     }
+ 
+-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
++    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+     {
+         assert($data instanceof UserApi);
+ 
+         $user = $this->mapDtoToEntity($data);
+-        dd($user);
++
++        $this->entityManager->persist($user);
++        $this->entityManager->flush();
+     }
+ 
+     private function mapDtoToEntity(UserApi $userApi): User
