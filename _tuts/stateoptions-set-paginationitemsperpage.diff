@@ -1,9 +1,9 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 522f160..3c264d7 100644
+index ec51a0a..1aff161 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
- use App\Entity\User;
+@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
  
  #[ApiResource(
 +    paginationItemsPerPage: 5,
