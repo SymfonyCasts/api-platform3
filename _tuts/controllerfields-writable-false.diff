@@ -1,0 +1,13 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 1412494..acad799 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -33,7 +33,7 @@ class UserApi
+      */
+     public array $dragonTreasures = [];
+ 
+-    #[ApiProperty(readable: false)]
++    #[ApiProperty(readable: false, writable: false)]
+     public string $tmpProperty = '';
+ 
+     public function __construct(int $id = null)
