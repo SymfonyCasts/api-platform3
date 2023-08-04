@@ -1,0 +1,13 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 92ba6e6..62244a7 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -15,7 +15,7 @@ use App\State\UserApiStateProvider;
+ )]
+ class UserApi
+ {
+-    #[ApiProperty(readable: false, identifier: true)]
++    #[ApiProperty(readable: false, writable: false, identifier: true)]
+     public ?int $id;
+ 
+     public ?string $email = null;

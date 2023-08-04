@@ -1,0 +1,37 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 73b454b..dc5f101 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -16,7 +16,7 @@ use App\State\UserApiStateProvider;
+ class UserApi
+ {
+     #[ApiProperty(readable: false, writable: false, identifier: true)]
+-    public readonly ?int $id;
++    public int $id;
+ 
+     public ?string $email = null;
+ 
+@@ -32,9 +32,4 @@ class UserApi
+      * @var DragonTreasure[]
+      */
+     public array $dragonTreasures = [];
+-
+-    public function __construct(int $id = null)
+-    {
+-        $this->id = $id;
+-    }
+ }
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index f62e350..d2cc1b7 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -37,7 +37,8 @@ class UserApiStateProvider implements ProviderInterface
+ 
+     private function mapEntityToDto(User $user): UserApi
+     {
+-        $userApi = new UserApi($user->getId());
++        $userApi = new UserApi();
++        $userApi->id = $user->getId();
+         $userApi->email = $user->getEmail();
+         $userApi->username = $user->getUsername();
+         $userApi->dragonTreasures = $user->getPublishedDragonTreasures()->getValues();
