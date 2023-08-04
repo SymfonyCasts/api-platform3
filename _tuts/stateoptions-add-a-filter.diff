@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 3c264d7..5c01121 100644
+index 1aff161..a09ab2c 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -2,7 +2,9 @@
@@ -10,9 +10,9 @@ index 3c264d7..5c01121 100644
  use ApiPlatform\Doctrine\Orm\State\Options;
 +use ApiPlatform\Metadata\ApiFilter;
  use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
  use App\Entity\User;
- 
-@@ -10,6 +12,9 @@ use App\Entity\User;
+@@ -13,6 +15,9 @@ use Doctrine\Common\Collections\Collection;
      paginationItemsPerPage: 5,
      stateOptions: new Options(entityClass: User::class),
  )]
@@ -21,4 +21,4 @@ index 3c264d7..5c01121 100644
 +])]
  class UserApi
  {
-     public int $id;
+     public ?int $id = null;
