@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index 6fc7615..120f547 100644
+index 7e99f03..142493d 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
-@@ -43,7 +43,7 @@ class UserResourceTest extends ApiTestCase
+@@ -44,7 +44,7 @@ class UserResourceTest extends ApiTestCase
  
          $this->browser()
              ->actingAs($user)
