@@ -1,0 +1,13 @@
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index a895483..303c4dd 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -45,7 +45,7 @@ class UserApiStateProcessor implements ProcessorInterface
+ 
+     private function mapDtoToEntity(UserApi $userApi): User
+     {
+-        if ($userApi->id) {
++        if (isset($userApi->id)) {
+             $user = $this->userRepository->find($userApi->id);
+ 
+             if (!$user) {

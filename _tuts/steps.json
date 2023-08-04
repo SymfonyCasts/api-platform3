@@ -321,15 +321,80 @@
             "description": null
         },
         {
+            "id": "controllerfields-repeat-for-id",
+            "name": "ControllerFields: Repeat for id",
+            "description": null
+        },
+        {
             "id": "controllerfields-change-patch-test-to-use-dto",
             "name": "ControllerFields: change PATCH test to use DTO",
             "description": null
         },
         {
-            "id": "controllerfields-try-to-pass-id",
-            "name": "ControllerFields: Try to pass id",
+            "id": "controllerfields-add-temp-prop",
+            "name": "ControllerFields: add temp prop",
+            "description": null
+        },
+        {
+            "id": "controllerfields-showing-read-write-in-test",
+            "name": "ControllerFields: showing read\/write in test",
+            "description": null
+        },
+        {
+            "id": "controllerfields-readable-false",
+            "name": "ControllerFields: readable: false",
+            "description": null
+        },
+        {
+            "id": "controllerfields-writable-false",
+            "name": "ControllerFields: writable: false",
+            "description": null
+        },
+        {
+            "id": "controllerfields-ignored-attributes-for-normalization",
+            "name": "ControllerFields: IGNORED_ATTRIBUTES for normalization",
+            "description": null
+        },
+        {
+            "id": "controllerfields-now-for-denormalization",
+            "name": "ControllerFields: Now for denormalization",
+            "description": null
+        },
+        {
+            "id": "controllerfields-ignore",
+            "name": "ControllerFields: #[Ignore]",
+            "description": null
+        },
+        {
+            "id": "controllerfields-reset-tmp-code",
+            "name": "ControllerFields: Reset tmp code",
+            "description": null
+        },
+        {
+            "id": "controllerfields-try-sending-id",
+            "name": "ControllerFields: Try sending id",
+            "description": null
+        },
+        {
+            "id": "controllerfields-try-writable-false",
+            "name": "ControllerFields: Try writable: false",
+            "description": null
+        },
+        {
+            "id": "controllerfields-try-readonly",
+            "name": "ControllerFields: Try readonly",
+            "description": null
+        },
+        {
+            "id": "controllerfields-remove-constructor",
+            "name": "ControllerFields: Remove constructor",
+            "description": null
+        },
+        {
+            "id": "controllerfields-use-isset-for-id",
+            "name": "ControllerFields: use isset() for id",
             "description": null
         }
     ],
-    "sha": "6fa1211b84f10e9336aa05c6e98d612636f3e197"
+    "sha": "f5a9ac2f17bf7700d31963c1171f50916819678e"
 }
