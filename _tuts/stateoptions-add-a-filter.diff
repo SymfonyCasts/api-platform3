@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 482f5e3..c300d1b 100644
+index 3c264d7..5c01121 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -2,7 +2,9 @@
@@ -12,8 +12,8 @@ index 482f5e3..c300d1b 100644
  use ApiPlatform\Metadata\ApiResource;
  use App\Entity\User;
  
-@@ -11,6 +13,9 @@ use App\Entity\User;
-     provider: 'api_platform.doctrine.orm.state.collection_provider',
+@@ -10,6 +12,9 @@ use App\Entity\User;
+     paginationItemsPerPage: 5,
      stateOptions: new Options(entityClass: User::class),
  )]
 +#[ApiFilter(SearchFilter::class, properties: [

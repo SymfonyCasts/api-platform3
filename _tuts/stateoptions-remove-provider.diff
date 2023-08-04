@@ -1,12 +1,12 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 522f160..3c264d7 100644
+index 772ae76..522f160 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
+@@ -7,7 +7,6 @@ use ApiPlatform\Metadata\ApiResource;
  use App\Entity\User;
  
  #[ApiResource(
-+    paginationItemsPerPage: 5,
+-    provider: 'api_platform.doctrine.orm.state.collection_provider',
      stateOptions: new Options(entityClass: User::class),
  )]
  class UserApi

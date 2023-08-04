@@ -121,6 +121,11 @@
             "description": null
         },
         {
+            "id": "publishprocessor-return-from-processor",
+            "name": "PublishProcessor: Return from processor",
+            "description": null
+        },
+        {
             "id": "publishprocessor-dump-context",
             "name": "PublishProcessor: dump($context)",
             "description": null
@@ -161,6 +166,11 @@
             "description": null
         },
         {
+            "id": "stateoptions-remove-provider",
+            "name": "StateOptions: Remove provider",
+            "description": null
+        },
+        {
             "id": "stateoptions-set-paginationitemsperpage",
             "name": "StateOptions: Set paginationItemsPerPage",
             "description": null
@@ -171,5 +181,5 @@
             "description": null
         }
     ],
-    "sha": "6b0823e6b483df853641e44282bdba10dc93d769"
+    "sha": "3b701d3f4c9515ad4b0d8bc7b37c494f074f0f5d"
 }
