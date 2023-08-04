@@ -1,0 +1,20 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 9a3e9f5..6bdc951 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\ApiResource;
+ 
++use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
+ use App\State\UserApiStateProvider;
+@@ -14,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
+ )]
+ class UserApi
+ {
++    #[ApiProperty(identifier: true)]
+     public ?int $id;
+ 
+     public ?string $email = null;
