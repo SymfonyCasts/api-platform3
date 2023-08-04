@@ -1,0 +1,28 @@
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 041b9ca..35b64a9 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\State;
+ 
++use ApiPlatform\Metadata\CollectionOperationInterface;
+ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\ProviderInterface;
+ use App\ApiResource\UserApi;
+@@ -19,9 +20,13 @@ class UserApiStateProvider implements ProviderInterface
+ 
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
+-        $users = $this->userRepository->findAll();
++        if ($operation instanceof CollectionOperationInterface) {
++            $users = $this->userRepository->findAll();
+ 
+-        return array_map([$this, 'mapEntityToDto'], $users);
++            return array_map([$this, 'mapEntityToDto'], $users);
++        }
++
++        dd($uriVariables);
+     }
+ 
+     private function mapEntityToDto(User $user): UserApi

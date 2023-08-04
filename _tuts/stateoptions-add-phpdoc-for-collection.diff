@@ -1,0 +1,22 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 9216915..ec51a0a 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -4,6 +4,7 @@ namespace App\ApiResource;
+ 
+ use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\ApiResource;
++use App\Entity\DragonTreasure;
+ use App\Entity\User;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
+@@ -19,6 +20,9 @@ class UserApi
+ 
+     public ?string $username = null;
+ 
++    /**
++     * @var Collection<int, DragonTreasure>
++     */
+     public Collection $dragonTreasures;
+ 
+     public function __construct()
