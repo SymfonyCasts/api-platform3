@@ -1,8 +1,8 @@
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index 120f547..496632a 100644
+index 142493d..9f18083 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
-@@ -46,6 +46,7 @@ class UserResourceTest extends ApiTestCase
+@@ -47,6 +47,7 @@ class UserResourceTest extends ApiTestCase
              ->patch('/api/user_apis/' . $user->getId(), [
                  'json' => [
                      'username' => 'changed',
