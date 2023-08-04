@@ -1,0 +1,42 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 6bdc951..93e6876 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -6,8 +6,6 @@ use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
+ use App\State\UserApiStateProvider;
+-use Doctrine\Common\Collections\ArrayCollection;
+-use Doctrine\Common\Collections\Collection;
+ 
+ #[ApiResource(
+     paginationItemsPerPage: 5,
+@@ -23,13 +21,12 @@ class UserApi
+     public ?string $username = null;
+ 
+     /**
+-     * @var Collection<int, DragonTreasure>
++     * @var DragonTreasure[]
+      */
+-    public Collection $dragonTreasures;
++    public array $dragonTreasures = [];
+ 
+     public function __construct(int $id = null)
+     {
+         $this->id = $id;
+-        $this->dragonTreasures = new ArrayCollection();
+     }
+ }
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 8d8421f..f62e350 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -40,7 +40,7 @@ class UserApiStateProvider implements ProviderInterface
+         $userApi = new UserApi($user->getId());
+         $userApi->email = $user->getEmail();
+         $userApi->username = $user->getUsername();
+-        $userApi->dragonTreasures = $user->getPublishedDragonTreasures();
++        $userApi->dragonTreasures = $user->getPublishedDragonTreasures()->getValues();
+ 
+         return $userApi;
+     }

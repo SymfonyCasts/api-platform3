@@ -171,6 +171,21 @@
             "description": null
         },
         {
+            "id": "stateoptions-add-more-fields",
+            "name": "StateOptions: Add more fields",
+            "description": null
+        },
+        {
+            "id": "stateoptions-add-dragontreasures",
+            "name": "StateOptions: Add dragonTreasures",
+            "description": null
+        },
+        {
+            "id": "stateoptions-add-phpdoc-for-collection",
+            "name": "StateOptions: Add phpdoc for Collection",
+            "description": null
+        },
+        {
             "id": "stateoptions-set-paginationitemsperpage",
             "name": "StateOptions: Set paginationItemsPerPage",
             "description": null
@@ -179,7 +194,142 @@
             "id": "stateoptions-add-a-filter",
             "name": "StateOptions: Add a filter",
             "description": null
+        },
+        {
+            "id": "dtoprovider-remove-stateoptions",
+            "name": "DtoProvider: Remove stateOptions",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-remove-filter",
+            "name": "DtoProvider: Remove filter",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-create-state-provider",
+            "name": "DtoProvider: Create state provider",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-return-1-userapi-object",
+            "name": "DtoProvider: Return 1 UserApi object",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-set-id",
+            "name": "DtoProvider: set id",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-add-identifier",
+            "name": "DtoProvider: Add identifier",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-show-null-values",
+            "name": "DtoProvider: Show null values",
+            "description": null
+        },
+        {
+            "id": "dtoprovider-comment-out-null-value-config",
+            "name": "DtoProvider: Comment-out null value config",
+            "description": null
+        },
+        {
+            "id": "providerlogic-query-and-map-to-dto",
+            "name": "ProviderLogic: Query & Map to DTO",
+            "description": null
+        },
+        {
+            "id": "providerlogic-check-for-collectionoperationinterface",
+            "name": "ProviderLogic: Check for CollectionOperationInterface",
+            "description": null
+        },
+        {
+            "id": "providerlogic-add-logic-to-query-for-1-item",
+            "name": "ProviderLogic: Add logic to query for 1 item",
+            "description": null
+        },
+        {
+            "id": "providerlogic-only-use-published-treasures",
+            "name": "ProviderLogic: Only use published treasures",
+            "description": null
+        },
+        {
+            "id": "providerlogic-change-to-array-values",
+            "name": "ProviderLogic: change to array values",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-point-test-at-dto",
+            "name": "DtoProcessor: Point test at DTO",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-hardcode-id-temporarily",
+            "name": "DtoProcessor: Hardcode id temporarily",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-remove-tmp-code",
+            "name": "DtoProcessor: remove tmp code",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-make-state-processor",
+            "name": "DtoProcessor: Make state-processor",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-add-processor-mapping-logic",
+            "name": "DtoProcessor: add processor mapping logic",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-save-in-processor",
+            "name": "DtoProcessor: Save in processor",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-return-dto",
+            "name": "DtoProcessor: Return dto",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-set-id-on-dto",
+            "name": "DtoProcessor: set id on DTO",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-also-delete-in-processor",
+            "name": "DtoProcessor: Also delete in processor",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-add-in-password-hashing",
+            "name": "DtoProcessor: Add in password hashing",
+            "description": null
+        },
+        {
+            "id": "controllerfields-test-that-id-is-not-included",
+            "name": "ControllerFields: test that id is not included",
+            "description": null
+        },
+        {
+            "id": "controllerfields-set-readable-false",
+            "name": "ControllerFields: Set readable: false",
+            "description": null
+        },
+        {
+            "id": "controllerfields-change-patch-test-to-use-dto",
+            "name": "ControllerFields: change PATCH test to use DTO",
+            "description": null
+        },
+        {
+            "id": "controllerfields-try-to-pass-id",
+            "name": "ControllerFields: Try to pass id",
+            "description": null
         }
     ],
-    "sha": "3b701d3f4c9515ad4b0d8bc7b37c494f074f0f5d"
+    "sha": "6fa1211b84f10e9336aa05c6e98d612636f3e197"
 }
