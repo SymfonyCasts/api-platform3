@@ -2,6 +2,7 @@
 
 namespace App\State;
 
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\DragonTreasure;
@@ -12,6 +13,7 @@ class DragonTreasureStateProvider implements ProviderInterface
 {
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.item_provider')] private ProviderInterface $itemProvider,
+        #[Autowire(service: 'api_platform.doctrine.orm.state.collection_provider')] private ProviderInterface $collectionProvider,
         private Security $security,
     )
     {
@@ -19,7 +21,10 @@ class DragonTreasureStateProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        dd($operation);
+        if ($operation instanceof CollectionOperationInterface) {
+            return $this->collectionProvider->provide($operation, $uriVariables, $context);
+        }
+
         $treasure = $this->itemProvider->provide($operation, $uriVariables, $context);
 
         if (!$treasure instanceof DragonTreasure) {
