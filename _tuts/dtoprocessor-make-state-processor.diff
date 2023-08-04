@@ -1,0 +1,38 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 93e6876..0e8fb3e 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -5,11 +5,13 @@ namespace App\ApiResource;
+ use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
++use App\State\UserApiStateProcessor;
+ use App\State\UserApiStateProvider;
+ 
+ #[ApiResource(
+     paginationItemsPerPage: 5,
+     provider: UserApiStateProvider::class,
++    processor: UserApiStateProcessor::class,
+ )]
+ class UserApi
+ {
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+new file mode 100644
+index 0000000..e44bfd1
+--- /dev/null
++++ b/src/State/UserApiStateProcessor.php
+@@ -0,0 +1,14 @@
++<?php
++
++namespace App\State;
++
++use ApiPlatform\Metadata\Operation;
++use ApiPlatform\State\ProcessorInterface;
++
++class UserApiStateProcessor implements ProcessorInterface
++{
++    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
++    {
++        // Handle the state
++    }
++}

@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 772ae76..522f160 100644
+index 5ea5287..e502f61 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -7,7 +7,6 @@ use ApiPlatform\Metadata\ApiResource;

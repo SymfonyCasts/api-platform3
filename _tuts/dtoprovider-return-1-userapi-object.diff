@@ -1,0 +1,36 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 0db392f..903f4f3 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -4,11 +4,13 @@ namespace App\ApiResource;
+ 
+ use ApiPlatform\Metadata\ApiResource;
+ use App\Entity\DragonTreasure;
++use App\State\UserApiStateProvider;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
+ 
+ #[ApiResource(
+     paginationItemsPerPage: 5,
++    provider: UserApiStateProvider::class,
+ )]
+ class UserApi
+ {
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 095d330..5151a49 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -4,11 +4,12 @@ namespace App\State;
+ 
+ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\ProviderInterface;
++use App\ApiResource\UserApi;
+ 
+ class UserApiStateProvider implements ProviderInterface
+ {
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
+-        // Retrieve the state from somewhere
++        return [new UserApi()];
+     }
+ }
