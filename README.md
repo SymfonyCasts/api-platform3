@@ -1,102 +1,61 @@
-# API Platform 3 Security Tutorial! 🐉
-
-Well howdy! This repository holds the code and script
-for the [API Platform 3](https://symfonycasts.com/screencast/api-platform-security) on SymfonyCasts.
-
-## Setup
-
-If you've just downloaded the code, congratulations!!
-
-To get it working, follow these steps:
-
-### Download Composer dependencies
-
-Make sure you have [Composer installed](https://getcomposer.org/download/)
-and then run:
+# Setup
 
 ```
+git clone git@github.com:SymfonyCasts/api-platform3.git testing_iri_state_options
+cd testing_iri_state_options
 composer install
-```
-
-You may alternatively need to run `php composer.phar install`, depending
-on how you installed Composer.
-
-### Database Setup
-
-The code comes with a `docker-compose.yaml` file and we recommend using
-Docker to boot a database container. You will still have PHP installed
-locally, but you'll connect to a database inside Docker. This is optional,
-but I think you'll love it!
-
-First, make sure you have [Docker installed](https://docs.docker.com/get-docker/)
-and running. To start the container, run:
-
-```
-docker-compose up -d
-```
-
-Next, build the database and the schema with:
-
-```
-# "symfony console" is equivalent to "bin/console"
-# but its aware of your database container
-symfony console doctrine:database:create --if-not-exists
-symfony console doctrine:schema:create
-symfony console doctrine:fixtures:load
-```
-
-If you're using something other than Postgresql, you can replace
-`doctrine:migrations:migrate` with `doctrine:schema:update --force`.
-
-If you do *not* want to use Docker, just make sure to start your own
-database server and update the `DATABASE_URL` environment variable in
-`.env` or `.env.local` before running the commands above.
-
-### Webpack Encore Assets
-
-This app uses Webpack Encore for the CSS, JS and image files, which we use
-a bit near the beginning to test out our login flow.
-
-First, make sure you have `npm` installed (`npm` comes with Node) and then run:
-
-```
-npm install
-npm run watch
-```
-
-### Start the Symfony web server
-
-You can use Nginx or Apache, but Symfony's local web server
-works even better.
-
-To install the Symfony local web server, follow
-"Downloading the Symfony client" instructions found
-here: https://symfony.com/download - you only need to do this
-once on your system.
-
-Then, to start the web server, open a terminal, move into the
-project, and run:
-
-```
 symfony serve
 ```
 
-(If this is your first time using this command, you may see an
-error that you need to run `symfony server:ca:install` first).
+Then go to https://localhost:8000/api/user_apis.jsonld - you should see the collection.
 
-Now check out the site at `https://localhost:8000`
+To trigger the problem, uncomment-recommend the `id` property type and how it's set:
 
-Have fun!
+A) In `src/State/UserApiStateProvider.php`
 
-## Have Ideas, Feedback or an Issue?
+```diff
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index dcbbc70..de389bc 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -24,11 +24,11 @@ use Doctrine\Common\Collections\Collection;
+ class UserApi
+ {
+     #[ApiProperty(identifier: true)]
+-    public User|null $id = null;
++    //public User|null $id = null;
 
-If you have suggestions or questions, please feel free to
-open an issue on this repository or comment on the course
-itself. We're watching both :).
+     // will not work
+     // (change line also in UserApiStateProvider)
+-    // public ?int $id = null;
++    public ?int $id = null;
 
-## Thanks!
+     public ?string $email = null;
+```
 
-And as always, thanks so much for your support and letting
-us do what we love!
+B) In `src/ApiResource/UserApi.php`:
 
-<3 Your friends at SymfonyCasts
+```diff
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 4534c13..6de0339 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -27,11 +27,11 @@ class UserApiStateProvider implements ProviderInterface
+             $userApi = new UserApi();
+
+             // works
+-            $userApi->id = $user;
++            //$userApi->id = $user;
+
+             // will not work
+             // change line also in UserApi
+-            //$userApi->id = $user->getId();
++            $userApi->id = $user->getId();
+
+             $userApi->email = $user->getEmail();
+             $userApi->username = $user->getUsername();
+```
+
+Refresh to see:
+
+> Unable to generate an IRI for the item of type "App\ApiResource\UserApi
