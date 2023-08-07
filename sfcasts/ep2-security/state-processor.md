@@ -91,6 +91,17 @@ To do that, add `#[AsDecorator()]` and pass the id of the service. You can usual
 find this in the documentation, or you can use the `debug:container` command to
 search for it. The docs say it's `api_platform.doctrine.orm.state.persist_processor`:
 
+***TIP
+Instead of this long string, API Platform also creates an "alias service" to the core processor's
+class name. This allows you to use:
+
+```php
+use ApiPlatform\Doctrine\Common\State\PersistProcessor;
+// ...
+#[AsDecorator(PersistProcessor::class)]
+```
+***
+
 [[[ code('c7e6df9fc6') ]]]
 
 Decoration done! We're not *doing* anything yet, but let's see if it hits our
