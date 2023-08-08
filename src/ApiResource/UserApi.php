@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\Collection;
 class UserApi
 {
     #[ApiProperty(identifier: true)]
-    public User|null $id = null;
+    public ?int $id = null;
 
     // will not work
     // (change line also in UserApiStateProvider)

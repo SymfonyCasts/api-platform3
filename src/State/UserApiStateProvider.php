@@ -27,7 +27,7 @@ class UserApiStateProvider implements ProviderInterface
             $userApi = new UserApi();
 
             // works
-            $userApi->id = $user;
+            $userApi->id = $user->getId();
 
             // will not work
             // change line also in UserApi
