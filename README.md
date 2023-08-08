@@ -3,6 +3,7 @@
 ```
 git clone git@github.com:SymfonyCasts/api-platform3.git testing_iri_state_options
 cd testing_iri_state_options
+git checkout -b playing-with-stateOptions origin/playing-with-stateOptions
 composer install
 symfony serve
 ```
