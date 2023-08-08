@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eca9e55f0329919b09e14ecf6bce748a",
+    "content-hash": "b0eb2d63d00ec80d6cf125119017647b",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.1.13",
+            "version": "3.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "190bb4eabeafbe8e830af4a8ccac1feaf5b74e96"
+                "reference": "ebf03104fcbffc5af74d78c3e9b14d02d7527214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/190bb4eabeafbe8e830af4a8ccac1feaf5b74e96",
-                "reference": "190bb4eabeafbe8e830af4a8ccac1feaf5b74e96",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/ebf03104fcbffc5af74d78c3e9b14d02d7527214",
+                "reference": "ebf03104fcbffc5af74d78c3e9b14d02d7527214",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.1.13"
+                "source": "https://github.com/api-platform/core/tree/3.1"
             },
             "funding": [
                 {
@@ -173,7 +173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-03T16:44:18+00:00"
+            "time": "2023-08-08T12:15:51+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -682,16 +682,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "2.10.1",
+            "version": "2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "f9d59c90b6f525dfc2a2064a695cb56e0ab40311"
+                "reference": "f28b1f78de3a2938ff05cfe751233097624cc756"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/f9d59c90b6f525dfc2a2064a695cb56e0ab40311",
-                "reference": "f9d59c90b6f525dfc2a2064a695cb56e0ab40311",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/f28b1f78de3a2938ff05cfe751233097624cc756",
+                "reference": "f28b1f78de3a2938ff05cfe751233097624cc756",
                 "shasum": ""
             },
             "require": {
@@ -778,7 +778,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineBundle/tree/2.10.1"
+                "source": "https://github.com/doctrine/DoctrineBundle/tree/2.10.2"
             },
             "funding": [
                 {
@@ -794,7 +794,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-28T07:47:41+00:00"
+            "time": "2023-08-06T09:31:40+00:00"
         },
         {
             "name": "doctrine/doctrine-migrations-bundle",
@@ -9749,7 +9749,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "api-platform/core": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
