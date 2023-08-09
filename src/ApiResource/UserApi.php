@@ -34,6 +34,7 @@ class UserApi
     /**
      * The plaintext password when being set or changed.
      */
+    #[ApiProperty(readable: false)]
     public ?string $password = null;
 
     /**
