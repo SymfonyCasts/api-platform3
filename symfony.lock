@@ -60,6 +60,9 @@
             "migrations/.gitignore"
         ]
     },
+    "jane-php/automapper-bundle": {
+        "version": "v7.5.3"
+    },
     "nelmio/cors-bundle": {
         "version": "2.2",
         "recipe": {

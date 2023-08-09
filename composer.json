@@ -12,6 +12,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "jane-php/automapper-bundle": "^7.5",
         "nelmio/cors-bundle": "^2.2",
         "nesbot/carbon": "^2.64",
         "phpdocumentor/reflection-docblock": "^5.3",
