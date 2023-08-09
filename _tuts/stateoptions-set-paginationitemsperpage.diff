@@ -1,11 +1,11 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index ec51a0a..1aff161 100644
+index 8b4ffe3..3c7a93b 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
- use Doctrine\Common\Collections\Collection;
+@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
  
  #[ApiResource(
+     shortName: 'User',
 +    paginationItemsPerPage: 5,
      stateOptions: new Options(entityClass: User::class),
  )]
