@@ -1,13 +1,15 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 3954d77..bbec663 100644
+index 9a3f21e..b27b1f0 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -15,4 +15,8 @@ use App\Entity\User;
+@@ -4,7 +4,9 @@ namespace App\ApiResource;
+ 
+ use ApiPlatform\Metadata\ApiResource;
+ 
+-#[ApiResource]
++#[ApiResource(
++    shortName: 'User',
++)]
  class UserApi
  {
      public ?int $id = null;
-+
-+    public ?string $email = null;
-+
-+    public ?string $username = null;
- }
