@@ -1,13 +1,13 @@
 diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index ba2432f..8d8421f 100644
+index 8e1fc53..c158860 100644
 --- a/src/State/UserApiStateProvider.php
 +++ b/src/State/UserApiStateProvider.php
-@@ -40,7 +40,7 @@ class UserApiStateProvider implements ProviderInterface
+@@ -56,7 +56,7 @@ class UserApiStateProvider implements ProviderInterface
          $userApi = new UserApi($user->getId());
          $userApi->email = $user->getEmail();
          $userApi->username = $user->getUsername();
 -        $userApi->dragonTreasures = $user->getDragonTreasures();
 +        $userApi->dragonTreasures = $user->getPublishedDragonTreasures();
+         $userApi->flameThrowingDistance = rand(1, 10);
  
          return $userApi;
-     }
