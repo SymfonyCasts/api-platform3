@@ -1,7 +1,7 @@
 api_platform:
-    defaults:
-        normalization_context:
-          skip_null_values: false
+#    defaults:
+#        normalization_context:
+#          skip_null_values: false
     formats:
         jsonld: [ 'application/ld+json' ]
         json: [ 'application/json' ]
