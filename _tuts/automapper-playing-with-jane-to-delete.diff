@@ -1,0 +1,36 @@
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index 9ac89d6..bfa1e42 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -11,6 +11,7 @@ use App\ApiResource\UserApi;
+ use App\Entity\User;
+ use App\Repository\UserRepository;
+ use Doctrine\ORM\EntityManagerInterface;
++use Jane\Component\AutoMapper\AutoMapperInterface;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+ 
+@@ -21,6 +22,7 @@ class UserApiStateProcessor implements ProcessorInterface
+         #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
+         #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
+         private UserPasswordHasherInterface $userPasswordHasher,
++        private AutoMapperInterface $autoMapper
+     )
+     {
+ 
+@@ -56,14 +58,6 @@ class UserApiStateProcessor implements ProcessorInterface
+             $user = new User();
+         }
+ 
+-        $user->setEmail($userApi->email);
+-        $user->setUsername($userApi->username);
+-        if ($userApi->password) {
+-            $user->setPassword($this->userPasswordHasher->hashPassword($user, $userApi->password));
+-        }
+-
+-        // TODO: handle dragon treasures
+-
+-        return $user;
++        return $this->autoMapper->map($userApi, $user);
+     }
+ }
