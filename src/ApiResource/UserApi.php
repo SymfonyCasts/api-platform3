@@ -46,8 +46,6 @@ class UserApi
 
     public int $flameThrowingDistance = 0;
 
-    public string $tmpProperty = '';
-
     public function __construct(int $id = null)
     {
         $this->id = $id;
