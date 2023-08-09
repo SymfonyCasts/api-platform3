@@ -27,6 +27,7 @@ class UserApiStateProcessor implements ProcessorInterface
         $user = $this->mapDtoToEntity($data);
 
         $this->persistProcessor->process($user, $operation, $uriVariables, $context);
+        $data->id = $user->getId();
 
         return $data;
     }
