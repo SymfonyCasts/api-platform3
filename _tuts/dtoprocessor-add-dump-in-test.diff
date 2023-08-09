@@ -1,0 +1,12 @@
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 869e0cc..db9bea1 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -22,6 +22,7 @@ class UserResourceTest extends ApiTestCase
+                     'password' => 'password',
+                 ]
+             ])
++            ->dump()
+             ->assertStatus(201)
+             ->post('/login', [
+                 'json' => [
