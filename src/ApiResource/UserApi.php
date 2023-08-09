@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
+use App\State\UserApiStateProvider;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 #[ApiResource(
     shortName: 'User',
     paginationItemsPerPage: 5,
+    provider: UserApiStateProvider::class,
     stateOptions: new Options(entityClass: User::class),
 )]
 #[ApiFilter(SearchFilter::class, properties: [
