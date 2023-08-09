@@ -1,8 +1,8 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 62244a7..73b454b 100644
+index 17f4e48..663e4a2 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -16,7 +16,7 @@ use App\State\UserApiStateProvider;
+@@ -28,7 +28,7 @@ use App\Entity\User;
  class UserApi
  {
      #[ApiProperty(readable: false, writable: false, identifier: true)]
