@@ -22,6 +22,8 @@ class UserApiStateProvider implements ProviderInterface
     {
         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
 
+        return $users;
+
         $userDtos = [];
         foreach ($users as $user) {
             $userDtos[] = $this->mapEntityToDto($user);

@@ -36,7 +36,7 @@ class UserApi
      */
     public Collection $dragonTreasures;
 
-    public int $flameThrowingDistance = 0;
+//    public int $flameThrowingDistance = 0;
 
     public function __construct(int $id = null)
     {
