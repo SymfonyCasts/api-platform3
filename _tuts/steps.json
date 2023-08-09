@@ -377,87 +377,87 @@
         },
         {
             "id": "controllerfields-test-that-id-is-not-included",
-            "name": "ControllerFields: test that id is not included",
+            "name": "ControlFields: test that id is not included",
             "description": null
         },
         {
             "id": "controllerfields-set-readable-false",
-            "name": "ControllerFields: Set readable: false",
+            "name": "ControlFields: Set readable: false",
             "description": null
         },
         {
             "id": "controllerfields-repeat-for-id",
-            "name": "ControllerFields: Repeat for id",
+            "name": "ControlFields: Repeat for id",
             "description": null
         },
         {
             "id": "controllerfields-change-patch-test-to-use-dto",
-            "name": "ControllerFields: change PATCH test to use DTO",
+            "name": "ControlFields: change PATCH test to use DTO",
             "description": null
         },
         {
             "id": "controllerfields-add-temp-prop",
-            "name": "ControllerFields: add temp prop",
+            "name": "ControlFields: add temp prop",
             "description": null
         },
         {
             "id": "controllerfields-showing-read-write-in-test",
-            "name": "ControllerFields: showing read\/write in test",
+            "name": "ControlFields: showing read\/write in test",
             "description": null
         },
         {
             "id": "controllerfields-readable-false",
-            "name": "ControllerFields: readable: false",
+            "name": "ControlFields: readable: false",
             "description": null
         },
         {
             "id": "controllerfields-writable-false",
-            "name": "ControllerFields: writable: false",
+            "name": "ControlFields: writable: false",
             "description": null
         },
         {
             "id": "controllerfields-ignored-attributes-for-normalization",
-            "name": "ControllerFields: IGNORED_ATTRIBUTES for normalization",
+            "name": "ControlFields: IGNORED_ATTRIBUTES for normalization",
             "description": null
         },
         {
             "id": "controllerfields-now-for-denormalization",
-            "name": "ControllerFields: Now for denormalization",
+            "name": "ControlFields: Now for denormalization",
             "description": null
         },
         {
             "id": "controllerfields-ignore",
-            "name": "ControllerFields: #[Ignore]",
+            "name": "ControlFields: #[Ignore]",
             "description": null
         },
         {
             "id": "controllerfields-reset-tmp-code",
-            "name": "ControllerFields: Reset tmp code",
+            "name": "ControlFields: Reset tmp code",
             "description": null
         },
         {
             "id": "controllerfields-try-sending-id",
-            "name": "ControllerFields: Try sending id",
+            "name": "ControlFields: Try sending id",
             "description": null
         },
         {
             "id": "controllerfields-try-writable-false",
-            "name": "ControllerFields: Try writable: false",
+            "name": "ControlFields: Try writable: false",
             "description": null
         },
         {
             "id": "controllerfields-try-readonly",
-            "name": "ControllerFields: Try readonly",
+            "name": "ControlFields: Try readonly",
             "description": null
         },
         {
             "id": "controllerfields-remove-constructor",
-            "name": "ControllerFields: Remove constructor",
+            "name": "ControlFields: Remove constructor",
             "description": null
         },
         {
             "id": "controllerfields-use-isset-for-id",
-            "name": "ControllerFields: use isset() for id",
+            "name": "ControlFields: use isset() for id",
             "description": null
         },
         {
