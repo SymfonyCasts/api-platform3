@@ -44,7 +44,7 @@ class UserApi
 
     public int $flameThrowingDistance = 0;
 
-    #[ApiProperty(readable: false)]
+    #[ApiProperty(readable: false, writable: false)]
     public string $tmpProperty = '';
 
     public function __construct(int $id = null)
