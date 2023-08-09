@@ -2,6 +2,7 @@
 
 namespace App\ApiResource;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
@@ -23,6 +24,7 @@ use Doctrine\Common\Collections\Collection;
 ])]
 class UserApi
 {
+    #[ApiProperty(identifier: true)]
     public ?int $id;
 
     public ?string $email = null;
