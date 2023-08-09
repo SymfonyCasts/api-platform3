@@ -10,8 +10,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\UserApiStateProvider;
 use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 #[ApiResource(
     shortName: 'User',
@@ -32,15 +30,14 @@ class UserApi
     public ?string $username = null;
 
     /**
-     * @var Collection<int, DragonTreasure>
+     * @var DragonTreasure[]
      */
-    public Collection $dragonTreasures;
+    public array $dragonTreasures = [];
 
     public int $flameThrowingDistance = 0;
 
     public function __construct(int $id = null)
     {
         $this->id = $id;
-        $this->dragonTreasures = new ArrayCollection();
     }
 }
