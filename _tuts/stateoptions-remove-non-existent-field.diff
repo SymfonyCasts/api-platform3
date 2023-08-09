@@ -1,0 +1,11 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 695e596..a18dc0a 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -17,6 +17,4 @@ class UserApi
+     public ?string $email = null;
+ 
+     public ?string $username = null;
+-
+-    public int $flameThrowingDistance = 0;
+ }
