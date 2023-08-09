@@ -1,9 +1,9 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 903f4f3..9a3e9f5 100644
+index 4e057f2..8e7d92f 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
- )]
+@@ -23,7 +23,7 @@ use Doctrine\Common\Collections\Collection;
+ ])]
  class UserApi
  {
 -    public ?int $id = null;
@@ -11,7 +11,7 @@ index 903f4f3..9a3e9f5 100644
  
      public ?string $email = null;
  
-@@ -25,8 +25,9 @@ class UserApi
+@@ -34,8 +34,9 @@ class UserApi
       */
      public Collection $dragonTreasures;
  
