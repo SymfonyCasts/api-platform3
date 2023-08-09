@@ -10,7 +10,9 @@ use ApiPlatform\State\ProcessorInterface;
 use App\ApiResource\UserApi;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserApiStateProcessor implements ProcessorInterface
 {
@@ -18,6 +20,7 @@ class UserApiStateProcessor implements ProcessorInterface
         private UserRepository $userRepository,
         #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
         #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
+        private UserPasswordHasherInterface $userPasswordHasher,
     )
     {
 
@@ -55,7 +58,10 @@ class UserApiStateProcessor implements ProcessorInterface
 
         $user->setEmail($userApi->email);
         $user->setUsername($userApi->username);
-        $user->setPassword('TODO properly');
+        if ($userApi->password) {
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, $userApi->password));
+        }
+
         // TODO: handle dragon treasures
 
         return $user;

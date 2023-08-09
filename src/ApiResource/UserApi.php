@@ -32,6 +32,11 @@ class UserApi
     public ?string $username = null;
 
     /**
+     * The plaintext password when being set or changed.
+     */
+    public ?string $password = null;
+
+    /**
      * @var DragonTreasure[]
      */
     public array $dragonTreasures = [];
