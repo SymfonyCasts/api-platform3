@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 
 #[ApiResource(
     shortName: 'User',
+    paginationItemsPerPage: 5,
     stateOptions: new Options(entityClass: User::class),
 )]
 class UserApi
