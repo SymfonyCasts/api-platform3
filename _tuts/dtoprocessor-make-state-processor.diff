@@ -1,21 +1,23 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 93e6876..0e8fb3e 100644
+index c560cff..fa01e2e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -5,11 +5,13 @@ namespace App\ApiResource;
- use ApiPlatform\Metadata\ApiProperty;
+@@ -8,6 +8,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\ApiFilter;
  use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
 +use App\State\UserApiStateProcessor;
  use App\State\UserApiStateProvider;
+ use App\Entity\User;
  
- #[ApiResource(
+@@ -15,6 +16,7 @@ use App\Entity\User;
+     shortName: 'User',
      paginationItemsPerPage: 5,
      provider: UserApiStateProvider::class,
 +    processor: UserApiStateProcessor::class,
+     stateOptions: new Options(entityClass: User::class),
  )]
- class UserApi
- {
+ #[ApiFilter(SearchFilter::class, properties: [
 diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
 new file mode 100644
 index 0000000..e44bfd1
