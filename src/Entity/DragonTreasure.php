@@ -145,7 +145,7 @@ class DragonTreasure
     /**
      * @var bool Non-persisted property to help determine if the treasure is owned by the authenticated user
      */
-    private bool $isOwnedByAuthenticatedUser;
+    private bool $isOwnedByAuthenticatedUser = false;
 
     public function __construct(string $name = null)
     {
