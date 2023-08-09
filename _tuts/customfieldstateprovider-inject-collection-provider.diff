@@ -1,24 +1,25 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index 9792fe7..9771abf 100644
+index 74c191e..ec4f1cd 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
-@@ -2,6 +2,7 @@
+@@ -2,6 +2,8 @@
  
  namespace App\State;
  
++use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 +use ApiPlatform\Metadata\CollectionOperationInterface;
+ use ApiPlatform\Doctrine\Orm\State\ItemProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\ProviderInterface;
- use App\Entity\DragonTreasure;
-@@ -12,6 +13,7 @@ class DragonTreasureStateProvider implements ProviderInterface
+@@ -13,6 +15,7 @@ class DragonTreasureStateProvider implements ProviderInterface
  {
      public function __construct(
-         #[Autowire(service: 'api_platform.doctrine.orm.state.item_provider')] private ProviderInterface $itemProvider,
-+        #[Autowire(service: 'api_platform.doctrine.orm.state.collection_provider')] private ProviderInterface $collectionProvider,
+         #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
++        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
          private Security $security,
      )
      {
-@@ -19,7 +21,10 @@ class DragonTreasureStateProvider implements ProviderInterface
+@@ -20,7 +23,10 @@ class DragonTreasureStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
