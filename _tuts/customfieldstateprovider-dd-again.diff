@@ -1,8 +1,8 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index 7c9b00a..9792fe7 100644
+index b9bcf03..74c191e 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
-@@ -19,6 +19,7 @@ class DragonTreasureStateProvider implements ProviderInterface
+@@ -20,6 +20,7 @@ class DragonTreasureStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
