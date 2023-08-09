@@ -15,8 +15,6 @@ use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
-    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['tmpProperty']],
-    denormalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['tmpProperty']],
     paginationItemsPerPage: 5,
     provider: UserApiStateProvider::class,
     processor: UserApiStateProcessor::class,
