@@ -42,10 +42,8 @@ class UserApi
      */
     public array $dragonTreasures = [];
 
-    public int $flameThrowingDistance = 0;
-
     #[ApiProperty(readable: false)]
-    public string $tmpProperty = '';
+    public int $flameThrowingDistance = 0;
 
     public function __construct(int $id = null)
     {
