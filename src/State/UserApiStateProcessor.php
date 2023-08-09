@@ -40,6 +40,7 @@ class UserApiStateProcessor implements ProcessorInterface
 
         $this->persistProcessor->process($user, $operation, $uriVariables, $context);
         $data->id = $user->getId();
+        dump($data);
 
         return $data;
     }
