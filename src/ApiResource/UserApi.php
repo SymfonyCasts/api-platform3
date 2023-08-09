@@ -10,10 +10,12 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\UserApiStateProcessor;
 use App\State\UserApiStateProvider;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
+    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['tmpProperty']],
     paginationItemsPerPage: 5,
     provider: UserApiStateProvider::class,
     processor: UserApiStateProcessor::class,
@@ -44,7 +46,6 @@ class UserApi
 
     public int $flameThrowingDistance = 0;
 
-    #[ApiProperty(readable: false, writable: false)]
     public string $tmpProperty = '';
 
     public function __construct(int $id = null)
