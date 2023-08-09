@@ -22,6 +22,7 @@ class UserResourceTest extends ApiTestCase
                     'password' => 'password',
                 ]
             ])
+            ->dump()
             ->assertStatus(201)
             ->post('/login', [
                 'json' => [
