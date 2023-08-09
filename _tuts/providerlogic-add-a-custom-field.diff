@@ -1,0 +1,25 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 5796b8f..a6faa10 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -36,6 +36,8 @@ class UserApi
+      */
+     public Collection $dragonTreasures;
+ 
++    public int $flameThrowingDistance = 0;
++
+     public function __construct(int $id = null)
+     {
+         $this->id = $id;
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 2519e78..44856b6 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -36,6 +36,7 @@ class UserApiStateProvider implements ProviderInterface
+         $userApi->email = $user->getEmail();
+         $userApi->username = $user->getUsername();
+         $userApi->dragonTreasures = $user->getDragonTreasures();
++        $userApi->flameThrowingDistance = rand(1, 10);
+ 
+         return $userApi;
+     }
