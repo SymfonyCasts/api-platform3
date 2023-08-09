@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\UserApiStateProcessor;
 use App\State\UserApiStateProvider;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\User;
 
@@ -47,9 +46,6 @@ class UserApi
     public array $dragonTreasures = [];
 
     public int $flameThrowingDistance = 0;
-
-    #[Ignore]
-    public string $tmpProperty = '';
 
     public function __construct(int $id = null)
     {
