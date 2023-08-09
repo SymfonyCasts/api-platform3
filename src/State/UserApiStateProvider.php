@@ -19,6 +19,6 @@ class UserApiStateProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
-        dd($users);
+        dd(iterator_to_array($users));
     }
 }
