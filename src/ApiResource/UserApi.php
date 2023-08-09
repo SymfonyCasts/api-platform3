@@ -23,7 +23,7 @@ use Doctrine\Common\Collections\Collection;
 ])]
 class UserApi
 {
-    public ?int $id = null;
+    public ?int $id;
 
     public ?string $email = null;
 
@@ -34,8 +34,9 @@ class UserApi
      */
     public Collection $dragonTreasures;
 
-    public function __construct()
+    public function __construct(int $id = null)
     {
+        $this->id = $id;
         $this->dragonTreasures = new ArrayCollection();
     }
 }
