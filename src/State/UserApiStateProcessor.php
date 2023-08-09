@@ -46,7 +46,7 @@ class UserApiStateProcessor implements ProcessorInterface
 
     private function mapDtoToEntity(UserApi $userApi): User
     {
-        if ($userApi->id) {
+        if (isset($userApi->id)) {
             $user = $this->userRepository->find($userApi->id);
 
             if (!$user) {
