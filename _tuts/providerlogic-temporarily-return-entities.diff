@@ -1,0 +1,26 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index a6faa10..ea9249f 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -36,7 +36,7 @@ class UserApi
+      */
+     public Collection $dragonTreasures;
+ 
+-    public int $flameThrowingDistance = 0;
++//    public int $flameThrowingDistance = 0;
+ 
+     public function __construct(int $id = null)
+     {
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 44856b6..c019905 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -22,6 +22,8 @@ class UserApiStateProvider implements ProviderInterface
+     {
+         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
+ 
++        return $users;
++
+         $userDtos = [];
+         foreach ($users as $user) {
+             $userDtos[] = $this->mapEntityToDto($user);
