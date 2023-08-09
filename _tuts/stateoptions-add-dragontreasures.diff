@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 59c4f2b..9216915 100644
+index a18dc0a..2405b8e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -5,6 +5,8 @@ namespace App\ApiResource;
@@ -10,8 +10,8 @@ index 59c4f2b..9216915 100644
 +use Doctrine\Common\Collections\Collection;
  
  #[ApiResource(
-     stateOptions: new Options(entityClass: User::class),
-@@ -16,4 +18,11 @@ class UserApi
+     shortName: 'User',
+@@ -17,4 +19,11 @@ class UserApi
      public ?string $email = null;
  
      public ?string $username = null;
