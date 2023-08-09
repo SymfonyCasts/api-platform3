@@ -1,21 +1,23 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index acad799..0208550 100644
+index 663c2e2..e3c482d 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -7,8 +7,10 @@ use ApiPlatform\Metadata\ApiResource;
+@@ -10,10 +10,12 @@ use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
  use App\State\UserApiStateProcessor;
  use App\State\UserApiStateProvider;
 +use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+ use App\Entity\User;
  
  #[ApiResource(
+     shortName: 'User',
 +    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['tmpProperty']],
      paginationItemsPerPage: 5,
      provider: UserApiStateProvider::class,
      processor: UserApiStateProcessor::class,
-@@ -33,7 +35,6 @@ class UserApi
-      */
-     public array $dragonTreasures = [];
+@@ -44,7 +46,6 @@ class UserApi
+ 
+     public int $flameThrowingDistance = 0;
  
 -    #[ApiProperty(readable: false, writable: false)]
      public string $tmpProperty = '';
