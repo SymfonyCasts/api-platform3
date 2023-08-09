@@ -53,7 +53,8 @@ class UserApiStateProvider implements ProviderInterface
 
     private function mapEntityToDto(User $user): UserApi
     {
-        $userApi = new UserApi($user->getId());
+        $userApi = new UserApi();
+        $userApi->id = $user->getId();
         $userApi->email = $user->getEmail();
         $userApi->username = $user->getUsername();
         $userApi->dragonTreasures = $user->getPublishedDragonTreasures()->getValues();

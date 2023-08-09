@@ -28,7 +28,7 @@ use App\Entity\User;
 class UserApi
 {
     #[ApiProperty(readable: false, writable: false, identifier: true)]
-    public readonly ?int $id;
+    public int $id;
 
     public ?string $email = null;
 
@@ -46,9 +46,4 @@ class UserApi
     public array $dragonTreasures = [];
 
     public int $flameThrowingDistance = 0;
-
-    public function __construct(int $id = null)
-    {
-        $this->id = $id;
-    }
 }
