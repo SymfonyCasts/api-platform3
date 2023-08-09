@@ -26,6 +26,7 @@ class UserResourceTest extends ApiTestCase
             ->assertStatus(201)
             ->use(function (Json $json) {
                 $json->assertMissing('password');
+                $json->assertMissing('id');
             })
             ->post('/login', [
                 'json' => [

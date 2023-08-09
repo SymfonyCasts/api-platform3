@@ -24,7 +24,7 @@ use App\Entity\User;
 ])]
 class UserApi
 {
-    #[ApiProperty(identifier: true)]
+    #[ApiProperty(readable: false, identifier: true)]
     public ?int $id;
 
     public ?string $email = null;
