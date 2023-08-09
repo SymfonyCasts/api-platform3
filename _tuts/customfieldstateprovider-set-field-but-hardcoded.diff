@@ -1,16 +1,16 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index 3b1bbe4..bbce7b7 100644
+index c1acce6..6aa69ca 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
-@@ -4,6 +4,7 @@ namespace App\State;
- 
+@@ -5,6 +5,7 @@ namespace App\State;
+ use ApiPlatform\Doctrine\Orm\State\ItemProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\ProviderInterface;
 +use App\Entity\DragonTreasure;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  
  class DragonTreasureStateProvider implements ProviderInterface
-@@ -16,6 +17,14 @@ class DragonTreasureStateProvider implements ProviderInterface
+@@ -17,6 +18,14 @@ class DragonTreasureStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
