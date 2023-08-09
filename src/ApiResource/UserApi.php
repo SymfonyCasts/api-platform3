@@ -15,7 +15,7 @@ use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
-    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['tmpProperty']],
+    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
     paginationItemsPerPage: 5,
     provider: UserApiStateProvider::class,
     processor: UserApiStateProcessor::class,
