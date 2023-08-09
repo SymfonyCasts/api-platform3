@@ -44,7 +44,7 @@ class UserResourceTest extends ApiTestCase
 
         $this->browser()
             ->actingAs($user)
-            ->patch('/api/user_apis/' . $user->getId(), [
+            ->patch('/api/users/' . $user->getId(), [
                 'json' => [
                     'username' => 'changed',
                     'tmpProperty' => 'WRITTEN',
