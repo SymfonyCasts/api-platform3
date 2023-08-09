@@ -56,7 +56,7 @@ class UserApiStateProvider implements ProviderInterface
         $userApi = new UserApi($user->getId());
         $userApi->email = $user->getEmail();
         $userApi->username = $user->getUsername();
-        $userApi->dragonTreasures = $user->getDragonTreasures();
+        $userApi->dragonTreasures = $user->getPublishedDragonTreasures();
         $userApi->flameThrowingDistance = rand(1, 10);
 
         return $userApi;
