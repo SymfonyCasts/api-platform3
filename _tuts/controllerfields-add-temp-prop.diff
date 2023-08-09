@@ -1,10 +1,10 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 92ba6e6..7129756 100644
+index 2d266a7..220221e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -33,6 +33,8 @@ class UserApi
-      */
-     public array $dragonTreasures = [];
+@@ -44,6 +44,8 @@ class UserApi
+ 
+     public int $flameThrowingDistance = 0;
  
 +    public string $tmpProperty = '';
 +
