@@ -3,11 +3,14 @@
 namespace App\ApiResource;
 
 use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
     provider: CollectionProvider::class,
+    stateOptions: new Options(entityClass: User::class),
 )]
 class UserApi
 {
