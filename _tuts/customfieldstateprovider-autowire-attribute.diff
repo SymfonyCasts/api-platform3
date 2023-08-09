@@ -1,9 +1,12 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index eae9907..3b1bbe4 100644
+index eae9907..c1acce6 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
-@@ -4,10 +4,13 @@ namespace App\State;
+@@ -2,12 +2,16 @@
  
+ namespace App\State;
+ 
++use ApiPlatform\Doctrine\Orm\State\ItemProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\ProviderInterface;
 +use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -12,7 +15,7 @@ index eae9907..3b1bbe4 100644
  {
 -    public function __construct(private ProviderInterface $itemProvider)
 +    public function __construct(
-+        #[Autowire(service: 'api_platform.doctrine.orm.state.item_provider')] private ProviderInterface $itemProvider
++        #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider
 +    )
      {
      }
