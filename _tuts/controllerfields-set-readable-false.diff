@@ -1,8 +1,8 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 2a74f8c..9033d4c 100644
+index 45d7ded..05bacbf 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -25,6 +25,7 @@ class UserApi
+@@ -34,6 +34,7 @@ class UserApi
      /**
       * The plaintext password when being set or changed.
       */
