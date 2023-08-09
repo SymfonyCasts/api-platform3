@@ -91,6 +91,11 @@
             "description": null
         },
         {
+            "id": "delete-me-1",
+            "name": "delete me 1",
+            "description": null
+        },
+        {
             "id": "publishprocessor-add-test-for-publishing",
             "name": "PublishProcessor: Add test for publishing",
             "description": null
@@ -156,6 +161,16 @@
             "description": null
         },
         {
+            "id": "dto-remove-apiresource-from-entity",
+            "name": "DTO: Remove ApiResource from entity",
+            "description": null
+        },
+        {
+            "id": "dto-give-userdto-shortname",
+            "name": "DTO: Give UserDto shortName",
+            "description": null
+        },
+        {
             "id": "stateoptions-set-provider-to-orm-collection",
             "name": "StateOptions: set provider to orm collection",
             "description": null
@@ -166,13 +181,28 @@
             "description": null
         },
         {
-            "id": "stateoptions-remove-provider",
-            "name": "StateOptions: Remove provider",
+            "id": "delete-me-2",
+            "name": "delete me 2",
             "description": null
         },
         {
             "id": "stateoptions-add-more-fields",
             "name": "StateOptions: Add more fields",
+            "description": null
+        },
+        {
+            "id": "stateoptions-remove-the-provider-option",
+            "name": "StateOptions: remove the provider option",
+            "description": null
+        },
+        {
+            "id": "stateoptions-add-non-existent-field",
+            "name": "StateOptions: Add non-existent field",
+            "description": null
+        },
+        {
+            "id": "stateoptions-remove-non-existent-field",
+            "name": "StateOptions: Remove non-existent field",
             "description": null
         },
         {
@@ -196,13 +226,13 @@
             "description": null
         },
         {
-            "id": "dtoprovider-remove-stateoptions",
-            "name": "DtoProvider: Remove stateOptions",
+            "id": "delete-me-3",
+            "name": "delete me 3",
             "description": null
         },
         {
-            "id": "dtoprovider-remove-filter",
-            "name": "DtoProvider: Remove filter",
+            "id": "delete-me-4",
+            "name": "delete me 4",
             "description": null
         },
         {
@@ -241,13 +271,43 @@
             "description": null
         },
         {
+            "id": "providerlogic-dump-the-iterator",
+            "name": "ProviderLogic: dump the iterator",
+            "description": null
+        },
+        {
+            "id": "providerlogic-map-entities-to-dtos",
+            "name": "ProviderLogic: Map entities to DTOs",
+            "description": null
+        },
+        {
+            "id": "providerlogic-add-a-custom-field",
+            "name": "ProviderLogic: Add a custom field",
+            "description": null
+        },
+        {
+            "id": "providerlogic-temporarily-return-entities",
+            "name": "ProviderLogic: Temporarily return entities",
+            "description": null
+        },
+        {
+            "id": "providerlogic-return-dtos-again",
+            "name": "ProviderLogic: Return DTOs again",
+            "description": null
+        },
+        {
+            "id": "providerlogic-return-traversablepaginator",
+            "name": "ProviderLogic: Return TraversablePaginator",
+            "description": null
+        },
+        {
             "id": "providerlogic-check-for-collectionoperationinterface",
             "name": "ProviderLogic: Check for CollectionOperationInterface",
             "description": null
         },
         {
-            "id": "providerlogic-add-logic-to-query-for-1-item",
-            "name": "ProviderLogic: Add logic to query for 1 item",
+            "id": "providerlogic-using-core-itemprovider",
+            "name": "ProviderLogic: Using core ItemProvider",
             "description": null
         },
         {
@@ -261,8 +321,8 @@
             "description": null
         },
         {
-            "id": "dtoprocessor-point-test-at-dto",
-            "name": "DtoProcessor: Point test at DTO",
+            "id": "dtoprocessor-add-dump-in-test",
+            "name": "DtoProcessor: add dump() in test",
             "description": null
         },
         {
@@ -291,13 +351,18 @@
             "description": null
         },
         {
-            "id": "dtoprocessor-return-dto",
-            "name": "DtoProcessor: Return dto",
+            "id": "delete-me-5",
+            "name": "delete me 5",
             "description": null
         },
         {
             "id": "dtoprocessor-set-id-on-dto",
             "name": "DtoProcessor: set id on DTO",
+            "description": null
+        },
+        {
+            "id": "delete-me-6",
+            "name": "delete me 6",
             "description": null
         },
         {
@@ -312,89 +377,99 @@
         },
         {
             "id": "controllerfields-test-that-id-is-not-included",
-            "name": "ControllerFields: test that id is not included",
+            "name": "ControlFields: test that id is not included",
             "description": null
         },
         {
             "id": "controllerfields-set-readable-false",
-            "name": "ControllerFields: Set readable: false",
+            "name": "ControlFields: Set readable: false",
             "description": null
         },
         {
             "id": "controllerfields-repeat-for-id",
-            "name": "ControllerFields: Repeat for id",
+            "name": "ControlFields: Repeat for id",
             "description": null
         },
         {
             "id": "controllerfields-change-patch-test-to-use-dto",
-            "name": "ControllerFields: change PATCH test to use DTO",
+            "name": "ControlFields: change PATCH test to use DTO",
             "description": null
         },
         {
             "id": "controllerfields-add-temp-prop",
-            "name": "ControllerFields: add temp prop",
+            "name": "ControlFields: add temp prop",
             "description": null
         },
         {
             "id": "controllerfields-showing-read-write-in-test",
-            "name": "ControllerFields: showing read\/write in test",
+            "name": "ControlFields: showing read\/write in test",
             "description": null
         },
         {
             "id": "controllerfields-readable-false",
-            "name": "ControllerFields: readable: false",
+            "name": "ControlFields: readable: false",
             "description": null
         },
         {
             "id": "controllerfields-writable-false",
-            "name": "ControllerFields: writable: false",
+            "name": "ControlFields: writable: false",
             "description": null
         },
         {
             "id": "controllerfields-ignored-attributes-for-normalization",
-            "name": "ControllerFields: IGNORED_ATTRIBUTES for normalization",
+            "name": "ControlFields: IGNORED_ATTRIBUTES for normalization",
             "description": null
         },
         {
             "id": "controllerfields-now-for-denormalization",
-            "name": "ControllerFields: Now for denormalization",
+            "name": "ControlFields: Now for denormalization",
             "description": null
         },
         {
             "id": "controllerfields-ignore",
-            "name": "ControllerFields: #[Ignore]",
+            "name": "ControlFields: #[Ignore]",
             "description": null
         },
         {
             "id": "controllerfields-reset-tmp-code",
-            "name": "ControllerFields: Reset tmp code",
+            "name": "ControlFields: Reset tmp code",
             "description": null
         },
         {
             "id": "controllerfields-try-sending-id",
-            "name": "ControllerFields: Try sending id",
+            "name": "ControlFields: Try sending id",
             "description": null
         },
         {
             "id": "controllerfields-try-writable-false",
-            "name": "ControllerFields: Try writable: false",
+            "name": "ControlFields: Try writable: false",
             "description": null
         },
         {
             "id": "controllerfields-try-readonly",
-            "name": "ControllerFields: Try readonly",
+            "name": "ControlFields: Try readonly",
             "description": null
         },
         {
             "id": "controllerfields-remove-constructor",
-            "name": "ControllerFields: Remove constructor",
+            "name": "ControlFields: Remove constructor",
             "description": null
         },
         {
             "id": "controllerfields-use-isset-for-id",
-            "name": "ControllerFields: use isset() for id",
+            "name": "ControlFields: use isset() for id",
+            "description": null
+        },
+        {
+            "id": "automapper-install-jane-automapper",
+            "name": "AutoMapper: install jane automapper",
+            "description": null
+        },
+        {
+            "id": "automapper-playing-with-jane-to-delete",
+            "name": "AutoMapper: Playing with jane - to delete",
             "description": null
         }
     ],
-    "sha": "f5a9ac2f17bf7700d31963c1171f50916819678e"
+    "sha": "0bbeb39c274df9bcf9d15226935d67c77e0b8bef"
 }
