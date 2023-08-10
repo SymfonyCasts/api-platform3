@@ -28,33 +28,33 @@ class UserApiStateProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
-            assert($users instanceof Paginator);
+            $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
+            assert($entities instanceof Paginator);
 
-            $userDtos = [];
-            foreach ($users as $user) {
-                $userDtos[] = $this->mapEntityToDto($user);
+            $dtos = [];
+            foreach ($entities as $entity) {
+                $dtos[] = $this->mapEntityToDto($entity);
             }
 
             return new TraversablePaginator(
-                new \ArrayIterator($userDtos),
-                $users->getCurrentPage(),
-                $users->getItemsPerPage(),
-                $users->getTotalItems()
+                new \ArrayIterator($dtos),
+                $entities->getCurrentPage(),
+                $entities->getItemsPerPage(),
+                $entities->getTotalItems()
             );
         }
 
-        $user = $this->itemProvider->provide($operation, $uriVariables, $context);
+        $entity = $this->itemProvider->provide($operation, $uriVariables, $context);
 
-        if (!$user) {
+        if (!$entity) {
             return null;
         }
 
-        return $this->mapEntityToDto($user);
+        return $this->mapEntityToDto($entity);
     }
 
-    private function mapEntityToDto(User $user): UserApi
+    private function mapEntityToDto(object $entity): object
     {
-        return $this->autoMapper->map($user, new UserApi());
+        return $this->autoMapper->map($entity, new UserApi());
     }
 }
