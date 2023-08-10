@@ -198,7 +198,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setFlameThrowingDistance($arg)
+    public function setFlameThrowingDistance(int $arg)
     {
     }
 
