@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\UserApi;
-use App\Entity\User;
 use Jane\Component\AutoMapper\AutoMapperInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
