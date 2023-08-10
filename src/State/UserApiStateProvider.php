@@ -11,6 +11,7 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\UserApi;
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class UserApiStateProvider implements ProviderInterface
@@ -56,7 +57,7 @@ class UserApiStateProvider implements ProviderInterface
         $userApi = new UserApi($user->getId());
         $userApi->email = $user->getEmail();
         $userApi->username = $user->getUsername();
-        $userApi->dragonTreasures = $user->getPublishedDragonTreasures()->getValues();
+        $userApi->dragonTreasures = new ArrayCollection($user->getPublishedDragonTreasures()->getValues());
         $userApi->flameThrowingDistance = rand(1, 10);
 
         return $userApi;
