@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\UserApiStateProcessor;
 use App\State\UserApiStateProvider;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
