@@ -4,19 +4,20 @@ namespace App\State;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
+use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\ApiResource\UserApi;
 use App\Entity\User;
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Jane\Component\AutoMapper\AutoMapperInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class UserApiStateProcessor implements ProcessorInterface
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private EntityManagerInterface $entityManager,
         #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
         #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
         private AutoMapperInterface $autoMapper
@@ -27,11 +28,13 @@ class UserApiStateProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-        dd($operation);
+        $stateOptions = $operation->getStateOptions();
+        assert($stateOptions instanceof Options);
+        $entityClass = $stateOptions->getEntityClass();
 
         assert($data instanceof UserApi);
 
-        $user = $this->mapDtoToEntity($data);
+        $user = $this->mapDtoToEntity($data, $entityClass);
 
         if ($operation instanceof DeleteOperationInterface) {
             $this->removeProcessor->process($user, $operation, $uriVariables, $context);
@@ -45,10 +48,12 @@ class UserApiStateProcessor implements ProcessorInterface
         return $data;
     }
 
-    private function mapDtoToEntity(UserApi $userApi): User
+    private function mapDtoToEntity(UserApi $userApi, string $entityClass): User
     {
         if (isset($userApi->id)) {
-            $user = $this->userRepository->find($userApi->id);
+            $user = $this->entityManager
+                ->getRepository($entityClass)
+                ->find($userApi->id);
 
             if (!$user) {
                 throw new \Exception(sprintf('User %d not found', $userApi->id));
