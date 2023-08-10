@@ -33,6 +33,7 @@ class UserApiStateProcessor implements ProcessorInterface
         assert($data instanceof UserApi);
 
         $user = $this->mapDtoToEntity($data);
+        dd($user);
 
         if ($operation instanceof DeleteOperationInterface) {
             $this->removeProcessor->process($user, $operation, $uriVariables, $context);
