@@ -23,6 +23,11 @@ class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
         assert($metadata instanceof MapperMetadata);
 
         $metadata->forMember('password', function (UserApi $userApi, User $user) {
+            // if the password is not set, we keep the old one
+            if (!$userApi->password) {
+                return $user->getPassword();
+            }
+
             return $this->userPasswordHasher->hashPassword($user, $userApi->password);
         });
     }
