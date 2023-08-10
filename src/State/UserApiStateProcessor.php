@@ -27,6 +27,8 @@ class UserApiStateProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
+        dd($operation);
+
         assert($data instanceof UserApi);
 
         $user = $this->mapDtoToEntity($data);
