@@ -29,6 +29,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
+/*
 #[ApiResource(
     shortName: 'Treasure',
     description: 'A rare and valuable treasure.',
@@ -91,6 +92,7 @@ use function Symfony\Component\String\u;
 #[ApiFilter(SearchFilter::class, properties: [
     'owner.username' => 'partial',
 ])]
+*/
 class DragonTreasure
 {
     #[ORM\Id]
