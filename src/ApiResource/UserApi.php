@@ -8,8 +8,8 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
-use App\State\UserApiStateProcessor;
-use App\State\UserApiStateProvider;
+use App\State\DtoToEntityStateProcessor;
+use App\State\EntityToDtoStateProvider;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,8 +18,8 @@ use Doctrine\Common\Collections\Collection;
 #[ApiResource(
     shortName: 'User',
     paginationItemsPerPage: 5,
-    provider: UserApiStateProvider::class,
-    processor: UserApiStateProcessor::class,
+    provider: EntityToDtoStateProvider::class,
+    processor: DtoToEntityStateProcessor::class,
     stateOptions: new Options(entityClass: User::class),
 )]
 #[ApiFilter(SearchFilter::class, properties: [

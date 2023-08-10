@@ -12,7 +12,7 @@ use ApiPlatform\State\ProviderInterface;
 use Jane\Component\AutoMapper\AutoMapperInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class UserApiStateProvider implements ProviderInterface
+class EntityToDtoStateProvider implements ProviderInterface
 {
     public function __construct(
         #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,

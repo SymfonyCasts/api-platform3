@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Jane\Component\AutoMapper\AutoMapperInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class UserApiStateProcessor implements ProcessorInterface
+class DtoToEntityStateProcessor implements ProcessorInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
