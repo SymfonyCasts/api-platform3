@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     shortName: 'User',
@@ -30,6 +31,8 @@ class UserApi
     #[ApiProperty(readable: false, writable: false, identifier: true)]
     public int $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     public ?string $email = null;
 
     public ?string $username = null;
