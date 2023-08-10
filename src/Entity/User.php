@@ -191,12 +191,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-//    public function setUsername(string $username): self
-//    {
-//        $this->username = $username;
-//
-//        return $this;
-//    }
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function setFlameThrowingDistance()
+    {
+    }
 
     /**
      * @return Collection<int, DragonTreasure>
