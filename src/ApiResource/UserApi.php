@@ -11,6 +11,8 @@ use App\Entity\DragonTreasure;
 use App\State\UserApiStateProcessor;
 use App\State\UserApiStateProvider;
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ApiResource(
     shortName: 'User',
@@ -32,15 +34,16 @@ class UserApi
     public ?string $username = null;
 
     /**
+<<<<<<< HEAD
      * The plaintext password when being set or changed.
      */
     #[ApiProperty(readable: false)]
     public ?string $password = null;
 
     /**
-     * @var DragonTreasure[]
+     * @var Collection<int, DragonTreasure>
      */
-    public array $dragonTreasures = [];
+    public Collection $dragonTreasures;
 
     #[ApiProperty(readable: false)]
     public int $flameThrowingDistance = 0;
@@ -48,5 +51,6 @@ class UserApi
     public function __construct(int $id = null)
     {
         $this->id = $id;
+        $this->dragonTreasures = new ArrayCollection();
     }
 }
