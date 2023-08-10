@@ -35,7 +35,6 @@ class UserApi
     public ?string $username = null;
 
     /**
-<<<<<<< HEAD
      * The plaintext password when being set or changed.
      */
     #[ApiProperty(readable: false)]
