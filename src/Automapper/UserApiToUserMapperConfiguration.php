@@ -11,7 +11,7 @@ class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
 {
     public function process(MapperGeneratorMetadataInterface $metadata): void
     {
-        dd($metadata);
+        dd($metadata->getPropertiesMapping());
     }
 
     public function getSource(): string
