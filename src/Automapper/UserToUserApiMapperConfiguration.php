@@ -16,6 +16,7 @@ class UserToUserApiMapperConfiguration implements MapperConfigurationInterface
         assert($metadata instanceof MapperMetadata);
 
         $metadata->forMember('dragonTreasures', fn (User $user) => new ArrayCollection($user->getPublishedDragonTreasures()->getValues()));
+        $metadata->forMember('flameThrowingDistance', fn (User $user) => rand(0, 10));
     }
 
     public function getSource(): string
