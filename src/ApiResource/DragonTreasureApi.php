@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\DtoToEntityStateProcessor;
 use App\State\EntityToDtoStateProvider;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
     shortName: 'Treasure',
@@ -20,6 +21,7 @@ class DragonTreasureApi
     #[ApiProperty(readable: false, writable: false, identifier: true)]
     public int $id;
 
+    #[NotBlank]
     public ?string $name = null;
 
     public ?UserApi $owner = null;
