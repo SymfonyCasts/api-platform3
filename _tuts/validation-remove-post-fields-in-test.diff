@@ -1,0 +1,17 @@
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 18d5dd3..a8e98b4 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -18,9 +18,9 @@ class UserResourceTest extends ApiTestCase
+         $this->browser()
+             ->post('/api/users', [
+                 'json' => [
+-                    'email' => 'draggin_in_the_morning@coffee.com',
+-                    'username' => 'draggin_in_the_morning',
+-                    'password' => 'password',
++//                    'email' => 'draggin_in_the_morning@coffee.com',
++//                    'username' => 'draggin_in_the_morning',
++//                    'password' => 'password',
+                 ]
+             ])
+             ->assertStatus(201)

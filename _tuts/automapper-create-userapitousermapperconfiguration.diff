@@ -1,0 +1,30 @@
+diff --git a/src/Automapper/UserApiToUserMapperConfiguration.php b/src/Automapper/UserApiToUserMapperConfiguration.php
+new file mode 100644
+index 0000000..ecb0be9
+--- /dev/null
++++ b/src/Automapper/UserApiToUserMapperConfiguration.php
+@@ -0,0 +1,24 @@
++<?php
++
++namespace App\Automapper;
++
++use Jane\Bundle\AutoMapperBundle\Configuration\MapperConfigurationInterface;
++use Jane\Component\AutoMapper\MapperGeneratorMetadataInterface;
++
++class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
++{
++    public function process(MapperGeneratorMetadataInterface $metadata): void
++    {
++        // TODO: Implement process() method.
++    }
++
++    public function getSource(): string
++    {
++        // TODO: Implement getSource() method.
++    }
++
++    public function getTarget(): string
++    {
++        // TODO: Implement getTarget() method.
++    }
++}

@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 9e3ffbd..d234b17 100644
+index cc7fae8..2611b36 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -10,7 +10,6 @@ use ApiPlatform\Metadata\ApiResource;
@@ -7,24 +7,22 @@ index 9e3ffbd..d234b17 100644
  use App\State\UserApiStateProcessor;
  use App\State\UserApiStateProvider;
 -use Symfony\Component\Serializer\Annotation\Ignore;
- use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
  use App\Entity\User;
- 
-@@ -48,9 +47,6 @@ class UserApi
- 
-     public int $flameThrowingDistance = 0;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
+@@ -45,7 +44,6 @@ class UserApi
+      */
+     public Collection $dragonTreasures;
  
 -    #[Ignore]
--    public string $tmpProperty = '';
--
+     public int $flameThrowingDistance = 0;
+ 
      public function __construct(int $id = null)
-     {
-         $this->id = $id;
 diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
-index c7c6e21..f625736 100644
+index 5c1bf87..b42c6ea 100644
 --- a/src/State/UserApiStateProcessor.php
 +++ b/src/State/UserApiStateProcessor.php
-@@ -40,7 +40,6 @@ class UserApiStateProcessor implements ProcessorInterface
+@@ -39,7 +39,6 @@ class UserApiStateProcessor implements ProcessorInterface
  
          $this->persistProcessor->process($user, $operation, $uriVariables, $context);
          $data->id = $user->getId();
@@ -33,14 +31,14 @@ index c7c6e21..f625736 100644
          return $data;
      }
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index 967f6e8..ea9fa76 100644
+index 80b418b..80c016f 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
 @@ -47,11 +47,9 @@ class UserResourceTest extends ApiTestCase
-             ->patch('/api/user_apis/' . $user->getId(), [
+             ->patch('/api/users/' . $user->getId(), [
                  'json' => [
                      'username' => 'changed',
--                    'tmpProperty' => 'WRITTEN',
+-                    'flameThrowingDistance' => 999,
                  ],
                  'headers' => ['Content-Type' => 'application/merge-patch+json']
              ])

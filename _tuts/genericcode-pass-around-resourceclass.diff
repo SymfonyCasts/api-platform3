@@ -1,0 +1,44 @@
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 48e5254..cde1cb1 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -9,7 +9,6 @@ use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\Pagination\TraversablePaginator;
+ use ApiPlatform\State\ProviderInterface;
+-use App\ApiResource\UserApi;
+ use Jane\Component\AutoMapper\AutoMapperInterface;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ 
+@@ -26,14 +25,14 @@ class UserApiStateProvider implements ProviderInterface
+ 
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
+-        dd($operation, $context);
++        $resourceClass = $operation->getClass();
+         if ($operation instanceof CollectionOperationInterface) {
+             $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
+             assert($entities instanceof Paginator);
+ 
+             $dtos = [];
+             foreach ($entities as $entity) {
+-                $dtos[] = $this->mapEntityToDto($entity);
++                $dtos[] = $this->mapEntityToDto($entity, $resourceClass);
+             }
+ 
+             return new TraversablePaginator(
+@@ -50,11 +49,11 @@ class UserApiStateProvider implements ProviderInterface
+             return null;
+         }
+ 
+-        return $this->mapEntityToDto($entity);
++        return $this->mapEntityToDto($entity, $resourceClass);
+     }
+ 
+-    private function mapEntityToDto(object $entity): object
++    private function mapEntityToDto(object $entity, string $resourceClass): object
+     {
+-        return $this->autoMapper->map($entity, new UserApi());
++        return $this->autoMapper->map($entity, $resourceClass);
+     }
+ }

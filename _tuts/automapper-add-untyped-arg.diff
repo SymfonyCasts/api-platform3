@@ -1,0 +1,13 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index f3c59ab..da21365 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -193,7 +193,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         return $this;
+     }
+ 
+-    public function setFlameThrowingDistance()
++    public function setFlameThrowingDistance($arg)
+     {
+     }
+ 

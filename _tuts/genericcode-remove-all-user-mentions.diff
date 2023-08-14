@@ -1,0 +1,62 @@
+diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+index 45dac1d..426d402 100644
+--- a/src/State/UserApiStateProcessor.php
++++ b/src/State/UserApiStateProcessor.php
+@@ -8,8 +8,6 @@ use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\DeleteOperationInterface;
+ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\ProcessorInterface;
+-use App\ApiResource\UserApi;
+-use App\Entity\User;
+ use Doctrine\ORM\EntityManagerInterface;
+ use Jane\Component\AutoMapper\AutoMapperInterface;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+@@ -32,36 +30,33 @@ class UserApiStateProcessor implements ProcessorInterface
+         assert($stateOptions instanceof Options);
+         $entityClass = $stateOptions->getEntityClass();
+ 
+-        assert($data instanceof UserApi);
+-
+-        $user = $this->mapDtoToEntity($data, $entityClass);
++        $entity = $this->mapDtoToEntity($data, $entityClass);
+ 
+         if ($operation instanceof DeleteOperationInterface) {
+-            $this->removeProcessor->process($user, $operation, $uriVariables, $context);
++            $this->removeProcessor->process($entity, $operation, $uriVariables, $context);
+ 
+             return null;
+         }
+ 
+-        $this->persistProcessor->process($user, $operation, $uriVariables, $context);
+-        $data->id = $user->getId();
++        $this->persistProcessor->process($entity, $operation, $uriVariables, $context);
++        $data->id = $entity->getId();
+ 
+         return $data;
+     }
+ 
+-    private function mapDtoToEntity(UserApi $userApi, string $entityClass): User
++    private function mapDtoToEntity(object $dto, string $entityClass): object
+     {
+-        if (isset($userApi->id)) {
+-            $user = $this->entityManager
++        $entity = $entityClass;
++        if (isset($dto->id)) {
++            $entity = $this->entityManager
+                 ->getRepository($entityClass)
+-                ->find($userApi->id);
++                ->find($dto->id);
+ 
+-            if (!$user) {
+-                throw new \Exception(sprintf('User %d not found', $userApi->id));
++            if (!$entity) {
++                throw new \Exception(sprintf('Object %d not found', $dto->id));
+             }
+-        } else {
+-            $user = new User();
+         }
+ 
+-        return $this->autoMapper->map($userApi, $user);
++        return $this->autoMapper->map($dto, $entity);
+     }
+ }

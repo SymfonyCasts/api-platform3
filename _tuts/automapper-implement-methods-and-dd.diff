@@ -1,0 +1,33 @@
+diff --git a/src/Automapper/UserApiToUserMapperConfiguration.php b/src/Automapper/UserApiToUserMapperConfiguration.php
+index ecb0be9..604677e 100644
+--- a/src/Automapper/UserApiToUserMapperConfiguration.php
++++ b/src/Automapper/UserApiToUserMapperConfiguration.php
+@@ -2,6 +2,8 @@
+ 
+ namespace App\Automapper;
+ 
++use App\ApiResource\UserApi;
++use App\Entity\User;
+ use Jane\Bundle\AutoMapperBundle\Configuration\MapperConfigurationInterface;
+ use Jane\Component\AutoMapper\MapperGeneratorMetadataInterface;
+ 
+@@ -9,16 +11,16 @@ class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
+ {
+     public function process(MapperGeneratorMetadataInterface $metadata): void
+     {
+-        // TODO: Implement process() method.
++        dd($metadata);
+     }
+ 
+     public function getSource(): string
+     {
+-        // TODO: Implement getSource() method.
++        return UserApi::class;
+     }
+ 
+     public function getTarget(): string
+     {
+-        // TODO: Implement getTarget() method.
++        return User::class;
+     }
+ }

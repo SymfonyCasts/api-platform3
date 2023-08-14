@@ -1,44 +1,21 @@
-diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index a6faa10..c560cff 100644
---- a/src/ApiResource/UserApi.php
-+++ b/src/ApiResource/UserApi.php
-@@ -10,8 +10,6 @@ use ApiPlatform\Metadata\ApiResource;
- use App\Entity\DragonTreasure;
- use App\State\UserApiStateProvider;
- use App\Entity\User;
--use Doctrine\Common\Collections\ArrayCollection;
--use Doctrine\Common\Collections\Collection;
- 
- #[ApiResource(
-     shortName: 'User',
-@@ -32,15 +30,14 @@ class UserApi
-     public ?string $username = null;
- 
-     /**
--     * @var Collection<int, DragonTreasure>
-+     * @var DragonTreasure[]
-      */
--    public Collection $dragonTreasures;
-+    public array $dragonTreasures = [];
- 
-     public int $flameThrowingDistance = 0;
- 
-     public function __construct(int $id = null)
-     {
-         $this->id = $id;
--        $this->dragonTreasures = new ArrayCollection();
-     }
- }
 diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index c158860..15a92da 100644
+index c158860..56535fd 100644
 --- a/src/State/UserApiStateProvider.php
 +++ b/src/State/UserApiStateProvider.php
-@@ -56,7 +56,7 @@ class UserApiStateProvider implements ProviderInterface
+@@ -11,6 +11,7 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
+ use ApiPlatform\State\ProviderInterface;
+ use App\ApiResource\UserApi;
+ use App\Entity\User;
++use Doctrine\Common\Collections\ArrayCollection;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ 
+ class UserApiStateProvider implements ProviderInterface
+@@ -56,7 +57,7 @@ class UserApiStateProvider implements ProviderInterface
          $userApi = new UserApi($user->getId());
          $userApi->email = $user->getEmail();
          $userApi->username = $user->getUsername();
 -        $userApi->dragonTreasures = $user->getPublishedDragonTreasures();
-+        $userApi->dragonTreasures = $user->getPublishedDragonTreasures()->getValues();
++        $userApi->dragonTreasures = new ArrayCollection($user->getPublishedDragonTreasures()->getValues());
          $userApi->flameThrowingDistance = rand(1, 10);
  
          return $userApi;

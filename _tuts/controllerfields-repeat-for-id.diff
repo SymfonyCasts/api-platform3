@@ -1,8 +1,8 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 05bacbf..2d266a7 100644
+index e8d8f69..2611b36 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -24,7 +24,7 @@ use App\Entity\User;
+@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\Collection;
  ])]
  class UserApi
  {

@@ -1,0 +1,36 @@
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index 772dbae..f305185 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -11,7 +11,7 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
+ use ApiPlatform\State\ProviderInterface;
+ use App\ApiResource\UserApi;
+ use App\Entity\User;
+-use Doctrine\Common\Collections\ArrayCollection;
++use Jane\Component\AutoMapper\AutoMapperInterface;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ 
+ class UserApiStateProvider implements ProviderInterface
+@@ -19,6 +19,7 @@ class UserApiStateProvider implements ProviderInterface
+     public function __construct(
+         #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
+         #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
++        private AutoMapperInterface $autoMapper
+     )
+     {
+ 
+@@ -54,13 +55,6 @@ class UserApiStateProvider implements ProviderInterface
+ 
+     private function mapEntityToDto(User $user): UserApi
+     {
+-        $userApi = new UserApi();
+-        $userApi->id = $user->getId();
+-        $userApi->email = $user->getEmail();
+-        $userApi->username = $user->getUsername();
+-        $userApi->dragonTreasures = new ArrayCollection($user->getPublishedDragonTreasures()->getValues());
+-        $userApi->flameThrowingDistance = rand(1, 10);
+-
+-        return $userApi;
++        return $this->autoMapper->map($user, new UserApi());
+     }
+ }

@@ -1,0 +1,27 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index cc8317e..f3c59ab 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -186,12 +186,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+         return $this->username;
+     }
+ 
+-//    public function setUsername(string $username): self
+-//    {
+-//        $this->username = $username;
+-//
+-//        return $this;
+-//    }
++    public function setUsername(string $username): self
++    {
++        $this->username = $username;
++
++        return $this;
++    }
++
++    public function setFlameThrowingDistance()
++    {
++    }
+ 
+     /**
+      * @return Collection<int, DragonTreasure>

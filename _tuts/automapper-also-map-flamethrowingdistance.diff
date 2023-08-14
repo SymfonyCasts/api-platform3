@@ -1,0 +1,12 @@
+diff --git a/src/Automapper/UserToUserApiMapperConfiguration.php b/src/Automapper/UserToUserApiMapperConfiguration.php
+index 35327b0..3e0e74f 100644
+--- a/src/Automapper/UserToUserApiMapperConfiguration.php
++++ b/src/Automapper/UserToUserApiMapperConfiguration.php
+@@ -16,6 +16,7 @@ class UserToUserApiMapperConfiguration implements MapperConfigurationInterface
+         assert($metadata instanceof MapperMetadata);
+ 
+         $metadata->forMember('dragonTreasures', fn (User $user) => new ArrayCollection($user->getPublishedDragonTreasures()->getValues()));
++        $metadata->forMember('flameThrowingDistance', fn (User $user) => rand(0, 10));
+     }
+ 
+     public function getSource(): string

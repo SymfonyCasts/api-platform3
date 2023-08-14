@@ -1,0 +1,87 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index 94e16b7..4db0028 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -7,15 +7,32 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+ use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\ApiFilter;
+ use ApiPlatform\Metadata\ApiResource;
++use ApiPlatform\Metadata\Delete;
++use ApiPlatform\Metadata\Get;
++use ApiPlatform\Metadata\GetCollection;
++use ApiPlatform\Metadata\Patch;
++use ApiPlatform\Metadata\Post;
++use ApiPlatform\Metadata\Put;
+ use App\Entity\DragonTreasure;
+ use App\State\UserApiStateProcessor;
+ use App\State\UserApiStateProvider;
+ use App\Entity\User;
+ use Doctrine\Common\Collections\ArrayCollection;
+ use Doctrine\Common\Collections\Collection;
++use Symfony\Component\Validator\Constraints as Assert;
+ 
+ #[ApiResource(
+     shortName: 'User',
++    operations: [
++        new Get(),
++        new GetCollection(),
++        new Post(
++            validationContext: ['groups' => ['Default', 'postValidation']],
++        ),
++        new Put(),
++        new Patch(),
++        new Delete(),
++    ],
+     paginationItemsPerPage: 5,
+     provider: UserApiStateProvider::class,
+     processor: UserApiStateProcessor::class,
+@@ -29,14 +46,18 @@ class UserApi
+     #[ApiProperty(readable: false, writable: false, identifier: true)]
+     public int $id;
+ 
++    #[Assert\NotBlank]
++    #[Assert\Email]
+     public ?string $email = null;
+ 
++    #[Assert\NotBlank]
+     public ?string $username = null;
+ 
+     /**
+      * The plaintext password when being set or changed.
+      */
+     #[ApiProperty(readable: false)]
++    #[Assert\NotBlank(groups: ['postValidation'])]
+     public ?string $password = null;
+ 
+     /**
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index 5507324..53e62a0 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -68,8 +68,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+     #[ORM\Column(length: 180, unique: true)]
+     #[Groups(['user:read', 'user:write'])]
+-    #[Assert\NotBlank]
+-    #[Assert\Email]
+     private ?string $email = null;
+ 
+     #[ORM\Column]
+@@ -86,17 +84,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+     #[Groups(['user:write'])]
+     #[SerializedName('password')]
+-    #[Assert\NotBlank(groups: ['postValidation'])]
+     private ?string $plainPassword = null;
+ 
+     #[ORM\Column(length: 255, unique: true)]
+     #[Groups(['user:read', 'user:write', 'treasure:item:get', 'treasure:write'])]
+-    #[Assert\NotBlank]
+     private ?string $username = null;
+ 
+     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
+     #[Groups(['user:write'])]
+-    #[Assert\Valid]
+     #[TreasuresAllowedOwnerChange]
+     private Collection $dragonTreasures;
+ 

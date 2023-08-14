@@ -391,8 +391,8 @@
             "description": null
         },
         {
-            "id": "controllerfields-change-patch-test-to-use-dto",
-            "name": "ControlFields: change PATCH test to use DTO",
+            "id": "delete-me-7",
+            "name": "delete me 7",
             "description": null
         },
         {
@@ -461,15 +461,165 @@
             "description": null
         },
         {
+            "id": "validation-remove-post-fields-in-test",
+            "name": "Validation: remove POST fields in test",
+            "description": null
+        },
+        {
+            "id": "validation-move-basic-constraints",
+            "name": "Validation: Move basic constraints",
+            "description": null
+        },
+        {
+            "id": "validation-re-add-post-fields",
+            "name": "Validation: Re-add POST fields",
+            "description": null
+        },
+        {
             "id": "automapper-install-jane-automapper",
             "name": "AutoMapper: install jane automapper",
             "description": null
         },
         {
-            "id": "automapper-playing-with-jane-to-delete",
-            "name": "AutoMapper: Playing with jane - to delete",
+            "id": "automapper-using-in-userapistateprocessor",
+            "name": "AutoMapper: using in UserApiStateProcessor",
+            "description": null
+        },
+        {
+            "id": "automapper-create-userapitousermapperconfiguration",
+            "name": "AutoMapper: create UserApiToUserMapperConfiguration",
+            "description": null
+        },
+        {
+            "id": "automapper-implement-methods-and-dd",
+            "name": "AutoMapper: Implement methods & dd()",
+            "description": null
+        },
+        {
+            "id": "automapper-dump-getpropertiesmapping",
+            "name": "AutoMapper: Dump getPropertiesMapping()",
+            "description": null
+        },
+        {
+            "id": "automapper-comment-out-setusername",
+            "name": "AutoMapper: Comment-out setUsername()",
+            "description": null
+        },
+        {
+            "id": "automapper-try-adding-setflamethrowingdistance",
+            "name": "AutoMapper: Try adding setFlameThrowingDistance()",
+            "description": null
+        },
+        {
+            "id": "automapper-add-untyped-arg",
+            "name": "AutoMapper: add untyped arg",
+            "description": null
+        },
+        {
+            "id": "automapper-add-int-to-arg",
+            "name": "AutoMapper: add int to arg",
+            "description": null
+        },
+        {
+            "id": "automapper-remove-tmp-method",
+            "name": "AutoMapper: Remove tmp method",
+            "description": null
+        },
+        {
+            "id": "automapper-add-callback-for-password-property",
+            "name": "AutoMapper: Add callback for password property",
+            "description": null
+        },
+        {
+            "id": "automapper-hash-the-password",
+            "name": "AutoMapper: Hash the password",
+            "description": null
+        },
+        {
+            "id": "automapper-use-existing-password-if-not-set",
+            "name": "AutoMapper: Use existing password if not set",
+            "description": null
+        },
+        {
+            "id": "automapper-remove-dd",
+            "name": "AutoMapper: Remove dd()",
+            "description": null
+        },
+        {
+            "id": "automapper-remove-password-hasher",
+            "name": "AutoMapper: Remove password hasher",
+            "description": null
+        },
+        {
+            "id": "automapper-use-mapper-in-provider",
+            "name": "AutoMapper: Use mapper in provider",
+            "description": null
+        },
+        {
+            "id": "automapper-usertouserapimapperconfiguration",
+            "name": "AutoMapper: UserToUserApiMapperConfiguration",
+            "description": null
+        },
+        {
+            "id": "automapper-also-map-flamethrowingdistance",
+            "name": "AutoMapper: also map flameThrowingDistance",
+            "description": null
+        },
+        {
+            "id": "genericcode-rename-user-variable-on-provider",
+            "name": "GenericCode: Rename user variable on provider",
+            "description": null
+        },
+        {
+            "id": "genericcode-dump-args",
+            "name": "GenericCode: Dump args",
+            "description": null
+        },
+        {
+            "id": "genericcode-pass-around-resourceclass",
+            "name": "GenericCode: Pass around resourceClass",
+            "description": null
+        },
+        {
+            "id": "genericcode-dump-operation-again",
+            "name": "GenericCode: dump $operation again",
+            "description": null
+        },
+        {
+            "id": "genericcode-use-entitymanager-dynamic-class",
+            "name": "GenericCode: Use entityManager + dynamic class",
+            "description": null
+        },
+        {
+            "id": "genericcode-remove-all-user-mentions",
+            "name": "GenericCode: Remove all user mentions",
+            "description": null
+        },
+        {
+            "id": "genericcode-rename-processor-and-provider",
+            "name": "GenericCode: Rename processor & provider",
+            "description": null
+        },
+        {
+            "id": "treasure-create-dragontreasure-resource-class",
+            "name": "Treasure: Create DragonTreasure resource class",
+            "description": null
+        },
+        {
+            "id": "treasure-add-owner-property",
+            "name": "Treasure: Add owner property",
+            "description": null
+        },
+        {
+            "id": "treasure-add-basic-validation",
+            "name": "Treasure: Add basic validation",
+            "description": null
+        },
+        {
+            "id": "treasure-custom-owner-mapping",
+            "name": "Treasure: custom owner mapping",
             "description": null
         }
     ],
-    "sha": "0bbeb39c274df9bcf9d15226935d67c77e0b8bef"
+    "sha": "fc3908f71dd790f3be177088e7baed2ad15c424e"
 }

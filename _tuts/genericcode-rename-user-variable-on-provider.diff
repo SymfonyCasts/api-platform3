@@ -1,0 +1,60 @@
+diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+index f305185..b850cbb 100644
+--- a/src/State/UserApiStateProvider.php
++++ b/src/State/UserApiStateProvider.php
+@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\Operation;
+ use ApiPlatform\State\Pagination\TraversablePaginator;
+ use ApiPlatform\State\ProviderInterface;
+ use App\ApiResource\UserApi;
+-use App\Entity\User;
+ use Jane\Component\AutoMapper\AutoMapperInterface;
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ 
+@@ -28,33 +27,33 @@ class UserApiStateProvider implements ProviderInterface
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
+         if ($operation instanceof CollectionOperationInterface) {
+-            $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
+-            assert($users instanceof Paginator);
++            $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
++            assert($entities instanceof Paginator);
+ 
+-            $userDtos = [];
+-            foreach ($users as $user) {
+-                $userDtos[] = $this->mapEntityToDto($user);
++            $dtos = [];
++            foreach ($entities as $entity) {
++                $dtos[] = $this->mapEntityToDto($entity);
+             }
+ 
+             return new TraversablePaginator(
+-                new \ArrayIterator($userDtos),
+-                $users->getCurrentPage(),
+-                $users->getItemsPerPage(),
+-                $users->getTotalItems()
++                new \ArrayIterator($dtos),
++                $entities->getCurrentPage(),
++                $entities->getItemsPerPage(),
++                $entities->getTotalItems()
+             );
+         }
+ 
+-        $user = $this->itemProvider->provide($operation, $uriVariables, $context);
++        $entity = $this->itemProvider->provide($operation, $uriVariables, $context);
+ 
+-        if (!$user) {
++        if (!$entity) {
+             return null;
+         }
+ 
+-        return $this->mapEntityToDto($user);
++        return $this->mapEntityToDto($entity);
+     }
+ 
+-    private function mapEntityToDto(User $user): UserApi
++    private function mapEntityToDto(object $entity): object
+     {
+-        return $this->autoMapper->map($user, new UserApi());
++        return $this->autoMapper->map($entity, new UserApi());
+     }
+ }

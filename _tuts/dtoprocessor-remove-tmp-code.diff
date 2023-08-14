@@ -1,8 +1,8 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 95d951b..c560cff 100644
+index c19e573..a6faa10 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -36,7 +36,7 @@ class UserApi
+@@ -38,7 +38,7 @@ class UserApi
  
      public int $flameThrowingDistance = 0;
  
@@ -10,4 +10,4 @@ index 95d951b..c560cff 100644
 +    public function __construct(int $id = null)
      {
          $this->id = $id;
-     }
+         $this->dragonTreasures = new ArrayCollection();
