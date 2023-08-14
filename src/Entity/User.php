@@ -68,8 +68,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['user:read', 'user:write'])]
-    #[Assert\NotBlank]
-    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -86,17 +84,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['user:write'])]
     #[SerializedName('password')]
-    #[Assert\NotBlank(groups: ['postValidation'])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(['user:read', 'user:write', 'treasure:item:get', 'treasure:write'])]
-    #[Assert\NotBlank]
     private ?string $username = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: DragonTreasure::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups(['user:write'])]
-    #[Assert\Valid]
     #[TreasuresAllowedOwnerChange]
     private Collection $dragonTreasures;
 
