@@ -1,8 +1,8 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index cd952f5..ddd3593 100644
+index 25dc27d..00127d6 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
-@@ -25,4 +25,6 @@ class DragonTreasureApi
+@@ -26,4 +26,6 @@ class DragonTreasureApi
      public ?string $name = null;
  
      public ?UserApi $owner = null;

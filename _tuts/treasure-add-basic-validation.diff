@@ -1,16 +1,16 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index 87e0fb8..cd952f5 100644
+index a89aaba..25dc27d 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
-@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
+@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
+ use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
- use App\State\DtoToEntityStateProcessor;
- use App\State\EntityToDtoStateProvider;
 +use Symfony\Component\Validator\Constraints\NotBlank;
+ use App\State\EntityClassDtoStateProcessor;
+ use App\State\EntityClassDtoStateProvider;
  
- #[ApiResource(
-     shortName: 'Treasure',
-@@ -20,6 +21,7 @@ class DragonTreasureApi
+@@ -21,6 +22,7 @@ class DragonTreasureApi
      #[ApiProperty(readable: false, writable: false, identifier: true)]
      public int $id;
  

@@ -1,0 +1,376 @@
+diff --git a/src/ApiPlatform/AdminGroupsContextBuilder.php b/src/ApiPlatform/AdminGroupsContextBuilder.php
+deleted file mode 100644
+index 54991d1..0000000
+--- a/src/ApiPlatform/AdminGroupsContextBuilder.php
++++ /dev/null
+@@ -1,27 +0,0 @@
+-<?php
+-
+-namespace App\ApiPlatform;
+-
+-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
+-use Symfony\Bundle\SecurityBundle\Security;
+-use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+-use Symfony\Component\HttpFoundation\Request;
+-
+-#[AsDecorator('api_platform.serializer.context_builder')]
+-class AdminGroupsContextBuilder implements SerializerContextBuilderInterface
+-{
+-    public function __construct(private SerializerContextBuilderInterface $decorated, private Security $security)
+-    {
+-    }
+-
+-    public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null): array
+-    {
+-        $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
+-
+-        if (isset($context['groups']) && $this->security->isGranted('ROLE_ADMIN')) {
+-            $context['groups'][] = $normalization ? 'admin:read' : 'admin:write';
+-        }
+-
+-        return $context;
+-    }
+-}
+diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
+index 070040e..b6c7ffc 100644
+--- a/src/Entity/DragonTreasure.php
++++ b/src/Entity/DragonTreasure.php
+@@ -2,95 +2,13 @@
+ 
+ namespace App\Entity;
+ 
+-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+-use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+-use ApiPlatform\Metadata\ApiFilter;
+-use ApiPlatform\Metadata\ApiProperty;
+-use ApiPlatform\Metadata\ApiResource;
+-use ApiPlatform\Metadata\Delete;
+-use ApiPlatform\Metadata\Get;
+-use ApiPlatform\Metadata\GetCollection;
+-use ApiPlatform\Metadata\Link;
+-use ApiPlatform\Metadata\Patch;
+-use ApiPlatform\Metadata\Post;
+-use ApiPlatform\Metadata\Put;
+-use ApiPlatform\Serializer\Filter\PropertyFilter;
+ use App\Repository\DragonTreasureRepository;
+-use App\State\DragonTreasureStateProcessor;
+-use App\State\DragonTreasureStateProvider;
+-use App\Validator\IsValidOwner;
+ use Carbon\Carbon;
+ use Doctrine\DBAL\Types\Types;
+ use Doctrine\ORM\Mapping as ORM;
+-use Symfony\Component\Validator\Constraints as Assert;
+-use Symfony\Component\Serializer\Annotation\Groups;
+-use Symfony\Component\Serializer\Annotation\SerializedName;
+ use function Symfony\Component\String\u;
+ 
+ #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
+-#[ApiResource(
+-    shortName: 'Treasure',
+-    description: 'A rare and valuable treasure.',
+-    operations: [
+-        new Get(
+-            normalizationContext: [
+-                'groups' => ['treasure:read', 'treasure:item:get'],
+-            ],
+-        ),
+-        new GetCollection(),
+-        new Post(
+-            security: 'is_granted("ROLE_TREASURE_CREATE")',
+-            processor: DragonTreasureStateProcessor::class,
+-        ),
+-        new Patch(
+-            security: 'is_granted("EDIT", object)',
+-            processor: DragonTreasureStateProcessor::class,
+-        ),
+-        new Delete(
+-            security: 'is_granted("ROLE_ADMIN")',
+-        ),
+-    ],
+-    formats: [
+-        'jsonld',
+-        'json',
+-        'html',
+-        'jsonhal',
+-        'csv' => 'text/csv',
+-    ],
+-    normalizationContext: [
+-        'groups' => ['treasure:read'],
+-    ],
+-    denormalizationContext: [
+-        'groups' => ['treasure:write'],
+-    ],
+-    paginationItemsPerPage: 10,
+-    provider: DragonTreasureStateProvider::class,
+-    extraProperties: [
+-        'standard_put' => true,
+-    ],
+-)]
+-#[ApiResource(
+-    uriTemplate: '/users/{user_id}/treasures.{_format}',
+-    shortName: 'Treasure',
+-    operations: [new GetCollection()],
+-    uriVariables: [
+-        'user_id' => new Link(
+-            fromProperty: 'dragonTreasures',
+-            fromClass: User::class,
+-        ),
+-    ],
+-    normalizationContext: [
+-        'groups' => ['treasure:read'],
+-    ],
+-    extraProperties: [
+-        'standard_put' => true,
+-    ],
+-)]
+-#[ApiFilter(PropertyFilter::class)]
+-#[ApiFilter(SearchFilter::class, properties: [
+-    'owner.username' => 'partial',
+-])]
+ class DragonTreasure
+ {
+     #[ORM\Id]
+@@ -99,47 +17,28 @@ class DragonTreasure
+     private ?int $id = null;
+ 
+     #[ORM\Column(length: 255)]
+-    #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
+-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+-    #[Assert\NotBlank]
+-    #[Assert\Length(min: 2, max: 50, maxMessage: 'Describe your loot in 50 chars or less')]
+     private ?string $name = null;
+ 
+     #[ORM\Column(type: Types::TEXT)]
+-    #[Groups(['treasure:read'])]
+-    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+-    #[Assert\NotBlank]
+     private ?string $description = null;
+ 
+     /**
+      * The estimated value of this treasure, in gold coins.
+      */
+     #[ORM\Column]
+-    #[Groups(['treasure:read', 'treasure:write', 'user:read', 'user:write'])]
+-    #[ApiFilter(RangeFilter::class)]
+-    #[Assert\GreaterThanOrEqual(0)]
+     private ?int $value = 0;
+ 
+     #[ORM\Column]
+-    #[Groups(['treasure:read', 'treasure:write'])]
+-    #[Assert\GreaterThanOrEqual(0)]
+-    #[Assert\LessThanOrEqual(10)]
+     private ?int $coolFactor = 0;
+ 
+     #[ORM\Column]
+     private \DateTimeImmutable $plunderedAt;
+ 
+     #[ORM\Column]
+-    #[ApiFilter(BooleanFilter::class)]
+-    #[Groups(['admin:read', 'admin:write', 'owner:read', 'treasure:write'])]
+     private bool $isPublished = false;
+ 
+     #[ORM\ManyToOne(inversedBy: 'dragonTreasures')]
+     #[ORM\JoinColumn(nullable: false)]
+-    #[Groups(['treasure:read', 'treasure:write'])]
+-    #[Assert\Valid]
+-    #[IsValidOwner]
+-    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+     private ?User $owner = null;
+ 
+     /**
+@@ -168,7 +67,6 @@ class DragonTreasure
+         return $this->description;
+     }
+ 
+-    #[Groups(['treasure:read'])]
+     public function getShortDescription(): string
+     {
+         return u($this->getDescription())->truncate(40, '...');
+@@ -181,8 +79,6 @@ class DragonTreasure
+         return $this;
+     }
+ 
+-    #[SerializedName('description')]
+-    #[Groups(['treasure:write', 'user:write'])]
+     public function setTextDescription(string $description): self
+     {
+         $this->description = nl2br($description);
+@@ -229,7 +125,6 @@ class DragonTreasure
+     /**
+      * A human-readable representation of when this treasure was plundered.
+      */
+-    #[Groups(['treasure:read'])]
+     public function getPlunderedAtAgo(): string
+     {
+         return Carbon::instance($this->plunderedAt)->diffForHumans();
+@@ -259,8 +154,6 @@ class DragonTreasure
+         return $this;
+     }
+ 
+-    #[Groups(['treasure:read'])]
+-    #[SerializedName('isMine')]
+     public function isOwnedByAuthenticatedUser(): bool
+     {
+         if (!isset($this->isOwnedByAuthenticatedUser)) {
+diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
+deleted file mode 100644
+index 776fef9..0000000
+--- a/src/Normalizer/AddOwnerGroupsNormalizer.php
++++ /dev/null
+@@ -1,49 +0,0 @@
+-<?php
+-
+-namespace App\Normalizer;
+-
+-use App\Entity\DragonTreasure;
+-use Symfony\Bundle\SecurityBundle\Security;
+-use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+-use Symfony\Component\Serializer\SerializerAwareInterface;
+-use Symfony\Component\Serializer\SerializerInterface;
+-
+-#[AsDecorator('api_platform.jsonld.normalizer.item')]
+-class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareInterface
+-{
+-    public function __construct(private NormalizerInterface $normalizer, private Security $security)
+-    {
+-    }
+-
+-    public function normalize(mixed $object, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+-    {
+-        if ($object instanceof DragonTreasure && $this->security->getUser() === $object->getOwner()) {
+-            $context['groups'][] = 'owner:read';
+-        }
+-
+-        return $this->normalizer->normalize($object, $format, $context);
+-    }
+-
+-    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
+-    {
+-        return $this->normalizer->supportsNormalization($data, $format);
+-    }
+-
+-    public function setSerializer(SerializerInterface $serializer): void
+-    {
+-        if ($this->normalizer instanceof SerializerAwareInterface) {
+-            $this->normalizer->setSerializer($serializer);
+-        }
+-    }
+-
+-    public function getSupportedTypes(?string $format): array
+-    {
+-        if (method_exists($this->normalizer, 'getSupportedTypes')) {
+-            return $this->normalizer->getSupportedTypes($format);
+-        }
+-
+-        // backported from next version of API Platform
+-        return 'jsonld' === $format ? ['*' => true] : [];
+-    }
+-}
+diff --git a/src/State/DragonTreasureStateProcessor.php b/src/State/DragonTreasureStateProcessor.php
+deleted file mode 100644
+index 286684f..0000000
+--- a/src/State/DragonTreasureStateProcessor.php
++++ /dev/null
+@@ -1,47 +0,0 @@
+-<?php
+-
+-namespace App\State;
+-
+-use ApiPlatform\Metadata\Operation;
+-use ApiPlatform\State\ProcessorInterface;
+-use App\Entity\DragonTreasure;
+-use App\Entity\Notification;
+-use Doctrine\ORM\EntityManagerInterface;
+-use Symfony\Bundle\SecurityBundle\Security;
+-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+-
+-class DragonTreasureStateProcessor implements ProcessorInterface
+-{
+-    public function __construct(
+-        #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
+-        private ProcessorInterface $innerProcessor,
+-        private Security $security,
+-        private EntityManagerInterface $entityManager
+-    )
+-    {
+-    }
+-
+-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+-    {
+-        assert($data instanceof DragonTreasure);
+-        $data->setOwner($this->security->getUser());
+-
+-        $data = $this->innerProcessor->process($data, $operation, $uriVariables, $context);
+-
+-        $data->setIsOwnedByAuthenticatedUser($data->getOwner() === $this->security->getUser());
+-
+-        $previousData = $context['previous_data'] ?? null;
+-        if ($previousData instanceof DragonTreasure
+-            && $data->getIsPublished()
+-            && $previousData->getIsPublished() !== $data->getIsPublished()
+-        ) {
+-            $notification = new Notification();
+-            $notification->setDragonTreasure($data);
+-            $notification->setMessage('Treasure has been published!');
+-            $this->entityManager->persist($notification);
+-            $this->entityManager->flush();
+-        }
+-
+-        return $data;
+-    }
+-}
+diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
+deleted file mode 100644
+index 9246692..0000000
+--- a/src/State/DragonTreasureStateProvider.php
++++ /dev/null
+@@ -1,47 +0,0 @@
+-<?php
+-
+-namespace App\State;
+-
+-use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
+-use ApiPlatform\Metadata\CollectionOperationInterface;
+-use ApiPlatform\Doctrine\Orm\State\ItemProvider;
+-use ApiPlatform\Metadata\Operation;
+-use ApiPlatform\State\ProviderInterface;
+-use App\Entity\DragonTreasure;
+-use Symfony\Bundle\SecurityBundle\Security;
+-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+-
+-class DragonTreasureStateProvider implements ProviderInterface
+-{
+-    public function __construct(
+-        #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
+-        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
+-        private Security $security,
+-    )
+-    {
+-    }
+-
+-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+-    {
+-        if ($operation instanceof CollectionOperationInterface) {
+-            /** @var $paginator iterable<DragonTreasure> */
+-            $paginator = $this->collectionProvider->provide($operation, $uriVariables, $context);
+-
+-            foreach ($paginator as $treasure) {
+-                $treasure->setIsOwnedByAuthenticatedUser($this->security->getUser() === $treasure->getOwner());
+-            }
+-
+-            return $paginator;
+-        }
+-
+-        $treasure = $this->itemProvider->provide($operation, $uriVariables, $context);
+-
+-        if (!$treasure instanceof DragonTreasure) {
+-            return $treasure;
+-        }
+-
+-        $treasure->setIsOwnedByAuthenticatedUser($this->security->getUser() === $treasure->getOwner());
+-
+-        return $treasure;
+-    }
+-}

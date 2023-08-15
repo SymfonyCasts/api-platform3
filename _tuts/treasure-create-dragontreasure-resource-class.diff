@@ -1,9 +1,9 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
 new file mode 100644
-index 0000000..99c35db
+index 0000000..f3f6a91
 --- /dev/null
 +++ b/src/ApiResource/DragonTreasureApi.php
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,25 @@
 +<?php
 +
 +namespace App\ApiResource;
@@ -12,13 +12,14 @@ index 0000000..99c35db
 +use ApiPlatform\Metadata\ApiProperty;
 +use ApiPlatform\Metadata\ApiResource;
 +use App\Entity\DragonTreasure;
-+use App\State\DtoToEntityStateProcessor;
-+use App\State\EntityToDtoStateProvider;
++use App\State\EntityClassDtoStateProcessor;
++use App\State\EntityClassDtoStateProvider;
 +
 +#[ApiResource(
 +    shortName: 'Treasure',
-+    provider: EntityToDtoStateProvider::class,
-+    processor: DtoToEntityStateProcessor::class,
++    paginationItemsPerPage: 10,
++    provider: EntityClassDtoStateProvider::class,
++    processor: EntityClassDtoStateProcessor::class,
 +    stateOptions: new Options(entityClass: DragonTreasure::class),
 +)]
 +class DragonTreasureApi
@@ -28,23 +29,3 @@ index 0000000..99c35db
 +
 +    public ?string $name = null;
 +}
-diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 070040e..04971c7 100644
---- a/src/Entity/DragonTreasure.php
-+++ b/src/Entity/DragonTreasure.php
-@@ -29,6 +29,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
- use function Symfony\Component\String\u;
- 
- #[ORM\Entity(repositoryClass: DragonTreasureRepository::class)]
-+/*
- #[ApiResource(
-     shortName: 'Treasure',
-     description: 'A rare and valuable treasure.',
-@@ -91,6 +92,7 @@ use function Symfony\Component\String\u;
- #[ApiFilter(SearchFilter::class, properties: [
-     'owner.username' => 'partial',
- ])]
-+*/
- class DragonTreasure
- {
-     #[ORM\Id]

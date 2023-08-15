@@ -801,6 +801,11 @@
             "description": null
         },
         {
+            "id": "treasure-delete-apiresource-stuff",
+            "name": "Treasure: Delete ApiResource stuff",
+            "description": null
+        },
+        {
             "id": "treasure-create-dragontreasure-resource-class",
             "name": "Treasure: Create DragonTreasure resource class",
             "description": null
@@ -808,6 +813,16 @@
         {
             "id": "treasure-add-owner-property",
             "name": "Treasure: Add owner property",
+            "description": null
+        },
+        {
+            "id": "treasure-change-user-to-the-dto",
+            "name": "Treasure: Change User to the DTO",
+            "description": null
+        },
+        {
+            "id": "treasure-change-to-longer-callback-syntax",
+            "name": "Treasure: Change to longer callback syntax",
             "description": null
         },
         {
@@ -821,5 +836,5 @@
             "description": null
         }
     ],
-    "sha": "2d088f370d5899a640d0c4f82c383daca0e866ce"
+    "sha": "f5cd2c086126071d09fb93f4f876e5349277e259"
 }
