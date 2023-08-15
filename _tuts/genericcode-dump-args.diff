@@ -1,8 +1,8 @@
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index b850cbb..48e5254 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
-@@ -26,6 +26,7 @@ class UserApiStateProvider implements ProviderInterface
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index 6dae620..709ddf3 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -26,6 +26,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {

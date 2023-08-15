@@ -1,37 +1,37 @@
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index bfb20d8..2519e78 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
-@@ -5,6 +5,8 @@ namespace App\State;
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index e059b3a..4a7381f 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -5,6 +5,7 @@ namespace App\State;
  use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\ProviderInterface;
 +use App\ApiResource\UserApi;
-+use App\Entity\User;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  
- class UserApiStateProvider implements ProviderInterface
-@@ -19,6 +21,22 @@ class UserApiStateProvider implements ProviderInterface
+ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -19,6 +20,23 @@ class EntityClassDtoStateProvider implements ProviderInterface
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
-         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
--        dd(iterator_to_array($users));
+         $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
+-        dd(iterator_to_array($entities));
 +
-+        $userDtos = [];
-+        foreach ($users as $user) {
-+            $userDtos[] = $this->mapEntityToDto($user);
++        $dtos = [];
++        foreach ($entities as $entity) {
++            $dtos[] = $this->mapEntityToDto($entity);
 +        }
 +
-+        return $userDtos;
++        return $dtos;
 +    }
 +
-+    private function mapEntityToDto(User $user): UserApi
++    private function mapEntityToDto(object $entity): object
 +    {
-+        $userApi = new UserApi($user->getId());
-+        $userApi->email = $user->getEmail();
-+        $userApi->username = $user->getUsername();
-+        $userApi->dragonTreasures = $user->getDragonTreasures();
++        $dto = new UserApi();
++        $dto->id = $entity->getId();
++        $dto->email = $entity->getEmail();
++        $dto->username = $entity->getUsername();
++        $dto->dragonTreasures = $entity->getDragonTreasures()->toArray();
 +
-+        return $userApi;
++        return $dto;
      }
  }

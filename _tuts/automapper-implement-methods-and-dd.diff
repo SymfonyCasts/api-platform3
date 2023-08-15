@@ -1,7 +1,7 @@
-diff --git a/src/Automapper/UserApiToUserMapperConfiguration.php b/src/Automapper/UserApiToUserMapperConfiguration.php
-index ecb0be9..604677e 100644
---- a/src/Automapper/UserApiToUserMapperConfiguration.php
-+++ b/src/Automapper/UserApiToUserMapperConfiguration.php
+diff --git a/src/Automapper/UserApiToEntityMapperConfiguration.php b/src/Automapper/UserApiToEntityMapperConfiguration.php
+index f92f006..6ccd21d 100644
+--- a/src/Automapper/UserApiToEntityMapperConfiguration.php
++++ b/src/Automapper/UserApiToEntityMapperConfiguration.php
 @@ -2,6 +2,8 @@
  
  namespace App\Automapper;
@@ -11,7 +11,7 @@ index ecb0be9..604677e 100644
  use Jane\Bundle\AutoMapperBundle\Configuration\MapperConfigurationInterface;
  use Jane\Component\AutoMapper\MapperGeneratorMetadataInterface;
  
-@@ -9,16 +11,16 @@ class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
+@@ -9,16 +11,16 @@ class UserApiToEntityMapperConfiguration implements MapperConfigurationInterface
  {
      public function process(MapperGeneratorMetadataInterface $metadata): void
      {

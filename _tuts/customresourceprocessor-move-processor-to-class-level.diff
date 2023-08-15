@@ -1,0 +1,19 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+index d17ab36..89cd196 100644
+--- a/src/ApiResource/DailyQuest.php
++++ b/src/ApiResource/DailyQuest.php
+@@ -17,11 +17,11 @@ use Symfony\Component\Serializer\Annotation\Ignore;
+     operations: [
+         new GetCollection(),
+         new Get(),
+-        new Patch(
+-            processor: DailyQuestStateProcessor::class,
+-        ),
++        new Patch(),
++
+     ],
+     provider: DailyQuestStateProvider::class,
++    processor: DailyQuestStateProcessor::class,
+ )]
+ class DailyQuest
+ {

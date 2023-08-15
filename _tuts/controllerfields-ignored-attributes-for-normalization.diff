@@ -1,27 +1,26 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 803162e..24df7a0 100644
+index 215c40b..c2be756 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -10,12 +10,14 @@ use ApiPlatform\Metadata\ApiResource;
+@@ -8,12 +8,14 @@ use ApiPlatform\Metadata\ApiFilter;
+ use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
- use App\State\UserApiStateProcessor;
- use App\State\UserApiStateProvider;
 +use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+ use App\State\EntityClassDtoStateProcessor;
+ use App\State\EntityClassDtoStateProvider;
  use App\Entity\User;
- use Doctrine\Common\Collections\ArrayCollection;
- use Doctrine\Common\Collections\Collection;
  
  #[ApiResource(
      shortName: 'User',
 +    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
      paginationItemsPerPage: 5,
-     provider: UserApiStateProvider::class,
-     processor: UserApiStateProcessor::class,
-@@ -44,7 +46,6 @@ class UserApi
+     provider: EntityClassDtoStateProvider::class,
+     processor: EntityClassDtoStateProcessor::class,
+@@ -42,6 +44,5 @@ class UserApi
       */
-     public Collection $dragonTreasures;
+     public array $dragonTreasures = [];
  
 -    #[ApiProperty(readable: false, writable: false)]
      public int $flameThrowingDistance = 0;
- 
-     public function __construct(int $id = null)
+ }

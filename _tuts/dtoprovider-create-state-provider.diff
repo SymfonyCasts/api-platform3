@@ -1,8 +1,8 @@
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
 new file mode 100644
-index 0000000..095d330
+index 0000000..f8b5085
 --- /dev/null
-+++ b/src/State/UserApiStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
 @@ -0,0 +1,14 @@
 +<?php
 +
@@ -11,7 +11,7 @@ index 0000000..095d330
 +use ApiPlatform\Metadata\Operation;
 +use ApiPlatform\State\ProviderInterface;
 +
-+class UserApiStateProvider implements ProviderInterface
++class EntityClassDtoStateProvider implements ProviderInterface
 +{
 +    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
 +    {

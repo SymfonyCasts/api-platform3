@@ -1,0 +1,18 @@
+diff --git a/tests/Functional/DailyQuestResourceTest.php b/tests/Functional/DailyQuestResourceTest.php
+new file mode 100644
+index 0000000..b3a2712
+--- /dev/null
++++ b/tests/Functional/DailyQuestResourceTest.php
+@@ -0,0 +1,12 @@
++<?php
++
++namespace App\Tests\Functional;
++
++use Zenstruck\Foundry\Test\Factories;
++use Zenstruck\Foundry\Test\ResetDatabase;
++
++class DailyQuestResourceTest extends ApiTestCase
++{
++    use ResetDatabase;
++    use Factories;
++}

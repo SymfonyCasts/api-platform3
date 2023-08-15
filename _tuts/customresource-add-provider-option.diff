@@ -1,0 +1,17 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+index 3b00a88..6c7ff58 100644
+--- a/src/ApiResource/DailyQuest.php
++++ b/src/ApiResource/DailyQuest.php
+@@ -3,9 +3,11 @@
+ namespace App\ApiResource;
+ 
+ use ApiPlatform\Metadata\ApiResource;
++use App\State\DailyQuestStateProvider;
+ 
+ #[ApiResource(
+-    shortName: 'Quest'
++    shortName: 'Quest',
++    provider: DailyQuestStateProvider::class,
+ )]
+ class DailyQuest
+ {

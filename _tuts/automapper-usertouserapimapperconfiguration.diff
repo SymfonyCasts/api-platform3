@@ -1,8 +1,8 @@
-diff --git a/src/Automapper/UserToUserApiMapperConfiguration.php b/src/Automapper/UserToUserApiMapperConfiguration.php
+diff --git a/src/Automapper/EntityToUserApiMapperConfiguration.php b/src/Automapper/EntityToUserApiMapperConfiguration.php
 new file mode 100644
-index 0000000..35327b0
+index 0000000..993e30b
 --- /dev/null
-+++ b/src/Automapper/UserToUserApiMapperConfiguration.php
++++ b/src/Automapper/EntityToUserApiMapperConfiguration.php
 @@ -0,0 +1,31 @@
 +<?php
 +
@@ -15,13 +15,13 @@ index 0000000..35327b0
 +use Jane\Component\AutoMapper\MapperGeneratorMetadataInterface;
 +use Jane\Component\AutoMapper\MapperMetadata;
 +
-+class UserToUserApiMapperConfiguration implements MapperConfigurationInterface
++class EntityToUserApiMapperConfiguration implements MapperConfigurationInterface
 +{
 +    public function process(MapperGeneratorMetadataInterface $metadata): void
 +    {
 +        assert($metadata instanceof MapperMetadata);
 +
-+        $metadata->forMember('dragonTreasures', fn (User $user) => new ArrayCollection($user->getPublishedDragonTreasures()->getValues()));
++        $metadata->forMember('dragonTreasures', fn (User $user) => $user->getPublishedDragonTreasures()->getValues());
 +    }
 +
 +    public function getSource(): string

@@ -1,0 +1,29 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+index c4b01da..d76139c 100644
+--- a/src/ApiResource/DailyQuest.php
++++ b/src/ApiResource/DailyQuest.php
+@@ -5,6 +5,7 @@ namespace App\ApiResource;
+ use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\State\DailyQuestStateProvider;
++use Symfony\Component\Serializer\Annotation\Ignore;
+ 
+ #[ApiResource(
+     shortName: 'Quest',
+@@ -12,6 +13,7 @@ use App\State\DailyQuestStateProvider;
+ )]
+ class DailyQuest
+ {
++    #[Ignore]
+     public \DateTimeInterface $day;
+ 
+     public function __construct(\DateTimeInterface $day)
+@@ -19,7 +21,7 @@ class DailyQuest
+         $this->day = $day;
+     }
+ 
+-    #[ApiProperty(identifier: true)]
++    #[ApiProperty(readable: false, identifier: true)]
+     public function getDayString(): string
+     {
+         return $this->day->format('Y-m-d');

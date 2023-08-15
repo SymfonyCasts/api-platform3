@@ -1,13 +1,13 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index a6faa10..c19e573 100644
+index 16f124f..681bff0 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -38,7 +38,7 @@ class UserApi
+@@ -21,7 +21,7 @@ use App\Entity\User;
+ ])]
+ class UserApi
+ {
+-    public ?int $id = null;
++    public ?int $id = 5;
  
-     public int $flameThrowingDistance = 0;
+     public ?string $email = null;
  
--    public function __construct(int $id = null)
-+    public function __construct(int $id = 5)
-     {
-         $this->id = $id;
-         $this->dragonTreasures = new ArrayCollection();

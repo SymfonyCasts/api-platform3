@@ -1,38 +1,11 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index a18dc0a..2405b8e 100644
+index a18dc0a..794aa8c 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -5,6 +5,8 @@ namespace App\ApiResource;
- use ApiPlatform\Doctrine\Orm\State\Options;
- use ApiPlatform\Metadata\ApiResource;
- use App\Entity\User;
-+use Doctrine\Common\Collections\ArrayCollection;
-+use Doctrine\Common\Collections\Collection;
- 
- #[ApiResource(
-     shortName: 'User',
-@@ -17,4 +19,11 @@ class UserApi
+@@ -17,4 +17,6 @@ class UserApi
      public ?string $email = null;
  
      public ?string $username = null;
 +
-+    public Collection $dragonTreasures;
-+
-+    public function __construct()
-+    {
-+        $this->dragonTreasures = new ArrayCollection();
-+    }
++    public array $dragonTreasures = [];
  }
-diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index c59bbc3..070040e 100644
---- a/src/Entity/DragonTreasure.php
-+++ b/src/Entity/DragonTreasure.php
-@@ -145,7 +145,7 @@ class DragonTreasure
-     /**
-      * @var bool Non-persisted property to help determine if the treasure is owned by the authenticated user
-      */
--    private bool $isOwnedByAuthenticatedUser;
-+    private bool $isOwnedByAuthenticatedUser = false;
- 
-     public function __construct(string $name = null)
-     {

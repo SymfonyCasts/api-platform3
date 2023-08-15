@@ -1,0 +1,23 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+index 3ef41b4..c4b01da 100644
+--- a/src/ApiResource/DailyQuest.php
++++ b/src/ApiResource/DailyQuest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\ApiResource;
+ 
++use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\State\DailyQuestStateProvider;
+ 
+@@ -17,4 +18,10 @@ class DailyQuest
+     {
+         $this->day = $day;
+     }
++
++    #[ApiProperty(identifier: true)]
++    public function getDayString(): string
++    {
++        return $this->day->format('Y-m-d');
++    }
+ }

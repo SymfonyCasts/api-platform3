@@ -1,8 +1,8 @@
-diff --git a/src/Automapper/UserApiToUserMapperConfiguration.php b/src/Automapper/UserApiToUserMapperConfiguration.php
-index 604677e..857b883 100644
---- a/src/Automapper/UserApiToUserMapperConfiguration.php
-+++ b/src/Automapper/UserApiToUserMapperConfiguration.php
-@@ -11,7 +11,7 @@ class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
+diff --git a/src/Automapper/UserApiToEntityMapperConfiguration.php b/src/Automapper/UserApiToEntityMapperConfiguration.php
+index 6ccd21d..2b12508 100644
+--- a/src/Automapper/UserApiToEntityMapperConfiguration.php
++++ b/src/Automapper/UserApiToEntityMapperConfiguration.php
+@@ -11,7 +11,7 @@ class UserApiToEntityMapperConfiguration implements MapperConfigurationInterface
  {
      public function process(MapperGeneratorMetadataInterface $metadata): void
      {

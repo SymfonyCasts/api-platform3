@@ -1,8 +1,8 @@
-diff --git a/src/Automapper/UserApiToUserMapperConfiguration.php b/src/Automapper/UserApiToUserMapperConfiguration.php
+diff --git a/src/Automapper/UserApiToEntityMapperConfiguration.php b/src/Automapper/UserApiToEntityMapperConfiguration.php
 new file mode 100644
-index 0000000..ecb0be9
+index 0000000..f92f006
 --- /dev/null
-+++ b/src/Automapper/UserApiToUserMapperConfiguration.php
++++ b/src/Automapper/UserApiToEntityMapperConfiguration.php
 @@ -0,0 +1,24 @@
 +<?php
 +
@@ -11,7 +11,7 @@ index 0000000..ecb0be9
 +use Jane\Bundle\AutoMapperBundle\Configuration\MapperConfigurationInterface;
 +use Jane\Component\AutoMapper\MapperGeneratorMetadataInterface;
 +
-+class UserApiToUserMapperConfiguration implements MapperConfigurationInterface
++class UserApiToEntityMapperConfiguration implements MapperConfigurationInterface
 +{
 +    public function process(MapperGeneratorMetadataInterface $metadata): void
 +    {

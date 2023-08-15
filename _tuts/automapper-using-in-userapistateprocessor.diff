@@ -1,7 +1,7 @@
-diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
-index d1e4e64..3ae2eda 100644
---- a/src/State/UserApiStateProcessor.php
-+++ b/src/State/UserApiStateProcessor.php
+diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
+index 1654145..3dd5d69 100644
+--- a/src/State/EntityClassDtoStateProcessor.php
++++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -10,6 +10,7 @@ use ApiPlatform\State\ProcessorInterface;
  use App\ApiResource\UserApi;
  use App\Entity\User;
@@ -10,7 +10,7 @@ index d1e4e64..3ae2eda 100644
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  
-@@ -20,6 +21,7 @@ class UserApiStateProcessor implements ProcessorInterface
+@@ -20,6 +21,7 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
          #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
          #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
          private UserPasswordHasherInterface $userPasswordHasher,
@@ -18,19 +18,18 @@ index d1e4e64..3ae2eda 100644
      )
      {
  
-@@ -55,14 +57,6 @@ class UserApiStateProcessor implements ProcessorInterface
-             $user = new User();
+@@ -56,13 +58,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
+             $entity = new User();
          }
  
--        $user->setEmail($userApi->email);
--        $user->setUsername($userApi->username);
--        if ($userApi->password) {
--            $user->setPassword($this->userPasswordHasher->hashPassword($user, $userApi->password));
+-        $entity->setEmail($dto->email);
+-        $entity->setUsername($dto->username);
+-        if ($dto->password) {
+-            $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
 -        }
--
 -        // TODO: handle dragon treasures
 -
--        return $user;
-+        return $this->autoMapper->map($userApi, $user);
+-        return $entity;
++        return $this->autoMapper->map($dto, $entity);
      }
  }

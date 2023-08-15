@@ -1,7 +1,7 @@
-diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
-index ecbf2d5..45dac1d 100644
---- a/src/State/UserApiStateProcessor.php
-+++ b/src/State/UserApiStateProcessor.php
+diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
+index 0c66489..cb47e4e 100644
+--- a/src/State/EntityClassDtoStateProcessor.php
++++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -4,19 +4,20 @@ namespace App\State;
  
  use ApiPlatform\Doctrine\Common\State\PersistProcessor;
@@ -17,7 +17,7 @@ index ecbf2d5..45dac1d 100644
  use Jane\Component\AutoMapper\AutoMapperInterface;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  
- class UserApiStateProcessor implements ProcessorInterface
+ class EntityClassDtoStateProcessor implements ProcessorInterface
  {
      public function __construct(
 -        private UserRepository $userRepository,
@@ -25,7 +25,7 @@ index ecbf2d5..45dac1d 100644
          #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
          #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
          private AutoMapperInterface $autoMapper
-@@ -27,11 +28,13 @@ class UserApiStateProcessor implements ProcessorInterface
+@@ -27,11 +28,13 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
  
      public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
      {
@@ -36,23 +36,24 @@ index ecbf2d5..45dac1d 100644
  
          assert($data instanceof UserApi);
  
--        $user = $this->mapDtoToEntity($data);
-+        $user = $this->mapDtoToEntity($data, $entityClass);
+-        $entity = $this->mapDtoToEntity($data);
++        $entity = $this->mapDtoToEntity($data, $entityClass);
  
          if ($operation instanceof DeleteOperationInterface) {
-             $this->removeProcessor->process($user, $operation, $uriVariables, $context);
-@@ -45,10 +48,12 @@ class UserApiStateProcessor implements ProcessorInterface
+             $this->removeProcessor->process($entity, $operation, $uriVariables, $context);
+@@ -45,11 +48,13 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
          return $data;
      }
  
--    private function mapDtoToEntity(UserApi $userApi): User
-+    private function mapDtoToEntity(UserApi $userApi, string $entityClass): User
+-    private function mapDtoToEntity(object $dto): object
++    private function mapDtoToEntity(object $dto, string $entityClass): object
      {
-         if (isset($userApi->id)) {
--            $user = $this->userRepository->find($userApi->id);
-+            $user = $this->entityManager
+         assert($dto instanceof UserApi);
+         if ($dto->id) {
+-            $entity = $this->userRepository->find($dto->id);
++            $entity = $this->entityManager
 +                ->getRepository($entityClass)
-+                ->find($userApi->id);
++                ->find($dto->id);
  
-             if (!$user) {
-                 throw new \Exception(sprintf('User %d not found', $userApi->id));
+             if (!$entity) {
+                 throw new \Exception(sprintf('Entity %d not found', $dto->id));

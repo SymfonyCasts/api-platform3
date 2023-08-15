@@ -1,0 +1,25 @@
+diff --git a/tests/Functional/DailyQuestResourceTest.php b/tests/Functional/DailyQuestResourceTest.php
+index b3a2712..52742f5 100644
+--- a/tests/Functional/DailyQuestResourceTest.php
++++ b/tests/Functional/DailyQuestResourceTest.php
+@@ -9,4 +9,20 @@ class DailyQuestResourceTest extends ApiTestCase
+ {
+     use ResetDatabase;
+     use Factories;
++
++    public function testPatchCanUpdateStatus()
++    {
++        $yesterday = new \DateTime('-1 day');
++        $this->browser()
++            ->patch('/api/quests/'.$yesterday->format('Y-m-d'), [
++                'json' => [
++                    'status' => 'completed',
++                ],
++                'headers' => ['Content-Type' => 'application/merge-patch+json']
++            ])
++            ->assertStatus(200)
++            ->dump()
++            ->assertJsonMatches('status', 'completed')
++        ;
++    }
+ }

@@ -1,7 +1,7 @@
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index 44856b6..adc1d31 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index 5f5871b..4836672 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
 @@ -2,8 +2,10 @@
  
  namespace App\State;
@@ -12,25 +12,25 @@ index 44856b6..adc1d31 100644
 +use ApiPlatform\State\Pagination\TraversablePaginator;
  use ApiPlatform\State\ProviderInterface;
  use App\ApiResource\UserApi;
- use App\Entity\User;
-@@ -21,13 +23,19 @@ class UserApiStateProvider implements ProviderInterface
+ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+@@ -20,13 +22,19 @@ class EntityClassDtoStateProvider implements ProviderInterface
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
-         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
-+        assert($users instanceof Paginator);
+         $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
++        assert($entities instanceof Paginator);
  
-         $userDtos = [];
-         foreach ($users as $user) {
-             $userDtos[] = $this->mapEntityToDto($user);
+         $dtos = [];
+         foreach ($entities as $entity) {
+             $dtos[] = $this->mapEntityToDto($entity);
          }
  
--        return $userDtos;
+-        return $dtos;
 +        return new TraversablePaginator(
-+            new \ArrayIterator($userDtos),
-+            $users->getCurrentPage(),
-+            $users->getItemsPerPage(),
-+            $users->getTotalItems()
++            new \ArrayIterator($dtos),
++            $entities->getCurrentPage(),
++            $entities->getItemsPerPage(),
++            $entities->getTotalItems()
 +        );
      }
  
-     private function mapEntityToDto(User $user): UserApi
+     private function mapEntityToDto(object $entity): object

@@ -1,26 +1,24 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index ea9249f..a6faa10 100644
+index 1d4af8a..16f124f 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -36,7 +36,7 @@ class UserApi
+@@ -32,5 +32,5 @@ class UserApi
       */
-     public Collection $dragonTreasures;
+     public array $dragonTreasures = [];
  
 -//    public int $flameThrowingDistance = 0;
 +    public int $flameThrowingDistance = 0;
- 
-     public function __construct(int $id = null)
+ }
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index 36bfe69..5f5871b 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -21,8 +21,6 @@ class EntityClassDtoStateProvider implements ProviderInterface
      {
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index c019905..44856b6 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
-@@ -22,8 +22,6 @@ class UserApiStateProvider implements ProviderInterface
-     {
-         $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
+         $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
  
--        return $users;
+-        return $entities;
 -
-         $userDtos = [];
-         foreach ($users as $user) {
-             $userDtos[] = $this->mapEntityToDto($user);
+         $dtos = [];
+         foreach ($entities as $entity) {
+             $dtos[] = $this->mapEntityToDto($entity);

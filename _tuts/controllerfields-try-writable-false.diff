@@ -1,13 +1,13 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 2611b36..bd75847 100644
+index 149e8e2..ea3b32e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\Collection;
+@@ -24,7 +24,7 @@ use App\Entity\User;
  ])]
  class UserApi
  {
 -    #[ApiProperty(readable: false, identifier: true)]
 +    #[ApiProperty(readable: false, writable: false, identifier: true)]
-     public ?int $id;
+     public ?int $id = null;
  
      public ?string $email = null;

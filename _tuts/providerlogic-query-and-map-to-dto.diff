@@ -1,18 +1,17 @@
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index 59f27dc..8416444 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
-@@ -2,14 +2,23 @@
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index f8b5085..87f2a29 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -2,13 +2,23 @@
  
  namespace App\State;
  
 +use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\ProviderInterface;
--use App\ApiResource\UserApi;
 +use Symfony\Component\DependencyInjection\Attribute\Autowire;
  
- class UserApiStateProvider implements ProviderInterface
+ class EntityClassDtoStateProvider implements ProviderInterface
  {
 +    public function __construct(
 +        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider
@@ -23,8 +22,8 @@ index 59f27dc..8416444 100644
 +
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
--        return [new UserApi(5)];
-+        $users = $this->collectionProvider->provide($operation, $uriVariables, $context);
-+        dd($users);
+-        // Retrieve the state from somewhere
++        $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
++        dd($entities);
      }
  }

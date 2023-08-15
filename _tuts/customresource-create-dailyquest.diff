@@ -1,0 +1,17 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+new file mode 100644
+index 0000000..f80a25a
+--- /dev/null
++++ b/src/ApiResource/DailyQuest.php
+@@ -0,0 +1,11 @@
++<?php
++
++namespace App\ApiResource;
++
++use ApiPlatform\Metadata\ApiResource;
++
++#[ApiResource]
++class DailyQuest
++{
++
++}

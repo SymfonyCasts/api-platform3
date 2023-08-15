@@ -151,6 +151,186 @@
             "description": null
         },
         {
+            "id": "customresource-create-dailyquest",
+            "name": "CustomResource: Create DailyQuest",
+            "description": null
+        },
+        {
+            "id": "customresource-add-shortname",
+            "name": "CustomResource: Add shortName",
+            "description": null
+        },
+        {
+            "id": "customresource-make-state-provider",
+            "name": "CustomResource: make:state-provider",
+            "description": null
+        },
+        {
+            "id": "customresource-return-empty-objects-from-provider",
+            "name": "CustomResource: Return empty objects from provider",
+            "description": null
+        },
+        {
+            "id": "customresource-add-provider-option",
+            "name": "CustomResource: Add provider option",
+            "description": null
+        },
+        {
+            "id": "customresource-add-id-property",
+            "name": "CustomResource: Add id property",
+            "description": null
+        },
+        {
+            "id": "customresource-change-id-to-day",
+            "name": "CustomResource: Change id to \"day\"",
+            "description": null
+        },
+        {
+            "id": "customresource-move-identifier-to-string-method",
+            "name": "CustomResource: Move identifier to string method",
+            "description": null
+        },
+        {
+            "id": "customresource-add-ignore-and-readable-false",
+            "name": "CustomResource: Add Ignore & readable=false",
+            "description": null
+        },
+        {
+            "id": "customresource-add-other-fields-and-populate",
+            "name": "CustomResource: Add other fields & populate",
+            "description": null
+        },
+        {
+            "id": "customitem-dd-operation",
+            "name": "CustomItem: dd($operation)",
+            "description": null
+        },
+        {
+            "id": "customitem-add-code-for-collection-operation",
+            "name": "CustomItem: Add code for collection operation",
+            "description": null
+        },
+        {
+            "id": "customitem-return-1-item-or-null",
+            "name": "CustomItem: return 1 item or null",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-add-operations",
+            "name": "CustomResourceProcessor: Add operations",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-create-test-class",
+            "name": "CustomResourceProcessor: Create test class",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-add-patch-test",
+            "name": "CustomResourceProcessor: Add PATCH test",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-make-state-processor",
+            "name": "CustomResourceProcessor: make:state-processor",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-add-dd-and-hook-up",
+            "name": "CustomResourceProcessor: add dd() and hook up",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-move-processor-to-class-level",
+            "name": "CustomResourceProcessor: move processor to class-level",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-set-lastupdated-from-processor",
+            "name": "CustomResourceProcessor: set lastUpdated from processor",
+            "description": null
+        },
+        {
+            "id": "customresourceprocessor-remove-dump",
+            "name": "CustomResourceProcessor: remove ->dump()",
+            "description": null
+        },
+        {
+            "id": "customresourcerelations-add-treasures-property",
+            "name": "CustomResourceRelations: add treasures property",
+            "description": null
+        },
+        {
+            "id": "customresourcerelations-make-isownedbyauthenticateduser-default-to-null",
+            "name": "CustomResourceRelations: make isOwnedByAuthenticatedUser default to null",
+            "description": null
+        },
+        {
+            "id": "customresourcerelations-add-phpdoc-to-collection",
+            "name": "CustomResourceRelations: Add phpdoc to collection",
+            "description": null
+        },
+        {
+            "id": "embeddingnonresource-embed-new-questtreasure",
+            "name": "EmbeddingNonResource: Embed new QuestTreasure",
+            "description": null
+        },
+        {
+            "id": "embeddingnonresource-try-genid-false",
+            "name": "EmbeddingNonResource: Try genId: false",
+            "description": null
+        },
+        {
+            "id": "embeddingnonresource-refactor-to-single-to-show-off-genid",
+            "name": "EmbeddingNonResource: Refactor to single to show off genId",
+            "description": null
+        },
+        {
+            "id": "pagination-return-traversablepaginator",
+            "name": "Pagination: Return TraversablePaginator",
+            "description": null
+        },
+        {
+            "id": "pagination-separate-page-and-itemsperpage-vars",
+            "name": "Pagination: Separate page & itemsPerPage vars",
+            "description": null
+        },
+        {
+            "id": "pagination-inject-pagination-and-grab-variables",
+            "name": "Pagination: Inject Pagination & grab variables",
+            "description": null
+        },
+        {
+            "id": "pagination-set-paginationitemsperpage",
+            "name": "Pagination: Set paginationItemsPerPage",
+            "description": null
+        },
+        {
+            "id": "pagination-calc-and-use-offset",
+            "name": "Pagination: Calc & use offset",
+            "description": null
+        },
+        {
+            "id": "delete-me-8",
+            "name": "delete me 8",
+            "description": null
+        },
+        {
+            "id": "delete-me-9",
+            "name": "delete me 9",
+            "description": null
+        },
+        {
+            "id": "dto-remove-all-api-stuff-from-user",
+            "name": "DTO: Remove all Api stuff from User",
+            "description": null
+        },
+        {
+            "id": "dto-delete-more-stuff",
+            "name": "DTO: Delete more stuff",
+            "description": null
+        },
+        {
             "id": "dto-create-the-class",
             "name": "DTO: Create the class",
             "description": null
@@ -161,8 +341,8 @@
             "description": null
         },
         {
-            "id": "dto-remove-apiresource-from-entity",
-            "name": "DTO: Remove ApiResource from entity",
+            "id": "delete-me-10",
+            "name": "delete me 10",
             "description": null
         },
         {
@@ -241,28 +421,28 @@
             "description": null
         },
         {
-            "id": "dtoprovider-return-1-userapi-object",
-            "name": "DtoProvider: Return 1 UserApi object",
+            "id": "dtoprovider-add-provider-option",
+            "name": "DtoProvider: add provider option",
             "description": null
         },
         {
-            "id": "dtoprovider-set-id",
-            "name": "DtoProvider: set id",
+            "id": "delete-me-11",
+            "name": "delete me 11",
             "description": null
         },
         {
-            "id": "dtoprovider-add-identifier",
-            "name": "DtoProvider: Add identifier",
+            "id": "delete-me-12",
+            "name": "delete me 12",
             "description": null
         },
         {
-            "id": "dtoprovider-show-null-values",
-            "name": "DtoProvider: Show null values",
+            "id": "delete-me-13",
+            "name": "delete me 13",
             "description": null
         },
         {
-            "id": "dtoprovider-comment-out-null-value-config",
-            "name": "DtoProvider: Comment-out null value config",
+            "id": "delete-me-14",
+            "name": "delete me 14",
             "description": null
         },
         {
@@ -316,8 +496,8 @@
             "description": null
         },
         {
-            "id": "providerlogic-change-to-array-values",
-            "name": "ProviderLogic: change to array values",
+            "id": "delete-me-19",
+            "name": "delete me 19",
             "description": null
         },
         {
@@ -396,8 +576,8 @@
             "description": null
         },
         {
-            "id": "controllerfields-add-temp-prop",
-            "name": "ControlFields: add temp prop",
+            "id": "delete-me-15",
+            "name": "delete me 15",
             "description": null
         },
         {
@@ -446,18 +626,18 @@
             "description": null
         },
         {
-            "id": "controllerfields-try-readonly",
-            "name": "ControlFields: Try readonly",
+            "id": "controlfields-make-treasures-and-flamethrowing-writable-false",
+            "name": "ControlFields: make treasures & flameThrowing writable: false",
             "description": null
         },
         {
-            "id": "controllerfields-remove-constructor",
-            "name": "ControlFields: Remove constructor",
+            "id": "delete-me-17",
+            "name": "delete me 17",
             "description": null
         },
         {
-            "id": "controllerfields-use-isset-for-id",
-            "name": "ControlFields: use isset() for id",
+            "id": "delete-me-18",
+            "name": "delete me 18",
             "description": null
         },
         {
@@ -473,6 +653,11 @@
         {
             "id": "validation-re-add-post-fields",
             "name": "Validation: Re-add POST fields",
+            "description": null
+        },
+        {
+            "id": "security-re-add-security",
+            "name": "Security: Re-add security",
             "description": null
         },
         {
@@ -566,8 +751,23 @@
             "description": null
         },
         {
-            "id": "genericcode-rename-user-variable-on-provider",
-            "name": "GenericCode: Rename user variable on provider",
+            "id": "automapper-dd-the-finished-dtos",
+            "name": "AutoMapper: dd() the finished DTOs",
+            "description": null
+        },
+        {
+            "id": "automapper-start-plain-password-null",
+            "name": "AutoMapper: start plain password null",
+            "description": null
+        },
+        {
+            "id": "automapper-remove-dd-on-dtos",
+            "name": "AutoMapper: Remove dd() on DTOs",
+            "description": null
+        },
+        {
+            "id": "delete-me-20",
+            "name": "delete me 20",
             "description": null
         },
         {
@@ -596,8 +796,8 @@
             "description": null
         },
         {
-            "id": "genericcode-rename-processor-and-provider",
-            "name": "GenericCode: Rename processor & provider",
+            "id": "delete-me-21",
+            "name": "delete me 21",
             "description": null
         },
         {
@@ -621,5 +821,5 @@
             "description": null
         }
     ],
-    "sha": "fc3908f71dd790f3be177088e7baed2ad15c424e"
+    "sha": "2d088f370d5899a640d0c4f82c383daca0e866ce"
 }

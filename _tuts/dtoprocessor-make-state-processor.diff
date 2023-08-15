@@ -1,28 +1,28 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index a6faa10..f27dd0a 100644
+index 16f124f..3ad671e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -8,6 +8,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
+@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
  use ApiPlatform\Metadata\ApiFilter;
  use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
-+use App\State\UserApiStateProcessor;
- use App\State\UserApiStateProvider;
++use App\State\EntityClassDtoStateProcessor;
+ use App\State\EntityClassDtoStateProvider;
  use App\Entity\User;
- use Doctrine\Common\Collections\ArrayCollection;
-@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
+ 
+@@ -14,6 +15,7 @@ use App\Entity\User;
      shortName: 'User',
      paginationItemsPerPage: 5,
-     provider: UserApiStateProvider::class,
-+    processor: UserApiStateProcessor::class,
+     provider: EntityClassDtoStateProvider::class,
++    processor: EntityClassDtoStateProcessor::class,
      stateOptions: new Options(entityClass: User::class),
  )]
  #[ApiFilter(SearchFilter::class, properties: [
-diff --git a/src/State/UserApiStateProcessor.php b/src/State/UserApiStateProcessor.php
+diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
 new file mode 100644
-index 0000000..e44bfd1
+index 0000000..b516a9c
 --- /dev/null
-+++ b/src/State/UserApiStateProcessor.php
++++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -0,0 +1,14 @@
 +<?php
 +
@@ -31,7 +31,7 @@ index 0000000..e44bfd1
 +use ApiPlatform\Metadata\Operation;
 +use ApiPlatform\State\ProcessorInterface;
 +
-+class UserApiStateProcessor implements ProcessorInterface
++class EntityClassDtoStateProcessor implements ProcessorInterface
 +{
 +    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
 +    {

@@ -1,0 +1,15 @@
+diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
+index c96090b..95e36be 100644
+--- a/src/State/DailyQuestStateProvider.php
++++ b/src/State/DailyQuestStateProvider.php
+@@ -16,7 +16,9 @@ class DailyQuestStateProvider implements ProviderInterface
+             return $this->createQuests();
+         }
+ 
+-        dd($uriVariables);
++        $quests = $this->createQuests();
++
++        return $quests[$uriVariables['dayString']] ?? null;
+     }
+ 
+     private function createQuests(): array

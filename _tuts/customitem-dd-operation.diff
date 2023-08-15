@@ -1,0 +1,12 @@
+diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
+index 6828f94..d708847 100644
+--- a/src/State/DailyQuestStateProvider.php
++++ b/src/State/DailyQuestStateProvider.php
+@@ -11,6 +11,7 @@ class DailyQuestStateProvider implements ProviderInterface
+ {
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
++        dd($operation);
+         return $this->createQuests();
+     }
+ 

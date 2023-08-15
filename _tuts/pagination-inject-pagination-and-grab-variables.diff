@@ -1,0 +1,34 @@
+diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
+index f0bfade..a41ba41 100644
+--- a/src/State/DailyQuestStateProvider.php
++++ b/src/State/DailyQuestStateProvider.php
+@@ -4,6 +4,7 @@ namespace App\State;
+ 
+ use ApiPlatform\Metadata\CollectionOperationInterface;
+ use ApiPlatform\Metadata\Operation;
++use ApiPlatform\State\Pagination\Pagination;
+ use ApiPlatform\State\Pagination\TraversablePaginator;
+ use ApiPlatform\State\ProviderInterface;
+ use App\ApiResource\DailyQuest;
+@@ -15,6 +16,7 @@ class DailyQuestStateProvider implements ProviderInterface
+ {
+     public function __construct(
+         private DragonTreasureRepository $treasureRepository,
++        private Pagination $pagination,
+     )
+     {
+     }
+@@ -22,9 +24,11 @@ class DailyQuestStateProvider implements ProviderInterface
+     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+     {
+         if ($operation instanceof CollectionOperationInterface) {
+-            $currentPage = 1;
+-            $itemsPerPage = 10;
++            $currentPage = $this->pagination->getPage($context);
++            $itemsPerPage = $this->pagination->getLimit($operation, $context);
++            $offset = $this->pagination->getOffset($operation, $context);
+             $totalItems = $this->countTotalQuests();
++            dd($currentPage, $itemsPerPage, $offset, $totalItems);
+ 
+             $quests = $this->createQuests();
+ 

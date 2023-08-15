@@ -1,25 +1,23 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 5796b8f..a6faa10 100644
+index 9dad541..16f124f 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
-@@ -36,6 +36,8 @@ class UserApi
+@@ -31,4 +31,6 @@ class UserApi
+      * @var array<int, DragonTreasure>
       */
-     public Collection $dragonTreasures;
- 
-+    public int $flameThrowingDistance = 0;
+     public array $dragonTreasures = [];
 +
-     public function __construct(int $id = null)
-     {
-         $this->id = $id;
-diff --git a/src/State/UserApiStateProvider.php b/src/State/UserApiStateProvider.php
-index 2519e78..44856b6 100644
---- a/src/State/UserApiStateProvider.php
-+++ b/src/State/UserApiStateProvider.php
-@@ -36,6 +36,7 @@ class UserApiStateProvider implements ProviderInterface
-         $userApi->email = $user->getEmail();
-         $userApi->username = $user->getUsername();
-         $userApi->dragonTreasures = $user->getDragonTreasures();
-+        $userApi->flameThrowingDistance = rand(1, 10);
++    public int $flameThrowingDistance = 0;
+ }
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index 4a7381f..5f5871b 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -36,6 +36,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
+         $dto->email = $entity->getEmail();
+         $dto->username = $entity->getUsername();
+         $dto->dragonTreasures = $entity->getDragonTreasures()->toArray();
++        $dto->flameThrowingDistance = rand(1, 10);
  
-         return $userApi;
+         return $dto;
      }
