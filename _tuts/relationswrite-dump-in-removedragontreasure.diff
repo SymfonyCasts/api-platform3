@@ -1,0 +1,12 @@
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index b0bf7699..cfb1506e 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -165,6 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+     public function removeDragonTreasure(DragonTreasure $treasure): self
+     {
++        dump('Removing treasure '.$treasure->getId());
+         if ($this->dragonTreasures->removeElement($treasure)) {
+             // set the owning side to null (unless already changed)
+             if ($treasure->getOwner() === $this) {

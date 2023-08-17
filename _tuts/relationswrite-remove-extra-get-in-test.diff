@@ -1,0 +1,12 @@
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index c7cf16a7..1c42b10a 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -96,7 +96,6 @@ class UserResourceTest extends ApiTestCase
+                 ],
+                 'headers' => ['Content-Type' => 'application/merge-patch+json']
+             ])
+-            ->get('/api/users/' . $otherUser->getId())->dump()
+             ->assertStatus(422);
+     }
+ 

@@ -1,0 +1,40 @@
+diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+index 651299e2..5310f990 100644
+--- a/src/Automapper/UserApiToEntityMapper.php
++++ b/src/Automapper/UserApiToEntityMapper.php
+@@ -3,8 +3,10 @@
+ namespace App\Automapper;
+ 
+ use App\ApiResource\UserApi;
++use App\Entity\DragonTreasure;
+ use App\Entity\User;
+ use App\MicroMapper\AsMapper;
++use App\MicroMapper\AutoMapper;
+ use App\MicroMapper\MapperInterface;
+ use App\Repository\UserRepository;
+ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+@@ -15,6 +17,7 @@ class UserApiToEntityMapper implements MapperInterface
+     public function __construct(
+         private UserRepository $userRepository,
+         private UserPasswordHasherInterface $userPasswordHasher,
++        private AutoMapper $autoMapper,
+     )
+     {
+ 
+@@ -45,8 +48,14 @@ class UserApiToEntityMapper implements MapperInterface
+         if ($dto->password) {
+             $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
+         }
+-        dump($dto);
+-        // TODO dragonTreasures if we change them to writeable
++
++        $dragonTreasureEntities = [];
++        foreach ($dto->dragonTreasures as $dragonTreasureApi) {
++            $dragonTreasureEntities[] = $this->autoMapper->map($dragonTreasureApi, DragonTreasure::class, [
++                AutoMapper::MAX_DEPTH => 0,
++            ]);
++        }
++        dd($dragonTreasureEntities);
+ 
+         return $entity;
+     }

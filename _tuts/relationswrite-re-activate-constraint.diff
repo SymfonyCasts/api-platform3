@@ -1,0 +1,54 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index d47e5dba..7ed8c2ab 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
+ use App\State\EntityClassDtoStateProcessor;
+ use App\State\EntityClassDtoStateProvider;
+ use App\Entity\User;
++use App\Validator\TreasuresAllowedOwnerChange;
+ use Symfony\Component\Validator\Constraints as Assert;
+ 
+ #[ApiResource(
+@@ -62,6 +63,7 @@ class UserApi
+     /**
+      * @var array<int, DragonTreasureApi>
+      */
++    #[TreasuresAllowedOwnerChange]
+     public array $dragonTreasures = [];
+ 
+     #[ApiProperty(writable: false)]
+diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+index 7e5fc96d..868324ad 100644
+--- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
++++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+@@ -3,7 +3,6 @@
+ namespace App\Validator;
+ 
+ use App\Entity\DragonTreasure;
+-use Doctrine\Common\Collections\Collection;
+ use Doctrine\ORM\EntityManagerInterface;
+ use Symfony\Component\Validator\Constraint;
+ use Symfony\Component\Validator\ConstraintValidator;
+@@ -22,8 +21,7 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
+             return;
+         }
+ 
+-        // meant to be used above a Collection field
+-        assert($value instanceof Collection);
++        dd($value);
+ 
+         $unitOfWork = $this->entityManager->getUnitOfWork();
+         foreach ($value as $dragonTreasure) {
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 523680f1..1c42b10a 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -83,6 +83,7 @@ class UserResourceTest extends ApiTestCase
+         $user = UserFactory::createOne();
+         $otherUser = UserFactory::createOne();
+         $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $otherUser]);
++        dump('Real owner is ' . $otherUser->getId());
+ 
+         $this->browser()
+             ->actingAs($user)

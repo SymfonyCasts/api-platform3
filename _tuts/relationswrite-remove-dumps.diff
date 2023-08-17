@@ -1,0 +1,24 @@
+diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+index daade330..d61a3fab 100644
+--- a/src/Automapper/UserApiToEntityMapper.php
++++ b/src/Automapper/UserApiToEntityMapper.php
+@@ -58,7 +58,6 @@ class UserApiToEntityMapper implements MapperInterface
+             ]);
+         }
+         $this->propertyAccessor->setValue($entity, 'dragonTreasures', $dragonTreasureEntities);
+-        dd($entity);
+ 
+         return $entity;
+     }
+diff --git a/src/Entity/User.php b/src/Entity/User.php
+index cfb1506e..b0bf7699 100644
+--- a/src/Entity/User.php
++++ b/src/Entity/User.php
+@@ -165,7 +165,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
+ 
+     public function removeDragonTreasure(DragonTreasure $treasure): self
+     {
+-        dump('Removing treasure '.$treasure->getId());
+         if ($this->dragonTreasures->removeElement($treasure)) {
+             // set the owning side to null (unless already changed)
+             if ($treasure->getOwner() === $this) {

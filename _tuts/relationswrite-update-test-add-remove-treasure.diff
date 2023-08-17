@@ -1,0 +1,36 @@
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 3fc2bc3a..b1ef4ee2 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -58,20 +58,28 @@ class UserResourceTest extends ApiTestCase
+     {
+         $user = UserFactory::createOne();
+         $otherUser = UserFactory::createOne();
+-        $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $otherUser]);
++        $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $user]);
++        DragonTreasureFactory::createOne(['owner' => $user]);
++        $dragonTreasure3 = DragonTreasureFactory::createOne(['owner' => $otherUser]);
+ 
+         $this->browser()
+             ->actingAs($user)
+             ->patch('/api/users/' . $user->getId(), [
+                 'json' => [
+-                    'username' => 'changed',
+                     'dragonTreasures' => [
+                         '/api/treasures/' . $dragonTreasure->getId(),
++                        '/api/treasures/' . $dragonTreasure3->getId(),
+                     ],
+                 ],
+                 'headers' => ['Content-Type' => 'application/merge-patch+json']
+             ])
+-            ->assertStatus(422);
++            ->assertStatus(200)
++            ->get('/api/users/' . $user->getId())
++            ->dump()
++            ->assertJsonMatches('length("dragonTreasures")', 2)
++            ->assertJsonMatches('dragonTreasures[0]', '/api/treasures/' . $dragonTreasure->getId())
++            ->assertJsonMatches('dragonTreasures[1]', '/api/treasures/' . $dragonTreasure3->getId())
++        ;
+     }
+ 
+     public function testTreasuresCannotBeStolen(): void

@@ -261,6 +261,11 @@
             "description": null
         },
         {
+            "id": "customresourcerelations-add-treasures-to-test",
+            "name": "CustomResourceRelations: Add treasures to test",
+            "description": null
+        },
+        {
             "id": "customresourcerelations-make-isownedbyauthenticateduser-default-to-null",
             "name": "CustomResourceRelations: make isOwnedByAuthenticatedUser default to null",
             "description": null
@@ -999,7 +1004,92 @@
             "id": "relationswrite-map-userapi-to-entity",
             "name": "RelationsWrite: map UserApi to entity",
             "description": null
+        },
+        {
+            "id": "relationswrite-duplicate-and-rename-test",
+            "name": "RelationsWrite: Duplicate & rename test",
+            "description": null
+        },
+        {
+            "id": "relationswrite-update-test-add-remove-treasure",
+            "name": "RelationsWrite: Update test: add\/remove treasure",
+            "description": null
+        },
+        {
+            "id": "relationswrite-dump-userapi",
+            "name": "RelationsWrite: dump UserApi",
+            "description": null
+        },
+        {
+            "id": "relationswrite-make-dragontreasures-writable",
+            "name": "RelationsWrite: make dragonTreasures writable",
+            "description": null
+        },
+        {
+            "id": "relationswrite-map-dragontreasureapi-to-entity",
+            "name": "RelationsWrite: Map DragonTreasureApi to entity",
+            "description": null
+        },
+        {
+            "id": "relationswrite-use-property-accessor",
+            "name": "RelationsWrite: Use property accessor",
+            "description": null
+        },
+        {
+            "id": "relationswrite-dump-in-removedragontreasure",
+            "name": "RelationsWrite: dump in removeDragonTreasure",
+            "description": null
+        },
+        {
+            "id": "relationswrite-remove-dumps",
+            "name": "RelationsWrite: remove dumps",
+            "description": null
+        },
+        {
+            "id": "relationswrite-remove-adding-treasure-in-test",
+            "name": "RelationsWrite: Remove adding treasure in test",
+            "description": null
+        },
+        {
+            "id": "relationswrite-re-activate-constraint",
+            "name": "RelationsWrite: Re-activate constraint",
+            "description": null
+        },
+        {
+            "id": "relationswrite-prove-the-treasure-is-stolen",
+            "name": "RelationsWrite: Prove the treasure is stolen",
+            "description": null
+        },
+        {
+            "id": "relationswrite-remove-extra-get-in-test",
+            "name": "RelationsWrite: remove extra get() in test",
+            "description": null
+        },
+        {
+            "id": "relationswrite-change-target-on-constraint",
+            "name": "RelationsWrite: Change target on constraint",
+            "description": null
+        },
+        {
+            "id": "relationswrite-remove-annotation-stuff",
+            "name": "RelationsWrite: Remove annotation stuff",
+            "description": null
+        },
+        {
+            "id": "relationswrite-move-constraint-to-top-of-class",
+            "name": "RelationsWrite: Move constraint to top of class",
+            "description": null
+        },
+        {
+            "id": "relationswrite-simplify-validator",
+            "name": "RelationsWrite: Simplify validator",
+            "description": null
+        },
+        {
+            "id": "relationswrite-remove-dump-in-test",
+            "name": "RelationsWrite: remove dump() in test",
+            "description": null
         }
     ],
-    "sha": "6447672c0daa23f0690c7188b33b81a78c76bdde"
+    "sha": "4b8b8c1e96c2f072962cfa2badb804cf9c967eb7"
 }

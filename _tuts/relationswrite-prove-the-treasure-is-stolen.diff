@@ -1,0 +1,25 @@
+diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+index 868324ad..f712ef17 100644
+--- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
++++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
+@@ -21,7 +21,7 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
+             return;
+         }
+ 
+-        dd($value);
++        return;
+ 
+         $unitOfWork = $this->entityManager->getUnitOfWork();
+         foreach ($value as $dragonTreasure) {
+diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
+index 1c42b10a..c7cf16a7 100644
+--- a/tests/Functional/UserResourceTest.php
++++ b/tests/Functional/UserResourceTest.php
+@@ -96,6 +96,7 @@ class UserResourceTest extends ApiTestCase
+                 ],
+                 'headers' => ['Content-Type' => 'application/merge-patch+json']
+             ])
++            ->get('/api/users/' . $otherUser->getId())->dump()
+             ->assertStatus(422);
+     }
+ 

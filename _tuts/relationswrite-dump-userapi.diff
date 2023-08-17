@@ -1,0 +1,12 @@
+diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+index 43540264..651299e2 100644
+--- a/src/Automapper/UserApiToEntityMapper.php
++++ b/src/Automapper/UserApiToEntityMapper.php
+@@ -45,6 +45,7 @@ class UserApiToEntityMapper implements MapperInterface
+         if ($dto->password) {
+             $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
+         }
++        dump($dto);
+         // TODO dragonTreasures if we change them to writeable
+ 
+         return $entity;

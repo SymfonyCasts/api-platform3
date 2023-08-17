@@ -1,0 +1,12 @@
+diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
+index d3e3bd34..d47e5dba 100644
+--- a/src/ApiResource/UserApi.php
++++ b/src/ApiResource/UserApi.php
+@@ -62,7 +62,6 @@ class UserApi
+     /**
+      * @var array<int, DragonTreasureApi>
+      */
+-    #[ApiProperty(writable: false)]
+     public array $dragonTreasures = [];
+ 
+     #[ApiProperty(writable: false)]
