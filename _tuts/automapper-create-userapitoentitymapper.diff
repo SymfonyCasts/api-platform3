@@ -1,17 +1,17 @@
-diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
 new file mode 100644
-index 00000000..ff3e5180
+index 00000000..8844480d
 --- /dev/null
-+++ b/src/Automapper/UserApiToEntityMapper.php
++++ b/src/Mapper/UserApiToEntityMapper.php
 @@ -0,0 +1,23 @@
 +<?php
 +
-+namespace App\Automapper;
++namespace App\Mapper;
 +
 +use App\ApiResource\UserApi;
 +use App\Entity\User;
-+use App\MicroMapper\AsMapper;
-+use App\MicroMapper\MapperInterface;
++use Symfonycasts\MicroMapper\AsMapper;
++use Symfonycasts\MicroMapper\MapperInterface;
 +
 +#[AsMapper(from: UserApi::class, to: User::class)]
 +class UserApiToEntityMapper implements MapperInterface

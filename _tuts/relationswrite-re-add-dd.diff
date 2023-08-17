@@ -1,7 +1,7 @@
-diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
-index 4fd30878..a6dd0e93 100644
---- a/src/Automapper/DragonTreasureApiToEntityMapper.php
-+++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
+index 4cc5024f..b909d030 100644
+--- a/src/Mapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -41,7 +41,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
          assert($entity instanceof DragonTreasure);
  

@@ -1,8 +1,8 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index dd0cf505..700b1eb7 100644
+index 89e6790f..ba3d790f 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
-@@ -4,19 +4,19 @@ namespace App\State;
+@@ -4,11 +4,12 @@ namespace App\State;
  
  use ApiPlatform\Doctrine\Common\State\PersistProcessor;
  use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
@@ -13,19 +13,10 @@ index dd0cf505..700b1eb7 100644
  use App\ApiResource\UserApi;
 -use App\Entity\User;
 +use Doctrine\ORM\EntityManagerInterface;
- use App\MicroMapper\AutoMapper;
--use App\Repository\UserRepository;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ use Symfonycasts\MicroMapper\MicroMapperInterface;
  
- class EntityClassDtoStateProcessor implements ProcessorInterface
- {
-     public function __construct(
--        private UserRepository $userRepository,
-+        private EntityManagerInterface $entityManager,
-         #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
-         #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
-         private AutoMapper $autoMapper
-@@ -27,11 +27,13 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
+@@ -25,11 +26,13 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
  
      public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
      {
@@ -41,14 +32,14 @@ index dd0cf505..700b1eb7 100644
  
          if ($operation instanceof DeleteOperationInterface) {
              $this->removeProcessor->process($entity, $operation, $uriVariables, $context);
-@@ -45,8 +47,8 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
+@@ -43,8 +46,8 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
          return $data;
      }
  
 -    private function mapDtoToEntity(object $dto): object
 +    private function mapDtoToEntity(object $dto, string $entityClass): object
      {
--        return $this->autoMapper->map($dto, User::class);
-+        return $this->autoMapper->map($dto, $entityClass);
+-        return $this->microMapper->map($dto, User::class);
++        return $this->microMapper->map($dto, $entityClass);
      }
  }

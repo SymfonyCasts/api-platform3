@@ -1,22 +1,25 @@
-diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
-index a6dd0e93..6fe16cbe 100644
---- a/src/Automapper/DragonTreasureApiToEntityMapper.php
-+++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
-@@ -4,7 +4,9 @@ namespace App\Automapper;
+diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
+index b909d030..4695db9a 100644
+--- a/src/Mapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
+@@ -4,10 +4,12 @@ namespace App\Mapper;
  
  use App\ApiResource\DragonTreasureApi;
  use App\Entity\DragonTreasure;
 +use App\Entity\User;
- use App\MicroMapper\AsMapper;
-+use App\MicroMapper\AutoMapper;
- use App\MicroMapper\MapperInterface;
  use App\Repository\DragonTreasureRepository;
  use Symfony\Bundle\SecurityBundle\Security;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
++use Symfonycasts\MicroMapper\MicroMapperInterface;
+ 
+ #[AsMapper(from: DragonTreasureApi::class, to: DragonTreasure::class)]
+ class DragonTreasureApiToEntityMapper implements MapperInterface
 @@ -15,6 +17,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
      public function __construct(
          private DragonTreasureRepository $repository,
          private Security $security,
-+        private AutoMapper $autoMapper,
++        private MicroMapperInterface $microMapper,
      )
      {
  
@@ -25,8 +28,8 @@ index a6dd0e93..6fe16cbe 100644
  
          if ($dto->owner) {
 -            dd($dto->owner);
-+            $entity->setOwner($this->autoMapper->map($dto->owner, User::class, [
-+                AutoMapper::MAX_DEPTH => 0,
++            $entity->setOwner($this->microMapper->map($dto->owner, User::class, [
++                MicroMapperInterface::MAX_DEPTH => 0,
 +            ]));
          } else {
              $entity->setOwner($this->security->getUser());

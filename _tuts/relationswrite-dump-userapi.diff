@@ -1,8 +1,8 @@
-diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
-index 43540264..651299e2 100644
---- a/src/Automapper/UserApiToEntityMapper.php
-+++ b/src/Automapper/UserApiToEntityMapper.php
-@@ -45,6 +45,7 @@ class UserApiToEntityMapper implements MapperInterface
+diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
+index 1bc83ec5..aec5f132 100644
+--- a/src/Mapper/UserApiToEntityMapper.php
++++ b/src/Mapper/UserApiToEntityMapper.php
+@@ -44,6 +44,7 @@ class UserApiToEntityMapper implements MapperInterface
          if ($dto->password) {
              $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
          }

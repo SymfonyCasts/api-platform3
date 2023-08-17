@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index 700b1eb7..cdea6820 100644
+index ba3d790f..0ba3d2bc 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -8,7 +8,6 @@ use ApiPlatform\Doctrine\Orm\State\Options;
@@ -8,9 +8,9 @@ index 700b1eb7..cdea6820 100644
  use ApiPlatform\State\ProcessorInterface;
 -use App\ApiResource\UserApi;
  use Doctrine\ORM\EntityManagerInterface;
- use App\MicroMapper\AutoMapper;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
-@@ -31,8 +30,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
+ use Symfonycasts\MicroMapper\MicroMapperInterface;
+@@ -30,8 +29,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
          assert($stateOptions instanceof Options);
          $entityClass = $stateOptions->getEntityClass();
  

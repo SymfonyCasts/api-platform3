@@ -1,7 +1,7 @@
-diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
-index 0890a732..48fdd73e 100644
---- a/src/Automapper/DragonTreasureApiToEntityMapper.php
-+++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
+index 1e538552..930e7576 100644
+--- a/src/Mapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -46,8 +46,11 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
              $entity->setOwner($this->security->getUser());
          }

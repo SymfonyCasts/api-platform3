@@ -1,17 +1,17 @@
-diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
 new file mode 100644
-index 00000000..6ae69df3
+index 00000000..c1e03e86
 --- /dev/null
-+++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -0,0 +1,35 @@
 +<?php
 +
-+namespace App\Automapper;
++namespace App\Mapper;
 +
 +use App\ApiResource\DragonTreasureApi;
 +use App\Entity\DragonTreasure;
-+use App\MicroMapper\AsMapper;
-+use App\MicroMapper\MapperInterface;
++use Symfonycasts\MicroMapper\AsMapper;
++use Symfonycasts\MicroMapper\MapperInterface;
 +
 +#[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
 +class DragonTreasureEntityToApiMapper implements MapperInterface

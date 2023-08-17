@@ -1,18 +1,18 @@
-diff --git a/src/Automapper/UserEntityToApiMapper.php b/src/Automapper/UserEntityToApiMapper.php
-index 7d2e854f..4c1a9bbe 100644
---- a/src/Automapper/UserEntityToApiMapper.php
-+++ b/src/Automapper/UserEntityToApiMapper.php
+diff --git a/src/Mapper/UserEntityToApiMapper.php b/src/Mapper/UserEntityToApiMapper.php
+index f85b1c00..2794ad6c 100644
+--- a/src/Mapper/UserEntityToApiMapper.php
++++ b/src/Mapper/UserEntityToApiMapper.php
 @@ -41,7 +41,7 @@ class UserEntityToApiMapper implements MapperInterface
          $dto->username = $entity->getUsername();
          $dto->dragonTreasures = array_map(function(DragonTreasure $dragonTreasure) {
-             return $this->autoMapper->map($dragonTreasure, DragonTreasureApi::class, [
--                AutoMapper::MAX_DEPTH => 1,
-+                AutoMapper::MAX_DEPTH => 0,
+             return $this->microMapper->map($dragonTreasure, DragonTreasureApi::class, [
+-                MicroMapperInterface::MAX_DEPTH => 1,
++                MicroMapperInterface::MAX_DEPTH => 0,
              ]);
          }, $entity->getPublishedDragonTreasures()->getValues());
          $dto->flameThrowingDistance = rand(1, 100);
 diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index bcdd0702..7ed49a3e 100644
+index a1b4779c..f72e9003 100644
 --- a/src/State/EntityClassDtoStateProvider.php
 +++ b/src/State/EntityClassDtoStateProvider.php
 @@ -34,6 +34,7 @@ class EntityClassDtoStateProvider implements ProviderInterface

@@ -20,14 +20,14 @@ index 92508c52..7c122efb 100644
 +
 +    public ?bool $isMine = null;
  }
-diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
-index 4d44d573..08b5e5c1 100644
---- a/src/Automapper/DragonTreasureEntityToApiMapper.php
-+++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
+index 20cf9977..ccb36363 100644
+--- a/src/Mapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -38,6 +38,12 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
  
          $dto->name = $entity->getName();
-         $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class);
+         $dto->owner = $this->microMapper->map($entity->getOwner(), UserApi::class);
 +        $dto->description = $entity->getDescription();
 +        $dto->value = $entity->getValue();
 +        $dto->coolFactor = $entity->getCoolFactor();

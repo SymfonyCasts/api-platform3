@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index bcdd0702..7ed49a3e 100644
+index a1b4779c..f72e9003 100644
 --- a/src/State/EntityClassDtoStateProvider.php
 +++ b/src/State/EntityClassDtoStateProvider.php
 @@ -34,6 +34,7 @@ class EntityClassDtoStateProvider implements ProviderInterface

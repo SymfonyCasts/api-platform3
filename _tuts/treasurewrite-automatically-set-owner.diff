@@ -1,15 +1,16 @@
-diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
-index 46cb8c62..0890a732 100644
---- a/src/Automapper/DragonTreasureApiToEntityMapper.php
-+++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
-@@ -7,12 +7,14 @@ use App\Entity\DragonTreasure;
- use App\MicroMapper\AsMapper;
- use App\MicroMapper\MapperInterface;
+diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
+index f600e50e..1e538552 100644
+--- a/src/Mapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
+@@ -5,6 +5,7 @@ namespace App\Mapper;
+ use App\ApiResource\DragonTreasureApi;
+ use App\Entity\DragonTreasure;
  use App\Repository\DragonTreasureRepository;
 +use Symfony\Bundle\SecurityBundle\Security;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
  
- #[AsMapper(from: DragonTreasureApi::class, to: DragonTreasure::class)]
- class DragonTreasureApiToEntityMapper implements MapperInterface
+@@ -13,6 +14,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
  {
      public function __construct(
          private DragonTreasureRepository $repository,

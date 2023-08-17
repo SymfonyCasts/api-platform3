@@ -1,12 +1,14 @@
-diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
-index ff3e5180..d050c0be 100644
---- a/src/Automapper/UserApiToEntityMapper.php
-+++ b/src/Automapper/UserApiToEntityMapper.php
-@@ -6,18 +6,33 @@ use App\ApiResource\UserApi;
+diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
+index 8844480d..d933e3d5 100644
+--- a/src/Mapper/UserApiToEntityMapper.php
++++ b/src/Mapper/UserApiToEntityMapper.php
+@@ -4,20 +4,34 @@ namespace App\Mapper;
+ 
+ use App\ApiResource\UserApi;
  use App\Entity\User;
- use App\MicroMapper\AsMapper;
- use App\MicroMapper\MapperInterface;
 +use App\Repository\UserRepository;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
  
  #[AsMapper(from: UserApi::class, to: User::class)]
  class UserApiToEntityMapper implements MapperInterface
@@ -15,7 +17,6 @@ index ff3e5180..d050c0be 100644
 +        private UserRepository $userRepository,
 +    )
 +    {
-+
 +    }
 +
      public function init(object $from, string $toClass, array $context): object

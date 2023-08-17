@@ -1,23 +1,24 @@
-diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
-index d050c0be..43540264 100644
---- a/src/Automapper/UserApiToEntityMapper.php
-+++ b/src/Automapper/UserApiToEntityMapper.php
-@@ -7,12 +7,14 @@ use App\Entity\User;
- use App\MicroMapper\AsMapper;
- use App\MicroMapper\MapperInterface;
+diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
+index d933e3d5..1bc83ec5 100644
+--- a/src/Mapper/UserApiToEntityMapper.php
++++ b/src/Mapper/UserApiToEntityMapper.php
+@@ -5,6 +5,7 @@ namespace App\Mapper;
+ use App\ApiResource\UserApi;
+ use App\Entity\User;
  use App\Repository\UserRepository;
 +use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
  
- #[AsMapper(from: UserApi::class, to: User::class)]
- class UserApiToEntityMapper implements MapperInterface
+@@ -13,6 +14,7 @@ class UserApiToEntityMapper implements MapperInterface
  {
      public function __construct(
          private UserRepository $userRepository,
 +        private UserPasswordHasherInterface $userPasswordHasher,
      )
      {
- 
-@@ -33,6 +35,18 @@ class UserApiToEntityMapper implements MapperInterface
+     }
+@@ -32,6 +34,18 @@ class UserApiToEntityMapper implements MapperInterface
  
      public function populate(object $from, object $to, array $context): object
      {

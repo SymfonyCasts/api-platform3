@@ -9,25 +9,25 @@ index 79148b27..92508c52 100644
 +
 +    public ?UserApi $owner = null;
  }
-diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
-index 6ae69df3..4d44d573 100644
---- a/src/Automapper/DragonTreasureEntityToApiMapper.php
-+++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
+index c1e03e86..20cf9977 100644
+--- a/src/Mapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -3,13 +3,21 @@
- namespace App\Automapper;
+ namespace App\Mapper;
  
  use App\ApiResource\DragonTreasureApi;
 +use App\ApiResource\UserApi;
  use App\Entity\DragonTreasure;
- use App\MicroMapper\AsMapper;
-+use App\MicroMapper\AutoMapper;
- use App\MicroMapper\MapperInterface;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
++use Symfonycasts\MicroMapper\MicroMapperInterface;
  
  #[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
  class DragonTreasureEntityToApiMapper implements MapperInterface
  {
 +    public function __construct(
-+        private AutoMapper $autoMapper,
++        private MicroMapperInterface $microMapper,
 +    )
 +    {
 +    }
@@ -39,7 +39,7 @@ index 6ae69df3..4d44d573 100644
          assert($dto instanceof DragonTreasureApi);
  
          $dto->name = $entity->getName();
-+        $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class);
++        $dto->owner = $this->microMapper->map($entity->getOwner(), UserApi::class);
  
          return $dto;
      }

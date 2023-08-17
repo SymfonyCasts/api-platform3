@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 59b09022..bcdd0702 100644
+index 2ffd62b5..a1b4779c 100644
 --- a/src/State/EntityClassDtoStateProvider.php
 +++ b/src/State/EntityClassDtoStateProvider.php
 @@ -9,7 +9,6 @@ use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
@@ -7,8 +7,8 @@ index 59b09022..bcdd0702 100644
  use ApiPlatform\State\Pagination\TraversablePaginator;
  use ApiPlatform\State\ProviderInterface;
 -use App\ApiResource\UserApi;
- use App\MicroMapper\AutoMapper;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
+ use Symfonycasts\MicroMapper\MicroMapperInterface;
  
 @@ -26,14 +25,14 @@ class EntityClassDtoStateProvider implements ProviderInterface
  
@@ -38,7 +38,7 @@ index 59b09022..bcdd0702 100644
 -    private function mapEntityToDto(object $entity): object
 +    private function mapEntityToDto(object $entity, string $resourceClass): object
      {
--        return $this->autoMapper->map($entity, UserApi::class);
-+        return $this->autoMapper->map($entity, $resourceClass);
+-        return $this->microMapper->map($entity, UserApi::class);
++        return $this->microMapper->map($entity, $resourceClass);
      }
  }

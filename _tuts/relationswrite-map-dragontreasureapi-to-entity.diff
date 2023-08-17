@@ -1,27 +1,30 @@
-diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
-index 651299e2..5310f990 100644
---- a/src/Automapper/UserApiToEntityMapper.php
-+++ b/src/Automapper/UserApiToEntityMapper.php
-@@ -3,8 +3,10 @@
- namespace App\Automapper;
+diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
+index aec5f132..726d47f7 100644
+--- a/src/Mapper/UserApiToEntityMapper.php
++++ b/src/Mapper/UserApiToEntityMapper.php
+@@ -3,11 +3,13 @@
+ namespace App\Mapper;
  
  use App\ApiResource\UserApi;
 +use App\Entity\DragonTreasure;
  use App\Entity\User;
- use App\MicroMapper\AsMapper;
-+use App\MicroMapper\AutoMapper;
- use App\MicroMapper\MapperInterface;
  use App\Repository\UserRepository;
  use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+ use Symfonycasts\MicroMapper\AsMapper;
+ use Symfonycasts\MicroMapper\MapperInterface;
++use Symfonycasts\MicroMapper\MicroMapperInterface;
+ 
+ #[AsMapper(from: UserApi::class, to: User::class)]
+ class UserApiToEntityMapper implements MapperInterface
 @@ -15,6 +17,7 @@ class UserApiToEntityMapper implements MapperInterface
      public function __construct(
          private UserRepository $userRepository,
          private UserPasswordHasherInterface $userPasswordHasher,
-+        private AutoMapper $autoMapper,
++        private MicroMapperInterface $microMapper,
      )
      {
- 
-@@ -45,8 +48,14 @@ class UserApiToEntityMapper implements MapperInterface
+     }
+@@ -44,8 +47,14 @@ class UserApiToEntityMapper implements MapperInterface
          if ($dto->password) {
              $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
          }
@@ -30,8 +33,8 @@ index 651299e2..5310f990 100644
 +
 +        $dragonTreasureEntities = [];
 +        foreach ($dto->dragonTreasures as $dragonTreasureApi) {
-+            $dragonTreasureEntities[] = $this->autoMapper->map($dragonTreasureApi, DragonTreasure::class, [
-+                AutoMapper::MAX_DEPTH => 0,
++            $dragonTreasureEntities[] = $this->microMapper->map($dragonTreasureApi, DragonTreasure::class, [
++                MicroMapperInterface::MAX_DEPTH => 0,
 +            ]);
 +        }
 +        dd($dragonTreasureEntities);
