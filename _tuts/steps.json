@@ -91,11 +91,6 @@
             "description": null
         },
         {
-            "id": "delete-me-1",
-            "name": "delete me 1",
-            "description": null
-        },
-        {
             "id": "publishprocessor-add-test-for-publishing",
             "name": "PublishProcessor: Add test for publishing",
             "description": null
@@ -316,16 +311,6 @@
             "description": null
         },
         {
-            "id": "delete-me-8",
-            "name": "delete me 8",
-            "description": null
-        },
-        {
-            "id": "delete-me-9",
-            "name": "delete me 9",
-            "description": null
-        },
-        {
             "id": "dto-remove-all-api-stuff-from-user",
             "name": "DTO: Remove all Api stuff from User",
             "description": null
@@ -346,11 +331,6 @@
             "description": null
         },
         {
-            "id": "delete-me-10",
-            "name": "delete me 10",
-            "description": null
-        },
-        {
             "id": "dto-give-userdto-shortname",
             "name": "DTO: Give UserDto shortName",
             "description": null
@@ -363,11 +343,6 @@
         {
             "id": "stateoptions-add-stateoptions",
             "name": "StateOptions: Add stateOptions",
-            "description": null
-        },
-        {
-            "id": "delete-me-2",
-            "name": "delete me 2",
             "description": null
         },
         {
@@ -411,16 +386,6 @@
             "description": null
         },
         {
-            "id": "delete-me-3",
-            "name": "delete me 3",
-            "description": null
-        },
-        {
-            "id": "delete-me-4",
-            "name": "delete me 4",
-            "description": null
-        },
-        {
             "id": "dtoprovider-create-state-provider",
             "name": "DtoProvider: Create state provider",
             "description": null
@@ -428,26 +393,6 @@
         {
             "id": "dtoprovider-add-provider-option",
             "name": "DtoProvider: add provider option",
-            "description": null
-        },
-        {
-            "id": "delete-me-11",
-            "name": "delete me 11",
-            "description": null
-        },
-        {
-            "id": "delete-me-12",
-            "name": "delete me 12",
-            "description": null
-        },
-        {
-            "id": "delete-me-13",
-            "name": "delete me 13",
-            "description": null
-        },
-        {
-            "id": "delete-me-14",
-            "name": "delete me 14",
             "description": null
         },
         {
@@ -501,16 +446,6 @@
             "description": null
         },
         {
-            "id": "delete-me-32",
-            "name": "delete me 32",
-            "description": null
-        },
-        {
-            "id": "delete-me-19",
-            "name": "delete me 19",
-            "description": null
-        },
-        {
             "id": "dtoprocessor-add-dump-in-test",
             "name": "DtoProcessor: add dump() in test",
             "description": null
@@ -541,18 +476,8 @@
             "description": null
         },
         {
-            "id": "delete-me-5",
-            "name": "delete me 5",
-            "description": null
-        },
-        {
             "id": "dtoprocessor-set-id-on-dto",
             "name": "DtoProcessor: set id on DTO",
-            "description": null
-        },
-        {
-            "id": "delete-me-6",
-            "name": "delete me 6",
             "description": null
         },
         {
@@ -578,16 +503,6 @@
         {
             "id": "controllerfields-repeat-for-id",
             "name": "ControlFields: Repeat for id",
-            "description": null
-        },
-        {
-            "id": "delete-me-7",
-            "name": "delete me 7",
-            "description": null
-        },
-        {
-            "id": "delete-me-15",
-            "name": "delete me 15",
             "description": null
         },
         {
@@ -641,16 +556,6 @@
             "description": null
         },
         {
-            "id": "delete-me-17",
-            "name": "delete me 17",
-            "description": null
-        },
-        {
-            "id": "delete-me-18",
-            "name": "delete me 18",
-            "description": null
-        },
-        {
             "id": "validation-remove-post-fields-in-test",
             "name": "Validation: remove POST fields in test",
             "description": null
@@ -696,56 +601,6 @@
             "description": null
         },
         {
-            "id": "delete-me-22",
-            "name": "delete me 22",
-            "description": null
-        },
-        {
-            "id": "delete-me-23",
-            "name": "delete me 23",
-            "description": null
-        },
-        {
-            "id": "delete-me-24",
-            "name": "delete me 24",
-            "description": null
-        },
-        {
-            "id": "delete-me-25",
-            "name": "delete me 25",
-            "description": null
-        },
-        {
-            "id": "delete-me-26",
-            "name": "delete me 26",
-            "description": null
-        },
-        {
-            "id": "delete-me-27",
-            "name": "delete me 27",
-            "description": null
-        },
-        {
-            "id": "delete-me-28",
-            "name": "delete me 28",
-            "description": null
-        },
-        {
-            "id": "delete-me-29",
-            "name": "delete me 29",
-            "description": null
-        },
-        {
-            "id": "delete-me-30",
-            "name": "delete me 30",
-            "description": null
-        },
-        {
-            "id": "delete-me-31",
-            "name": "delete me 31",
-            "description": null
-        },
-        {
             "id": "automapper-remove-password-hasher",
             "name": "AutoMapper: Remove password hasher",
             "description": null
@@ -758,41 +613,6 @@
         {
             "id": "automapper-create-userentitytoapimapper",
             "name": "AutoMapper: Create UserEntityToApiMapper",
-            "description": null
-        },
-        {
-            "id": "delete-me-33",
-            "name": "delete me 33",
-            "description": null
-        },
-        {
-            "id": "delete-me-34",
-            "name": "delete me 34",
-            "description": null
-        },
-        {
-            "id": "delete-me-35",
-            "name": "delete me 35",
-            "description": null
-        },
-        {
-            "id": "delete-me-36",
-            "name": "delete me 36",
-            "description": null
-        },
-        {
-            "id": "delete-me-37",
-            "name": "delete me 37",
-            "description": null
-        },
-        {
-            "id": "delete-me-38",
-            "name": "delete me 38",
-            "description": null
-        },
-        {
-            "id": "delete-me-20",
-            "name": "delete me 20",
             "description": null
         },
         {
@@ -818,11 +638,6 @@
         {
             "id": "genericcode-remove-all-user-mentions",
             "name": "GenericCode: Remove all user mentions",
-            "description": null
-        },
-        {
-            "id": "delete-me-21",
-            "name": "delete me 21",
             "description": null
         },
         {
