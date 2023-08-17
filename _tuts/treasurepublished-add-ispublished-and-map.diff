@@ -1,0 +1,39 @@
+diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
+index 8edd1a1d..c946e221 100644
+--- a/src/ApiResource/DragonTreasureApi.php
++++ b/src/ApiResource/DragonTreasureApi.php
+@@ -56,6 +56,8 @@ class DragonTreasureApi
+     #[LessThanOrEqual(10)]
+     public ?int $coolFactor = 0;
+ 
++    public bool $isPublished = false;
++
+     #[IsValidOwner]
+     public ?UserApi $owner = null;
+ 
+diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
+index 3a246d5c..4fd30878 100644
+--- a/src/Automapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+@@ -49,8 +49,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
+         $entity->setDescription($dto->description);
+         $entity->setCoolFactor($dto->coolFactor);
+         $entity->setValue($dto->value);
+-
+-        // TODO: set published
++        $entity->setIsPublished($dto->isPublished);
+ 
+         return $entity;
+     }
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+index 38e226b6..354d1d07 100644
+--- a/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -39,6 +39,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
+         assert($dto instanceof DragonTreasureApi);
+ 
+         $dto->name = $entity->getName();
++        $dto->isPublished = $entity->getIsPublished();
+         $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class, [
+             AutoMapper::MAX_DEPTH => 0,
+         ]);

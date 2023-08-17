@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index b21c059..0c66489 100644
+index 3b40d045..dd0cf505 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -27,6 +27,8 @@ class EntityClassDtoStateProcessor implements ProcessorInterface

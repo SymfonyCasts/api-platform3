@@ -1,6 +1,6 @@
 diff --git a/src/ApiPlatform/AdminGroupsContextBuilder.php b/src/ApiPlatform/AdminGroupsContextBuilder.php
 deleted file mode 100644
-index 54991d1..0000000
+index 54991d1b..00000000
 --- a/src/ApiPlatform/AdminGroupsContextBuilder.php
 +++ /dev/null
 @@ -1,27 +0,0 @@
@@ -32,7 +32,7 @@ index 54991d1..0000000
 -    }
 -}
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 070040e..b6c7ffc 100644
+index 070040ef..b6c7ffcb 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -2,95 +2,13 @@
@@ -215,7 +215,7 @@ index 070040e..b6c7ffc 100644
          if (!isset($this->isOwnedByAuthenticatedUser)) {
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
 deleted file mode 100644
-index 776fef9..0000000
+index 776fef90..00000000
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ /dev/null
 @@ -1,49 +0,0 @@
@@ -270,7 +270,7 @@ index 776fef9..0000000
 -}
 diff --git a/src/State/DragonTreasureStateProcessor.php b/src/State/DragonTreasureStateProcessor.php
 deleted file mode 100644
-index 286684f..0000000
+index 286684f6..00000000
 --- a/src/State/DragonTreasureStateProcessor.php
 +++ /dev/null
 @@ -1,47 +0,0 @@
@@ -323,7 +323,7 @@ index 286684f..0000000
 -}
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
 deleted file mode 100644
-index 9246692..0000000
+index 9246692e..00000000
 --- a/src/State/DragonTreasureStateProvider.php
 +++ /dev/null
 @@ -1,47 +0,0 @@

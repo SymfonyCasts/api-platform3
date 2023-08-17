@@ -1,11 +1,45 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index f3f6a91..a89aaba 100644
+index 79148b27..92508c52 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -22,4 +22,6 @@ class DragonTreasureApi
-     public int $id;
+     public ?int $id = null;
  
      public ?string $name = null;
 +
 +    public ?UserApi $owner = null;
  }
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+index 6ae69df3..4d44d573 100644
+--- a/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -3,13 +3,21 @@
+ namespace App\Automapper;
+ 
+ use App\ApiResource\DragonTreasureApi;
++use App\ApiResource\UserApi;
+ use App\Entity\DragonTreasure;
+ use App\MicroMapper\AsMapper;
++use App\MicroMapper\AutoMapper;
+ use App\MicroMapper\MapperInterface;
+ 
+ #[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
+ class DragonTreasureEntityToApiMapper implements MapperInterface
+ {
++    public function __construct(
++        private AutoMapper $autoMapper,
++    )
++    {
++    }
++
+     public function init(object $from, string $toClass, array $context): object
+     {
+         $entity = $from;
+@@ -29,6 +37,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
+         assert($dto instanceof DragonTreasureApi);
+ 
+         $dto->name = $entity->getName();
++        $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class);
+ 
+         return $dto;
+     }

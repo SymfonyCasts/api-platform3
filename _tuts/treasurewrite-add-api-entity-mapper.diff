@@ -1,0 +1,52 @@
+diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
+new file mode 100644
+index 00000000..46cb8c62
+--- /dev/null
++++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+@@ -0,0 +1,46 @@
++<?php
++
++namespace App\Automapper;
++
++use App\ApiResource\DragonTreasureApi;
++use App\Entity\DragonTreasure;
++use App\MicroMapper\AsMapper;
++use App\MicroMapper\MapperInterface;
++use App\Repository\DragonTreasureRepository;
++
++#[AsMapper(from: DragonTreasureApi::class, to: DragonTreasure::class)]
++class DragonTreasureApiToEntityMapper implements MapperInterface
++{
++    public function __construct(
++        private DragonTreasureRepository $repository,
++    )
++    {
++
++    }
++
++    public function init(object $from, string $toClass, array $context): object
++    {
++        $dto = $from;
++        assert($dto instanceof DragonTreasureApi);
++
++        $entity = $dto->id ? $this->repository->find($dto->id) : new DragonTreasure($dto->name);
++        if (!$entity) {
++            throw new \Exception('DragonTreasure not found');
++        }
++
++        return $entity;
++    }
++
++    public function populate(object $from, object $to, array $context): object
++    {
++        $dto = $from;
++        $entity = $to;
++        assert($dto instanceof DragonTreasureApi);
++        assert($entity instanceof DragonTreasure);
++
++        // TODO owner if needed
++        // TODO and other fields
++
++        return $entity;
++    }
++}

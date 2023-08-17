@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index ae3b917..149e8e2 100644
+index ae3b9175..149e8e21 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -8,7 +8,6 @@ use ApiPlatform\Metadata\ApiFilter;
@@ -18,7 +18,7 @@ index ae3b917..149e8e2 100644
      public int $flameThrowingDistance = 0;
  }
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index 9f3b4fb..1654145 100644
+index 9f3b4fbf..16541455 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -39,7 +39,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
@@ -30,7 +30,7 @@ index 9f3b4fb..1654145 100644
          return $data;
      }
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index 80b418b..80c016f 100644
+index 80b418bf..80c016fa 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
 @@ -47,11 +47,9 @@ class UserResourceTest extends ApiTestCase

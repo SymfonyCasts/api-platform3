@@ -1,5 +1,5 @@
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index d708847..c96090b 100644
+index d7088479..c96090b4 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -2,6 +2,7 @@

@@ -1,0 +1,39 @@
+diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+index d050c0be..43540264 100644
+--- a/src/Automapper/UserApiToEntityMapper.php
++++ b/src/Automapper/UserApiToEntityMapper.php
+@@ -7,12 +7,14 @@ use App\Entity\User;
+ use App\MicroMapper\AsMapper;
+ use App\MicroMapper\MapperInterface;
+ use App\Repository\UserRepository;
++use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+ 
+ #[AsMapper(from: UserApi::class, to: User::class)]
+ class UserApiToEntityMapper implements MapperInterface
+ {
+     public function __construct(
+         private UserRepository $userRepository,
++        private UserPasswordHasherInterface $userPasswordHasher,
+     )
+     {
+ 
+@@ -33,6 +35,18 @@ class UserApiToEntityMapper implements MapperInterface
+ 
+     public function populate(object $from, object $to, array $context): object
+     {
+-        dd($from, $to);
++        $dto = $from;
++        assert($dto instanceof UserApi);
++        $entity = $to;
++        assert($entity instanceof User);
++
++        $entity->setEmail($dto->email);
++        $entity->setUsername($dto->username);
++        if ($dto->password) {
++            $entity->setPassword($this->userPasswordHasher->hashPassword($entity, $dto->password));
++        }
++        // TODO dragonTreasures if we change them to writeable
++
++        return $entity;
+     }
+ }

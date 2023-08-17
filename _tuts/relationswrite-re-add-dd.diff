@@ -1,0 +1,13 @@
+diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
+index 4fd30878..a6dd0e93 100644
+--- a/src/Automapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+@@ -41,7 +41,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
+         assert($entity instanceof DragonTreasure);
+ 
+         if ($dto->owner) {
+-            //dd($dto->owner);
++            dd($dto->owner);
+         } else {
+             $entity->setOwner($this->security->getUser());
+         }

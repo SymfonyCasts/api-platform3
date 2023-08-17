@@ -496,6 +496,11 @@
             "description": null
         },
         {
+            "id": "delete-me-32",
+            "name": "delete me 32",
+            "description": null
+        },
+        {
             "id": "delete-me-19",
             "name": "delete me 19",
             "description": null
@@ -661,73 +666,78 @@
             "description": null
         },
         {
-            "id": "automapper-install-jane-automapper",
-            "name": "AutoMapper: install jane automapper",
+            "id": "automapper-install-our-lib",
+            "name": "AutoMapper: \"install\" our lib",
             "description": null
         },
         {
-            "id": "automapper-using-in-userapistateprocessor",
-            "name": "AutoMapper: using in UserApiStateProcessor",
+            "id": "automapper-using-in-entityclassdtostateprocessor",
+            "name": "AutoMapper: using in EntityClassDtoStateProcessor",
             "description": null
         },
         {
-            "id": "automapper-create-userapitousermapperconfiguration",
-            "name": "AutoMapper: create UserApiToUserMapperConfiguration",
+            "id": "automapper-create-userapitoentitymapper",
+            "name": "AutoMapper: create UserApiToEntityMapper",
             "description": null
         },
         {
-            "id": "automapper-implement-methods-and-dd",
-            "name": "AutoMapper: Implement methods & dd()",
+            "id": "automapper-implement-init-and-dd",
+            "name": "AutoMapper: Implement init() & dd",
             "description": null
         },
         {
-            "id": "automapper-dump-getpropertiesmapping",
-            "name": "AutoMapper: Dump getPropertiesMapping()",
+            "id": "automapper-implement-populate",
+            "name": "AutoMapper: implement populate()",
             "description": null
         },
         {
-            "id": "automapper-comment-out-setusername",
-            "name": "AutoMapper: Comment-out setUsername()",
+            "id": "delete-me-22",
+            "name": "delete me 22",
             "description": null
         },
         {
-            "id": "automapper-try-adding-setflamethrowingdistance",
-            "name": "AutoMapper: Try adding setFlameThrowingDistance()",
+            "id": "delete-me-23",
+            "name": "delete me 23",
             "description": null
         },
         {
-            "id": "automapper-add-untyped-arg",
-            "name": "AutoMapper: add untyped arg",
+            "id": "delete-me-24",
+            "name": "delete me 24",
             "description": null
         },
         {
-            "id": "automapper-add-int-to-arg",
-            "name": "AutoMapper: add int to arg",
+            "id": "delete-me-25",
+            "name": "delete me 25",
             "description": null
         },
         {
-            "id": "automapper-remove-tmp-method",
-            "name": "AutoMapper: Remove tmp method",
+            "id": "delete-me-26",
+            "name": "delete me 26",
             "description": null
         },
         {
-            "id": "automapper-add-callback-for-password-property",
-            "name": "AutoMapper: Add callback for password property",
+            "id": "delete-me-27",
+            "name": "delete me 27",
             "description": null
         },
         {
-            "id": "automapper-hash-the-password",
-            "name": "AutoMapper: Hash the password",
+            "id": "delete-me-28",
+            "name": "delete me 28",
             "description": null
         },
         {
-            "id": "automapper-use-existing-password-if-not-set",
-            "name": "AutoMapper: Use existing password if not set",
+            "id": "delete-me-29",
+            "name": "delete me 29",
             "description": null
         },
         {
-            "id": "automapper-remove-dd",
-            "name": "AutoMapper: Remove dd()",
+            "id": "delete-me-30",
+            "name": "delete me 30",
+            "description": null
+        },
+        {
+            "id": "delete-me-31",
+            "name": "delete me 31",
             "description": null
         },
         {
@@ -741,28 +751,38 @@
             "description": null
         },
         {
-            "id": "automapper-usertouserapimapperconfiguration",
-            "name": "AutoMapper: UserToUserApiMapperConfiguration",
+            "id": "automapper-create-userentitytoapimapper",
+            "name": "AutoMapper: Create UserEntityToApiMapper",
             "description": null
         },
         {
-            "id": "automapper-also-map-flamethrowingdistance",
-            "name": "AutoMapper: also map flameThrowingDistance",
+            "id": "delete-me-33",
+            "name": "delete me 33",
             "description": null
         },
         {
-            "id": "automapper-dd-the-finished-dtos",
-            "name": "AutoMapper: dd() the finished DTOs",
+            "id": "delete-me-34",
+            "name": "delete me 34",
             "description": null
         },
         {
-            "id": "automapper-start-plain-password-null",
-            "name": "AutoMapper: start plain password null",
+            "id": "delete-me-35",
+            "name": "delete me 35",
             "description": null
         },
         {
-            "id": "automapper-remove-dd-on-dtos",
-            "name": "AutoMapper: Remove dd() on DTOs",
+            "id": "delete-me-36",
+            "name": "delete me 36",
+            "description": null
+        },
+        {
+            "id": "delete-me-37",
+            "name": "delete me 37",
+            "description": null
+        },
+        {
+            "id": "delete-me-38",
+            "name": "delete me 38",
             "description": null
         },
         {
@@ -811,30 +831,175 @@
             "description": null
         },
         {
+            "id": "treasure-create-dragontreasureentitytoapimapper",
+            "name": "Treasure: Create DragonTreasureEntityToApiMapper",
+            "description": null
+        },
+        {
             "id": "treasure-add-owner-property",
             "name": "Treasure: Add owner property",
             "description": null
         },
         {
-            "id": "treasure-change-user-to-the-dto",
-            "name": "Treasure: Change User to the DTO",
+            "id": "treasure-map-the-missing-fields",
+            "name": "Treasure: Map the missing fields",
             "description": null
         },
         {
-            "id": "treasure-change-to-longer-callback-syntax",
-            "name": "Treasure: Change to longer callback syntax",
+            "id": "treasure-add-real-ismine-logic",
+            "name": "Treasure: Add real isMine logic",
             "description": null
         },
         {
-            "id": "treasure-add-basic-validation",
-            "name": "Treasure: Add basic validation",
+            "id": "relations-dump-user-dtos",
+            "name": "Relations: dump user dtos",
             "description": null
         },
         {
-            "id": "treasure-custom-owner-mapping",
-            "name": "Treasure: custom owner mapping",
+            "id": "relations-change-user-to-the-dto",
+            "name": "Relations: Change User to the DTO",
+            "description": null
+        },
+        {
+            "id": "relations-map-dragontreasures-to-api",
+            "name": "Relations: map DragonTreasures to API",
+            "description": null
+        },
+        {
+            "id": "relations-set-depth-1",
+            "name": "Relations: Set depth=1",
+            "description": null
+        },
+        {
+            "id": "relations-remove-dd-temporarily",
+            "name": "Relations: remove dd() temporarily",
+            "description": null
+        },
+        {
+            "id": "relations-change-depth-0",
+            "name": "Relations: change depth=0",
+            "description": null
+        },
+        {
+            "id": "relations-remove-dd-again",
+            "name": "Relations: remove dd() again",
+            "description": null
+        },
+        {
+            "id": "relations-add-depth-0-to-dragontreasure-mapper",
+            "name": "Relations: add depth=0 to DragonTreasure mapper",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-add-api-entity-mapper",
+            "name": "TreasureWrite: add Api -> entity mapper",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-rename-test-method",
+            "name": "TreasureWrite: Rename test method",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-add-validation",
+            "name": "TreasureWrite: Add validation",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-automatically-set-owner",
+            "name": "TreasureWrite: Automatically set owner",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-populate-other-fields",
+            "name": "TreasureWrite: Populate other fields",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-re-add-operations-and-security",
+            "name": "TreasureWrite: Re-add operations & security",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-rename-voter-class",
+            "name": "TreasureWrite: Rename voter class",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-update-voter-class",
+            "name": "TreasureWrite: Update voter class",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-correct-test-by-comparing-id",
+            "name": "TreasureWrite: Correct test by comparing id",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-add-patch-headers",
+            "name": "TreasureWrite: add patch headers",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-remove-dd-for-now",
+            "name": "TreasureWrite: remove dd() for now",
+            "description": null
+        },
+        {
+            "id": "treasurewrite-re-add-isvalidowner",
+            "name": "TreasureWrite: Re-add isValidOwner",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-add-ispublished-and-map",
+            "name": "TreasurePublished: Add isPublished and map",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-add-security-to-ispublished",
+            "name": "TreasurePublished: Add security to isPublished",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-allow-writable-ispublished",
+            "name": "TreasurePublished: Allow writable isPublished",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-add-new-state-processor",
+            "name": "TreasurePublished: Add new state processor",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-decorate-the-normal-processor",
+            "name": "TreasurePublished: Decorate the normal processor",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-dump-previous-data",
+            "name": "TreasurePublished: Dump previous_data",
+            "description": null
+        },
+        {
+            "id": "treasurepublished-add-notification-code",
+            "name": "TreasurePublished: add notification code",
+            "description": null
+        },
+        {
+            "id": "relationswrite-re-add-dd",
+            "name": "RelationsWrite: Re-add dd()",
+            "description": null
+        },
+        {
+            "id": "relationswrite-send-owner-manually",
+            "name": "RelationsWrite: send owner manually",
+            "description": null
+        },
+        {
+            "id": "relationswrite-map-userapi-to-entity",
+            "name": "RelationsWrite: map UserApi to entity",
             "description": null
         }
     ],
-    "sha": "f5cd2c086126071d09fb93f4f876e5349277e259"
+    "sha": "6447672c0daa23f0690c7188b33b81a78c76bdde"
 }

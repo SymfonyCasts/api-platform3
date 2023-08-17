@@ -1,0 +1,12 @@
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index 7ed49a3e..bcdd0702 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -34,7 +34,6 @@ class EntityClassDtoStateProvider implements ProviderInterface
+             foreach ($entities as $entity) {
+                 $dtos[] = $this->mapEntityToDto($entity, $resourceClass);
+             }
+-            dd($dtos);
+ 
+             return new TraversablePaginator(
+                 new \ArrayIterator($dtos),

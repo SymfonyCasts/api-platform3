@@ -1,5 +1,5 @@
 diff --git a/src/State/DragonTreasureStateProcessor.php b/src/State/DragonTreasureStateProcessor.php
-index 935113d..f8a0c02 100644
+index 935113d5..f8a0c025 100644
 --- a/src/State/DragonTreasureStateProcessor.php
 +++ b/src/State/DragonTreasureStateProcessor.php
 @@ -20,6 +20,7 @@ class DragonTreasureStateProcessor implements ProcessorInterface

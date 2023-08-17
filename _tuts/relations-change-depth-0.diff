@@ -1,0 +1,25 @@
+diff --git a/src/Automapper/UserEntityToApiMapper.php b/src/Automapper/UserEntityToApiMapper.php
+index 7d2e854f..4c1a9bbe 100644
+--- a/src/Automapper/UserEntityToApiMapper.php
++++ b/src/Automapper/UserEntityToApiMapper.php
+@@ -41,7 +41,7 @@ class UserEntityToApiMapper implements MapperInterface
+         $dto->username = $entity->getUsername();
+         $dto->dragonTreasures = array_map(function(DragonTreasure $dragonTreasure) {
+             return $this->autoMapper->map($dragonTreasure, DragonTreasureApi::class, [
+-                AutoMapper::MAX_DEPTH => 1,
++                AutoMapper::MAX_DEPTH => 0,
+             ]);
+         }, $entity->getPublishedDragonTreasures()->getValues());
+         $dto->flameThrowingDistance = rand(1, 100);
+diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
+index bcdd0702..7ed49a3e 100644
+--- a/src/State/EntityClassDtoStateProvider.php
++++ b/src/State/EntityClassDtoStateProvider.php
+@@ -34,6 +34,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
+             foreach ($entities as $entity) {
+                 $dtos[] = $this->mapEntityToDto($entity, $resourceClass);
+             }
++            dd($dtos);
+ 
+             return new TraversablePaginator(
+                 new \ArrayIterator($dtos),

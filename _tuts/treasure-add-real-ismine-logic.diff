@@ -1,0 +1,28 @@
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+index 08b5e5c1..63eb1a3e 100644
+--- a/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -8,12 +8,14 @@ use App\Entity\DragonTreasure;
+ use App\MicroMapper\AsMapper;
+ use App\MicroMapper\AutoMapper;
+ use App\MicroMapper\MapperInterface;
++use Symfony\Bundle\SecurityBundle\Security;
+ 
+ #[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
+ class DragonTreasureEntityToApiMapper implements MapperInterface
+ {
+     public function __construct(
+         private AutoMapper $autoMapper,
++        private Security $security,
+     )
+     {
+     }
+@@ -43,7 +45,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
+         $dto->coolFactor = $entity->getCoolFactor();
+         $dto->shortDescription = $entity->getShortDescription();
+         $dto->plunderedAtAgo = $entity->getPlunderedAtAgo();
+-        $dto->isMine = true;
++        $dto->isMine = $this->security->getUser() && $this->security->getUser() === $entity->getOwner();
+ 
+         return $dto;
+     }

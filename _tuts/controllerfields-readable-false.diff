@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 149e8e2..e1ec6d0 100644
+index 149e8e21..e1ec6d05 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -42,5 +42,6 @@ class UserApi

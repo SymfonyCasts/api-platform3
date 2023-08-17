@@ -1,0 +1,39 @@
+diff --git a/src/Automapper/UserEntityToApiMapper.php b/src/Automapper/UserEntityToApiMapper.php
+index eac7652f..4dc3b0cb 100644
+--- a/src/Automapper/UserEntityToApiMapper.php
++++ b/src/Automapper/UserEntityToApiMapper.php
+@@ -2,14 +2,23 @@
+ 
+ namespace App\Automapper;
+ 
++use App\ApiResource\DragonTreasureApi;
+ use App\ApiResource\UserApi;
++use App\Entity\DragonTreasure;
+ use App\Entity\User;
+ use App\MicroMapper\AsMapper;
++use App\MicroMapper\AutoMapper;
+ use App\MicroMapper\MapperInterface;
+ 
+ #[AsMapper(from: User::class, to: UserApi::class)]
+ class UserEntityToApiMapper implements MapperInterface
+ {
++    public function __construct(
++        private AutoMapper $autoMapper
++    )
++    {
++    }
++
+     public function init(object $from, string $toClass, array $context): object
+     {
+         $entity = $from;
+@@ -30,7 +39,9 @@ class UserEntityToApiMapper implements MapperInterface
+ 
+         $dto->email = $entity->getEmail();
+         $dto->username = $entity->getUsername();
+-        $dto->dragonTreasures = $entity->getPublishedDragonTreasures()->getValues();
++        $dto->dragonTreasures = array_map(function(DragonTreasure $dragonTreasure) {
++            return $this->autoMapper->map($dragonTreasure, DragonTreasureApi::class);
++        }, $entity->getPublishedDragonTreasures()->getValues());
+         $dto->flameThrowingDistance = rand(1, 100);
+ 
+         return $dto;

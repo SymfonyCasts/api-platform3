@@ -1,0 +1,54 @@
+diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
+index bcb9b4f4..8edd1a1d 100644
+--- a/src/ApiResource/DragonTreasureApi.php
++++ b/src/ApiResource/DragonTreasureApi.php
+@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
+ use App\Entity\DragonTreasure;
+ use App\State\EntityClassDtoStateProcessor;
+ use App\State\EntityClassDtoStateProvider;
++use App\Validator\IsValidOwner;
+ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+ use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+ use Symfony\Component\Validator\Constraints\NotBlank;
+@@ -55,6 +56,7 @@ class DragonTreasureApi
+     #[LessThanOrEqual(10)]
+     public ?int $coolFactor = 0;
+ 
++    #[IsValidOwner]
+     public ?UserApi $owner = null;
+ 
+     public ?string $shortDescription = null;
+diff --git a/src/Validator/IsValidOwnerValidator.php b/src/Validator/IsValidOwnerValidator.php
+index cc3461f5..e281882b 100644
+--- a/src/Validator/IsValidOwnerValidator.php
++++ b/src/Validator/IsValidOwnerValidator.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Validator;
+ 
++use App\ApiResource\UserApi;
+ use App\Entity\User;
+ use Symfony\Bundle\SecurityBundle\Security;
+ use Symfony\Component\Validator\Constraint;
+@@ -22,18 +23,19 @@ class IsValidOwnerValidator extends ConstraintValidator
+         }
+ 
+         // constraint is only meant to be used above a User property
+-        assert($value instanceof User);
++        assert($value instanceof UserApi);
+ 
+         $user = $this->security->getUser();
+         if (!$user) {
+             throw new \LogicException('IsOwnerValidator should only be used when a user is logged in.');
+         }
++        assert($user instanceof User);
+ 
+         if ($this->security->isGranted('ROLE_ADMIN')) {
+             return;
+         }
+ 
+-        if ($value !== $user) {
++        if ($value->id !== $user->getId()) {
+             $this->context->buildViolation($constraint->message)
+                 ->addViolation();
+         }

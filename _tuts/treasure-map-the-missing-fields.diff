@@ -1,0 +1,39 @@
+diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
+index 92508c52..7c122efb 100644
+--- a/src/ApiResource/DragonTreasureApi.php
++++ b/src/ApiResource/DragonTreasureApi.php
+@@ -23,5 +23,17 @@ class DragonTreasureApi
+ 
+     public ?string $name = null;
+ 
++    public ?string $description = null;
++
++    public ?int $value = 0;
++
++    public ?int $coolFactor = 0;
++
+     public ?UserApi $owner = null;
++
++    public ?string $shortDescription = null;
++
++    public ?string $plunderedAtAgo = null;
++
++    public ?bool $isMine = null;
+ }
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+index 4d44d573..08b5e5c1 100644
+--- a/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -38,6 +38,12 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
+ 
+         $dto->name = $entity->getName();
+         $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class);
++        $dto->description = $entity->getDescription();
++        $dto->value = $entity->getValue();
++        $dto->coolFactor = $entity->getCoolFactor();
++        $dto->shortDescription = $entity->getShortDescription();
++        $dto->plunderedAtAgo = $entity->getPlunderedAtAgo();
++        $dto->isMine = true;
+ 
+         return $dto;
+     }

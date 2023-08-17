@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index b20cdda..6ec94f9 100644
+index b20cddad..6ec94f94 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -7,13 +7,28 @@ use ApiPlatform\Doctrine\Orm\State\Options;

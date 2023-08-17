@@ -1,0 +1,18 @@
+diff --git a/src/Automapper/DragonTreasureApiToEntityMapper.php b/src/Automapper/DragonTreasureApiToEntityMapper.php
+index 0890a732..48fdd73e 100644
+--- a/src/Automapper/DragonTreasureApiToEntityMapper.php
++++ b/src/Automapper/DragonTreasureApiToEntityMapper.php
+@@ -46,8 +46,11 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
+             $entity->setOwner($this->security->getUser());
+         }
+ 
+-        // TODO owner if needed
+-        // TODO and other fields
++        $entity->setDescription($dto->description);
++        $entity->setCoolFactor($dto->coolFactor);
++        $entity->setValue($dto->value);
++
++        // TODO: set published
+ 
+         return $entity;
+     }

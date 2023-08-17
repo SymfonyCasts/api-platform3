@@ -1,0 +1,213 @@
+diff --git a/src/Kernel.php b/src/Kernel.php
+index 779cd1f2..f05582c6 100644
+--- a/src/Kernel.php
++++ b/src/Kernel.php
+@@ -2,10 +2,51 @@
+ 
+ namespace App;
+ 
++use App\MicroMapper\AsMapper;
++use App\MicroMapper\AutoMapper;
++use App\MicroMapper\MapperConfig;
+ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
++use Symfony\Component\Config\Loader\LoaderInterface;
++use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
++use Symfony\Component\DependencyInjection\ChildDefinition;
++use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
++use Symfony\Component\DependencyInjection\ContainerBuilder;
++use Symfony\Component\DependencyInjection\Definition;
++use Symfony\Component\DependencyInjection\Reference;
+ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+ 
+-class Kernel extends BaseKernel
++class Kernel extends BaseKernel implements CompilerPassInterface
+ {
+-    use MicroKernelTrait;
++    use MicroKernelTrait {
++        registerContainerConfiguration as registerContainerConfigurationBase;
++    }
++
++    public function registerContainerConfiguration(LoaderInterface $loader): void
++    {
++        $this->registerContainerConfigurationBase($loader);
++        $loader->load(function (ContainerBuilder $container) {
++            $container->registerAttributeForAutoconfiguration(AsMapper::class, static function (ChildDefinition $definition, AsMapper $attribute) {
++                $definition->addTag('automapper.mapper', [
++                    'from' => $attribute->getFrom(),
++                    'to' => $attribute->getTo(),
++                ]);
++            });
++        });
++    }
++
++    public function process(ContainerBuilder $container): void
++    {
++        $mapperConfigDefinitions = [];
++        foreach ($container->findTaggedServiceIds('automapper.mapper') as $id => $tags) {
++            foreach ($tags as $tag) {
++                $mapperConfigDefinitions[] = new Definition(MapperConfig::class, [
++                    $tag['from'],
++                    $tag['to'],
++                    new ServiceClosureArgument(new Reference($id))
++                ]);
++            }
++        }
++        $autoMapperDefinition = $container->findDefinition(AutoMapper::class);
++        $autoMapperDefinition->setArgument(0, $mapperConfigDefinitions);
++    }
+ }
+diff --git a/src/MicroMapper/AsMapper.php b/src/MicroMapper/AsMapper.php
+new file mode 100644
+index 00000000..5df1443d
+--- /dev/null
++++ b/src/MicroMapper/AsMapper.php
+@@ -0,0 +1,24 @@
++<?php
++
++namespace App\MicroMapper;
++
++#[\Attribute(\Attribute::TARGET_CLASS)]
++class AsMapper
++{
++    public function __construct(
++        private string $from,
++        private string $to,
++    )
++    {
++    }
++
++    public function getFrom(): string
++    {
++        return $this->from;
++    }
++
++    public function getTo(): string
++    {
++        return $this->to;
++    }
++}
+diff --git a/src/MicroMapper/AutoMapper.php b/src/MicroMapper/AutoMapper.php
+new file mode 100644
+index 00000000..2dfc9b82
+--- /dev/null
++++ b/src/MicroMapper/AutoMapper.php
+@@ -0,0 +1,73 @@
++<?php
++
++namespace App\MicroMapper;
++
++class AutoMapper
++{
++    public const MAX_DEPTH = 'max_depth';
++
++    private array $objectHashes = [];
++
++    private int $currentDepth = 0;
++    private ?int $maxDepth = null;
++
++    /**
++     * @param MapperConfig[] $mapperConfigs
++     */
++    public function __construct(private array $mapperConfigs)
++    {
++    }
++
++    public function map(object $from, string $toClass, array $context = []): object
++    {
++        $this->currentDepth++;
++
++        if ($this->currentDepth > 50) {
++            throw new \Exception('Max depth reached');
++        }
++
++        // set the max depth if not already set
++        // the max depth is recorded as MAX_DEPTH + the current depth
++        $previousMaxDepth = $this->maxDepth;
++        if (isset($context[self::MAX_DEPTH])
++            && (null === $this->maxDepth || ($context[self::MAX_DEPTH] + $this->currentDepth) < $this->maxDepth)
++        ) {
++            $this->maxDepth = $context[self::MAX_DEPTH] + $this->currentDepth;
++        }
++
++        $shouldFullyPopulate = $this->maxDepth === null || $this->currentDepth < $this->maxDepth;
++
++        // watch for circular references, but only if we're fully populating
++        // if we are not fully populating, this is already the final depth/level
++        // through the automapper.
++        if (isset($this->objectHashes[spl_object_hash($from)]) && $shouldFullyPopulate) {
++            throw new \Exception(sprintf(
++                'Circular reference detected with automapper: %s. Try passing [AutoMapper::MAX_DEPTH => 1] when mapping relationships.',
++                implode(' -> ', array_merge($this->objectHashes, [get_class($from)]))
++            ));
++        }
++
++        $this->objectHashes[spl_object_hash($from)] = get_class($from);
++
++        foreach ($this->mapperConfigs as $mapperConfig) {
++            if (!$mapperConfig->supports($from, $toClass)) {
++                continue;
++            }
++
++            $toObject = $mapperConfig->getMapper()->init($from, $toClass, $context);
++
++            // avoid fully populated objects if max depth is reached
++            if ($this->maxDepth === null || $this->currentDepth < $this->maxDepth) {
++                $mapperConfig->getMapper()->populate($from, $toObject, $context);
++            }
++
++            unset($this->objectHashes[spl_object_hash($from)]);
++            $this->currentDepth--;
++            $this->maxDepth = $previousMaxDepth;
++
++            return $toObject;
++        }
++
++        throw new \Exception(sprintf('No mapper found for %s -> %s', get_class($from), $toClass));
++    }
++}
+diff --git a/src/MicroMapper/MapperConfig.php b/src/MicroMapper/MapperConfig.php
+new file mode 100644
+index 00000000..9c4c7ce3
+--- /dev/null
++++ b/src/MicroMapper/MapperConfig.php
+@@ -0,0 +1,24 @@
++<?php
++
++namespace App\MicroMapper;
++
++class MapperConfig
++{
++    public function __construct(
++        private string $fromClass,
++        private string $toClass,
++        private \Closure $mapper
++    )
++    {
++    }
++
++    public function supports(object $fromObject, string $targetClass): bool
++    {
++        return $fromObject instanceof $this->fromClass && $this->toClass === $targetClass;
++    }
++
++    public function getMapper(): MapperInterface
++    {
++        return ($this->mapper)();
++    }
++}
+diff --git a/src/MicroMapper/MapperInterface.php b/src/MicroMapper/MapperInterface.php
+new file mode 100644
+index 00000000..947129b2
+--- /dev/null
++++ b/src/MicroMapper/MapperInterface.php
+@@ -0,0 +1,10 @@
++<?php
++
++namespace App\MicroMapper;
++
++interface MapperInterface
++{
++    public function init(object $from, string $toClass, array $context): object;
++
++    public function populate(object $from, object $to, array $context): object;
++}

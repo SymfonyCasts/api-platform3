@@ -1,0 +1,15 @@
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+index 63eb1a3e..38e226b6 100644
+--- a/src/Automapper/DragonTreasureEntityToApiMapper.php
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -39,7 +39,9 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
+         assert($dto instanceof DragonTreasureApi);
+ 
+         $dto->name = $entity->getName();
+-        $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class);
++        $dto->owner = $this->autoMapper->map($entity->getOwner(), UserApi::class, [
++            AutoMapper::MAX_DEPTH => 0,
++        ]);
+         $dto->description = $entity->getDescription();
+         $dto->value = $entity->getValue();
+         $dto->coolFactor = $entity->getCoolFactor();

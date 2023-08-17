@@ -1,0 +1,41 @@
+diff --git a/src/Automapper/DragonTreasureEntityToApiMapper.php b/src/Automapper/DragonTreasureEntityToApiMapper.php
+new file mode 100644
+index 00000000..6ae69df3
+--- /dev/null
++++ b/src/Automapper/DragonTreasureEntityToApiMapper.php
+@@ -0,0 +1,35 @@
++<?php
++
++namespace App\Automapper;
++
++use App\ApiResource\DragonTreasureApi;
++use App\Entity\DragonTreasure;
++use App\MicroMapper\AsMapper;
++use App\MicroMapper\MapperInterface;
++
++#[AsMapper(from: DragonTreasure::class, to: DragonTreasureApi::class)]
++class DragonTreasureEntityToApiMapper implements MapperInterface
++{
++    public function init(object $from, string $toClass, array $context): object
++    {
++        $entity = $from;
++        assert($entity instanceof DragonTreasure);
++
++        $dto = new DragonTreasureApi();
++        $dto->id = $entity->getId();
++
++        return $dto;
++    }
++
++    public function populate(object $from, object $to, array $context): object
++    {
++        $entity = $from;
++        $dto = $to;
++        assert($entity instanceof DragonTreasure);
++        assert($dto instanceof DragonTreasureApi);
++
++        $dto->name = $entity->getName();
++
++        return $dto;
++    }
++}

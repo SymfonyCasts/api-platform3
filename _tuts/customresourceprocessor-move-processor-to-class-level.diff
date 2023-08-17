@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index d17ab36..89cd196 100644
+index d17ab361..89cd196b 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -17,11 +17,11 @@ use Symfony\Component\Serializer\Annotation\Ignore;

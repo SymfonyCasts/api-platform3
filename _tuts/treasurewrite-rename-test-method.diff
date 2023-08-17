@@ -1,0 +1,13 @@
+diff --git a/tests/Functional/DragonTreasureResourceTest.php b/tests/Functional/DragonTreasureResourceTest.php
+index d61e8361..abbb970c 100644
+--- a/tests/Functional/DragonTreasureResourceTest.php
++++ b/tests/Functional/DragonTreasureResourceTest.php
+@@ -59,7 +59,7 @@ class DragonTreasureResourceTest extends ApiTestCase
+             ->assertStatus(404);
+     }
+ 
+-    public function testPostToCreateTreasure(): void
++    public function testPostToCreateTreasureWithLogin(): void
+     {
+         $user = UserFactory::createOne();
+ 

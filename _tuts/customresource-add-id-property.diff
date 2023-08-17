@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index 6c7ff58..9348b3c 100644
+index 6c7ff581..9348b3cc 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -11,5 +11,10 @@ use App\State\DailyQuestStateProvider;
@@ -14,7 +14,7 @@ index 6c7ff58..9348b3c 100644
 +    }
  }
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index 6e6b627..59c83cc 100644
+index 6e6b627f..59c83cca 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -11,8 +11,8 @@ class DailyQuestStateProvider implements ProviderInterface

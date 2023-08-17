@@ -1,12 +1,12 @@
 diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 4284202..6dae620 100644
+index 548532fb..8f15fbfd 100644
 --- a/src/State/EntityClassDtoStateProvider.php
 +++ b/src/State/EntityClassDtoStateProvider.php
 @@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\Pagination\TraversablePaginator;
  use ApiPlatform\State\ProviderInterface;
  use App\ApiResource\UserApi;
-+use Jane\Component\AutoMapper\AutoMapperInterface;
++use App\MicroMapper\AutoMapper;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  
  class EntityClassDtoStateProvider implements ProviderInterface
@@ -14,7 +14,7 @@ index 4284202..6dae620 100644
      public function __construct(
          #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
          #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
-+        private AutoMapperInterface $autoMapper
++        private AutoMapper $autoMapper
      )
      {
  
@@ -26,10 +26,10 @@ index 4284202..6dae620 100644
 -        $dto->id = $entity->getId();
 -        $dto->email = $entity->getEmail();
 -        $dto->username = $entity->getUsername();
--        $dto->dragonTreasures = $entity->getPublishedDragonTreasures()->toArray();
+-        $dto->dragonTreasures = $entity->getPublishedDragonTreasures()->getValues();
 -        $dto->flameThrowingDistance = rand(1, 10);
 -
 -        return $dto;
-+        return $this->autoMapper->map($entity, new UserApi());
++        return $this->autoMapper->map($entity, UserApi::class);
      }
  }

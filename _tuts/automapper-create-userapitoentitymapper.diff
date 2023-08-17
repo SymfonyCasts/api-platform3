@@ -1,0 +1,29 @@
+diff --git a/src/Automapper/UserApiToEntityMapper.php b/src/Automapper/UserApiToEntityMapper.php
+new file mode 100644
+index 00000000..ff3e5180
+--- /dev/null
++++ b/src/Automapper/UserApiToEntityMapper.php
+@@ -0,0 +1,23 @@
++<?php
++
++namespace App\Automapper;
++
++use App\ApiResource\UserApi;
++use App\Entity\User;
++use App\MicroMapper\AsMapper;
++use App\MicroMapper\MapperInterface;
++
++#[AsMapper(from: UserApi::class, to: User::class)]
++class UserApiToEntityMapper implements MapperInterface
++{
++    public function init(object $from, string $toClass, array $context): object
++    {
++        dd($from, $toClass);
++        // TODO: Implement init() method.
++    }
++
++    public function populate(object $from, object $to, array $context): object
++    {
++        // TODO: Implement populate() method.
++    }
++}

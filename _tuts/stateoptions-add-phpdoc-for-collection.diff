@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 794aa8c..18fdcf0 100644
+index 794aa8c0..18fdcf04 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -4,6 +4,7 @@ namespace App\ApiResource;
