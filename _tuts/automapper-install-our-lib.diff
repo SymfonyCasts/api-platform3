@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 30c6cb2f..ba7652ea 100644
+index 30c6cb2f..f5326b3d 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -34,7 +34,8 @@
@@ -8,25 +8,12 @@ index 30c6cb2f..ba7652ea 100644
          "symfony/webpack-encore-bundle": "^2.0",
 -        "symfony/yaml": "6.3.*"
 +        "symfony/yaml": "6.3.*",
-+        "symfonycasts/micro-mapper": "1.x-dev"
++        "symfonycasts/micro-mapper": "dev-main"
      },
      "config": {
          "platform": {
-@@ -101,5 +102,11 @@
-         "symfony/web-profiler-bundle": "6.3.*",
-         "zenstruck/browser": "^1.2",
-         "zenstruck/foundry": "^1.26"
--    }
-+    },
-+    "repositories": [
-+        {
-+            "type": "path",
-+            "url": "/Users/weaverryan/Sites/os/micro_mapper"
-+        }
-+    ]
- }
 diff --git a/composer.lock b/composer.lock
-index 77975d19..4e30b01c 100644
+index 77975d19..5e7d6262 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -34,21 +21,27 @@ index 77975d19..4e30b01c 100644
          "This file is @generated automatically"
      ],
 -    "content-hash": "b0eb2d63d00ec80d6cf125119017647b",
-+    "content-hash": "6a1bb71d624daaec8be63c7f66b955eb",
++    "content-hash": "815b72e5419e90c90114041b97471004",
      "packages": [
          {
              "name": "api-platform/core",
-@@ -6343,6 +6343,51 @@
+@@ -6343,6 +6343,56 @@
              ],
              "time": "2023-07-31T07:08:24+00:00"
          },
 +        {
 +            "name": "symfonycasts/micro-mapper",
-+            "version": "1.x-dev",
++            "version": "dev-main",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/SymfonyCasts/micro-mapper.git",
++                "reference": "439f0b3963c5422986ddab54a4cc20e9dc5760e2"
++            },
 +            "dist": {
-+                "type": "path",
-+                "url": "/Users/weaverryan/Sites/os/micro_mapper",
-+                "reference": "5b268e9bdf1d9cbe33e94c0de834ec331580ef09"
++                "type": "zip",
++                "url": "https://api.github.com/repos/SymfonyCasts/micro-mapper/zipball/439f0b3963c5422986ddab54a4cc20e9dc5760e2",
++                "reference": "439f0b3963c5422986ddab54a4cc20e9dc5760e2",
++                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=8.1"
@@ -59,17 +52,14 @@ index 77975d19..4e30b01c 100644
 +                "symfony/framework-bundle": "^6.3",
 +                "symfony/phpunit-bridge": "^6.3"
 +            },
++            "default-branch": true,
 +            "type": "library",
 +            "autoload": {
 +                "psr-4": {
 +                    "Symfonycasts\\MicroMapper\\": "src"
 +                }
 +            },
-+            "autoload-dev": {
-+                "psr-4": {
-+                    "Symfonycasts\\MicroMapper\\Tests\\": "tests/"
-+                }
-+            },
++            "notification-url": "https://packagist.org/downloads/",
 +            "license": [
 +                "MIT"
 +            ],
@@ -83,14 +73,16 @@ index 77975d19..4e30b01c 100644
 +            "keywords": [
 +                "data-mapper"
 +            ],
-+            "transport-options": {
-+                "relative": false
-+            }
++            "support": {
++                "issues": "https://github.com/SymfonyCasts/micro-mapper/issues",
++                "source": "https://github.com/SymfonyCasts/micro-mapper/tree/main"
++            },
++            "time": "2023-08-18T15:04:39+00:00"
 +        },
          {
              "name": "twig/twig",
              "version": "v3.7.0",
-@@ -9750,7 +9795,8 @@
+@@ -9750,7 +9800,8 @@
      "aliases": [],
      "minimum-stability": "dev",
      "stability-flags": {
@@ -111,7 +103,7 @@ index cf89bd50..743ddff5 100644
 +    Symfonycasts\MicroMapper\SymfonycastsMicroMapperBundle::class => ['all' => true],
  ];
 diff --git a/symfony.lock b/symfony.lock
-index d418fbae..64bb1c05 100644
+index d418fbae..b4ea21bf 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -367,6 +367,9 @@
@@ -119,7 +111,7 @@ index d418fbae..64bb1c05 100644
          "version": "v6.2.2"
      },
 +    "symfonycasts/micro-mapper": {
-+        "version": "1.x-dev"
++        "version": "dev-main"
 +    },
      "zenstruck/foundry": {
          "version": "1.26",

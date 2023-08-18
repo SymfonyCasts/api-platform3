@@ -11,7 +11,7 @@ index cfb1506e..b0bf7699 100644
              // set the owning side to null (unless already changed)
              if ($treasure->getOwner() === $this) {
 diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
-index aad668d5..2b16d7c9 100644
+index 6256346c..51f89661 100644
 --- a/src/Mapper/UserApiToEntityMapper.php
 +++ b/src/Mapper/UserApiToEntityMapper.php
 @@ -57,7 +57,6 @@ class UserApiToEntityMapper implements MapperInterface

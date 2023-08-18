@@ -12,7 +12,7 @@ index 8edd1a1d..c946e221 100644
      public ?UserApi $owner = null;
  
 diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
-index 53b6e9c9..4cc5024f 100644
+index 8f1fa73d..1db88d7c 100644
 --- a/src/Mapper/DragonTreasureApiToEntityMapper.php
 +++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -49,8 +49,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
@@ -26,7 +26,7 @@ index 53b6e9c9..4cc5024f 100644
          return $entity;
      }
 diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
-index a9f7d937..c10cec77 100644
+index 52b98c88..0c491d9b 100644
 --- a/src/Mapper/DragonTreasureEntityToApiMapper.php
 +++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -39,6 +39,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface

@@ -21,7 +21,7 @@ index 92508c52..7c122efb 100644
 +    public ?bool $isMine = null;
  }
 diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
-index 20cf9977..ccb36363 100644
+index d46464d1..ee762ebe 100644
 --- a/src/Mapper/DragonTreasureEntityToApiMapper.php
 +++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -38,6 +38,12 @@ class DragonTreasureEntityToApiMapper implements MapperInterface

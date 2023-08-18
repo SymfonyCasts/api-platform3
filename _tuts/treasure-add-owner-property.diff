@@ -10,7 +10,7 @@ index 79148b27..92508c52 100644
 +    public ?UserApi $owner = null;
  }
 diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
-index c1e03e86..20cf9977 100644
+index 647c999f..d46464d1 100644
 --- a/src/Mapper/DragonTreasureEntityToApiMapper.php
 +++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -3,13 +3,21 @@
@@ -32,7 +32,7 @@ index c1e03e86..20cf9977 100644
 +    {
 +    }
 +
-     public function init(object $from, string $toClass, array $context): object
+     public function load(object $from, string $toClass, array $context): object
      {
          $entity = $from;
 @@ -29,6 +37,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface

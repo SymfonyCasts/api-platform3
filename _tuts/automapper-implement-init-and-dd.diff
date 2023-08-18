@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
-index 8844480d..d933e3d5 100644
+index 3a77c59a..5f9266ec 100644
 --- a/src/Mapper/UserApiToEntityMapper.php
 +++ b/src/Mapper/UserApiToEntityMapper.php
 @@ -4,20 +4,34 @@ namespace App\Mapper;
@@ -19,10 +19,10 @@ index 8844480d..d933e3d5 100644
 +    {
 +    }
 +
-     public function init(object $from, string $toClass, array $context): object
+     public function load(object $from, string $toClass, array $context): object
      {
 -        dd($from, $toClass);
--        // TODO: Implement init() method.
+-        // TODO: Implement load() method.
 +        $dto = $from;
 +        assert($dto instanceof UserApi);
 +

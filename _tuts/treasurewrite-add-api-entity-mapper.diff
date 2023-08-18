@@ -1,6 +1,6 @@
 diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
 new file mode 100644
-index 00000000..f600e50e
+index 00000000..61ce6bc0
 --- /dev/null
 +++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -0,0 +1,46 @@
@@ -24,7 +24,7 @@ index 00000000..f600e50e
 +
 +    }
 +
-+    public function init(object $from, string $toClass, array $context): object
++    public function load(object $from, string $toClass, array $context): object
 +    {
 +        $dto = $from;
 +        assert($dto instanceof DragonTreasureApi);

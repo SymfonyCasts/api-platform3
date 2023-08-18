@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/UserEntityToApiMapper.php b/src/Mapper/UserEntityToApiMapper.php
-index 0d9ce466..b92e558f 100644
+index 7dfc1bc8..3cf51992 100644
 --- a/src/Mapper/UserEntityToApiMapper.php
 +++ b/src/Mapper/UserEntityToApiMapper.php
 @@ -2,14 +2,23 @@
@@ -23,7 +23,7 @@ index 0d9ce466..b92e558f 100644
 +    {
 +    }
 +
-     public function init(object $from, string $toClass, array $context): object
+     public function load(object $from, string $toClass, array $context): object
      {
          $entity = $from;
 @@ -30,7 +39,9 @@ class UserEntityToApiMapper implements MapperInterface
