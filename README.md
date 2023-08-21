@@ -52,18 +52,6 @@ If you do *not* want to use Docker, just make sure to start your own
 database server and update the `DATABASE_URL` environment variable in
 `.env` or `.env.local` before running the commands above.
 
-### Webpack Encore Assets
-
-This app uses Webpack Encore for the CSS, JS and image files, which we use
-a bit near the beginning to test out our login flow.
-
-First, make sure you have `npm` installed (`npm` comes with Node) and then run:
-
-```
-npm install
-npm run watch
-```
-
 ### Start the Symfony web server
 
 You can use Nginx or Apache, but Symfony's local web server
@@ -87,6 +75,19 @@ error that you need to run `symfony server:ca:install` first).
 Now check out the site at `https://localhost:8000`
 
 Have fun!
+
+### (OPTIONAL) Webpack Encore Assets
+
+This app uses Webpack Encore for the CSS, JS and image files, but the compiled
+files are part of the project. So, you **do not need to install or run Encore**.
+However, if you want to play with the CSS/JS, you're welcome to!
+
+First, make sure you have `npm` installed (`npm` comes with Node) and then run:
+
+```
+npm install
+npm run watch
+```
 
 ## Have Ideas, Feedback or an Issue?
 
