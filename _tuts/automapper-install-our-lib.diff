@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 30c6cb2f..f5326b3d 100644
+index 30c6cb2f..e418d987 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -34,7 +34,8 @@
@@ -8,12 +8,12 @@ index 30c6cb2f..f5326b3d 100644
          "symfony/webpack-encore-bundle": "^2.0",
 -        "symfony/yaml": "6.3.*"
 +        "symfony/yaml": "6.3.*",
-+        "symfonycasts/micro-mapper": "dev-main"
++        "symfonycasts/micro-mapper": "^0.1.0"
      },
      "config": {
          "platform": {
 diff --git a/composer.lock b/composer.lock
-index 77975d19..5e7d6262 100644
+index a23ec3b1..e6873bd7 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -21,26 +21,26 @@ index 77975d19..5e7d6262 100644
          "This file is @generated automatically"
      ],
 -    "content-hash": "b0eb2d63d00ec80d6cf125119017647b",
-+    "content-hash": "815b72e5419e90c90114041b97471004",
++    "content-hash": "d74d0093678f6c85b640383f533bf7ca",
      "packages": [
          {
              "name": "api-platform/core",
-@@ -6343,6 +6343,56 @@
+@@ -6348,6 +6348,55 @@
              ],
              "time": "2023-07-31T07:08:24+00:00"
          },
 +        {
 +            "name": "symfonycasts/micro-mapper",
-+            "version": "dev-main",
++            "version": "v0.1.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/SymfonyCasts/micro-mapper.git",
-+                "reference": "439f0b3963c5422986ddab54a4cc20e9dc5760e2"
++                "reference": "e47d557511cf4c14db9e9982e517b1ff39f65d67"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/SymfonyCasts/micro-mapper/zipball/439f0b3963c5422986ddab54a4cc20e9dc5760e2",
-+                "reference": "439f0b3963c5422986ddab54a4cc20e9dc5760e2",
++                "url": "https://api.github.com/repos/SymfonyCasts/micro-mapper/zipball/e47d557511cf4c14db9e9982e517b1ff39f65d67",
++                "reference": "e47d557511cf4c14db9e9982e517b1ff39f65d67",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -52,7 +52,6 @@ index 77975d19..5e7d6262 100644
 +                "symfony/framework-bundle": "^6.3",
 +                "symfony/phpunit-bridge": "^6.3"
 +            },
-+            "default-branch": true,
 +            "type": "library",
 +            "autoload": {
 +                "psr-4": {
@@ -75,23 +74,13 @@ index 77975d19..5e7d6262 100644
 +            ],
 +            "support": {
 +                "issues": "https://github.com/SymfonyCasts/micro-mapper/issues",
-+                "source": "https://github.com/SymfonyCasts/micro-mapper/tree/main"
++                "source": "https://github.com/SymfonyCasts/micro-mapper/tree/v0.1.0"
 +            },
-+            "time": "2023-08-18T15:04:39+00:00"
++            "time": "2023-08-21T14:06:07+00:00"
 +        },
          {
              "name": "twig/twig",
              "version": "v3.7.0",
-@@ -9750,7 +9800,8 @@
-     "aliases": [],
-     "minimum-stability": "dev",
-     "stability-flags": {
--        "api-platform/core": 20
-+        "api-platform/core": 20,
-+        "symfonycasts/micro-mapper": 20
-     },
-     "prefer-stable": true,
-     "prefer-lowest": false,
 diff --git a/config/bundles.php b/config/bundles.php
 index cf89bd50..743ddff5 100644
 --- a/config/bundles.php
