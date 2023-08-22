@@ -1,0 +1,20 @@
+diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
+index 3ef41b4e..e82e98f6 100644
+--- a/src/ApiResource/DailyQuest.php
++++ b/src/ApiResource/DailyQuest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\ApiResource;
+ 
++use ApiPlatform\Metadata\ApiProperty;
+ use ApiPlatform\Metadata\ApiResource;
+ use App\State\DailyQuestStateProvider;
+ 
+@@ -11,6 +12,7 @@ use App\State\DailyQuestStateProvider;
+ )]
+ class DailyQuest
+ {
++    #[ApiProperty(identifier: true)]
+     public \DateTimeInterface $day;
+ 
+     public function __construct(\DateTimeInterface $day)

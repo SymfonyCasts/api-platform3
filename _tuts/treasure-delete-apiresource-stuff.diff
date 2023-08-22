@@ -270,14 +270,15 @@ index 776fef90..00000000
 -}
 diff --git a/src/State/DragonTreasureStateProcessor.php b/src/State/DragonTreasureStateProcessor.php
 deleted file mode 100644
-index 286684f6..00000000
+index 757c74aa..00000000
 --- a/src/State/DragonTreasureStateProcessor.php
 +++ /dev/null
-@@ -1,47 +0,0 @@
+@@ -1,48 +0,0 @@
 -<?php
 -
 -namespace App\State;
 -
+-use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 -use ApiPlatform\Metadata\Operation;
 -use ApiPlatform\State\ProcessorInterface;
 -use App\Entity\DragonTreasure;
@@ -289,7 +290,7 @@ index 286684f6..00000000
 -class DragonTreasureStateProcessor implements ProcessorInterface
 -{
 -    public function __construct(
--        #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
+-        #[Autowire(service: PersistProcessor::class)]
 -        private ProcessorInterface $innerProcessor,
 -        private Security $security,
 -        private EntityManagerInterface $entityManager

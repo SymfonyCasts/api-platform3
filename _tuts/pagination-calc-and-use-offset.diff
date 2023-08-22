@@ -1,5 +1,5 @@
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index a41ba419..179567ef 100644
+index a41ba419..48336b38 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -28,9 +28,8 @@ class DailyQuestStateProvider implements ProviderInterface
@@ -18,7 +18,7 @@ index a41ba419..179567ef 100644
      }
  
 -    private function createQuests(): array
-+    private function createQuests(int $offset = 0, int $limit = 10): array
++    private function createQuests(int $offset, int $limit = 50): array
      {
          $treasures = $this->treasureRepository->findBy([], [], 10);
          $totalQuests = $this->countTotalQuests();

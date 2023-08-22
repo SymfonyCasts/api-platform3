@@ -181,6 +181,11 @@
             "description": null
         },
         {
+            "id": "customresource-add-identifier-true",
+            "name": "CustomResource: Add identifier: true",
+            "description": null
+        },
+        {
             "id": "customresource-move-identifier-to-string-method",
             "name": "CustomResource: Move identifier to string method",
             "description": null
@@ -308,6 +313,11 @@
         {
             "id": "pagination-calc-and-use-offset",
             "name": "Pagination: Calc & use offset",
+            "description": null
+        },
+        {
+            "id": "pagination-fix-item-provider-part",
+            "name": "Pagination: fix item provider part",
             "description": null
         },
         {
@@ -906,5 +916,5 @@
             "description": null
         }
     ],
-    "sha": "0b6c510bfe5663bb92301baace9438336f1b8ecc"
+    "sha": "fba1f9ee186ad5718558241d493fba030dbd3aaf"
 }
