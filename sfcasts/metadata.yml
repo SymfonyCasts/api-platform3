@@ -1,1 +1,17 @@
-chapters: []
+chapters:
+    - install
+    - custom-field-provider
+    - custom-field-collection-provider
+    - simper-state-processor
+    - on-publish
+    - custom-resource
+    - custom-resource-provider
+    - custom-resource-item-provider
+    - custom-resource-processor
+    - custom-resource-relations
+    - embedded-object
+    - pagination
+    - user-dto
+    - state-options
+    - entity-dto-provider
+    - provider-return-dto
