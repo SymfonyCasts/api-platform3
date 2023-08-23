@@ -1,69 +1,72 @@
-# Install
+# Setup & Ways to Extend API Platform
 
-Coming soon...
+Welcome API Platform and dragon fans to Episode 3 of our API Platform series. The
+episode where things get... let's say: more advanced and interesting.
 
-Welcome, API Platform slash Dragon fans, to Episode 3 of our API Platform series. The
-episode where things, frankly, take a turn for the serious. We're going to do some
-very complex, very cool stuff. This tutorial was kind of tough for me to write
-because we are doing really complex stuff and I want it to be awesome. I think you're
-going to be very happy with the results. To review in Episode 1, that was our
-introduction. We talked about pagination, filtering, and we talked a lot about
-serialization, so how our API resource classes are turned into JSON and how the JSON
-is turned back into our API resource classes. Episode 2 was about security. We talked
-about things like state processors, which is how our data is saved. We talked about
-custom fields, validation, voters, and more. All good stuff. But so far, all of our
-API resource classes, so for our tutorial, the Dragon, Treasure, and the User,
-they've all been entities. That's fine, but if your API starts to look different than
-your entities, this adds complexity. You have to start leveraging groups so that you
-have a field in your entity, but it's not in your API, or you have to do tricks to
-add new fields to your API that don't live in your entity. At some point, it can
-become a lot easier, a lot clearer to stop using your entity and create custom
-classes for your API. That's going to be the big focus of this tutorial. We're really
-going to break this down into two different parts. First, we're going to get a deeper
-look into the concept of state providers and state processors in API platform, which
-are basically the core to everything. We're going to use that to add custom fields
-and run code when a field changes, like when something becomes published. The second
-part of this tutorial is we're going to dive into that world of API resource classes
-that are not entities. All right, people, let's do this. As always, if you want to
-get the most out of this tutorial, you should absolutely download the course code and
-code along with me. Come on, it's way more fun than just listening to my voice. When
-you download the course code and unzip it, you'll find a start directory with the
-same code that we have here, including the all-important readme.md file, which is
-going to contain all the details to get this tutorial running. The last step will be
-to spin over, open a terminal into the project, and run symphony-serve-d to start the
-built-in web server at 127.0.0.1,8000. Say hello to Treasure Connect. This is the
-same project we worked on in episode two and episode one. I've made a few small
-changes to it, fixed a few deprecations, but mostly this is the same thing that we
-were working with before. We don't need to worry about logging in right now. The most
-important thing is we go to slash API, we can see our two resources, Treasure and
-User. This is fairly complex. We have sub-resources. We have lots of different custom
-rules, custom fields, but again, the most important thing to note is that both of
-these, Dragon, Treasure, and User. The API resource attribute is above our entity
-class, so that's going to be the big thing that we're going to be working on a little
-later in this tutorial, creating dedicated classes that are not entities to represent
-our API. Before we hop in, I'm going to go to the API platform docs and search for
-API platform extending. This is one of my favorite pages on the API platform
-documentation. It's just answers the question about what are all the different ways
-that I can extend API platform? For example, state processors can be a way to run
-code before or after you save something out of the database, which is something we
-talked about in the last tutorial and something we're going to talk about more really
-soon. I want you to know about this resource, but I also want to mention a couple of
-things we're not going to talk about. We're not going to talk about building custom
-controllers. You'll notice that it's not even in this list. The reason is that
-there's almost always a better way, a different extension point when you need to do
-something custom. We're also not going to talk about event listeners. Down here, you
-can say kernel events. It's for the same reason. There are almost always different
-extensions points you can use if you feel like you need to listen to an event. These
-events only work for REST. They don't work for GraphQL. I happen to know in the next
-version of API platform 3.2, these kernel events are probably going to go away in
-favor of a new internal system that leverages the state providers and state
-processors anymore. Another thing we're not going to show are these DTOs, at least
-not in the way that they are talked about here. This DTO article talks about
-something called using input and output classes. This is something that's not really
-recommended anymore with API platform. The reason, and this is actually a quote from
-talking with some of the core developers, is that a resource or operation should be
-marked on the class it's representing. What we recommend now is to have a class per
-URL. I'm not going to go too far into this. Instead of these input and output things,
-we're going to favor more just creating ... Maybe I don't even need to talk about
-DTOs at all. Next up, let's leverage a state provider and add a totally custom field
-that, unlike the previous tutorial, will have proper documentation inside of our API.
+Episode 1 was our introduction, and we covered a lot: pagination, filtering and
+a lot about serialization: how our API resource objects are turned into JSON and
+how the JSON sent by the user is turned *back* into those same objects.
+
+Episode 2 was about security and included things like state processors - the key
+to running code before or after saving - custom fields, validation, voters, and more.
+
+## Custom Api Classes?
+
+That's *all* good stuff. But, so far, all of our `#[ApiResource]` classes have been
+Doctrine entities. And that's fine! But if your API starts to look different than
+your entities, making that works adds complexity: serialization groups, extending
+normalizers, etc. At some point, it becomes easier and clearer to stop using your
+entity directly for your API and, instead, create a dedicated class. *That* is the
+biggest focus of this tutorial... and it'll take us deep into the concept of
+state providers and processors... which are basically the core to everything.
+
+## Project Setup
+
+All right, people, let's do this! I recommend POSTing up and coding along with me:
+it's more fun and you'll get more out of it. Download the course code from this
+page and, when you unzip it, you'll find a `start/` directory with the same code
+that I have here. Including the all-important README.MD file, which contains all
+the deets to get this tutorial running.
+
+The last step is to spin over, open a terminal into the project, and run
+
+```terminal
+symfony serve -d
+```
+
+to start the built-in web server at https://127.0.0.1:8000. Say hello to: Treasure
+Connect! This is the same project we worked on in episode one and two. I *have*
+made a few small changes to it - including fixed a few deprecations - but nothing
+major.
+
+The most important page is `/api` where we can see our two API resources:
+Treasure and User. And we made these fairly complex! We have sub-resources, 
+custom fields, complex security, etc. But again, for both `DragonTreasure` and
+`User`, the `#[ApiResource]` attribute is above an *entity* class. In a bit, we'll
+re-create this *same* API setup with dedicated classes.
+
+## Custom Controllers? Event Listeners?
+
+Before we hop in, I'm going to search for "API platform extending" to find one of
+my favorite pages on the API Platform documentation. It's answers a simple but powerful
+question: what are all the different ways that I can extend API platform? For example,
+state processors are the best way to run code before or after you save something:
+a topic we talked about in the last tutorial.
+
+So, this page is *great* and I want you to know about it. But I'm also here to
+mention a couple of things that we are *not* going to talk about. First, we are *not*
+going to talk about building custom operations that use custom controllers. Heck,
+that's not even in this list! The reason: there's always a better way - a different
+extension point - to do that. For example, you might create a custom operation
+or even a custom ApiResource class with a state processor that allows you to do
+whatever weird work you need to do.
+
+We're also not going to talk about event listeners: these kernel events. It's for
+the same reason: there are different extensions points we can use. These events also
+only work for REST: they don't work for GraphQL. And... it looks like the next version
+of API Platform - version 3.2 - may even *remove* these events in favor of a new
+internal system that leverages the state providers and state processors even more.
+
+Ok team: time to get to work. Next, let's leverage a state provider and add a totally
+custom field that to one of our resources. But unlike when we did this in the previous
+tutorial, this field will be properly documented in our API.
