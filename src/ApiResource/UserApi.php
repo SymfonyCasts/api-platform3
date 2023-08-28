@@ -4,6 +4,7 @@ namespace App\ApiResource;
 
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiResource;
+use App\Entity\DragonTreasure;
 use App\Entity\User;
 
 #[ApiResource(
@@ -18,5 +19,8 @@ class UserApi
 
     public ?string $username = null;
 
+    /**
+     * @var array<int, DragonTreasure>
+     */
     public array $dragonTreasures = [];
 }
