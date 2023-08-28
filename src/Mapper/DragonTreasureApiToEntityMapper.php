@@ -49,8 +49,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
         $entity->setDescription($dto->description);
         $entity->setCoolFactor($dto->coolFactor);
         $entity->setValue($dto->value);
-
-        // TODO: set published
+        $entity->setIsPublished($dto->isPublished);
 
         return $entity;
     }

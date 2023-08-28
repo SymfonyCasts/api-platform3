@@ -56,6 +56,8 @@ class DragonTreasureApi
     #[LessThanOrEqual(10)]
     public int $coolFactor = 0;
 
+    public bool $isPublished = false;
+
     #[IsValidOwner]
     public ?UserApi $owner = null;
 
