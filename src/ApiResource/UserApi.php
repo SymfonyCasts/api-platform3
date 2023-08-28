@@ -42,5 +42,6 @@ class UserApi
      */
     public array $dragonTreasures = [];
 
+    #[ApiProperty(readable: false)]
     public int $flameThrowingDistance = 0;
 }
