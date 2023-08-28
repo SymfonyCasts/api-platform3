@@ -4,6 +4,7 @@ namespace App\Tests\Functional;
 
 use App\Factory\DragonTreasureFactory;
 use App\Factory\UserFactory;
+use Zenstruck\Browser\Json;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -22,8 +23,10 @@ class UserResourceTest extends ApiTestCase
                     'password' => 'password',
                 ]
             ])
-            ->dump()
             ->assertStatus(201)
+            ->use(function (Json $json) {
+                $json->assertMissing('password');
+            })
             ->post('/login', [
                 'json' => [
                     'email' => 'draggin_in_the_morning@coffee.com',
