@@ -5,6 +5,7 @@ namespace App\Mapper;
 use App\ApiResource\DragonTreasureApi;
 use App\Entity\DragonTreasure;
 use App\Repository\DragonTreasureRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfonycasts\MicroMapper\AsMapper;
 use Symfonycasts\MicroMapper\MapperInterface;
 
@@ -13,6 +14,7 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
 {
     public function __construct(
         private DragonTreasureRepository $repository,
+        private Security $security,
     )
     {
 
@@ -37,6 +39,12 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
         $entity = $to;
         assert($dto instanceof DragonTreasureApi);
         assert($entity instanceof DragonTreasure);
+
+        if ($dto->owner) {
+            dd($dto->owner);
+        } else {
+            $entity->setOwner($this->security->getUser());
+        }
 
         // TODO owner if needed
         // TODO and other fields
