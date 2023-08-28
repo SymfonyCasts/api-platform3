@@ -41,6 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: [
     'username' => 'partial',
 ])]
+#[TreasuresAllowedOwnerChange]
 class UserApi
 {
     #[ApiProperty(readable: false, writable: false, identifier: true)]
@@ -63,7 +64,6 @@ class UserApi
     /**
      * @var array<int, DragonTreasureApi>
      */
-    #[TreasuresAllowedOwnerChange]
     public array $dragonTreasures = [];
 
     #[ApiProperty(writable: false)]

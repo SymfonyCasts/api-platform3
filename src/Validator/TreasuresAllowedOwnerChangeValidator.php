@@ -21,7 +21,7 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator
             return;
         }
 
-        return;
+        dd($value);
 
         $unitOfWork = $this->entityManager->getUnitOfWork();
         foreach ($value as $dragonTreasure) {
