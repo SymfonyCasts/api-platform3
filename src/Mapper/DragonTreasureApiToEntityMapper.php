@@ -46,8 +46,11 @@ class DragonTreasureApiToEntityMapper implements MapperInterface
             $entity->setOwner($this->security->getUser());
         }
 
-        // TODO owner if needed
-        // TODO and other fields
+        $entity->setDescription($dto->description);
+        $entity->setCoolFactor($dto->coolFactor);
+        $entity->setValue($dto->value);
+
+        // TODO: set published
 
         return $entity;
     }
