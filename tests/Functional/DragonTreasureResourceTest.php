@@ -59,7 +59,7 @@ class DragonTreasureResourceTest extends ApiTestCase
             ->assertStatus(404);
     }
 
-    public function testPostToCreateTreasure(): void
+    public function testPostToCreateTreasureWithLogin(): void
     {
         $user = UserFactory::createOne();
 
