@@ -5,6 +5,7 @@ namespace App\Mapper;
 use App\ApiResource\DragonTreasureApi;
 use App\ApiResource\UserApi;
 use App\Entity\DragonTreasure;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfonycasts\MicroMapper\AsMapper;
 use Symfonycasts\MicroMapper\MapperInterface;
 use Symfonycasts\MicroMapper\MicroMapperInterface;
@@ -14,6 +15,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
 {
     public function __construct(
         private MicroMapperInterface $microMapper,
+        private Security $security,
     )
     {
     }
@@ -43,7 +45,7 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
         $dto->coolFactor = $entity->getCoolFactor();
         $dto->shortDescription = $entity->getShortDescription();
         $dto->plunderedAtAgo = $entity->getPlunderedAtAgo();
-        $dto->isMine = true;
+        $dto->isMine = $this->security->getUser() && $this->security->getUser() === $entity->getOwner();
 
         return $dto;
     }
