@@ -254,6 +254,8 @@ class DragonTreasure
         return $this;
     }
 
+    #[Groups(['treasure:read'])]
+    #[SerializedName('isMine')]
     public function isOwnedByAuthenticatedUser(): bool
     {
         if (!isset($this->isOwnedByAuthenticatedUser)) {
