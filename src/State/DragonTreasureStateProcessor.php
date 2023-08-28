@@ -7,8 +7,14 @@ use ApiPlatform\State\ProcessorInterface;
 
 class DragonTreasureStateProcessor implements ProcessorInterface
 {
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+    public function __construct(
+        private EntityClassDtoStateProcessor $innerProcessor,
+    )
     {
-        // Handle the state
+    }
+
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        return $this->innerProcessor->process($data, $operation, $uriVariables, $context);
     }
 }
