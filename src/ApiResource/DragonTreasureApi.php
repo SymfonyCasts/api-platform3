@@ -8,6 +8,9 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ApiResource(
     shortName: 'Treasure',
@@ -21,12 +24,17 @@ class DragonTreasureApi
     #[ApiProperty(readable: false, writable: false, identifier: true)]
     public ?int $id = null;
 
+    #[NotBlank]
     public ?string $name = null;
 
+    #[NotBlank]
     public ?string $description = null;
 
+    #[GreaterThanOrEqual(0)]
     public int $value = 0;
 
+    #[GreaterThanOrEqual(0)]
+    #[LessThanOrEqual(10)]
     public int $coolFactor = 0;
 
     public ?UserApi $owner = null;
