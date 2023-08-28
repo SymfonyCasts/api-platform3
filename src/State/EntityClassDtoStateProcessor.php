@@ -9,6 +9,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
 {
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        // Handle the state
+        dd($data);
     }
 }
