@@ -38,6 +38,12 @@ class DragonTreasureEntityToApiMapper implements MapperInterface
 
         $dto->name = $entity->getName();
         $dto->owner = $this->microMapper->map($entity->getOwner(), UserApi::class);
+        $dto->description = $entity->getDescription();
+        $dto->value = $entity->getValue();
+        $dto->coolFactor = $entity->getCoolFactor();
+        $dto->shortDescription = $entity->getShortDescription();
+        $dto->plunderedAtAgo = $entity->getPlunderedAtAgo();
+        $dto->isMine = true;
 
         return $dto;
     }
