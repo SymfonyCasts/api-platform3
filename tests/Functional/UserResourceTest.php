@@ -83,7 +83,6 @@ class UserResourceTest extends ApiTestCase
         $user = UserFactory::createOne();
         $otherUser = UserFactory::createOne();
         $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $otherUser]);
-        dump('Real owner is ' . $otherUser->getId());
 
         $this->browser()
             ->actingAs($user)
