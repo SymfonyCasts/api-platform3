@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
-use Symfony\Component\Serializer\Annotation\Ignore;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
 use App\Entity\User;
@@ -43,6 +42,5 @@ class UserApi
      */
     public array $dragonTreasures = [];
 
-    #[Ignore]
     public int $flameThrowingDistance = 0;
 }
