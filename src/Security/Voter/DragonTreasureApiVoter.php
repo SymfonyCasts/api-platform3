@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\DragonTreasure;
+use App\ApiResource\DragonTreasureApi;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -19,7 +19,7 @@ class DragonTreasureApiVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT])
-            && $subject instanceof DragonTreasure;
+            && $subject instanceof DragonTreasureApi;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -34,7 +34,8 @@ class DragonTreasureApiVoter extends Voter
             return true;
         }
 
-        assert($subject instanceof DragonTreasure);
+        assert($subject instanceof DragonTreasureApi);
+        dd($subject);
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
@@ -43,7 +44,7 @@ class DragonTreasureApiVoter extends Voter
                     return false;
                 }
 
-                if ($subject->getOwner() === $user) {
+                if ($subject->owner === $user) {
                     return true;
                 }
 
