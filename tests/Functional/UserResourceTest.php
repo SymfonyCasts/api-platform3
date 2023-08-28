@@ -18,9 +18,9 @@ class UserResourceTest extends ApiTestCase
         $this->browser()
             ->post('/api/users', [
                 'json' => [
-//                    'email' => 'draggin_in_the_morning@coffee.com',
-//                    'username' => 'draggin_in_the_morning',
-//                    'password' => 'password',
+                    'email' => 'draggin_in_the_morning@coffee.com',
+                    'username' => 'draggin_in_the_morning',
+                    'password' => 'password',
                 ]
             ])
             ->assertStatus(201)
