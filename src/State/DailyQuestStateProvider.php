@@ -4,6 +4,7 @@ namespace App\State;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\DailyQuest;
 use App\ApiResource\QuestTreasure;
@@ -21,7 +22,14 @@ class DailyQuestStateProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            return $this->createQuests();
+            $quests = $this->createQuests();
+
+            return new TraversablePaginator(
+                new \ArrayIterator($quests),
+                1,
+                10,
+                count($quests),
+            );
         }
 
         $quests = $this->createQuests();
