@@ -54,6 +54,26 @@ class UserResourceTest extends ApiTestCase
             ->assertStatus(200);
     }
 
+    public function testTreasuresCanBeRemoved(): void
+    {
+        $user = UserFactory::createOne();
+        $otherUser = UserFactory::createOne();
+        $dragonTreasure = DragonTreasureFactory::createOne(['owner' => $otherUser]);
+
+        $this->browser()
+            ->actingAs($user)
+            ->patch('/api/users/' . $user->getId(), [
+                'json' => [
+                    'username' => 'changed',
+                    'dragonTreasures' => [
+                        '/api/treasures/' . $dragonTreasure->getId(),
+                    ],
+                ],
+                'headers' => ['Content-Type' => 'application/merge-patch+json']
+            ])
+            ->assertStatus(422);
+    }
+
     public function testTreasuresCannotBeStolen(): void
     {
         $user = UserFactory::createOne();
