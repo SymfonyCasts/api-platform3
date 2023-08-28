@@ -2,6 +2,7 @@
 
 namespace App\State;
 
+use ApiPlatform\Doctrine\Orm\State\ItemProvider;
 use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
@@ -14,7 +15,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class EntityClassDtoStateProvider implements ProviderInterface
 {
     public function __construct(
-        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider
+        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
+        #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
     )
     {
 
@@ -39,7 +41,13 @@ class EntityClassDtoStateProvider implements ProviderInterface
             );
         }
 
-        dd($uriVariables);
+        $entity = $this->itemProvider->provide($operation, $uriVariables, $context);
+
+        if (!$entity) {
+            return null;
+        }
+
+        return $this->mapEntityToDto($entity);
     }
 
     private function mapEntityToDto(object $entity): object
