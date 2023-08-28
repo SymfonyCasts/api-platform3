@@ -11,12 +11,14 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\UserApi;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfonycasts\MicroMapper\MicroMapperInterface;
 
 class EntityClassDtoStateProvider implements ProviderInterface
 {
     public function __construct(
         #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
         #[Autowire(service: ItemProvider::class)] private ProviderInterface $itemProvider,
+        private MicroMapperInterface $microMapper
     )
     {
 
@@ -52,13 +54,6 @@ class EntityClassDtoStateProvider implements ProviderInterface
 
     private function mapEntityToDto(object $entity): object
     {
-        $dto = new UserApi();
-        $dto->id = $entity->getId();
-        $dto->email = $entity->getEmail();
-        $dto->username = $entity->getUsername();
-        $dto->dragonTreasures = $entity->getPublishedDragonTreasures()->getValues();
-        $dto->flameThrowingDistance = rand(1, 10);
-
-        return $dto;
+        return $this->microMapper->map($entity, UserApi::class);
     }
 }
