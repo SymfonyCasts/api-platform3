@@ -24,12 +24,16 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
         new GetCollection(),
         new Post(
+            security: 'is_granted("PUBLIC_ACCESS")',
             validationContext: ['groups' => ['Default', 'postValidation']],
         ),
-        new Patch(),
+        new Patch(
+            security: 'is_granted("ROLE_USER_EDIT")'
+        ),
         new Delete(),
     ],
     paginationItemsPerPage: 5,
+    security: 'is_granted("ROLE_USER")',
     provider: EntityClassDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
     stateOptions: new Options(entityClass: User::class),
