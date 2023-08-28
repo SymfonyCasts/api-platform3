@@ -47,6 +47,7 @@ class UserResourceTest extends ApiTestCase
             ->patch('/api/users/' . $user->getId(), [
                 'json' => [
                     'username' => 'changed',
+                    'id' => 47,
                 ],
                 'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
