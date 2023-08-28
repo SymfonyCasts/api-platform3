@@ -96,7 +96,6 @@ class UserResourceTest extends ApiTestCase
                 ],
                 'headers' => ['Content-Type' => 'application/merge-patch+json']
             ])
-            ->get('/api/users/' . $otherUser->getId())->dump()
             ->assertStatus(422);
     }
 
