@@ -34,7 +34,8 @@
         "symfony/ux-vue": "^2.7",
         "symfony/validator": "6.3.*",
         "symfony/webpack-encore-bundle": "^2.0",
-        "symfony/yaml": "6.3.*"
+        "symfony/yaml": "6.3.*",
+        "symfonycasts/micro-mapper": "^0.1.0"
     },
     "config": {
         "platform": {

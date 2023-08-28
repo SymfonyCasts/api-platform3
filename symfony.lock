@@ -367,6 +367,9 @@
     "symfony/yaml": {
         "version": "v6.2.2"
     },
+    "symfonycasts/micro-mapper": {
+        "version": "dev-main"
+    },
     "zenstruck/foundry": {
         "version": "1.26",
         "recipe": {
