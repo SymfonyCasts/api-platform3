@@ -56,6 +56,7 @@ class DragonTreasureApi
     #[LessThanOrEqual(10)]
     public int $coolFactor = 0;
 
+    #[ApiProperty(security: 'is_granted("EDIT", object)')]
     public bool $isPublished = false;
 
     #[IsValidOwner]
