@@ -4,7 +4,9 @@ namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
 
-#[ApiResource]
+#[ApiResource(
+    shortName: 'Quest'
+)]
 class DailyQuest
 {
 
