@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\ApiResource\DailyQuest;
+use App\ApiResource\QuestTreasure;
 use App\Enum\DailyQuestStatusEnum;
 use App\Repository\DragonTreasureRepository;
 
@@ -43,7 +44,15 @@ class DailyQuestStateProvider implements ProviderInterface
 
             $randomTreasuresKeys = array_rand($treasures, rand(1, 3));
             $randomTreasures = array_map(fn($key) => $treasures[$key], (array) $randomTreasuresKeys);
-            $quest->treasures = $randomTreasures;
+            $questTreasures = [];
+            foreach ($randomTreasures as $treasure) {
+                $questTreasures[] = new QuestTreasure(
+                    $treasure->getName(),
+                    $treasure->getValue(),
+                    $treasure->getCoolFactor(),
+                );
+            }
+            $quest->treasures = $questTreasures;
 
             $quests[$quest->getDayString()] = $quest;
         }
