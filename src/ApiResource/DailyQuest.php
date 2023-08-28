@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use App\Enum\DailyQuestStatusEnum;
+use App\State\DailyQuestStateProcessor;
 use App\State\DailyQuestStateProvider;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
@@ -16,9 +17,11 @@ use Symfony\Component\Serializer\Annotation\Ignore;
     operations: [
         new GetCollection(),
         new Get(),
-        new Patch(),
+        new Patch(
+            processor: DailyQuestStateProcessor::class,
+        ),
     ],
-    provider: DailyQuestStateProvider::class
+    provider: DailyQuestStateProvider::class,
 )]
 class DailyQuest
 {
