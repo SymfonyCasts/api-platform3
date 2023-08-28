@@ -8,15 +8,13 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
 use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
-    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
-    denormalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
     paginationItemsPerPage: 5,
     provider: EntityClassDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
@@ -45,5 +43,6 @@ class UserApi
      */
     public array $dragonTreasures = [];
 
+    #[Ignore]
     public int $flameThrowingDistance = 0;
 }
