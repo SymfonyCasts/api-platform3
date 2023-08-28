@@ -16,6 +16,7 @@ use App\Entity\User;
 #[ApiResource(
     shortName: 'User',
     normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
+    denormalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
     paginationItemsPerPage: 5,
     provider: EntityClassDtoStateProvider::class,
     processor: EntityClassDtoStateProcessor::class,
