@@ -56,7 +56,11 @@ class DragonTreasureApi
     #[LessThanOrEqual(10)]
     public int $coolFactor = 0;
 
-    #[ApiProperty(security: 'is_granted("EDIT", object)')]
+    // Object is null ONLY during deserialization: so this allows isPublished
+    // to be writable in ALL cases (which is ok because the operations are secured).
+    // During serialization, object will always be a DragonTreasureApi, so our
+    // voter is called.
+    #[ApiProperty(security: 'object === null or is_granted("EDIT", object)')]
     public bool $isPublished = false;
 
     #[IsValidOwner]
