@@ -5,6 +5,7 @@ namespace App\ApiResource;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
 use App\State\EntityClassDtoStateProcessor;
@@ -32,6 +33,7 @@ class UserApi
     /**
      * The plaintext password when being set or changed.
      */
+    #[ApiProperty(readable: false)]
     public ?string $password = null;
 
     /**
