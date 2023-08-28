@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class DragonTreasureVoter extends Voter
+class DragonTreasureApiVoter extends Voter
 {
     public const EDIT = 'EDIT';
 
