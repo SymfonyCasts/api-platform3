@@ -40,7 +40,9 @@ class UserApi
     /**
      * @var array<int, DragonTreasure>
      */
+    #[ApiProperty(writable: false)]
     public array $dragonTreasures = [];
 
+    #[ApiProperty(writable: false)]
     public int $flameThrowingDistance = 0;
 }
