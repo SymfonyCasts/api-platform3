@@ -8,7 +8,6 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\ApiResource\UserApi;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfonycasts\MicroMapper\MicroMapperInterface;
@@ -29,8 +28,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
         $stateOptions = $operation->getStateOptions();
         assert($stateOptions instanceof Options);
         $entityClass = $stateOptions->getEntityClass();
-
-        assert($data instanceof UserApi);
 
         $entity = $this->mapDtoToEntity($data, $entityClass);
 
