@@ -11,6 +11,7 @@ class DailyQuestStateProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
+        dd($operation);
         return $this->createQuests();
     }
 
