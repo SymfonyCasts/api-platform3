@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\DragonTreasure;
+use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
 use App\Entity\User;
 
@@ -14,6 +15,7 @@ use App\Entity\User;
     shortName: 'User',
     paginationItemsPerPage: 5,
     provider: EntityClassDtoStateProvider::class,
+    processor: EntityClassDtoStateProcessor::class,
     stateOptions: new Options(entityClass: User::class),
 )]
 #[ApiFilter(SearchFilter::class, properties: [
