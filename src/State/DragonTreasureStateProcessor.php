@@ -33,7 +33,6 @@ class DragonTreasureStateProcessor implements ProcessorInterface
             && $data->getIsPublished()
             && $previousData->getIsPublished() !== $data->getIsPublished()
         ) {
-            dd('published!');
         }
 
         return $data;
