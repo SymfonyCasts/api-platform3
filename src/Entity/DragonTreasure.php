@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\DragonTreasureRepository;
+use App\State\DragonTreasureStateProvider;
 use App\Validator\IsValidOwner;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
@@ -61,6 +62,7 @@ use function Symfony\Component\String\u;
         'groups' => ['treasure:write'],
     ],
     paginationItemsPerPage: 10,
+    provider: DragonTreasureStateProvider::class,
     extraProperties: [
         'standard_put' => true,
     ],
