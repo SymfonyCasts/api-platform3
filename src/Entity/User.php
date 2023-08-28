@@ -165,7 +165,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeDragonTreasure(DragonTreasure $treasure): self
     {
-        dump('Removing treasure '.$treasure->getId());
         if ($this->dragonTreasures->removeElement($treasure)) {
             // set the owning side to null (unless already changed)
             if ($treasure->getOwner() === $this) {

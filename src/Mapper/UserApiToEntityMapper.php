@@ -57,7 +57,6 @@ class UserApiToEntityMapper implements MapperInterface
             ]);
         }
         $this->propertyAccessor->setValue($entity, 'dragonTreasures', $dragonTreasureEntities);
-        dd($entity);
 
         return $entity;
     }
