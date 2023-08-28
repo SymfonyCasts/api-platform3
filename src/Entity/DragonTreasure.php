@@ -256,10 +256,14 @@ class DragonTreasure
 
     public function isOwnedByAuthenticatedUser(): bool
     {
+        if (!isset($this->isOwnedByAuthenticatedUser)) {
+            throw new \LogicException('You must call setIsOwnedByAuthenticatedUser() before isOwnedByAuthenticatedUser()');
+        }
+
         return $this->isOwnedByAuthenticatedUser;
     }
 
-    public function setIsOwnedByAuthenticatedUser(bool $isOwnedByAuthenticatedUser)
+    public function setIsOwnedByAuthenticatedUser(bool $isOwnedByAuthenticatedUser): void
     {
         $this->isOwnedByAuthenticatedUser = $isOwnedByAuthenticatedUser;
     }
