@@ -26,6 +26,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
+        dd($operation, $context);
         if ($operation instanceof CollectionOperationInterface) {
             $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
             assert($entities instanceof Paginator);
