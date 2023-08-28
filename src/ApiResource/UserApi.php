@@ -21,7 +21,7 @@ use App\Entity\User;
 ])]
 class UserApi
 {
-    public ?int $id = 5;
+    public ?int $id = null;
 
     public ?string $email = null;
 
