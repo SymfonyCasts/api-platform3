@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use App\State\EntityClassDtoStateProcessor;
 use App\State\EntityClassDtoStateProvider;
 use App\Entity\User;
+use App\Validator\TreasuresAllowedOwnerChange;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
@@ -62,6 +63,7 @@ class UserApi
     /**
      * @var array<int, DragonTreasureApi>
      */
+    #[TreasuresAllowedOwnerChange]
     public array $dragonTreasures = [];
 
     #[ApiProperty(writable: false)]
