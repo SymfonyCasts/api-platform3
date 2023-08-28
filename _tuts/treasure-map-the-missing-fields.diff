@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index 92508c52..7c122efb 100644
+index 92508c52..c1723f11 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -23,5 +23,17 @@ class DragonTreasureApi
@@ -8,9 +8,9 @@ index 92508c52..7c122efb 100644
  
 +    public ?string $description = null;
 +
-+    public ?int $value = 0;
++    public int $value = 0;
 +
-+    public ?int $coolFactor = 0;
++    public int $coolFactor = 0;
 +
      public ?UserApi $owner = null;
 +

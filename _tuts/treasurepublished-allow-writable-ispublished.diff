@@ -1,10 +1,10 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index d4ec2b23..bfd898ce 100644
+index 119f4764..16db45d5 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -56,7 +56,11 @@ class DragonTreasureApi
      #[LessThanOrEqual(10)]
-     public ?int $coolFactor = 0;
+     public int $coolFactor = 0;
  
 -    #[ApiProperty(security: 'is_granted("EDIT", object)')]
 +    // Object is null ONLY during deserialization: so this allows isPublished

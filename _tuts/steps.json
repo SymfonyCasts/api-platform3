@@ -426,13 +426,13 @@
             "description": null
         },
         {
-            "id": "providerlogic-temporarily-return-entities",
-            "name": "ProviderLogic: Temporarily return entities",
+            "id": "delete-me-1",
+            "name": "delete me 1",
             "description": null
         },
         {
-            "id": "providerlogic-return-dtos-again",
-            "name": "ProviderLogic: Return DTOs again",
+            "id": "delete-me-2",
+            "name": "delete me 2",
             "description": null
         },
         {
@@ -473,6 +473,11 @@
         {
             "id": "dtoprocessor-make-state-processor",
             "name": "DtoProcessor: Make state-processor",
+            "description": null
+        },
+        {
+            "id": "dtoprocessor-dump-data",
+            "name": "DtoProcessor: dump $data",
             "description": null
         },
         {
@@ -916,5 +921,5 @@
             "description": null
         }
     ],
-    "sha": "fba1f9ee186ad5718558241d493fba030dbd3aaf"
+    "sha": "ba727171ee31ded659ba9c17f65da87c851a107b"
 }

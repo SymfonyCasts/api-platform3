@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index bfd898ce..609fcd94 100644
+index 16db45d5..0f8ecfcb 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -11,7 +11,7 @@ use ApiPlatform\Metadata\GetCollection;

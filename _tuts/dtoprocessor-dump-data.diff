@@ -1,0 +1,12 @@
+diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
+index b516a9c0..38f9cc7b 100644
+--- a/src/State/EntityClassDtoStateProcessor.php
++++ b/src/State/EntityClassDtoStateProcessor.php
+@@ -9,6 +9,6 @@ class EntityClassDtoStateProcessor implements ProcessorInterface
+ {
+     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
+     {
+-        // Handle the state
++        dd($data);
+     }
+ }

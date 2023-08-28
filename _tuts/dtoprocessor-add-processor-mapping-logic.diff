@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index b516a9c0..afeca1cf 100644
+index 38f9cc7b..afeca1cf 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -4,11 +4,45 @@ namespace App\State;
@@ -21,7 +21,7 @@ index b516a9c0..afeca1cf 100644
 +
      public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
      {
--        // Handle the state
+-        dd($data);
 +        assert($data instanceof UserApi);
 +
 +        $entity = $this->mapDtoToEntity($data);

@@ -1,10 +1,10 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index 8edd1a1d..c946e221 100644
+index b374cf21..4a2be86f 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -56,6 +56,8 @@ class DragonTreasureApi
      #[LessThanOrEqual(10)]
-     public ?int $coolFactor = 0;
+     public int $coolFactor = 0;
  
 +    public bool $isPublished = false;
 +

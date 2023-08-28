@@ -13,7 +13,7 @@ index 30c6cb2f..e418d987 100644
      "config": {
          "platform": {
 diff --git a/composer.lock b/composer.lock
-index a23ec3b1..e6873bd7 100644
+index a23ec3b1..71eff05d 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -31,16 +31,16 @@ index a23ec3b1..e6873bd7 100644
          },
 +        {
 +            "name": "symfonycasts/micro-mapper",
-+            "version": "v0.1.0",
++            "version": "v0.1.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/SymfonyCasts/micro-mapper.git",
-+                "reference": "e47d557511cf4c14db9e9982e517b1ff39f65d67"
++                "reference": "ff2071997fa17810012b6329366e0a10cbba92dd"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/SymfonyCasts/micro-mapper/zipball/e47d557511cf4c14db9e9982e517b1ff39f65d67",
-+                "reference": "e47d557511cf4c14db9e9982e517b1ff39f65d67",
++                "url": "https://api.github.com/repos/SymfonyCasts/micro-mapper/zipball/ff2071997fa17810012b6329366e0a10cbba92dd",
++                "reference": "ff2071997fa17810012b6329366e0a10cbba92dd",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -74,9 +74,9 @@ index a23ec3b1..e6873bd7 100644
 +            ],
 +            "support": {
 +                "issues": "https://github.com/SymfonyCasts/micro-mapper/issues",
-+                "source": "https://github.com/SymfonyCasts/micro-mapper/tree/v0.1.0"
++                "source": "https://github.com/SymfonyCasts/micro-mapper/tree/v0.1.1"
 +            },
-+            "time": "2023-08-21T14:06:07+00:00"
++            "time": "2023-08-23T14:42:45+00:00"
 +        },
          {
              "name": "twig/twig",

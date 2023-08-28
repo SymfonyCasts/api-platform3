@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index bcb9b4f4..8edd1a1d 100644
+index 79b1c1e0..b374cf21 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
@@ -12,7 +12,7 @@ index bcb9b4f4..8edd1a1d 100644
  use Symfony\Component\Validator\Constraints\NotBlank;
 @@ -55,6 +56,7 @@ class DragonTreasureApi
      #[LessThanOrEqual(10)]
-     public ?int $coolFactor = 0;
+     public int $coolFactor = 0;
  
 +    #[IsValidOwner]
      public ?UserApi $owner = null;
