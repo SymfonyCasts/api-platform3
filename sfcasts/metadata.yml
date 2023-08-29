@@ -1,6 +1,7 @@
 chapters:
     - install
     - custom-field-provider
+    - decorated-state-provider
     - custom-field-collection-provider
     - simper-state-processor
     - on-publish
