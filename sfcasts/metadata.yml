@@ -3,7 +3,7 @@ chapters:
     - custom-field-provider
     - decorated-state-provider
     - custom-field-collection-provider
-    - simper-state-processor
+    - simpler-state-processor
     - on-publish
     - custom-resource
     - custom-resource-provider
