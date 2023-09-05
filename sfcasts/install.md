@@ -46,6 +46,8 @@ custom fields, complex security, etc. But again, for both `DragonTreasure` and
 `User`, the `#[ApiResource]` attribute is above an *entity* class. In a bit, we'll
 re-create this *same* API setup, but with dedicated classes.
 
+[[[ code('84df11c956') ]]]
+
 ## Custom Controllers? Event Listeners?
 
 Before we hop in, I'm going to search for "API platform extending" to find one of
