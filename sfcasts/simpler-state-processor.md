@@ -51,7 +51,8 @@ my life simpler. But let's rename this class to be more clear: `DragonTreasureSt
 
 In the last tutorial, we learned that there are *two* ways to add a custom state
 provider or processor into the system. We used the first method a few minutes
-ago with the state provider: create a normal boring service... then set the `provider`
+ago with the state provider: create a normal boring service... use `#[Autowire] to
+inject the core services... then set the `provider`
 option on `DragonTreasure` to point to it.
 
 The *other* way - which we did in the last tutorial for this class - is to
