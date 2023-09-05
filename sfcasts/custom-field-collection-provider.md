@@ -39,6 +39,7 @@ provider we need!
 
 Let's get the core `CollectionProvider` injected. Copy the first argument,
 duplicate it, and set it to use the `CollectionProvider` service from ORM.
+Name it `$collectionProvider`.
 
 Below, check to see if `$operation` is an instance of `CollectionOperationInterface`.
 Ok, really, only *one* operation - `GetCollection` - uses the collection provider...
