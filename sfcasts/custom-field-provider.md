@@ -25,6 +25,8 @@ In Episode 2, we decorated the `PersistProcessor` for the `User` entity. This
 let us hash the plain password up here... before calling the core
 `PersistProcessor` to handle the saving.
 
+[[[ code('7c2bfb64af') ]]]
+
 ## Good & Better Ways to Add a Custom Field
 
 We're talking about this because we can use a *similar* trick with the state
@@ -37,11 +39,15 @@ the normalizer. We did this in `AddOwnerGroupsNormalizer`. Well, this does a
 if a `DragonTreasure` is being turned into JSON - *and* the currently authenticated
 user is the owner of that treasure, then add a totally custom `isMine` field.
 
+[[[ code('100447ac31') ]]]
+
 We can see this in our tests:
 `tests/Functional/DragonTreasureResourceTest.php`
 Search for `isMine`. Yep: `testOwnerCanSeeIsPublishedAndIsMineFields`. The important
 part is the bottom: when the treasure is serialized, `isMine` should be in the
 response.
+
+[[[ code('ecd7a98abf') ]]]
 
 This works great... except for one hiccup: in the documentation... there is *no*
 mention of the `isMine` field! It *will* be returned, but it's not documented.
@@ -55,6 +61,8 @@ a totally custom API resource class. *That* will be our big topic later.
 Step 1: remove the code in the normalizer... and just return. Copy the test method
 name... to make sure this fails:
 
+[[[ code('fdcf1cec0c') ]]]
+
 ```terminal-silent
 symfony php bin/phpunit --filter=testOwnerCanSeeIsPublishedAndIsMineFields
 ```
@@ -67,12 +75,18 @@ Step 2: add this field as a real property on our class: how about
 it only exists to help our API. Doing this isn't super common, but *is*
 allowed. Skip down to the bottom to add a getter and setter.
 
+[[[ code('582f4535f5') ]]]
+
 Oh, and since the property doesn't have a default value, if the property hasn't
 been initialized, let's yell so we know.
+
+[[[ code('1adaa2ee20') ]]]
 
 Last but not least, we need to expose this property to our API. Do that by putting
 it into the group called `treasure:read`... and then use `SerializedName` to call
 it `isMine` in the API.
+
+[[[ code('81fc26d0f8') ]]]
 
 If we go run the test now:
 
