@@ -1,0 +1,243 @@
+WEBVTT
+
+00:00:01.136 --> 00:00:06.626 align:middle
+Para rellenar la propiedad no persistente de nuestra
+entidad, utilizaremos un proveedor de estado personalizado.
+
+00:00:07.296 --> 00:00:11.436 align:middle
+Crea uno con: php bin/console
+make:state-provider Llamémoslo
+
+00:00:11.436 --> 00:00:13.636 align:middle
+DragonTreasureStateProvider.
+
+00:00:15.336 --> 00:00:18.046 align:middle
+Gira y abre esto en src/State/.
+
+00:00:19.366 --> 00:00:24.336 align:middle
+Vale, implementa un ProviderInterface
+que requiere un método: provide().
+
+00:00:25.196 --> 00:00:29.716 align:middle
+Nuestro trabajo consiste en devolver el objeto
+DragonTreasure para la petición actual de la API,
+
+00:00:29.836 --> 00:00:31.946 align:middle
+que es una petición Patch en nuestra prueba.
+
+00:00:32.686 --> 00:00:38.166 align:middle
+Antes de pensar en hacerlo, dd($operation)
+para que podamos ver si se ejecuta.
+
+00:00:39.186 --> 00:00:40.446 align:middle
+Cuando probamos la prueba...
+
+00:00:40.886 --> 00:00:43.206 align:middle
+la respuesta es que no se llama.
+
+00:00:43.606 --> 00:00:45.276 align:middle
+Obtenemos el mismo error que antes.
+
+00:00:45.276 --> 00:00:51.696 align:middle
+Así pues, crear un proveedor de estado e
+implementar ProviderInterface no es suficiente
+
+00:00:51.696 --> 00:00:53.676 align:middle
+para que se utilice nuestra clase.
+
+00:00:54.096 --> 00:00:55.016 align:middle
+¡Y esto es genial!
+
+00:00:55.356 --> 00:00:59.506 align:middle
+Podemos controlarlo recurso por recurso...
+
+00:00:59.736 --> 00:01:03.456 align:middle
+o incluso operación por operación.
+
+00:01:03.456 --> 00:01:08.096 align:middle
+En DragonTreasure, muy arriba,
+dentro del atributo ApiResource,
+
+00:01:08.356 --> 00:01:13.396 align:middle
+añade provider y luego el ID del
+servicio, que es la clase en nuestro caso:
+
+00:01:13.606 --> 00:01:16.136 align:middle
+DragonTreasureStateProvider::class.
+
+00:01:17.196 --> 00:01:23.486 align:middle
+Así que ahora, siempre que API Platform necesite
+"cargar" un tesoro dragón, llamará a nuestro proveedor.
+
+00:01:24.096 --> 00:01:26.276 align:middle
+Y nuestra prueba es un ejemplo perfecto.
+
+00:01:26.706 --> 00:01:32.516 align:middle
+Cuando hagamos una petición a PATCH, lo primero que
+hará la API Platform será pedir al proveedor de estado
+
+00:01:32.516 --> 00:01:34.126 align:middle
+que cargue este tesoro.
+
+00:01:34.496 --> 00:01:36.826 align:middle
+Luego lo actualizará utilizando el JSON.
+
+00:01:37.556 --> 00:01:41.916 align:middle
+Observa, cuando ahora ejecutemos
+la prueba ¡Llegamos al vertedero!
+
+00:01:43.016 --> 00:01:45.916 align:middle
+Pero... No quiero hacer todo el trabajo
+
+00:01:45.916 --> 00:01:48.916 align:middle
+de consultar la base de datos en
+busca de los tesoros dragón...
+
+00:01:49.336 --> 00:01:52.856 align:middle
+¡porque ya existe un proveedor de
+entidades del núcleo que hace todo eso!
+
+00:01:53.226 --> 00:01:54.606 align:middle
+Así que ¡utilicémoslo!
+
+00:01:55.106 --> 00:01:56.086 align:middle
+Añade un constructor...
+
+00:01:57.226 --> 00:01:59.206 align:middle
+oh y lo mantendré en dd() por ahora.
+
+00:01:59.206 --> 00:02:03.986 align:middle
+Añade un argumento privado
+ProviderInterface $itemProvider. Como
+
+00:02:05.026 --> 00:02:12.756 align:middle
+recordatorio: las operaciones Get uno, Patch,
+Put y Delete utilizan todas ItemProvider,
+
+00:02:13.116 --> 00:02:15.646 align:middle
+que sabe consultar un único elemento.
+
+00:02:16.166 --> 00:02:20.886 align:middle
+Como nuestra prueba utiliza Patch, vamos a
+centrarnos primero en utilizar ese proveedor.
+
+00:02:22.746 --> 00:02:26.466 align:middle
+Si ejecutamos la prueba ahora, falla.
+
+00:02:26.916 --> 00:02:30.746 align:middle
+El error es No se puede autoconectar el
+servicio DragonTreasureStateProvider:
+
+00:02:30.856 --> 00:02:36.346 align:middle
+el argumento itemProvider hace referencia a
+ProviderInterface, pero no existe tal servicio.
+
+00:02:36.446 --> 00:02:41.266 align:middle
+A menudo en Symfony, si tecleamos una interfaz,
+Symfony nos pasará lo que necesitamos.
+
+00:02:41.526 --> 00:02:46.406 align:middle
+Pero en el caso de ProviderInterface, hay
+múltiples servicios que lo implementan -
+
+00:02:46.646 --> 00:02:50.076 align:middle
+incluyendo el núcleo
+ItemProvider y CollectionProvider.
+
+00:02:50.696 --> 00:02:53.766 align:middle
+Esto significa que tenemos que
+decirle a Symfony cuál queremos.
+
+00:02:54.616 --> 00:02:59.566 align:middle
+Hazlo con el práctico atributo
+#[Autowire] con service ajustado
+
+00:02:59.566 --> 00:03:05.456 align:middle
+a ItemProvider::class -
+asegúrate de obtener el de ORM.
+
+00:03:06.556 --> 00:03:09.486 align:middle
+Y ¡sí! Es un identificador
+de servicio válido.
+
+00:03:09.996 --> 00:03:12.326 align:middle
+También hay un identificador de
+servicio más difícil de recordar,
+
+00:03:12.686 --> 00:03:17.906 align:middle
+pero API Platform proporciona un alias
+de servicio para que podamos utilizarlo.
+
+00:03:18.396 --> 00:03:21.906 align:middle
+¡Encantador! Vale, ¡a probar!
+
+00:03:22.826 --> 00:03:27.356 align:middle
+¡Sí! Hemos llegado al vertedero, lo que significa
+que se ha inyectado el proveedor de elementos.
+
+00:03:27.766 --> 00:03:29.636 align:middle
+Así que ahora, somos peligrosos.
+
+00:03:30.536 --> 00:03:35.626 align:middle
+$treasure es igual a
+$this->itemProvider->provide() pasando los 3 args.
+
+00:03:36.446 --> 00:03:41.816 align:middle
+En este punto, $treasure será null
+o un objeto valioso DragonTreasure.
+
+00:03:41.856 --> 00:03:46.026 align:middle
+Si no es una instancia de
+DragonTreasure, devuelve null.
+
+00:03:47.986 --> 00:03:51.396 align:middle
+Pero si es un tesoro, ¡ya está!
+
+00:03:51.936 --> 00:03:57.096 align:middle
+Llama a setIsOwnedByAuthenticatedUser()
+y codifica verdadero por ahora.
+
+00:03:57.386 --> 00:03:59.026 align:middle
+Luego devuelve $treasure.
+
+00:04:00.076 --> 00:04:02.346 align:middle
+Vale, ¡a probar!
+
+00:04:03.116 --> 00:04:04.936 align:middle
+¡Shazam! ¡Estamos en verde!
+
+00:04:05.896 --> 00:04:08.416 align:middle
+Así que vamos a establecer
+ese valor de verdad.
+
+00:04:08.756 --> 00:04:13.716 align:middle
+Esto es bastante fácil: añade
+un argumento private Security...
+
+00:04:15.446 --> 00:04:17.536 align:middle
+y asegúrate de que el
+primer arg tiene una coma.
+
+00:04:19.856 --> 00:04:26.366 align:middle
+Entonces es verdadero si $this->security->getUser()
+es igual a $treasure->getOwner().
+
+00:04:27.786 --> 00:04:28.826 align:middle
+Y... entonces...
+
+00:04:30.186 --> 00:04:32.286 align:middle
+la prueba sigue pasando.
+
+00:04:32.686 --> 00:04:34.946 align:middle
+¡Campo personalizado conseguido!
+
+00:04:35.416 --> 00:04:39.846 align:middle
+Y, lo más importante, está
+documentado dentro de nuestra API.
+
+00:04:40.726 --> 00:04:45.046 align:middle
+Sin embargo, acabamos de romper
+nuestra ruta GetCollection.
+
+00:04:45.586 --> 00:04:46.686 align:middle
+Vamos a arreglarlo a continuación.
