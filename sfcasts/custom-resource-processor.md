@@ -1,98 +1,48 @@
 # Custom Resource Processor
 
-Coming soon...
+We haven't specified the operations key on our API resource, so right now, we're getting *every possible operation* on our quest. We only need a few of them, so we're going to *specify* the operations. The ones we're looking for are `new getCollection()`, `new Get()` so we can fetch just a single one, and `new Patch()` so users can update the status of an *existing* quest when they complete it. When we refresh... perfect! We're *just* getting the three we want.
 
-Right now, because we have not specified the operations key on our API resource, we
-get every possible operation on our quest. But really, we just need a few of them. So
-I'm going to specify the operation, which I usually do on my entities, or my
-resources, operations. And the ones we want are new Git collection, new Git, so we
-can fetch just a single one, and new patch so that you can update so that users can
-update the status of an existing quest when they complete it. So now when we refresh,
-perfect, we have just the three we want. All right, so let's turn to talk about the
-state processor. That's what's going to be called when we make a patch request. And
-as I mentioned, the idea is that users can make a patch request to change the status
-of a quest when they've completed it. So to play with this, let's create a new test.
-So down here in the test functional directory, we'll create a new test class called
-daily quest resource test. Make this extend an API test case that we created last
-time. And then we're going to use the reset database from foundry to make sure our
-database is empty at the start of every test and use factories. The use reset
-database we don't technically need because we're not talking to the database, though.
-It doesn't hurt anything. And if we start talking to database later, then we'll have
-it. All right down here, let's say public function test patch can update status. So
-first thing is I'm going to create a new date time object that represents yesterday,
-minus one day. Because remember, in our provider, we are creating daily quests for
-basically today, through the last 50 days. So since we're making a pet patch request,
-our provider is going to be called first to load that. And then the new JSON is going
-to be added on to that. So we need to use a make a request to a date that is going to
-match one of our quests in our provider. So let's do that. This is our browser. And
-then we'll say patch and the URL is going to be slash API slash requests, slash. And
-then we'll say yesterday, format, y dash m dash d. Perfect. And then I'll pass a
-second argument, which is gonna be the options for this. And we want to first we're
-gonna pass the JSON we're gonna be passing. So let's say status completed. status
-completed. This comes from the enum. So we have an enum for status, but behind the
-scenes is either active or completed. So we're passing active. We're passing
-completed, I mean, down here, I'm gonna say assert status. 200. Dump. That'll be
-handy in a second. And then assert JSON matches. That status is actually updated to
-completed. Perfect. Now in reality, we're not actually going to save this updated
-status anywhere. But we should at least see that the final JSON has status completed.
-So let's copy this test name. And I've run over say symphony php bin slash php unit
-dash dash filter equals that name. And 415 I forgot something. So the 415 is the
-content type application JSON is not supported. I forgot for my patch requests. We
-also need to pass a header kind of annoying, but this is going to be a content type
-header set to application slash merge patch plus JSON. This tells the system how what
-type of patch we have. This is the only one that's supported right now. We talked
-about this in the last tutorial that just needs to be back there for patch requests.
-And now it passes. But in reality, all that's happening is that API platform is
-loading this daily quest from our state provider. DC realizing this JSON onto it, and
-then re serializing that object into JSON, there's no state processor at all
-happening behind the scenes. But actually, I'm gonna comment out that status, I want
-to make sure we actually are working with by coming out the status, oh, it actually
-says it still works. Let me actually go minus two days and actually change this to
-just day. Remember, in our provider, we kind of randomly make things active or
-inactive. I think I selected one that is completed by default. There we go back two
-days, we found one that was in an active state by default. And if we set status to
-completed, there we go. Okay, so we can see it. So again, there's no state provider
-processor happening, but it does load our daily quest, it does DC realize the JSON
-onto it. So it updates our status property of our daily quest. And then it re
-serializes it at the bottom, we do want to do something when this when this happens,
-so we're going to create a state processor. And we know how to do this, bin console,
-make state processor. And we'll call it daily quest, state processor, another
-brilliantly creative name. Perfect. Here it is, it's empty. And then of course, last
-thing we need to do is we need to hook it up. So we want this to happen for the patch
-request. So here, we'll say processor, we'll say daily quest stats, processor, colon
-colon class. And just to prove this is now being hit in here, we can DD the data. All
-right, let's try the test again. And got it. And you can see that the status is set
-to complete it. So the order of things is that, because it's a patch request, it hits
-our date, our state provider to load the daily quest matching that the serializer
-updates the object with this JSON, and then it calls our state processor. By the way,
-we put the state we put the processor on the patch operation. But we can also put
-this down here. On the API resource class. In this situation, that makes no
-difference at all. This is the only operation we have that even uses a processor,
-there's no processor called for a get or get collection. If we did have, for example,
-a delete operation or some other operations, then having the processor down in the
-bottom would mean this is the processor also used for that operation. So in that
-case, you might need to do something different in your processor based on the
-operation, which you can do because we are past the operation as an argument. We're
-actually going to see that later where we create a processor that handles deletes and
-database saves when we go back to a custom resource for our entity. Anyways, this
-instead of our state processor is normally where we'd save this data somewhere or do
-something with it, we don't really have a database. But let's at least add a last
-updated property to our daily stat daily quest objects, we can see the difference. So
-what I mean is we're gonna create a new bump public date time interface last updated
-property here. So it's gonna be a new property that's on our API. And then I'm gonna
-go and make sure that it's populated inside of our state provider, so that it's there
-when we fetch data. So how about quest arrow last updated equals new, I'll make a
-date time immutable. And I'll put some randomness here. So minus percent d days, and
-we'll have that be something random between 10 and 100. Cool. And now more
-importantly, in our state processor, so we can see the difference. We're going to set
-that to right now inside of here, and we'll see it in our response. So the first
-thing we know that this daily quest state processor is only being used for daily
-quests. So this data will be a daily quest object. To help my editor with that, I'm
-going to say data is an instance of daily quest, daily quest. And down here, data
-arrow last updated equals new date time immutable. Now. Alright, so watch this, when
-we run the test, we're not doing an assertion for that. But we are still dumping the
-output. And we can see I can promise you that is I'm looking at my watch right now.
-That is right now in my world. So it did hit our state processor. Perfect. So now
-let's go back to the test. Now I've got this working, I'm going to remove that dump.
-Alright, next, let's make our resource more interesting by adding a relation to
-another API resource a relation to dragon treasure.
+*Now*, let's shift gears and talk about the state processor. That will be called when we make a `PATCH` request. We want users to be able to make a `PATCH` request so they can change the *status* of a quest when they've completed it. Let's start by creating a new test. Down here, in `/tests/Functional`, we'll create a new test class called `DailyQuestResourceTest`. We'll make this extend the `ApiTestCase` that we created last time, and then we'll `use ResetDatabase` from Foundry to make sure our database is *empty* at the start of every test, as well as `use Factories`. *Technically*, we don't *need* `use ResetDatabase` since we're not *talking* to the database right now, but if we decide to do that later on, we're *ready*.
+
+Down here, say `public function testPatchCanUpdateStatus()`. The first thing we need to do here is create a `new \dateTime()` object that represents `$yesterday`, `-1 d` or "minus one day". That's because, if you'll recall, in our provider, we're creating daily quests for today through the last 50 days. Since we're making a `PATCH` request, our provider will be called to load that *first*, and then our new JSON will be added. What we need to do is make a request to a date that's going to match one of the quests in our provider. Let's try it!
+
+Say `$this->browser()`, followed by `->patch()`... and the URL is going to be `'/api/quests/'` with `.$yesterday->format('Y-m-d')`. Perfect! Then we'll pass a *second* argument, which will be the *options* for this, using `json` with `'status' => 'completed'`. This comes from the `/Enum`. We have an Enum for `status`, but behind the scenes, it's either `active` or `completed`. We're passing `completed`. Down here, say `->assertStatus(200)`, `->dump()` (that will be handy in a second), and then `->assertJsonMatches()` where we'll update the `status` to `completed`. *Awesome*.
+
+In reality, we won't actually *save* this updated status anywhere, but we should at least see that the final JSON has `status` `completed`. Copy this test name... and over here, run
+
+```terminal
+symphony php bin/phpunit --filter=
+```
+
+and paste that name. And... whoops! We got a 415. It looks like I forgot something. The error says:
+
+`The content-type \"application/json\" is not
+supported.`
+
+Ah... I forgot to add a header to my `PATCH` request. Say `'headers' => ['Content-Type']` and we'll set that to `application/merge-patch+json`. We talked about this in the last tutorial. This tells the system what *type* of patch we have, and it's the only one that's supported right now. If we try that now... it *passes*. So basically, API platform is loading this daily quest from our state provider, deserializes this JSON onto it, and then *reserializes* that object into JSON. There's *no* state processor working behind the scenes here.
+
+*But* I'm going to comment out that status really quick. Ah... it *still* says it works. I'll change this to `-2 d`... and `$yesterday` to just `$day`. Remember, in our provider, we're making things active or inactive at random. It looks like I've selected one that is "completed" by default. If we try this again... we now have one that's in an "active" state by default, so if we set the `status` to `completed` now... there we go! We can see it. So again, there's no state processor happening, but it *does* load our daily quest, *deserializes* the JSON onto it (so it updates the `$status` property of our daily quest), and then it *reserializes* it at the bottom.
+
+Now we want this to actually *do* something, so we're going to create a state processor, and we *already* know how to do this. Run
+
+```terminal
+./bin/console, make:state-processor
+```
+
+and we'll call it
+
+```terminal
+DailyQuestStateProcessor
+```
+
+(another *brilliant* name). And...perfect! We can see it here, and it's currently *empty*. The last thing we need to do is hook it up. We want this to happen for the `PATCH` request so, right here, we'll say `processor: DailyQuestStatsProcessor::class`. And to prove that this is working, we can `dd($data)`.
+
+Okay! Let's try the test again, and... got it! We can see that the status is set to "completed". *So*, because this is a `PATCH` request, it hits our state provider to *load* the daily quest that matches, the *serializer* updates the object with this JSON, and *then* it calls our state processor. By the way, we put the processor on the `Patch()` operation, but we can *also* put this down here on the `#[ApiResource()]` class. That makes no difference at all because this is the only operation we have that even *uses* a processor. We don't call a processor for a `Get` or `getCollection`. If we *did* have a `Delete()` operation however, then having the processor down here would mean that this is the processor *also* used for that operation. In that case, you might need to do something a little different in your processor based on the operation, which isn't a problem because we passed the operation as an argument. We'll actually see that later when we create a processor that handles both deletes and database saves when we go back to a custom resource for our entity.
+
+Anyway, this is *normally* where we would save this data or do something with it, rather than have a state processor. We don't really have a database, but we can *at least* add a `$lastUpdated` property to our daily quest object so we can see the difference. Over here, we're going to create a new `public \DateTimeInterface` with `$lastUpdated`. This will be a new property on our API. Then we'll make sure that it's populated inside of our state provider, so it's there when we fetch data, by saying `$quest->lastUpdated = new \DateTimeImmutable()`. And let's add some randomness here -  `sprintf('- %d days')` - and we'll have that be something random, between `10` and `100`. Cool!
+
+Now let's head over to our state processor. We know that this `DailyQuestStateProcessor` is only being used for daily quests, so this `$data` will be a daily quest object. To help our editor, say `assert($data instanceof DailyQuest)` and, below, `$data->lastUpdated = new \DateTimeImmutable('now')`.
+
+Okay, now watch *this*. When we run the test, we're not doing an assertion for that, but we *are* still dumping the output, and we can see here. I'm looking at my watch and... that *is* the correct time for my little corner of the world, so it *did* hit our state processor. Awesome! Now we can go back to the test, and since this is working, we can remove this `dd()`.
+
+Next: Let's make our resource more interesting by adding a relation to *another* API resource - a relation to *dragon treasure*.
