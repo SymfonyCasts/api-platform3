@@ -1,44 +1,17 @@
 # Custom Resource Item Provider
 
-Coming soon...
+Let's try to get a *single* item here. I'll change the date, hit "Execute", and... *200 status code*. Except this is returning a *collection* - the *exact* same data as our *collection endpoint*. Earlier, we talked about how each *operation* can have a provider. Right now, when we put `provider` under the `#[ApiResource()]`, *this* becomes the provider for every operation. That's *fine*, but it's important to note that *some* operations are fetching a *collection* of resources and *some* are fetching a single item. Inside of our provider, the `operation` will help us see the difference. We'll say `dd($operation)`... and then, over here, copy this URL, paste it in a new tab and add `.jsonld` at the end of it. There we go! In this case, you can see that we're getting the `Get` operation. If we did the collection operation, it's `GetCollection`, which we saw earlier. So we can leverage that to spot the difference between the two.
 
-Let's try to get a single item here. I will do this and the identifier. I'll put
-today's date when I'm recording this and 200 status code except it returns a
-collection. The exact same thing as our collection endpoint. We talked a little bit
-earlier about how each operation can have a provider. Right now, when we put provider
-under the API resource, this becomes the provider for every operation, which is fine.
-You just need to realize that some operations are fetching a collection of resources
-and some are fetching in a single item. Inside of our provider, the operation is
-what's going to help us see the difference. If we dd operation. I'm actually going to
-open this up in a new tab, put .jsonld on the end of it. There we go. It's in this
-case, we're getting the get operation. If we did the collection operation, it's get
-collection, something that we saw earlier. We can leverage that to figure out the
-difference between the two. Very simply, we can say if operation is an instance of
-collection operation interface, so all collection operations should implement that,
-then we're going to return this error create quests. And down here, now we need the
-item operation. So our job here is to find the one operation that we're currently
-using. So first of all, you can see that this fixes the collection operation. But we
-need to basically somehow get this from the URL so that we can go fetch the one quest
-matching that date. To do that, we're going to dump URI variables. And we refresh, we
-have a day string inside. So one of the key things is that you notice in our daily
-quest, we're not saying what our URL should be. You can do that. But by default, API
-platform automatically figures out what the route and URL should look for should look
-like. When we run diva router, by default, you can see what it does is it says slash
-API slash quests. And then because our identifier is a day string, it puts a curly
-brace day string inside of the route. So what's cool about that is that becomes our
-one URI variable. And when we have our provider, it's going to pass us any of the URI
-variables that were matched in the route. So you can see day string is passed to us.
-That makes us dangerous. So in this case, since we're returning since right now we
-know our provider down here is acting as the item provider, our job is to return a
-single daily quest or no. So I'm going to say quests equals this arrow create quests.
-And then we return quests. left square bracket URI variables left record day string
-or no. And remember, this works because I made the key the day string for all of our
-quests. I did that specifically so I could use this trick of fetching it based on the
-day string. Now in a real app, we would want to do this in a more efficient way. It
-doesn't really make sense for us to load all of our quests just to return one. But
-for our test app, this is going to work fine. And over here, God, it's it returns the
-one. And if we did some date that doesn't exist, like 2013, we get the 404 API
-platform sees that we return No, it handles doing the 404 for us. Alright, we now
-have a fully functional state provider, though, we're going to talk a little bit more
-about this later with things like pagination. Next, let's turn to creating a state
-processor.
+Back over in our provider, say `if ($operation instanceof CollectionOperationInterface)` so all collection operations will implement that, and then we're going to `return $this->createQuests()`. Down here, we need the item operation. We're trying to find the *one* operation that we're currently using. You can see that this fixes the *collection* operation, but now we need a way to get this from the URL so we can fetch the quest matching that date. To do that, we're going to `dd($uriVariables)`. When we refresh... we have a `dayString` inside!
+
+Notice that, in `DailyQuest.php`, we're not saying what our URL should be. You *can* do that, but by default, API Platform *automatically* figures out what the route and URL should look like. When we run
+
+```terminal
+./bin/console debug:router
+```
+
+by default, it says `/api/quests/` and, since our identifier is `dayString`, it adds `{dayString}` inside of the route. That's cool because *that* becomes our one URI variable. And when we have our provider, it's going to pass us any of the URI variables that were matched in the route, like `dayString`. That makes us *dangerous*.
+
+Right now, we know our provider down here is acting as the item provider. *Our* job is to return a *single* daily quest or *null*. Say `$quests = $this->createQuests()`, and then we'll `return $quests[$uriVariables['dayString']] ?? null`. And remember, this works because we made the key `dayString` for *all* of our quests so we could use that to fetch them. In a *real* app, we would want to do this more efficiently, since it doesn't really make sense for us to load *all* of our quests just to return *one*, but for our test app, this will work fine. If we try this... *got it*! It returns *one*. And if we try to use a random date that *doesn't* exist in our data, like "2013"... we get a 404. API Platform sees that we returned null and it handled doing the 404 for us.
+
+Okay! We now have a fully functional state provider! We'll talk about this more later, including things like pagination. Next: Let's shift our focus and create a *state processor*.
