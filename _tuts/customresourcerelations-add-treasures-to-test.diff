@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DailyQuestResourceTest.php b/tests/Functional/DailyQuestResourceTest.php
-index 8fe9254a..04aa80cd 100644
+index a192c957..122c6fa8 100644
 --- a/tests/Functional/DailyQuestResourceTest.php
 +++ b/tests/Functional/DailyQuestResourceTest.php
 @@ -2,6 +2,7 @@
@@ -17,6 +17,6 @@ index 8fe9254a..04aa80cd 100644
 +        // quests need at least some treasures to be available
 +        DragonTreasureFactory::createMany(5);
 +
-         $yesterday = new \DateTime('-1 day');
+         $day = new \DateTime('-2 days');
          $this->browser()
-             ->patch('/api/quests/'.$yesterday->format('Y-m-d'), [
+             ->patch('/api/quests/'.$day->format('Y-m-d'), [
