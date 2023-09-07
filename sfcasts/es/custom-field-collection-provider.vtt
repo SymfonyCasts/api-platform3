@@ -1,0 +1,378 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:07.386 align:middle
+Hagamos con valentía algo que nos asusta a la mayoría de
+los desarrolladores: ejecutar todo el conjunto de pruebas:
+
+00:00:07.386 --> 00:00:15.266 align:middle
+symfony php bin/phpunit Éstas pasaban
+obedientemente cuando empecé el tutorial...
+
+00:00:15.436 --> 00:00:17.716 align:middle
+¡pero han decidido rebelarse!
+
+00:00:17.716 --> 00:00:20.986 align:middle
+Abramos la respuesta fallida.
+
+00:00:20.986 --> 00:00:27.636 align:middle
+Hmm: Se ha encontrado más de un resultado para la
+consulta, aunque se esperaba una fila o ninguna.
+
+00:00:27.756 --> 00:00:32.136 align:middle
+Si ves el código fuente de la
+página, esto proviene de Doctrine...
+
+00:00:32.426 --> 00:00:35.726 align:middle
+y finalmente del núcleo
+ItemProvider al que estamos llamando.
+
+00:00:36.436 --> 00:00:42.046 align:middle
+Volviendo a los documentos, la operación
+GetCollection -que es la que se utiliza en esta prueba-
+
+00:00:42.316 --> 00:00:45.586 align:middle
+tiene un proveedor diferente:
+CollectionProvider.
+
+00:00:45.586 --> 00:00:51.506 align:middle
+Por desgracia, cuando establezco provider
+dentro del atributo #[ApiResource]...
+
+00:00:51.826 --> 00:00:54.836 align:middle
+eso establece el proveedor
+para cada operación.
+
+00:00:55.246 --> 00:00:58.886 align:middle
+Es posible establecer el provider
+para una operación específica...
+
+00:00:59.186 --> 00:01:00.016 align:middle
+así.
+
+00:01:00.356 --> 00:01:05.966 align:middle
+Pero... Me gusta tener un único proveedor
+para todo mi recurso API: es más sencillo.
+
+00:01:06.746 --> 00:01:11.336 align:middle
+Para ello, sólo tenemos que darnos
+cuenta de que se llamará a este proveedor
+
+00:01:11.336 --> 00:01:16.076 align:middle
+tanto cuando se obtenga un único elemento como
+cuando se obtenga una colección de elementos.
+
+00:01:16.216 --> 00:01:20.966 align:middle
+En esta prueba, se llama a nuestro
+proveedor para obtener una colección...
+
+00:01:21.256 --> 00:01:23.606 align:middle
+luego llamamos al proveedor de elementos...
+
+00:01:23.746 --> 00:01:25.566 align:middle
+y ocurren cosas raras.
+
+00:01:25.716 --> 00:01:28.026 align:middle
+dd() el $operation de nuevo...
+
+00:01:28.646 --> 00:01:30.416 align:middle
+luego copia el nombre de la prueba que falla...
+
+00:01:31.226 --> 00:01:36.496 align:middle
+y ejecuta sólo esa: ¡Excelente!
+
+00:01:36.706 --> 00:01:38.766 align:middle
+Un objeto GetCollection.
+
+00:01:39.296 --> 00:01:42.386 align:middle
+¡Podemos utilizarlo para averiguar
+qué proveedor necesitamos!
+
+00:01:42.386 --> 00:01:46.036 align:middle
+Vamos a inyectar el núcleo CollectionProvider.
+
+00:01:46.886 --> 00:01:49.496 align:middle
+Copia el primer argumento, duplícalo
+
+00:01:49.496 --> 00:01:52.996 align:middle
+y configúralo para que utilice el
+servicio CollectionProvider del ORM.
+
+00:01:52.996 --> 00:01:56.356 align:middle
+Llámalo $collectionProvider.
+
+00:01:58.246 --> 00:02:05.106 align:middle
+A continuación, comprueba si $operation es
+una instancia de CollectionOperationInterface.
+
+00:02:05.776 --> 00:02:11.646 align:middle
+Vale, en realidad, sólo una operación -
+GetCollection - utiliza el proveedor de colecciones...
+
+00:02:11.966 --> 00:02:14.756 align:middle
+pero en caso de que se añadiera
+una operación personalizada,
+
+00:02:14.986 --> 00:02:18.426 align:middle
+cualquier cosa que necesite una
+colección implementará esta interfaz.
+
+00:02:19.286 --> 00:02:20.466 align:middle
+En esta situación,
+
+00:02:20.466 --> 00:02:25.666 align:middle
+devuelve $this->collectionProvider->provide()
+y pasa los args.
+
+00:02:25.976 --> 00:02:28.036 align:middle
+Y... ¡no olvides el nombre del método!
+
+00:02:30.086 --> 00:02:34.376 align:middle
+¡Muy bien! Gira o ejecuta
+de nuevo la prueba: Y...
+
+00:02:34.716 --> 00:02:36.606 align:middle
+sigue explotando.
+
+00:02:37.156 --> 00:02:40.446 align:middle
+Algo sobre que se espera
+que null sea igual que 5.
+
+00:02:41.366 --> 00:02:43.266 align:middle
+Comprueba la respuesta.
+
+00:02:43.266 --> 00:02:45.806 align:middle
+¡Ah! ¡Otra vez nuestro error!
+
+00:02:47.316 --> 00:02:50.436 align:middle
+Para la operación del objeto,
+estamos estableciendo esa propiedad.
+
+00:02:52.186 --> 00:02:56.616 align:middle
+Ahora tenemos que hacer lo mismo aquí:
+recorrer cada tesoro y establecerla.
+
+00:02:57.256 --> 00:03:03.556 align:middle
+Pero antes, ¿qué devuelve el proveedor
+de la colección: una matriz de tesoros?
+
+00:03:04.476 --> 00:03:07.306 align:middle
+Copia toda la llamada, dd()...
+
+00:03:07.946 --> 00:03:11.756 align:middle
+y ejecuta de nuevo la prueba: Veamos...
+
+00:03:12.516 --> 00:03:14.746 align:middle
+¡es un objeto Paginator!
+
+00:03:15.136 --> 00:03:21.236 align:middle
+Eso es importante: es lo que alimenta la
+paginación de nuestras rutas de recolección.
+
+00:03:21.936 --> 00:03:27.346 align:middle
+Vale, en realidad no es tan importante ahora
+mismo -podemos hacer un bucle sobre este objeto
+
+00:03:27.346 --> 00:03:32.926 align:middle
+para obtener cada DragonTreasure -, pero volveremos a ello
+más adelante, cuando creemos un recurso personalizado.
+
+00:03:33.726 --> 00:03:38.846 align:middle
+Elimina el dd() y, en lugar del
+retorno, di igual a $paginator.
+
+00:03:39.796 --> 00:03:43.926 align:middle
+Ayudaré a mi editor diciendo que se
+trata de un iterable de DragonTreasure.
+
+00:03:45.456 --> 00:03:48.216 align:middle
+Ahora, foreach $paginator como $treasure...
+
+00:03:48.636 --> 00:03:51.586 align:middle
+y luego robaré el código de abajo...
+
+00:03:51.896 --> 00:03:52.756 align:middle
+y lo pegaré.
+
+00:03:52.796 --> 00:03:58.896 align:middle
+Ahora que hemos modificado cada
+elemento, return $paginator.
+
+00:03:59.656 --> 00:04:01.426 align:middle
+¡Vamos a intentarlo de nuevo!
+
+00:04:02.756 --> 00:04:04.366 align:middle
+Vuelve a fallar...
+
+00:04:04.366 --> 00:04:08.936 align:middle
+pero justo al final:
+DragonTreasureResourceTest línea 37.
+
+00:04:09.526 --> 00:04:10.406 align:middle
+Vamos a comprobarlo.
+
+00:04:10.476 --> 00:04:16.196 align:middle
+Así que, hasta aquí, creamos algunos
+tesoros, hacemos una petición ->get()
+
+00:04:16.196 --> 00:04:22.276 align:middle
+a la ruta de la colección, verificamos algunas
+cosas y, a continuación, cogemos el primer elemento
+
+00:04:22.706 --> 00:04:25.936 align:middle
+y comprobamos que tiene los campos correctos.
+
+00:04:26.566 --> 00:04:29.426 align:middle
+Aparentemente, la propiedad
+isMine está ahí...
+
+00:04:29.616 --> 00:04:31.256 align:middle
+¿pero no se esperaba?
+
+00:04:31.936 --> 00:04:32.836 align:middle
+Es culpa mía.
+
+00:04:33.166 --> 00:04:36.796 align:middle
+En una aventura anterior, cuando
+añadimos la propiedad isMine,
+
+00:04:37.056 --> 00:04:39.606 align:middle
+sólo la añadimos cuando era true.
+
+00:04:40.266 --> 00:04:45.066 align:middle
+Si un DragonTreasure no me
+pertenecía, el campo no estaba...
+
+00:04:45.316 --> 00:04:47.056 align:middle
+y probablemente debería haberlo estado.
+
+00:04:47.516 --> 00:04:48.846 align:middle
+Así que vamos a actualizar la prueba.
+
+00:04:50.986 --> 00:04:51.826 align:middle
+Y ahora...
+
+00:04:52.696 --> 00:04:53.866 align:middle
+¡está en verde!
+
+00:04:54.216 --> 00:04:56.276 align:middle
+Vuelve a ejecutar todo Uhhh.
+
+00:04:59.086 --> 00:05:04.896 align:middle
+hasta un fallo: testPostToCreateTreasure
+- con un error 500.
+
+00:05:05.696 --> 00:05:06.896 align:middle
+Abre eso en nuestro navegador.
+
+00:05:08.366 --> 00:05:12.606 align:middle
+¡Bah! Es nuestro: Debes llamar a
+setIsOwnedByAuthenticatedUser().
+
+00:05:13.136 --> 00:05:14.586 align:middle
+Pero, ¿cómo es posible?
+
+00:05:14.946 --> 00:05:19.916 align:middle
+No importa, ¡estamos estableciendo ese
+valor dentro de nuestro proveedor de estado!
+
+00:05:20.746 --> 00:05:21.976 align:middle
+Sin embargo...
+
+00:05:22.206 --> 00:05:29.486 align:middle
+la operación POST es única: es la única
+operación que no utiliza un proveedor.
+
+00:05:30.196 --> 00:05:35.096 align:middle
+Vale, Delete no muestra un
+proveedor, pero utiliza ItemProvider
+
+00:05:35.096 --> 00:05:37.326 align:middle
+para cargar el único
+elemento que va a eliminar.
+
+00:05:37.326 --> 00:05:43.786 align:middle
+Para Post, el JSON se deserializa
+directamente en un TreasureEntity.
+
+00:05:43.916 --> 00:05:44.786 align:middle
+y luego se guarda.
+
+00:05:45.656 --> 00:05:48.376 align:middle
+El proveedor de estado nunca
+se necesita ni se utiliza....
+
+00:05:48.616 --> 00:05:54.146 align:middle
+lo que significa que cuando se serializa a JSON,
+esa propiedad sigue sin establecerse. La solución
+
+00:05:54.766 --> 00:05:58.546 align:middle
+está en el procesador de estado
+para DragonTreasure: justo antes
+
+00:05:58.546 --> 00:06:01.776 align:middle
+o después de guardar, tenemos
+que ejecutar esta misma lógica.
+
+00:06:02.796 --> 00:06:03.526 align:middle
+Entendido.
+
+00:06:04.176 --> 00:06:07.336 align:middle
+Ya tenemos un procesador de
+estado para DragonTreasure.
+
+00:06:07.686 --> 00:06:10.336 align:middle
+Su función es establecer el
+propietario si no está establecido...
+
+00:06:10.646 --> 00:06:12.956 align:middle
+pero vamos a secuestrarlo para esto.
+
+00:06:13.536 --> 00:06:15.576 align:middle
+Justo después de guardar, pega esto.
+
+00:06:15.796 --> 00:06:20.716 align:middle
+Pero la forma en que lo creamos en
+el episodio anterior significa que se
+
+00:06:20.716 --> 00:06:23.406 align:middle
+llama para cada ApiResource.
+
+00:06:23.846 --> 00:06:26.256 align:middle
+Así que necesitamos la misma
+sentencia if de aquí arriba:
+
+00:06:26.256 --> 00:06:31.166 align:middle
+si $data es un instanceof DragonTreasure
+, entonces establece esa propiedad.
+
+00:06:32.656 --> 00:06:35.126 align:middle
+Voy a... actualizar un par de variables.
+
+00:06:36.986 --> 00:06:40.176 align:middle
+Así, el objeto se guarda,
+establecemos la propiedad...
+
+00:06:40.436 --> 00:06:42.796 align:middle
+y luego se serializa a JSON.
+
+00:06:43.626 --> 00:06:49.316 align:middle
+Vuelve a hacer esas pruebas: ¡Todo verde!
+
+00:06:49.456 --> 00:06:54.216 align:middle
+¡Guau! Así que ya sabemos que podemos ejecutar
+código antes o después de que un elemento se guarde
+
+00:06:54.286 --> 00:06:56.486 align:middle
+teniendo un procesador de estado personalizado.
+
+00:06:57.036 --> 00:07:01.386 align:middle
+Pero, ¿y si necesitamos ejecutar código
+sólo cuando cambia algo concreto?
+
+00:07:01.716 --> 00:07:06.476 align:middle
+Como cuando un DragonTreasure
+cambia de no publicado a publicado.
+
+00:07:06.996 --> 00:07:11.516 align:middle
+Nos ocuparemos de ello a continuación, empezando
+por simplificar un poco nuestro procesador de estado.

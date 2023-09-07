@@ -1,0 +1,255 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:06.296 align:middle
+La API Platform 3 introdujo nuevos y atractivos conceptos
+llamados Proveedores de Estado y Procesadores de Estado.
+
+00:00:06.566 --> 00:00:09.176 align:middle
+Hablamos de ellos en el
+último tutorial y vamos a
+
+00:00:09.176 --> 00:00:11.086 align:middle
+profundizar aún más en este. En la
+
+00:00:11.706 --> 00:00:15.756 align:middle
+"Guía de actualización" de la
+documentación de API Platform hay una
+
+00:00:15.756 --> 00:00:18.616 align:middle
+de mis secciones favoritas sobre este tema.
+
+00:00:19.046 --> 00:00:25.046 align:middle
+Cada clase de recurso API -ya sea una entidad o
+una clase normal- tendrá un Proveedor de Estado.
+
+00:00:25.506 --> 00:00:29.276 align:middle
+Su trabajo consiste en cargar los
+datos, como desde la base de datos...
+
+00:00:29.356 --> 00:00:30.496 align:middle
+o de donde sea. Cada clase de
+recurso de la API tendrá también
+
+00:00:30.956 --> 00:00:36.116 align:middle
+un Procesador de Estado, cuyo
+trabajo es guardar los datos, como
+
+00:00:36.116 --> 00:00:39.936 align:middle
+en una petición POST o PATCH.
+
+00:00:40.286 --> 00:00:42.056 align:middle
+También se encarga de borrarlos.
+
+00:00:42.756 --> 00:00:49.766 align:middle
+La gran ventaja es que si tu recurso API es una
+entidad, obtendrás automáticamente un conjunto
+
+00:00:49.766 --> 00:00:52.176 align:middle
+de Proveedores de Estado y
+Procesadores de Estado. Por
+
+00:00:52.696 --> 00:00:57.146 align:middle
+ejemplo, la operación GetCollection
+utiliza un núcleo CollectionProvider,
+
+00:00:57.266 --> 00:00:59.316 align:middle
+que consulta la base de datos por ti.
+
+00:00:59.736 --> 00:01:03.966 align:middle
+Y hay un ItemProvider similar para
+obtener un elemento de la base de datos.
+
+00:01:04.536 --> 00:01:09.926 align:middle
+Las entidades también tienen un complemento
+PersistProcessor, que, sin sorpresa,
+
+00:01:10.136 --> 00:01:12.276 align:middle
+persiste tus datos en la base de datos.
+
+00:01:12.906 --> 00:01:17.596 align:middle
+En el Episodio 2, decoramos el
+PersistProcessor para la entidad User.
+
+00:01:18.076 --> 00:01:20.736 align:middle
+Esto nos permitió hacer hash de la
+contraseña simple aquí arriba...
+
+00:01:20.856 --> 00:01:24.576 align:middle
+antes de llamar al núcleo PersistProcessor
+para que se encargue de guardarla.
+
+00:01:25.176 --> 00:01:30.106 align:middle
+Hablamos de esto porque podemos utilizar
+un truco similar con el proveedor de estado
+
+00:01:30.106 --> 00:01:35.526 align:middle
+para añadir un campo personalizado: un campo que
+quieres en tu API, pero que no vive en la base de datos.
+
+00:01:36.136 --> 00:01:38.636 align:middle
+En el último episodio,
+aprendimos que una forma
+
+00:01:38.636 --> 00:01:41.856 align:middle
+de añadir un campo personalizado
+es ampliando el normalizador.
+
+00:01:42.486 --> 00:01:45.026 align:middle
+Lo hicimos en AddOwnerGroupsNormalizer.
+
+00:01:45.486 --> 00:01:51.736 align:middle
+Pues bien, esto hace varias cosas, pero lo más importante
+para nosotros es que si el objeto es un DragonTreasure
+
+00:01:52.106 --> 00:01:55.126 align:middle
+-por tanto, si un DragonTreasure
+se está convirtiendo en JSON-
+
+00:01:55.546 --> 00:01:59.466 align:middle
+y el usuario autenticado en ese momento
+es el propietario de ese tesoro,
+
+00:01:59.956 --> 00:02:03.036 align:middle
+entonces añade un campo isMine
+totalmente personalizado.
+
+00:02:03.676 --> 00:02:05.006 align:middle
+Podemos comprobarlo en nuestras pruebas:
+
+00:02:05.366 --> 00:02:10.986 align:middle
+tests/Functional/DragonTreasureResourceTest.php
+Busca isMine.
+
+00:02:11.696 --> 00:02:16.076 align:middle
+Sí: testOwnerCanSeeIsPublishedAndIsMineFields.
+
+00:02:16.716 --> 00:02:20.796 align:middle
+La parte importante es la de abajo:
+cuando se serializa el tesoro,
+
+00:02:21.026 --> 00:02:23.186 align:middle
+isMine debe estar en la respuesta.
+
+00:02:23.736 --> 00:02:25.376 align:middle
+Esto funciona de maravilla...
+
+00:02:25.686 --> 00:02:29.066 align:middle
+excepto por un contratiempo:
+en la documentación...
+
+00:02:29.226 --> 00:02:33.226 align:middle
+¡no se menciona el campo isMine!
+
+00:02:33.706 --> 00:02:36.736 align:middle
+Se devolverá, pero no está documentado.
+
+00:02:37.316 --> 00:02:42.916 align:middle
+Si esto te importa, hay dos formas mejores
+de manejarlo: añade un campo no persistente
+
+00:02:42.916 --> 00:02:45.736 align:middle
+a tu entidad -eso es lo que
+haremos dentro de un momento-
+
+00:02:46.186 --> 00:02:49.996 align:middle
+o crea una clase de recurso
+API totalmente personalizada.
+
+00:02:50.176 --> 00:02:52.366 align:middle
+Ese será nuestro gran tema más adelante.
+
+00:02:53.236 --> 00:02:55.966 align:middle
+Paso 1: elimina el código del normalizador...
+
+00:02:56.346 --> 00:02:57.606 align:middle
+y simplemente devuelve.
+
+00:03:00.516 --> 00:03:01.906 align:middle
+Copia el nombre del método de prueba...
+
+00:03:02.176 --> 00:03:08.386 align:middle
+para asegurarte de que esto falla: Y...
+
+00:03:08.596 --> 00:03:09.676 align:middle
+¡yay fallo!
+
+00:03:09.996 --> 00:03:13.886 align:middle
+Esperaba que null fuera el mismo
+que true de la línea 215...
+
+00:03:13.886 --> 00:03:16.756 align:middle
+¡porque ya no existe el campo isMine!
+
+00:03:18.416 --> 00:03:23.186 align:middle
+Paso 2: añadir este campo como una
+propiedad real en nuestra clase:
+
+00:03:24.746 --> 00:03:28.826 align:middle
+qué tal private bool
+$isOwnedByAuthenticatedUser.
+
+00:03:30.676 --> 00:03:36.586 align:middle
+Observa que se trata de una propiedad no
+persistente: sólo existe para ayudar a nuestra API.
+
+00:03:37.326 --> 00:03:40.296 align:middle
+Hacer esto no es supercomún,
+pero está permitido.
+
+00:03:41.226 --> 00:03:43.736 align:middle
+Ve hasta el final para
+añadir un getter y un setter.
+
+00:03:46.996 --> 00:03:49.996 align:middle
+Ah, y como la propiedad no
+tiene un valor por defecto,
+
+00:03:50.506 --> 00:03:54.406 align:middle
+si la propiedad no se ha inicializado,
+vamos a gritar para que lo sepamos.
+
+00:03:58.346 --> 00:04:02.316 align:middle
+Por último, pero no menos importante, tenemos
+que exponer esta propiedad a nuestra API.
+
+00:04:03.096 --> 00:04:06.706 align:middle
+Hazlo poniéndola en el grupo
+llamado treasure:read...
+
+00:04:07.196 --> 00:04:12.316 align:middle
+y luego utilizar SerializedName
+para llamarla isMine en la API.
+
+00:04:13.756 --> 00:04:20.066 align:middle
+Si ahora vamos a ejecutar la prueba:
+¡Nos recibe un delicioso error 500!
+
+00:04:20.756 --> 00:04:25.876 align:middle
+Gracias a la biblioteca zenstruck/browser,
+guardó esa respuesta fallida en un archivo...
+
+00:04:26.196 --> 00:04:28.146 align:middle
+que podemos abrir en nuestro navegador.
+
+00:04:28.786 --> 00:04:30.166 align:middle
+Y... ¡sí!
+
+00:04:30.666 --> 00:04:37.556 align:middle
+Debes llamar a setIsOwnedByAuthenticatedUser() Así
+que está intentando exponer el campo a nuestra API...
+
+00:04:38.086 --> 00:04:40.366 align:middle
+pero nada establece esa propiedad.
+
+00:04:40.986 --> 00:04:42.696 align:middle
+¿Cómo la estableceremos?
+
+00:04:43.176 --> 00:04:45.106 align:middle
+¡Con una actitud positiva!
+
+00:04:45.376 --> 00:04:47.426 align:middle
+Y... sobre todo con un proveedor
+de estado personalizado.
+
+00:04:47.956 --> 00:04:48.556 align:middle
+Eso a continuación.
