@@ -27,8 +27,11 @@ both when fetching a *single* item and when fetching a *collection* of
 items. For this test, our provider is being called to fetch a collection...
 then we're calling the item provider... and weird stuff happens.
 
-`dd()` the `$operation` again... then copy the failing test name... and run
-just that one:
+`dd()` the `$operation` again... 
+
+[[[ code('f9708d25c1') ]]]
+
+then copy the failing test name... and run just that one:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testGetCollectionOfTreasures
@@ -41,11 +44,15 @@ Let's get the core `CollectionProvider` injected. Copy the first argument,
 duplicate it, and set it to use the `CollectionProvider` service from ORM.
 Name it `$collectionProvider`.
 
+[[[ code('9162c8ed10') ]]]
+
 Below, check to see if `$operation` is an instance of `CollectionOperationInterface`.
 Ok, really, only *one* operation - `GetCollection` - uses the collection provider...
 but in case a custom operation were added, anything that needs a collection
 will implement this interface. In this situation, return `$this->collectionProvider->provide()`
 and pass in the args. And... don't forget the method name!
+
+[[[ code('c723018b0c') ]]]
 
 Alrighty! Spin over or run the test again:
 
@@ -63,6 +70,8 @@ over each treasure and set that.
 But first, what *does* the collection provider return - an array of treasures?
 Copy the entire call, `dd()` it... and run the test again:
 
+[[[ code('e1d125a94f') ]]]
+
 ```terminal-silent
 symfony php bin/phpunit --filter=testGetCollectionOfTreasures
 ```
@@ -78,6 +87,8 @@ help my editor by saying that this is an `iterable` of `DragonTreasure`. Now,
 below... and paste.
 
 Now that we've modified each item, `return $paginator`.
+
+[[[ code('837b8734ae') ]]]
 
 Let's try it again!
 
@@ -95,6 +106,8 @@ That's my bad. On a previous adventure, when we added the `isMine` property, we
 *only* added it when it was `true`. If a `DragonTreasure` did *not* belong to
 me, the field wasn't there at all... and it probably should have been. So let's
 update the test. And now... it's green!
+
+[[[ code('b36aeb94c9') ]]]
 
 Re-run *everything*
 
@@ -125,6 +138,8 @@ hijack it for this. Right after the save, paste that. Oh, but the way we created
 this in the previous episode means that it's called for *every* ApiResource. So
 we need the same if statement from up here: if `$data` is an `instanceof`
 `DragonTreasure`, then set that property. I'll... update a couple of variables.
+
+[[[ code('91cae81e5b') ]]]
 
 So, the object saves, we set the property... and *then* it's serialized to JSON.
 Try those tests again:
