@@ -1,22 +1,75 @@
-# Custom Resource Relations
+# Relating Custom ApiResources
 
-Inside `DailyQuest.php`, let's add a new property: `public array $treasures`. This is going to hold an array of *dragon treasures* that you can *win* if you  complete this quest - treasures like a fancy magician's hat... a talking frog... the world's *second* largest slinky... or *all four* corner pieces of brownie! Mmmmmm...
+Inside `DailyQuest`, add a new property: `public array $treasures`. This will
+hold an array of *dragon treasures* that you can *win* if you complete this quest:
+treasures like a fancy magician's hat... a talking frog... the world's *second*
+largest slinky... or *all four* corner pieces of brownie! Mmmmmm...
 
-This is just like any other property. Over in our provider, let's populate that. Say `$quest->treasures` and then we'll set that to something. Instead of an empty array, we want to pull in our dragon treasure objects. Up at the top, add `public function __construct()`, and inside of that, we'll say `private DragonTreasureRepository $treasureRepository`. Down here, we can add a little randomness. The first thing we'll do is say `$treasures = $this->treasureRepository->findBy()`. We're going to abuse this a little bit. For the first argument's criteria, we'll give it *none*, *no* `orderBy`, and a limit of `10`. We're basically just finding the first ten treasures in the database, and then we're going to create a random set down here for each one.
+## Adding an array Relations Property
 
-The code for this part is a little boring. First, we're going to get between one and three `$randomTreasureKeys`. *Then* we're going to use the fancy `array_map()` function with the even *fancier* `fn()` syntax, which will turn those random keys into random dragon treasure objects, and down here, *that* is what we'll set. Perfect! And, even though we don't really care right now, just to make sure our test keeps passing, at the top here, say `DragonTreasureFactory::createMany(5)`. We're just doing this because, if we don't have *any* treasures available, it will fail and explode. We're not really worried about the test right now, but that's good to keep in mind.
+In PHP land, this is just like any other property. Over in our provider,
+populate it: say `$quest->treasures = `... and then we'll set that to something.
+Instead of a boring empty array, we need some `DragonTreasure` objects. Up at
+the top, add `public function __construct()` to autowire a
+`private DragonTreasureRepository $treasureRepository`. Below, grab some treasure:
+`$treasures = $this->treasureRepository->findBy()` passing an empty array for the
+criteria - so it'll return everything - *no* `orderBy`, and a limit of `10`. Yea,
+we're just finding the first 1 treasures in the database. I'll paste in some boring
+code that will grab a random *set* of these `DragonTreasure` objects. Put *that*
+onto the `treasures` property.
 
-What we *really* need to see is if this new field shows up in our API. Check this out. If we go to `/api/quest.jsonld` *directly*... we get a very strange error:
+Cool! And, even though we don't care right now, to make sure our test keeps passing,
+at the top here, say `DragonTreasureFactory::createMany(5)`... because if there are
+*zero* treasures, weird things will happen in our provider... and the dragons will
+revolt.
 
-`You must call setIsOwnedByAuthenticatedUser() before
-isOwnedByAuthenticatedUser()`
+Ok, does this new property show up in our API? Head to `/api/quest.jsonld` to see..
+a familiar error:
 
-This is coming from `DragonTreasure.php`. All the way at the bottom... here we go! So what's going on here? For some reason, when we are serializing the daily quest, it's serializing the dragon treasures and calling this field. *Normally*, when we *fetch* a dragon treasure directly (when that's the top-level object), we're *actually* setting that field in a custom dragon treasure provider. But when it's an  *embedded* object, the provider *isn't* called, so that field isn't set.
+> You must call `setIsOwnedByAuthenticatedUser()` before `isOwnedByAuthenticatedUser()`.
 
-But... hold on a second. This shouldn't even be a problem. Let me show you what I mean. To temporarily silence this error, and understand a bit more about what's going on, we need to find that property... there it is... and give it a default value of `false`. Spin over, refresh, and... *whoa*! It *works*. Here's our daily quest... and *here* are the treasures. *But* this isn't actually what we expected. We can see that each treasure is an *embedded object*, but why is that happening?
+We know this: it comes from `DragonTreasure`... all the way at the bottom. Apparently,
+the serializer is trying to access this field, but we never set it.. which makes
+sense, because we're the provider and processor for `DragonTreasure` aren't called
+when we're using a `DailyQuest` endpoint.
 
-If you'll recall, when you have a relationship, it's only embedded if the parent and child share groups. We're not using any groups, so the only reason `$treasures` should be embedded is if we were, for example, using `normalizationContext` here with `groups` set to `quest:read` like this, where our `quest:read` group is above `$treasures`, *and*, in `DragonTreasure.php`, we had at least one property that *also* had `quest:read` on it. Unless you have cascading groups like that, API Platform should render this as an *array* of IRA strings, *not* embedded objects. So what the heck is going on?
+## Why The Relation is Embedded
 
-The *problem* is that the serializer looks at this `$treasures` property and doesn't realize that this property represents an *array* of dragon treasure objects. Since it doesn't *know* that this holds an array of objects that are, themselves, `#[ApiResource]` objects, it treats this like a *normal* set of objects, serializing all of their properties. This normally isn't a problem with entities, because the serializer is generally smart enough to read the Doctrine relationship metadata and figure out that the property is a *collection* of some *other* `#[ApiResource]` object. Long story short, this is really simple to fix - it's just hard to understand at first. We just need to give it some PHP documentation to help it understand what this is. So if we say something like `@var DragonTreasure[]` and try this again... bam! *Now* they're IRIs. And while I won't do this now, you *could* even undo the default value here because this object won't be serialized (which is what gave us this error in the first place) - it's just using the IRI from it.
+But... hold on a second. This shouldn't even be a problem. Let me show you what I
+mean. To temporarily silence this error, and understand what's going on, find that
+property... there it is... and give it a default value of `false`. Spin over, refresh,
+and... *whoa*! It *works*! Here's our daily quest... and *here* are the treasures.
+*But*... this is not, *quite* what we expected. Each treasure is an *embedded object*.
 
-So there you go! This was really no big deal. We just needed to have a little documentation there for the collection case. *However*, if we wanted to *show off* the treasures that a dragon could win for completing this quest, we don't need to embed the dragon  treasures directly. We could, instead, embed some *new* class with some new information about those dragon treasures. I'll show you what I mean *next*.
+Remember: when you have a relationship to an object that is an `ApiResource`, like
+`DragonTreasure`, that object should only be *embedded* if the parent class and
+child class share serialization groups. Like, if we had `normalizationContext`
+with `groups` set to `quest:read` like this... where the `quest:read` group is above
+`$treasures`, *and*, in `DragonTreasure`, we had at least one property that *also*
+had `quest:read` on it.
+
+But, if you do *not* have this situation - heck, we're not using groups at all -
+then the serializer should render each `DragonTreasure` as an IRI string. This
+should be an array of strings not embedded objects!
+
+The *problem* is that the serializer looks at this `$treasures` property and doesn't
+realize that it holds an array of `DragonTreasure` objects. It knows it's an array,
+but before it starts serializing, it doesn't know *what* is inside. And so, instead
+of sending them through the system that serializes `ApiResource` objects, it sends
+them through the code that serializes *normal* objects... which results in it just
+serializing all the properties.
+
+This isn't a problem with entities, because the serializer is smart enough: it reads
+the Doctrine relationship metadata to figure out that a property is a *collection*
+of some *other* `#[ApiResource]` object. Long story short, this is a simple
+to fix... it's just hard to understand at first. Above the property, add some
+PHPDoc to help the serializer: `@var DragonTreasure[]`.
+
+Try it now... bam! *Now* we get IRI strings! I won't bother, but we could now
+undo the default value because this object won't be serialized...which is what gave
+us this error in the first place.
+
+So, other than the embedded object surprise, adding relations to our custom resource
+is no biggie! Next: instead of embedding `DragonTreasure` objects directly, let's
+see how we can invent a *new* class and new data structure to represent these
+treasures.
