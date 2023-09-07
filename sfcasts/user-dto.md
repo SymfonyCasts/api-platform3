@@ -1,16 +1,70 @@
-# User Dto
+# User Class Dto
 
-The *fastest* way to get started with API Platform is by adding these `#[ApiResource]` attributes above your entity classes. That's because API Platform gives you that free state provider that queries from the database, includes pagination and filters, and *also* gives you a free state *processor*, which saves things to the database. *But*, as we've seen with `DailyQuest.php`, that's not actually required. And if your API starts to look pretty different from your entities, like entity properties that differ from fields in your API, then it might make sense to separate your entity and API resource classes.
+The *fastest* way to get started with API Platform is by adding these `#[ApiResource]`
+attributes above your entity classes. That's because API Platform gives you free
+state providers that query from the database (which include pagination and filters)
+and free state *processors* that save things *to* the database.
 
-We haven't done this yet. So far, our entities *are* our API resource classes, and that *has* added some complexity. For example, we have a custom `isMine` field which is actually powered by this `isOwnedByAuthenticatedUser` property. That's a non-persisted property that we populate via a state provider. And one of the most *noticeable* things are our serialization groups. We *have to* use serialization groups, like `treasure:read`, so that we can include the properties we *want* and avoid the properties that we *don't* want. This *has* saved us some time, but we've had to use a few tricks to manipulate our entity so it looks like we want it to in the API. There *has* to be a better way, right? Especially if we're building a really big *custom* API. Well, there *is*!
+## To use DTOs or Not?
 
-It's a little slow at first, but we can use a dedicated *class* for our API *from the start*. That's often referred to as a "DTO", or "Data Transfer Object". You'll hear me use that term *a lot*. I'm just referring to a class that's *also* an API resource.
+*But*, as we've seen with `DailyQuest`, that's not *required*. And if your API starts
+to look pretty different from your entities - like you have fields in your API
+that don't exist in your or are named differently - it might make sense to *separate*
+your entity and API resource classes.
 
-We're going to start by moving all of the API stuff from the `user` entity to its own dedicated class, and that means we need to delete a bunch of stuff here. We have this `#[ApiResource()]`, another sub-API resource, a filter, and validation. You *may* have some forms in your system that still need validation, but in *our* case, we're not going to need it, so we'll clear out all of the things here related to validation and serialization. We'll go little by little and make sure we're removing anything else hiding in here that deals with that, and... whoa... this class is *a lot* smaller now. It looks like that's everything... the new statements on top look good... and... *awesome*. We should have most of the API things cleaned out, and we're *also* going to remove the state processor we have for this. This is responsible for hashing the plain password and setting it onto the password property. We're going to re-implement that and several of the things we just deleted *later*, but for now, we need a clean slate to kick things off. If we look at the docs, we're now reduced to "Quest" and "Treasure". That's *it*.
+Right now, our entities *are* API resources... and that *has* added some complexity.
+For example, we have a custom `isMine` field which is powered by this
+`isOwnedByAuthenticatedUser` property: a non-persisted property that we populate
+via a state provider. And one of the most *noticeable* things is our huge use of
+serialization groups. We *have to* use serialization groups, like `treasure:read`,
+so that we can include the properties we *want* and avoid the properties that we
+*don't* want.
 
-We're going to start just like we did with the daily quest. In the `/ApiResource` directory, we're going to create a new class called `UserApi` to indicate that this is the *user* class for our API. Inside, add `#[ApiResource]` to it. So far, this is just like any other custom API resource. It shows up here, and if we try the `GET` collection operation, just like with our daily quest, we get a 404. So even though this shows up in our docs and we can use the endpoints, nothing's actually *working* yet. And just like before, you can see that we're missing the "ID" part of some of these operations. To fix that, our users are going to have an `?int $id`. Say `public ?int $id = null`. We're using public properties here *just* because it makes life easier for classes that have this very simple use case of representing our API. As soon as we do that... API Platform *recognizes* that this is the identifier, and our operations are *looking good*.
+This *has* saved us some time... but increased complexity. So let's get *crazy*
+and use a dedicated *class* for our API *from the start*. That's often referred to
+as a "DTO", or "Data Transfer Object". I'll use that term a lot - but it just means
+"the dedicated class for our API" - like the `DailyQuest` class.
 
-While we're here, let's also modify the short name. This is called "UserApi", which isn't a *great* name for an API, so instead, let's say `shortName: 'User'`. Suddenly, this starts to look *a lot* like what we had before.
+## Removing the API Stuff from User
 
-Just like with our daily quest, we're going to need a state provider and state processor to get this to work. Let's add the state provider next, but with a *twist* that leverages a brand new API Platform feature that's going to save us a *ton* of work.
+To kick things off, let's remove *all* of the API-related stuff from the `User` entity.
+Remove the `#[ApiResource()]`... both of them, filters and validation. You *may*
+still want validation constraints if you're using your entity with the form system...
+but since we're not, let's clear it. I'm also clearing anything related to
+serialization... and hunting down anything that's hiding.
 
+Woh. This class is *a lot* smaller now. It think that's everything... the use
+statements on top look good... and... *awesome*.
+
+Let's also remove the state processor for `User`, which hashes the plain password.
+We *are* going to re-implement many of the things we just deleted, but I want to
+start with a clean look at things.
+
+Alright, go check out the API docs. We're reduced to "Quest" and "Treasure". I
+love it!
+
+## Creating the DTO / Dedicated ApiResource Class
+
+Ok, we're going to start like we did with the `DailyQuest`. In the `src/ApiResource/`
+directory, create a new class called `UserApi`... to indicate this is the *user*
+class for our API. Inside, add `#[ApiResource]` above it.
+
+So far, this is just like any other custom API resource. It shows up in the docs...
+and if we try the `GET` collection operation, it fails with a 404. Heck, we're
+even missing the "ID" part in the URL of the item operations.
+
+To fix that in `UserApi`, add a `public ?int $id = null` property... because our
+users *will* still be identified by their database id. Oh, and I'm using a public
+property *just* to make life easier... and this class will stay simple.
+
+As soon as we do that... API Platform *recognizes* that this as the identifier, and
+our operations are *looking good*.
+
+While we're here, let's also modify the `shortName`. This is called `UserApi`, which
+sucks as a name - so change it with `shortName: 'User'`.
+
+Suddenly, this is *starting* to look like what we had before!
+
+The *big* missing pieces, like with `DailyQuest`, are the state provider and state
+processor. Let's add the state provider next.... but with a *twist* that leverages
+a brand new feature that's going to save us a *ton* of work.
