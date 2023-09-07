@@ -1,106 +1,126 @@
-# Pagination
+# Pagination on a Custom Resource
 
-Coming soon...
+When we fetch the collection of quests, we see all *50* of them! There's no
+pagination... a fact I can prove because, at the bottom we don't see any extra data
+about the pagination.
 
-When we fetch the collection for our quests, we see all 50 items that we're
-returning. There is no pagination and you can see it because at the bottom we don't
-see any extra data about the pagination. As a reminder if we go to if you go all the
-way down to the bottom there actually is an area that describes how the pagination
-works showing you that in this case there's three pages but over here on our quests
-there is no such stuff on the bottom. That's because pagination is ultimately the
-responsibility of your provider. So it works pretty simple. If your collection
-provider returns just an array of quests or some sort of iterable of quests, then
-that's what's going to be returned to the screen. But if it returns an object from
-API Platform that implements a paginator interface, API Platform will see that and it
-will render it with all the pagination details. So it's pretty simple. Instead of
-returning this array, we're going to return a an object that implements that
-paginator interface. And actually API Platform has one that we can just use. So check
-this out. We'll say quest equal and then return new traversable paginator from API
-Platform. This takes a couple of arguments versus the the traversable, the thing that
-holds the results. So that's our array of quests in this case. Oh except it needs to
-be an iterable of quests. So we're going to this case. Oh except it needs to be an
-iterator. So new array iterator and we'll put the quests inside. Then the current
-page, I'm going to hard code that as one for now. The items per page, I'm going to
-hard code that as 10. And the total items, which for now I'm just going to count the
-quests. Now it's not a very smart paginator yet. It's not actually going to work
-since we have the page hard coded. But if we go over and refresh and go to the
-bottom, we do see the pagination information. And you can see according to this, it
-says that we can go all the way to the last page, which will be page five, which
-makes sense. We're doing 10 per page, we have 50 items, so five pages. But you'll
-also see that we're still actually returning 50 items. There's not actual pagination
-going on here. There's no magic happening behind the scenes. We're passing this all
-50 items, it's rendering all 50 items. So I'm going to do a little bit of
-reorganization here to get this ready to actually work the way that we want it to. So
-up here, I'm gonna set a couple of variables. First one is the current page, I'm
-going to keep that hard coded to one items per page. I'm gonna keep that hard coded
-to 10. And total items. Now for this, I'm going to call a new private method called
-count total requests. Over here, I'll hit Alt Enter, and I can add that method down
-here. This is going to return an int. And I'm just going to return 50. 50 is just the
-number, we sort of have a fake database, and we've decided there are 50 of them in
-the database. I'll change the create quest up here to call that. Now, that might seem
-silly, why am I creating this private method that returns that? What I'm trying to
-show is that we're going to have two responsibilities with pagination. One, as we'll
-see in a few minutes, as we'll see in a few minutes, it's going to be our job to
-return the correct subset of our 50 results. Like if we're on page two, maybe we're
-returning results 11 through 20. Secondly, independent of that, we're going to need a
-way to count the total results. When we use doctrine, what actually happens is
-there's one query to return just the results you want. And there's a whole second
-query which counts all of the results inside of your table. So this is going to be
-kind of our fake method here that you would fill in with real logic to count the
-total number of results in your database or wherever you're storing these. All right,
-then up here, let's use those variables. So current page, items per page, and total
-items. Cool, that doesn't change anything, just a little bit of reorganization. So
-what we really need to do is we need to grab just the results that are for the
-current page. Like if we're showing 10 per page and we're on page two, we would want
-to actually return just results 11 through 20, not all 50 results. But how do we even
-determine what page we're on right now we have the page hard coded. If you look over
-here, the way that API platform does pages is with query parameters. So technically,
-we say question mark page equals two, and we're on page two. But our code isn't
-reading this yet. So really, if you look, it still thinks we're on page one, see the
-current page down here is just page one. Because we have one hard coded. So how do we
-read the page? Now you might think that we need to actually read this query parameter
-directly. And you could do that. But API platform has a service available that
-already holds all the pagination information. And it's just kind of takes care of a
-lot of the work for us. So up here, we're gonna add a second constructor argument
-called private pagination. See from API platform, pagination. And down here, we can
-replace our local variables. With current page equals this arrow pagination arrow get
-current page, or get page. And then that takes the context that we already have as an
-argument on this method. And then items per page, this arrow pagination arrow. This
-is called get limit, as in like kind of limit offset from a database. And so we'll
-pass that operation and context. And then finally, for total items, the next thing we
-can actually get is the offset. We can do that with this arrow pagination, arrow get
-offset operation, and context. So if we're on page two, and the limits 10, this is
-going to offset is going to tell us to start on result 11. And down here, let's just
-dump all this current page, items per page. Offset and share. Well, dump total items
-as well, even though that's hard coded. Alright, so check this out. I'm gonna go back
-to page one right now, refresh. Look at that. Page one, 30 items per page, the limit
-is, and the offset is zero. If I go to page equals two, then it's page two, the
-number per page is still 30. And so the offset is 30, we should start at result 30.
-Now, where's it getting this 30 as the items per page? Well, that's the default in
-APL platform for any resource. But this is something that you can configure on your
-API resource attribute, you can say pagination items per page. How about let's do 10.
-Now check this out. That changes the 10, you can see offsets 10. If we go to page
-three, of course, our per page is still 10. And now it's saying, hey, since we're on
-page three, you should start at result 20. So now we're dangerous. We've asked API
-platform to grab all the pagination information for us. So now we just need to use
-that to actually return the correct request instead of all the quests. So to do that,
-I'm going to pass the offset and the items per page and to create quests. And down
-here, this becomes int offset, and really int limit. And we'll say limit, we'll give
-it a default of about 50. And then down here, we're gonna say I equals offset, and
-then I is less than or equal to not all of them are really offset plus limit. So it's
-kind of a doing sort of a limit offset, as if we were in a database. And now check
-this out, we're gonna page three, look at this, we're starting with the items that
-are on page three, it's a little more obvious, if we go to page one, you can see
-descriptions here, description one, it keeps coming up description to page two,
-description 10, description 11, and so on, it works. So I think you kind of need to
-watch out for with my kind of silly example here is the, this takes care of the
-collection, we still need to kind of do the item. So right now, what we do is really
-kind of query the database specifically for the day string. Right now, I'm actually
-gonna put zero, and this arrow count total requests. So it's still gonna return all
-the requests in this all the quests in this case, and then just find the one that we
-want. In a real app, you can make that a little bit smarter. But that's fine. So
-that's page nation and a custom resource. What about filtering? We're gonna talk
-about creating custom filters in a future tutorial. But spoiler alert, the filtering
-logic is also something that happens right here inside of the collection provider.
-All right, next up, let's remove all of the API resource stuff from our user entity
-and add it to a new class that's going to be dedicated to our API.
+Usually... if we peek at the treasures collection... at the bottom of the response,
+API Platform adds a `hydra:view` field that describes how you can paginate through
+these resources. But over here for quests... nothing done here!
+
+## Pagination Comes from the Provider
+
+But where *does* pagination come from in API Platform? It turns out that pagination
+is completely the responsibility of your provider. It's... pretty simple actually.
+*Whatever* your collection provider returns - whether it's just an array of quests...
+or some sort of iterable of quests - is what is serialized to JSON. *But*, if
+it returns an iterable object that happens to implement a special `PaginatorInterface`,
+API Platform will see that and render the `hydra:view` pagination details.
+
+## Using The TraversablePaginator
+
+So, if we want our collection to support pagination, step one is, instead of
+returning this array, to return an object that implements that interface. And,
+fortunately, API Platform already has a class that can help us!
+
+First, set the array to a `$quests` variable. Then return new `TraversablePaginator`
+from API Platform. This takes a few arguments. First, a traversable - basically
+the results that should be shown for the *current* page. Right now, we'll still
+use *all* 50 quests. Oh, except this needs to be an *iterable*... so wrap them
+in a new `ArrayIterator`.
+
+Next is the current page - hardcode that to 1 for now - then items per page - hardcode
+that to 10 - and finally the total number of items, which for now, I'm just going
+to count `$quests`.
+
+This is *not* a very smart paginator yet: it will always be on page 1 and will
+show ever result. But when we go over, refresh... and scroll to the bottom, we *do*
+see the pagination info! According to this, there are 5 pages of results... which
+makes sense: 10 items per page and 50 total items. But you'll also see that we're
+*still* returning 50 items. There's not *real* pagination happening!
+
+Why? Because it's up to *us* to figure out which page we're on and to pass only
+the *correct* results to the paginator. If we pass it 50 items, it'll render 50
+items, regardless of what we tell it are the max per page.
+
+## Organizing our Variables
+
+To help us do that, let's set a few variables: `$currentPage` hardcoded to 1,
+`$itemsPerPage` hardcoded to 10 and `$totalItems`. For this, call a new private method
+`countTotalQuests()`. I'll hit Alt+Enter and  add that method at the bottom.
+This will return an `int`... and I'm just going to return 50... because that's
+the *total* possible quests we have in our "fake" database. If you were using a
+database, you'd count every available row. Let's change the code in `createQuests()`
+to use this.
+
+That probably looked a bit silly: why am I creating a private method to return
+something so simple? Well, what I'm really trying to show highlight are the two
+distinct "jobs" we have for pagination. First, to return the correct subset of
+our 50 results - which we'll do in a moment. Second, to return the count of the
+*total* number of items. When you use Doctrine, it executes 2 separate queries
+for this: one to fetch the result with a LIMIT and OFFSEt, and a second COUNT
+query to count *all* of them.
+
+## Current Page, Limit, Offset: The Pagination Service
+
+Ok, back on top, let's use these variables: `$currentPage`, `$itemsPerPage` and
+`$totalItems`.
+
+Ok cool... but what we *really* need to do is determine the *actual* current
+page and then use that to return only a *subset* of the results. Like, if we're
+showing 10 per page and we're on page 2, we should only return quests 11 through
+20.
+
+Pagination works via a `?page` query parameter: `?page=2` should mean we're on
+page 2. But our code isn't reading this yet. Look: it still thinks we're on page 1...
+because we've hardcoded that. To get the correct page, we *could* try to read the
+query parameter directly... but we don't need to! API Platform gives us a service
+that already holds *all* the pagination info.
+
+On top, add a second constructor argument called `private Pagination` - from API
+platform `$pagination`. Below, set `$currentPage` to
+`$this->pagination->getPage()`, which needs the `$context` that we have as an
+argument on this method. Then `$itemsPerPage` set to
+`$this->pagination->getLimit()` passing `$operation` and `$context`. We can also
+get an `$offset` in a similar way, which is *super* handy. If we're on page 2
+and the limit is 10, the `Pagination` service will calculate that the offset
+should be 11. Below, dump all four variables.
+
+Let's check this out! Go back to page 1, refresh and look at that! Page 1, 30 items
+per page, the limit and offset 0. If we go to `page=2`, then it's page 2, the number
+per page is still 30 and the offset is 30.
+
+Now, where is it getting 30 as the items per page? Well, that's the default in API
+Platform for any resource. But this is something you can configure on your
+`#[ApiResource]` attribute: `paginationItemsPerPage` set to, how about, 10.
+
+Now try it. That changes the 10 and the offset is 10. If we go to page
+3, our per page is still 10. And now it's saying:
+
+> Hey, since we're on page 3, you should start at result 20.
+
+We're in *great* shape now. Our *final* job is to use this info to return the
+correct *subset* of results, instead of *all* of the quests. To do that, I'm going
+to pass `$offset` and `$itemsPerPage` and to `createQuests()`.
+
+Down here, add `int $offset` and `int $limit` with a default of 50. And use those:
+`$i = $offset` and then `$i <=` `$offset` plus `$limit`.
+
+Ok team check it out! We're on page 3 and... these are the items from page 3!
+It's more obvious if we go to page 1. See the descriptions: description 1, 2, 3
+and so on. So, pagination is working on our collection!
+
+Though, in this simple example, I need to make sure I don't break the item provider.
+Because we're looking up the day string as an array key, we need to return *all*
+the quests. To make sure that happens, pass 0 and 50.
+
+In a real app, you would make this smarter by, for example, querying for the *one*
+item you need... instead of loading *all* of them.
+
+So that's pagination for a custom resource. What about filtering? We're going to
+talk about creating custom filters in a future tutorial. But spoiler alert: the
+filtering logic is *also* something that happens right here inside of the collection
+provider.
+
+Next: let's remove all of the API resource stuff from our `User` entity and add it
+to a new class that's going to be dedicated to our API. Woh.
