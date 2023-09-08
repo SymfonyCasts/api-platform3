@@ -67,4 +67,4 @@ Suddenly, this is *starting* to look like what we had before!
 
 The *big* missing pieces, like with `DailyQuest`, are the state provider and state
 processor. Let's add the state provider next.... but with a *twist* that leverages
-a brand new feature that's going to save us a *ton* of work.
+a brand-new feature that's going to save us a *ton* of work.

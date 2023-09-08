@@ -5,8 +5,8 @@ like normal.
 
 ## Customizing ApiResource Options
 
-We can customize things, like... instead of `DailyQuests`, maybe we change the
-`shortName` to just `Quest`. When we check the docs, as expected, the title changes...
+For example, instead of `DailyQuests`, maybe we change the
+`shortName` to just `Quest`. When we peek at the docs, as expected, the title changes...
 along with all the URLs.
 
 ## Making the State Provider
@@ -14,27 +14,27 @@ along with all the URLs.
 To be able to load data and have this collection endpoint *not* return a 404, we
 need a *state provider*. And it's not *just* the `GET` endpoints. The `PUT` endpoint
 uses a state provider, as well as `DELETE` and `PATCH`: these all first *load*
-the resource before editing or deleting it.
+the resource, before editing or deleting it.
 
-So let's make a state provider! We've done this before: at your terminal, run:
+So let's make a state provider! We've done this before. At your terminal, run:
 
 ```terminal
 ./bin/console make:state-provider
 ```
 
-Let's call it `DailyQuestStateProvider`. *Awesome* name!
+Call it `DailyQuestStateProvider`. *Awesome* name!
 
 Spin back over, open the `State/` directory and... there it is! Our job is simple:
 to return the `DailyQuest` object or objects for the current operation.
 
-Let's start *so* simple: return an array with two hard-coded `new DailyQuest()`
+Let's start *super* basic: return an array with two hard-coded `new DailyQuest()`
 objects. They're both empty... because that class doesn't have any properties.
 
-Now, to tell API Platform when to *use* the shiny new provider, in `DailyQuest`,
-say `provider` set to `DailyQuestStatsProvider::class`.
+To tell API Platform to *use* the shiny new provider, in `DailyQuest`,
+add `provider` set to `DailyQuestStateProvider::class`.
 
-Let's try this thing! Head back over to the docs to "Execute" the collection endpoint.
-And... *yes*! No more 404! Now we have a 200... and it returned 2 items! All they
+Let's give this a whirl! Dash back over to the docs to "Execute" the collection endpoint.
+And... *yes*! No more 404! We get a 200... and it returned 2 items! All they
 have are the JSON-LD fields -  `@id` and `@type` - but that makes sense since the
 class doesn't have any other properties.
 
@@ -53,16 +53,16 @@ Spin over and run:
 php bin/console debug:router
 ```
 
-I love this. API Platform creates an actual route for *every* operation of ever
-API resource. I'll make this a little smaller... better. You can see all of the
-routes here for the quests. Here's the one for `_get_collection` and, above it, we
-see the one for `_get_single`... but with the *same* URL!
+I love this. API Platform creates an actual route for *every* operation of every
+API resource. I'll make this a little smaller... better. You can see all the
+routes for the quests. Here's the one for `_get_collection` and, above it, the
+one for `_get_single`... but with the *same* URL!
 
 *Usually*, the URL would be `/api/quests/{id}`... where `id` is known as the
-identifier. But... our `DailyQuest` doesn't have *any* properties... so it API
+identifier. But... our `DailyQuest` doesn't have *any* properties... so API
 Platform has *no* idea what to use for the identifier.
 
-How do we fix it? The easiest way is to add an `$id` property: `public int $id`...
+So what's the solution? The easiest is to add an `$id` property: `public int $id`...
 and, for simplicity, let's add a constructor where we can pass the `int $id`. Set
 the property inside.
 
@@ -73,23 +73,23 @@ Over in `DailyQuestStateProvider`, invent a few IDs: how about `4` and `5`. Cool
 php bin/console debug:router
 ```
 
-And... check it out! The single `GET` has a *different* URL with `{id}`. The `id`
+Behold! The single `GET` has a *different* URL with `{id}`. The `id`
 was also missing from `put`, `patch`, and `delete`... and it's there now too. Over
 on the docs, when we refresh... we see the *same* thing.
 
-The `id` identifier is important because it's used the URLs... and so it's also
-used to generate the `@id` field for each item. Here, you can see the `@id` is now
-pointing to `/api/quests/4`.
+The identifier is important because it's used in the URLs... and so it's also
+used to generate the `@id` IRI string for each item. Here, you can see the `@id`
+is now pointing to `/api/quests/4`.
 
 ## A non-traditional Identifier with identifier: true
 
-But wait, *how* did API Platform know that the `id` is the all-important "identifier"
-and now just some normal property? I'm... *honestly*... not entirely sure. But it
-seems that the *name* `id` is a special *somewhere* in API platform. If you name
+But wait, *how* did API Platform know that the `id` is the all-important "identifier"...
+and not just some normal property? I'm... *honestly*... not entirely sure. But it
+seems that the *name* `id` is special... *somewhere* in API platform. If you name
 a property `id`, API Platform says:
 
 > Oh, that must be your identifier!
 
-*But* there's a more explicit way to say that a property is an identifier. Next,
-instead of an integer identifier, let's see if we can use a *date* to have URLs
-like `/api/quest/2023-06-05`.
+And... it's usually not wrong! *But*, there *is* a more explicit way to say that
+a property is an identifier. Next, instead of an integer identifier, let's see if
+we can use a *date* identifier, so we have URLs like `/api/quests/2023-06-05`.
