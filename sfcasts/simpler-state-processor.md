@@ -18,6 +18,8 @@ owns a treasure with `isPublished` `false`. Then we log in as that user, make a
 `isPublished: true`. This should be a 200 status code... and then
 `->assertJsonMatches()` that `isPublished` is `true`.
 
+[[[ code('f34b2a3a1a') ]]]
+
 Simple enough! Copy that test name, spin over and run it:
 
 ```terminal
@@ -29,9 +31,13 @@ line: the JSON still has `isPublished` false. Maybe... the field isn't writable?
 Check the groups above that property. Ah: in a previous tutorial, we made this field
 writable by *admin* users, but not normal users. Add `treasure:write`.
 
+[[[ code('7f13ac18a5') ]]]
+
 That means anyone with access to the `Patch` operation can write to this field...
 which in reality, thanks to the `security` on that operation... and a custom voter
 we created... is just admin users and the owner.
+
+[[[ code('98ce0bb528') ]]]
 
 Try the test now:
 
@@ -51,7 +57,7 @@ my life simpler. But let's rename this class to be more clear: `DragonTreasureSt
 
 In the last tutorial, we learned that there are *two* ways to add a custom state
 provider or processor into the system. We used the first method a few minutes
-ago with the state provider: create a normal boring service... use `#[Autowire] to
+ago with the state provider: create a normal boring service... use `#[Autowire]` to
 inject the core services... then set the `provider`
 option on `DragonTreasure` to point to it.
 
@@ -63,6 +69,8 @@ was easy to set up because all we needed was `#[AsDecorator]` and... bam! Our
 service started being called for *all* our resources. But that's *also* why we need
 this extra code that checks *which* object is being saved.
 
+[[[ code('05aaee4b69') ]]]
+
 Both ways are fine. But for consistency with the provider, let's refactor this to
 use the *other* method. This is 3 steps. First, remove `#[AsDecorator]`. Suddenly,
 instead of overriding a core service, this is a normal, boring service that *nobody*
@@ -71,10 +79,14 @@ Symfony won't know what to pass for `$innerProcessor`. Break this onto multiple
 lines... then use the `#[Autowire]` trick to point to the core `PersistProcessor`.
 And I'll clean up the old `use` statement.
 
+[[[ code('d7aeb5eec0') ]]]
+
 Step 3 is to tell API Platform *when* to use this processor. In `DragonTreasure`, we
 want this to be used for both our `Post` and `Patch` operations. Set
 `processor` to `DragonTreasureStateProcessor::class`... and repeat that down for
 `Patch`.
+
+[[[ code('2a1123eeae') ]]]
 
 Done! API Platform will call our processor... and it contains the core `PersistProcessor`
 so we can make it do the *real* work. Re-run the test to give us infinite confidence:
@@ -89,6 +101,8 @@ And the nice thing about doing the processor with *this* method is that you don'
 need this conditional code: this will *always* be a `DragonTreasure`. To
 help my editor and prove it, `assert()` that `$data` is an `instanceof`
 `DragonTreasure`.
+
+[[[ code('fcaf6cba28') ]]]
 
 And my editor is already yelling:
 
