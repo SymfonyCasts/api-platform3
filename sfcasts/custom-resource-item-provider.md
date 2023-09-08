@@ -1,14 +1,14 @@
 # Custom Resource Item Provider
 
 Let's try to get a *single* item. I'll change the date, hit "Execute", and...
-*200 status code*. Except... this is returning a *collection*: the *exact* same data
-as our *collection endpoint*!
+*200 status code*. Hold your horses... this is returning a *collection*: the
+*exact* same data as our *collection endpoint*!
 
 ## Collection vs Item Operations
 
 Ok, each *operation* can have its own provider. But when we put `provider` direclty
 under `#[ApiResource]`, *this* becomes the provider for *every* operation. That's
-*fine*... as long as you remember that *some* operations fetch a *collection*
+peachy... given you don't forget that *some* operations fetch a *collection*
 of resources while other fetch a *single* item.
 
 Inside our provider, the `$operation` helps us know the difference. `dd()` that...
@@ -23,11 +23,11 @@ Below, we know this is an "item" operation.
 
 ## URI Variables
 
-So this *does* fix the *collection* operation. Now, we need a way to get the date
+So this *does* keep the *collection* operation working. Now, we need a way to extract the date
 string from the URL so we can find the *one* quest that matches. How can we get
 that? `dd($uriVariables)`.
 
-When we refresh... we have a `dayString` inside! Notice that, in `DailyQuest`,
+When we refresh... behold: there's a `dayString` inside! Notice that, in `DailyQuest`,
 we never configure what the URL should look like. You *can* do that, but by default,
 API Platform *automatically* figures out what the route and URL should look like.
 Run:
@@ -46,15 +46,15 @@ Down here, we need to return a *single* `DailyQuest` or *null*. Say
 `$quests = $this->createQuests()`, then
 `return $quests[$uriVariables['dayString']]` or `null` if it's not set.
 
-Remember: this works because the array uses `dayString` for each key so we could
-use that to fetch them. In a *real* app, we would want to do this more efficiently:
+Remember: this works because the array uses `dayString` for each key.
+In a *real* app, we would want to do this more efficiently:
 it doesn't make sense to load *every* quest... just to return *one*. But for our
 test app, this will work fine.
 
-Ok, try that endpoint. Got it! One result. And if we try to a random date that
+Ok, try that endpoint. Got it! One result. And if we try a random date that
 *doesn't* exist... like "2013"... we get a 404. API Platform sees that we returned
 `null` and it handled the 404 for us.
 
-Okay! We now have a fully functional state provider! Though we'll talk about this
-more soon - including topics like pagination. But next: let's shift our focus and
-create a *state processor* for our custom resource.
+We are now the proud parents of a fully functional state provider! Though
+we'll talk about this more soon - including topics like pagination. But next: let's
+shift our focus to creating a *state processor* for our custom resource.
