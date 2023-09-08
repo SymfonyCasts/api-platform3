@@ -1,0 +1,288 @@
+WEBVTT
+
+00:00:01.036 --> 00:00:05.976 align:middle
+Publicar un DragonTreasure es fácil: haz
+una petición Patch a la ruta del tesoro
+
+00:00:05.976 --> 00:00:08.826 align:middle
+con isPublished establecido en true y...
+
+00:00:09.046 --> 00:00:09.916 align:middle
+¡a celebrar!
+
+00:00:10.546 --> 00:00:16.726 align:middle
+Pero... ¿qué pasa si, cuando se publica un DragonTreasure,
+necesitamos ejecutar algún código personalizado -
+
+00:00:17.106 --> 00:00:19.506 align:middle
+tal vez activar algunas
+notificaciones en el sitio.
+
+00:00:20.276 --> 00:00:28.176 align:middle
+Una opción es crear una operación personalizada
+- como quizás POST /api/treasures/5/publish.
+
+00:00:28.846 --> 00:00:33.356 align:middle
+Puedes hacerlo - y podría ser
+divertido verlo en un futuro tutorial.
+
+00:00:33.746 --> 00:00:35.276 align:middle
+Pero, ¿quién quiere trabajo extra?
+
+00:00:35.756 --> 00:00:40.566 align:middle
+Podemos mantener esa simple petición a Patch
+y seguir ejecutando el código que queramos.
+
+00:00:40.986 --> 00:00:45.666 align:middle
+¿Cómo? Utilizando un procesador
+de estado y detectando el cambio.
+
+00:00:46.346 --> 00:00:48.856 align:middle
+Empecemos creando una prueba
+que publique un tesoro.
+
+00:00:49.506 --> 00:00:57.816 align:middle
+En la parte inferior, copia esta última prueba,
+pégala y cámbiale el nombre a testPublishTreasure.
+
+00:00:58.806 --> 00:01:02.626 align:middle
+Comenzamos con un usuario que posee
+un tesoro con isPublished false .
+
+00:01:03.106 --> 00:01:10.076 align:middle
+A continuación, iniciamos sesión como ese usuario, hacemos
+una petición ->patch() a /api/treasures/ utilizando el id...
+
+00:01:10.366 --> 00:01:12.416 align:middle
+y enviamos isPublished: true.
+
+00:01:14.146 --> 00:01:16.166 align:middle
+Esto debería ser un código de estado 200...
+
+00:01:16.166 --> 00:01:20.566 align:middle
+y luego ->assertJsonMatches()
+que isPublished es true.
+
+00:01:21.096 --> 00:01:23.406 align:middle
+¡Bastante sencillo!
+
+00:01:23.446 --> 00:01:29.926 align:middle
+Copia el nombre de la prueba, gira y
+ejecútala: symfony php bin/phpunit
+
+00:01:29.926 --> 00:01:33.656 align:middle
+--filter=testPublishTreasure ¡Uy!
+
+00:01:33.726 --> 00:01:37.216 align:middle
+Falla: esperaba que false
+fuera lo mismo que true.
+
+00:01:37.896 --> 00:01:43.286 align:middle
+Eso es de la última línea: el JSON
+sigue teniendo isPublished falso.
+
+00:01:43.976 --> 00:01:46.536 align:middle
+Quizá... ¿el campo no es escribible?
+
+00:01:47.376 --> 00:01:49.096 align:middle
+Comprueba los grupos que
+hay sobre esa propiedad.
+
+00:01:50.076 --> 00:01:57.386 align:middle
+Ah: en un tutorial anterior, hicimos que este campo fuera escribible
+por los usuarios administradores, pero no por los usuarios normales.
+
+00:01:57.786 --> 00:01:59.666 align:middle
+Añade treasure:write.
+
+00:02:00.266 --> 00:02:04.716 align:middle
+Eso significa que cualquiera con acceso a la
+operación Patch puede escribir en este campo...
+
+00:02:05.166 --> 00:02:09.396 align:middle
+que en realidad, gracias al
+security de esa operación...
+
+00:02:09.556 --> 00:02:11.426 align:middle
+y a un votante personalizado
+que hemos creado...
+
+00:02:11.826 --> 00:02:14.286 align:middle
+son sólo los usuarios
+administradores y el propietario.
+
+00:02:15.156 --> 00:02:18.916 align:middle
+Haz la prueba ahora: ¡Ya está!
+
+00:02:19.756 --> 00:02:23.636 align:middle
+Para ejecutar algún código cuando se publique
+el tesoro, necesitamos un procesador de estado.
+
+00:02:24.006 --> 00:02:25.776 align:middle
+Y ya tenemos uno para `¡TesoroDragón!
+
+00:02:26.376 --> 00:02:31.206 align:middle
+Lo creamos originalmente para establecer el
+propietario en el usuario autenticado en ese momento.
+
+00:02:31.796 --> 00:02:37.706 align:middle
+Así que... ¿deberíamos meter el nuevo
+código aquí o crear un segundo procesador?
+
+00:02:38.296 --> 00:02:43.236 align:middle
+Tú decides, pero a mí me gusta tener
+un procesador por clase de recurso.
+
+00:02:43.656 --> 00:02:45.446 align:middle
+Me simplifica la vida.
+
+00:02:45.946 --> 00:02:50.516 align:middle
+Pero cambiemos el nombre de esta clase para que
+quede más claro: DragonTreasureStateProcessor.
+
+00:02:53.196 --> 00:02:56.146 align:middle
+En el último tutorial,
+aprendimos que hay dos formas
+
+00:02:56.146 --> 00:02:59.796 align:middle
+de añadir un proveedor de estado o
+procesador personalizado al sistema.
+
+00:03:00.296 --> 00:03:04.036 align:middle
+Hace unos minutos hemos utilizado el
+primer método con el proveedor de estado:
+
+00:03:04.556 --> 00:03:06.596 align:middle
+crear un servicio normal aburrido...
+
+00:03:06.926 --> 00:03:09.346 align:middle
+utiliza #[Autowire] para inyectar
+los servicios básicos...
+
+00:03:09.806 --> 00:03:14.836 align:middle
+y luego establecer la opción provider en
+DragonTreasure para que apunte a él. La
+
+00:03:14.836 --> 00:03:19.006 align:middle
+otra forma -que hicimos en el último
+tutorial de esta clase- es decorar
+
+00:03:19.516 --> 00:03:22.446 align:middle
+el procesador central.
+
+00:03:23.146 --> 00:03:27.036 align:middle
+Aquí, decoramos el
+PersistProcessor de Doctrine...
+
+00:03:27.336 --> 00:03:31.176 align:middle
+lo que significa que siempre que se
+guarde cualquier recurso de la API,
+
+00:03:31.666 --> 00:03:37.086 align:middle
+cuando intente utilizar el núcleo PersistProcessor,
+se llamará a nuestro servicio en su lugar.
+
+00:03:37.706 --> 00:03:42.996 align:middle
+Esto fue fácil de configurar porque todo lo
+que necesitábamos era #[AsDecorator] y...
+
+00:03:43.476 --> 00:03:47.876 align:middle
+bam! nuestro servicio empezó a ser
+llamado para todos nuestros recursos.
+
+00:03:48.556 --> 00:03:53.566 align:middle
+Pero también por eso necesitamos este código
+adicional que comprueba qué objeto se está guardando.
+
+00:03:54.386 --> 00:03:55.396 align:middle
+Ambas formas están bien.
+
+00:03:55.576 --> 00:04:00.336 align:middle
+Pero por coherencia con el proveedor, vamos a
+refactorizar esto para utilizar el otro método.
+
+00:04:00.866 --> 00:04:02.266 align:middle
+Esto consta de 3 pasos.
+
+00:04:02.406 --> 00:04:05.006 align:middle
+En primer lugar, elimina #[AsDecorator].
+
+00:04:05.556 --> 00:04:10.366 align:middle
+De repente, en lugar de sobrescribir un servicio
+central, se trata de un servicio normal y
+
+00:04:10.366 --> 00:04:14.176 align:middle
+aburrido que nadie utiliza en
+este momento. En segundo lugar
+
+00:04:14.896 --> 00:04:18.756 align:middle
+, como ya no estamos decorando
+un servicio del núcleo,
+
+00:04:19.086 --> 00:04:22.576 align:middle
+Symfony no sabrá qué
+pasar por $innerProcessor.
+
+00:04:23.546 --> 00:04:24.876 align:middle
+Divide esto en varias líneas...
+
+00:04:25.146 --> 00:04:29.386 align:middle
+y luego utiliza el truco #[Autowire]
+para apuntar al núcleo PersistProcessor.
+
+00:04:32.816 --> 00:04:35.106 align:middle
+Y limpiaré la antigua declaración use.
+
+00:04:35.106 --> 00:04:40.906 align:middle
+El paso 3 es decirle a API Platform
+cuándo utilizar este procesador.
+
+00:04:41.316 --> 00:04:46.656 align:middle
+En DragonTreasure, queremos que se utilice
+para nuestras operaciones Post y Patch.
+
+00:04:46.846 --> 00:04:51.716 align:middle
+Establece processor en
+DragonTreasureStateProcessor::class...
+
+00:04:51.926 --> 00:04:54.646 align:middle
+y repite lo mismo para Patch.
+
+00:04:56.386 --> 00:04:59.726 align:middle
+¡Listo! API Platform llamará
+a nuestro procesador...
+
+00:05:00.016 --> 00:05:05.996 align:middle
+y contendrá el núcleo PersistProcessor para
+que podamos hacer que haga el trabajo real.
+
+00:05:06.446 --> 00:05:13.386 align:middle
+Vuelve a ejecutar la prueba para darnos una
+confianza infinita: Me parece estupendo.
+
+00:05:13.526 --> 00:05:17.616 align:middle
+Y lo bueno de hacer el
+procesador con este método es
+
+00:05:17.616 --> 00:05:23.066 align:middle
+que no necesitas este código condicional:
+siempre será un DragonTreasure.
+
+00:05:23.956 --> 00:05:30.116 align:middle
+Para ayudar a mi editor y demostrarlo, assert()
+que $data es un instanceof DragonTreasure .
+
+00:05:30.626 --> 00:05:35.476 align:middle
+Y mi editor ya está gritando ¡Eh, este
+código de aquí abajo ya no es necesario, tío!
+
+00:05:35.906 --> 00:05:37.446 align:middle
+Así que elimínalo también.
+
+00:05:38.576 --> 00:05:43.116 align:middle
+Ahora que hemos refactorizado nuestro procesador
+de estados, volvamos a la tarea que nos ocupa:
+
+00:05:43.596 --> 00:05:46.846 align:middle
+ejecutar código personalizado
+cuando se publique un tesoro.
