@@ -1,15 +1,82 @@
-# Provider Return Dto
+# Provider: Transforming Entities to DTOs
 
-Let's keep track of our goal here. When we originally used the `stateOptions`, it triggered the core Doctrine collection provider to be used. That's *great*, except that it returned the `User` entities, meaning that the `User` entity objects became the *central* objects internally whenever we used our `UserApi` endpoints. That caused a serious limitation when serializing. Our `UserApi` properties needed to match our `User` properties because the serializer was basically taking those `User` objects and serializing them into our `UserApi` objects. To fix that and give us full control, we're going to create our own state provider, call the collection provider like we have been, but *ultimately* return `UserApi` objects instead of `User` entity objects. Our `UserApi` objects will then become the *central* objects when using the `UserApi` endpoints and they'll serialize *normally*. None of that weirdness where it tries to convert a `User` into a `UserApi`. That will free us up to have whatever properties we want on `UserApi`.
+Let's keep track of the goal: when we first used `stateOptions`, it triggered the
+core Doctrine collection provider to be used. That's *great*... except that it
+returns `User` *entities*, meaning that the `User` entities became the *central*
+objects internally for the `UserApi` endpoints. That causes a serious limitation
+when serializing: our `UserApi` properties need to match our `User` properties...
+otherwise the serializer explodes.
 
-So *our* job is pretty simple. We need to loop over all of these `User` entity objects and convert them to `UserApi` objects. This part is kind of boring, but that's the beauty of it. Right here, ceate a `$dtos` array, and then we're going to `foreach` over `$entities as $entity`. *Then* we're going to add that `$dtos` array by calling a new method: `mapEntityToDto($entity)`. Hit "alt" + "enter" to add that method down here. This isn't going to be `mixed`, but rather an `object`. In this case, it's actually going to be a `User` object, but we're trying to keep this class somewhat generic. This will return a different `object` - a `UserApi` object. Then we'll just paste some logic in here, hit "alt" + "enter", and import that class to add that `use` statement.
+To fix that and give us *full* control, we're created our own state provider that
+calls the core collection provider. But instead of returning these `User` entity
+objects, we're going to return `UserApi` objects so that *they* become the *central*
+objects and serialize *normally*.
 
-This is pretty simple. We're going to take in the `$entity`, which we know is going to be a `User` entity, and then we'll put the data onto the DTO and return it. The only thing that's *kind of* fancy is where we're changing this collection to an array because our `UserApi` is using an `array` on its property. *That's it*. Finally, down here at the bottom, we're going to `return $dtos`. Internally, it's going to serialize the `$dtos` instead of these `$entities`. If we try it... it works just like before! The big difference is that our `UserApi` is now the central object, so it's being serialized like normal. *That* means we're free to have custom properties.
+## Mapping to the DTO
 
-We can go put `public int $flameThrowingDistance` back, and then, in our provider, this is where we have an opportunity to set those custom properties, like `$dto->flameThrowingDistance = rand(1, 10)`. And... *voilà*! We now have the ability to add custom properties! We're reusing the core Doctrine `collectionProvider`, but with the ability to add custom fields. Oh! And I forgot to mention - now that we've done this, our JSON-LD fields `@id` and `@type` are now *back*.
+So, *our* job is simple: loop over these `User` entity objects and convert them to
+`UserApi` objects. This is.... kind of boring. But that's also kine of beautiful
+Create a `$dtos` array and then `foreach` over `$entities as $entity`. *Then* 
+add to the `$dtos` array by calling a new method: `mapEntityToDto($entity)`.
 
-So this is it! Though, we did miss one thing. We're missing *pagination*. You can see our filter stuff is documented down here, but we normally have a little spot down here that *also* explains the pagination. In reality, it *is* paginating. Watch. If I go to `?page=2` in the URL, while we're looking at "user 1" right now... it becomes *"user 6"*. So internally, the core `collectionProvider` from Doctrine is *still* reading the current page and querying for the correct set of objects for that page. We're just missing the Hydra stuff at the bottom that *describes* the pagination. And that's because we're no longer returning an object that implements `PaginationInterface`. Remember, we're calling `$entities`, but this is actually a pagination object. Now that we're just returning an array, it makes API Platform think we *don't* support pagination when we *do*.
+Hit "alt" + "enter" to add that method at the bottom. This will return an `object`.
+Well, in this case, it will be a `UserApi` object... but we're trying to keep this
+class generic. I'll paste on some logic - you can copy this from the code block on
+this page - then hit "alt" + "enter" to add the missing `use` statement. This code
+*is* user-specific... but we'll make it more generic later so this class can be
+used for dragon treasures.
 
-The solution for this is really simple. We're going to take our array of `$dtos` and pop these into a pagination object. Chech this out. Instead of returning `$dtos`, we'll `return new Traversable Paginator()` like we did before, and we'll also use the same `\ArrayIterator()` to pass that array in. Then we just need to pass a few things like the current page, items per page, and total items. And we can actually get all of that from the paginator object up here. Remember, this is not `$entities`. We dumped that in the last video. This is actually an instance of paginator. So say `assert($entities instanceof Paginator)` (the one from Doctrine ORM) to help my editor, and then, down here, this part is pretty easy: `$entities->getCurrentPage()`, `$entities->getItemsPerPage()`, and `$entities->getTotalItems()` because it already did all of that work for us. *How nice is that*? When we refresh... the results, of course, don't change. But down here in `hydra:view`... our pagination is *back*. Nice!
+But isn't this refreshingly boring and understandable code? Just transferring
+properties from the `User` $entity... onto the DTO. The only thing that's *kind of*
+fancy is where we change this collection to an array... because this proeprty is
+an `array` on `UserApi`.
 
-Next: Let's get this working for our item operations, like `GET` one or `PATCH`, and leverage our new system to add something custom to `UserApi` that we had previously. But *this time*, we're going to do it in a cooler, simpler way.
+*That's it*. Finally, at the bottom, `return $dtos`.
+
+Thanks to this, the central objects will be `UserApi` objects... and *these* will
+be serialized normally... without any fanciness of trying to serializer from a
+`User` entity onto a `UserApi`.
+
+Moment of truth. It works... with the same result as before! But *now* we have the
+power to add custom properties.
+
+## Adding Custom Properties
+
+Add the `public int $flameThrowingDistance` back. Then, in the provider, *this* is
+where we have an opportunity to set those custom properties, like
+`$dto->flameThrowingDistance = rand(1, 10)`.
+
+And... *voilà*! We are so freakin' dangerous right now! we're reusing the core
+Doctrine `CollectionProvider`, but with the ability to add custom fields. Oh! And
+I forgot to mention: our JSON-LD fields `@id` and `@type` are *back*. We did it!
+
+## Fixing Pagination
+
+Though, we're now missing *pagination*. We can see our filter stuff is documented...
+but the `hydra:view` field that documents the pagination I gone! Ok, in reality,
+pagination *does* still work. Watch: if I go to `?page=2`, the first "user 1" user...
+becomes *"user 6"*. Yup, internally, the core `CollectionProvider` from Doctrine is
+*still* reading the current page and querying for the correct set of objects *for*
+that page. We're missing the `hdra:view` field at the bottom that *describes* the
+pagination simple because we're no longer returning an object that implements
+`PaginationInterface`.
+
+Remember, this `$entities` variable is actually a `Pagination` object. Now that we're
+just returning an array, it makes API Platform *think* that we don't support
+pagination.
+
+The solution is dead-simple. Instead of returning `$dtos`,
+`return new TraversablePaginator()` with a new `\ArrayIterator()` of `$dtos`.
+For the other arguments, we can grab those from the original paginator. To help,
+`assert($entities instanceof Paginator)` (the one from Doctrine ORM). Then, down
+here, usex `$entities->getCurrentPage()`, `$entities->getItemsPerPage()`, and
+`$entities->getTotalItems()`.
+
+The core collection provider already did all that hard work for us.
+
+When we refresh... the results, of course, don't change. But down here,
+`hydra:view` is back!
+
+Next: Let's get this working for our item operations, like `GET` one or `PATCH`.
+We;ll also leverage our new system to readd something to `UserApi` that we
+*previously* had. But this time... we're going to do it in a much cooler way.
