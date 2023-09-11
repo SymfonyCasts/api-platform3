@@ -2,23 +2,22 @@
 
 When we create a non-entity API resource, *we're* responsible for loading and saving
 the data. What's *frustrating* is that, if we make a custom state provider for
-`UserAPI`, it will need to do the *exact* same thing as the core Doctrine state
-provider: query the database. It's a *bummer* to have to reinvent all of that logic
-inside our custom provider. This, historically, has been the *big* downside of
-DTO's.
+`UserApi`, it will do the *exact* same thing as the core Doctrine state
+provider: query the database. It's a *bummer* to reinvent all of that logic ourselves.
+This, historically, has been the Achille's heel of DTO's.
 
 ## Checking out the Core CollectionProvider
 
-Open up the core `CollectionProvider` from Doctrine ORM. If you ever wanted to see
+Crack open the core `CollectionProvider` from Doctrine ORM. If you ever wanted to see
 what the `CollectionProvider` looks like, *here* it is! It's more complex than I
 imagined. It creates the `QueryBuilder`, calls `handleLinks()` (which intelligently
-joins to other tables based on the data you need), and holds the query extension
+joins to other tables based on the data you need), and houses the query extension
 system. In the last tutorial, we created a query extension for `DragonTreasure` so
 it would only return *published* items. And *part* of that extension system, though
 we can't see it here, is where pagination and filtering is added.
 
 *So*, this class gives us a *lot*... and I want to reuse it. So, darn it, let's
-yolo this thing and try it!
+yolo this thing and try to!
 
 ## Trying to use the CollectionProvider
 
@@ -30,22 +29,22 @@ Let's see what happens! At the browser, go to the endpoint *directly* -
 
 > Call to a member function `getRepository()` on null.
 
-Coming from the core `CollectionProvider`. Boo. but not too surprising. Our `UserApi`
-isn't an entity... and when it tries to figure out how to query for it, explosions!
+Coming from the core `CollectionProvider`. Boo. But not surprising. Our `UserApi`
+isn't an entity... and so when it tries to figure out how to query for it, explosions!
 
 ## Hello stateOptions + entityClas
 
 But *psst*... want to hear a secret? There *is* a way we can hint to the provider
-the data for this class should come from the `User` entity. It looks like this:
+that data for this class should come from the `User` entity. It looks like this:
 `stateOptions` set it to a `new Options` object (making sure to grab the one from
-the ORM), and inside, `entityClass: User::class`.
+ORM), and inside, `entityClass: User::class`.
 
 Let's see what happens now! When we head over and refresh... whoa! It looks like
 that worked! We see "totalItems: 11"... with items 1-11 all right here. We only have
 an `$id` property, but I guess that makes sense... since we only have an `$id`
-property inside of our `UserApi`.
+property inside our `UserApi`.
 
-Let's try adding a few more properties! We'll add `public ?string $email = null`
+Let's add a few more properties! How about `public ?string $email = null`
 and `public ?string $username = null`. Both of these properties also live in
 our `User` entity.
 
@@ -54,7 +53,7 @@ is going on?
 
 ## How this all Works
 
-If we could see peek under API Platform's hood, we would see that the underlying
+If we could peek under API Platform's hood, we would see that the underlying
 API resource objects *are* `UserApi`. So what we're seeing here *is* the JSON for
 a collection of `UserApi` objects.
 
@@ -81,18 +80,18 @@ This seems to work well... but with one, major limitation.
 
 ## Limitation: No Custom Properties
 
-Check it out! Add a property that is *not* on our entity, like
+Add a property that is *not* on our entity, like
 `public int $flameThrowingDistance = 0`. There is *no* `$flameThrowingDistance`
 property over on `User`.
 
 When we try this... *explosion*! If we scroll down a bit, we see that this comes
-from the *normalizer* system... which is part of the serializer system. It
-looks at the `UserApi`, thinks "Oh, I need a `$flameThrowingDistance` property",
+from the *normalizer* system... which is part of the serializer. It
+looks at `UserApi`, thinks "Oh, I need a `$flameThrowingDistance` field",
 tries to fetch that from `User`, and, since it's not there, boom!
 
-So the big, huge, gigantic limitation of the `entityClass` strategy is that we *can't*
-have extra fields on our `UserApi` class. But no worries: we'll find a path around
-this in the next chapter. For now, remove the extra property.
+So the colossal, monstrous, titanic limitation of the `entityClass` strategy is...
+we *can't* have extra fields on our `UserApi` class. But no worries: we'll find a
+path around this in the next chapter. For now, remove the extra property.
 
 Oh, and one *other* limitation that you may have noticed is that we don't have the
 JSON-LD fields `@id` or `@type`. We'll handle that while we're fixing the issue with
@@ -100,7 +99,7 @@ custom fields... like the multitasking wizards we are.
 
 ## Adding a Relation Property
 
-Let's add another property: how about `public array $dragonTreasures = []`? We *do*
+Let's add another property: `public array $dragonTreasures = []`? We *do*
 have a `$dragonTreasures` property over on `User` that holds a collection of
 `DragonTreasure` objects.
 
@@ -111,7 +110,7 @@ the same problem we saw earlier, and the fix is the same.
 I *do* want to point out one interesting thing about this, though. When it embeds
 the `dragonTreasures`, one of the properties is `owner`. Right now, that *owner*
 is actually the `User` entity. Since the `User` *entity* is no longer an API resource,
-it's using the random `genid` thing.
+it embeds it and uses the random `genid` thing.
 
 I'll talk about this more in a bit, but once we start creating DTOs and using *those*
 instead of entities, we'll probably want to use DTOs for *all* of our API resources...
@@ -127,11 +126,11 @@ If we try this again... back to IRIs! Woo!
 So far, we know that `stateOptions` does *three* things. One: It automatically sets
 the provider and processor to use the core Doctrine provider and processor. Two:
 the provider is smart enough to query from this entity. This also works for
-*single* items, like `/users/1.jsonld`. Awesome! And three: The serializer
-*serializes* the `User` entity *into* the `UserApi` class.
+*single* items, like `/users/1.jsonld`. And three: The serializer
+*serializes* the `User` entity *into* a `UserApi` object.
 
 The fact that `stateOptions` causes the core Doctrine state provider to be used has
-some *very* important side effects. First, we get pagination *for free*. Add
+some *very* important other side effects. First, we get pagination *for free*. Add
 `paginationItemsPerPage: 5`, go over, and refresh. We see that the total number of
 items is "11"... but it only shows *five*... and the pages are down here.
 
@@ -141,24 +140,24 @@ Later on, when we convert `DragonTreasure` to its own DTO class, this extension 
 *still* going to work.
 
 The third and final goodie is that the *filter* system still works! Watch:
-above `UserApi`, add `#[ApiFilter()]` with `SearchFilter::class, properties: []`...
-and set `username` to `partial`.
+above `UserApi`, add `#[ApiFilter()]` with `SearchFilter::class` and `properties:`
+with `username` set to `partial`.
 
-Go back and look at the documentation... *whoops*. Yup... I autocompleted the
-`SearchFilter` form ODM. Delete that, then I'll hit Alt+Enter to grab the one
+Go back and look at the documentation... *whoops*. I autocompleted the
+`SearchFilter` from ODM. Delete that, then I'll hit Alt+Enter to grab the one
 from `ORM`.
 
 Refresh the docs again... and look at the `/api/users` endpoint. It *is* advertising
-that there's a `username` filter and it *is* going to work! In the other tab,
+that there's a `username` filter, and it *is* going to work! In the other tab,
 add `?username=Clumsy`.
 
-And... yes! It only returns those 5 results! So the filter system *does* work!
+And... yes! It only returns those 5 results! So the filter system works!
 Though, one thing to note is that, when we say `username`, we're referring to the
-`$username` *property* on `User`. As far as the filter is concerned, we don't even
-*need* a `username` in `UserApi`.
+`$username` property on the `User` *entity*. As far as the filter is concerned, we
+don't even *need* a `username` in `UserApi`.
 
 So: we're reusing all of this core Doctrine provider logic, we have pagination,
-filters and.... it's the best thing since ice cream sandwiches... except for that
-big, scary limitation... that our DTO can't have custom fields. And... that's really
-the whole point of a DTO! To have the flexibility to have different fields than your
-entity. So let's see how to fix that limitation *next*.
+filters and.... it's the best thing since ice cream sandwiches. Except... for that
+big, scary limitation: that our DTO can't have custom fields. And... that's really
+the whole point of a DTO: to gain the flexibility of having different fields than
+your entity. So let's see how to fix that limitation *next*.
