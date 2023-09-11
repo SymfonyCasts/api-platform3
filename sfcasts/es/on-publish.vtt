@@ -1,0 +1,316 @@
+WEBVTT
+
+00:00:01.036 --> 00:00:03.786 align:middle
+Una cosa rápida y sin importancia
+sobre los procesadores de estado.
+
+00:00:04.126 --> 00:00:09.676 align:middle
+El comando make:state-processor creó el
+método process() con un retorno void.
+
+00:00:10.036 --> 00:00:11.506 align:middle
+Y... eso tiene sentido.
+
+00:00:11.946 --> 00:00:16.376 align:middle
+API Platform nos pasa los datos y
+nuestro trabajo es sólo guardar eso...
+
+00:00:16.546 --> 00:00:17.956 align:middle
+no devolver nada.
+
+00:00:18.426 --> 00:00:23.236 align:middle
+Sin embargo, técnicamente el método
+process() puede devolver algo.
+
+00:00:23.706 --> 00:00:27.386 align:middle
+Y, por coherencia, devolveré algo.
+
+00:00:28.276 --> 00:00:32.646 align:middle
+Elimina el tipo void y,
+al final, devuelve $data.
+
+00:00:35.026 --> 00:00:39.676 align:middle
+Repetiré esto en
+UserHashPasswordStateProcessor por coherencia.
+
+00:00:42.586 --> 00:00:47.686 align:middle
+Éste es el trato: si devuelves
+algo, ésa será la "cosa"
+
+00:00:47.686 --> 00:00:51.016 align:middle
+que finalmente se serialice
+y devuelva como JSON.
+
+00:00:51.016 --> 00:00:55.806 align:middle
+Si no devuelves nada, se serializará $data.
+
+00:00:56.466 --> 00:00:58.406 align:middle
+Así que, al devolver $data...
+
+00:00:58.406 --> 00:01:00.456 align:middle
+no estamos cambiando ningún comportamiento.
+
+00:01:00.806 --> 00:01:04.346 align:middle
+Pero es interesante saber que
+podrías devolver algo diferente.
+
+00:01:05.486 --> 00:01:07.066 align:middle
+Bien, volvamos a nuestro objetivo.
+
+00:01:07.536 --> 00:01:12.366 align:middle
+Después de guardar, necesitamos detectar
+si el campo isPublished cambió de falso
+
+00:01:12.366 --> 00:01:14.656 align:middle
+a verdadero, para poder ejecutar
+algún código personalizado.
+
+00:01:15.076 --> 00:01:17.616 align:middle
+Pero cuando se llama al procesador de estado,
+
+00:01:17.916 --> 00:01:22.046 align:middle
+el JSON del usuario ya se ha
+utilizado para actualizar el objeto.
+
+00:01:22.496 --> 00:01:25.016 align:middle
+Así que $data ya tendrá
+isPublished verdadero.
+
+00:01:25.706 --> 00:01:31.206 align:middle
+En el último tutorial, tuvimos una situación similar
+con un validador en el que necesitábamos comprobar
+
+00:01:31.206 --> 00:01:34.266 align:middle
+si el propietario de un
+DragonTreasure había cambiado.
+
+00:01:34.736 --> 00:01:38.216 align:middle
+Esta lógica vive en
+TreasureAllowToChangeValidator.
+
+00:01:39.286 --> 00:01:44.816 align:middle
+Empezamos con $value, que es una colección de
+objetos DragonTreasure, hacemos un bucle sobre ellos y
+
+00:01:45.086 --> 00:01:50.346 align:middle
+luego utilizamos UnitOfWork de Doctrine para
+ver qué aspecto tenía cada DragonTreasure
+
+00:01:50.346 --> 00:01:53.626 align:middle
+cuando se cargó originalmente
+de la base de datos.
+
+00:01:54.526 --> 00:02:00.336 align:middle
+¿Deberíamos utilizar el mismo truco aquí para ver qué
+aspecto tenía originalmente la propiedad isPublished?
+
+00:02:00.866 --> 00:02:01.756 align:middle
+Podríamos...
+
+00:02:02.366 --> 00:02:03.886 align:middle
+¡pero hay una forma más fácil!
+
+00:02:04.396 --> 00:02:07.466 align:middle
+API Platform tiene un concepto
+de "datos anteriores".
+
+00:02:08.106 --> 00:02:13.286 align:middle
+Cuando se inicia la petición, API
+Platform clona el objeto de nivel superior.
+
+00:02:13.686 --> 00:02:19.166 align:middle
+Así, si estamos editando un DragonTreasure, lo coge de
+la base de datos utilizando nuestro proveedor de estado,
+
+00:02:19.446 --> 00:02:24.956 align:middle
+lo clona y, a continuación, guarda ese
+clon "original" por si nos resulta útil.
+
+00:02:25.586 --> 00:02:29.276 align:middle
+Podemos utilizarlo para ver si el
+valor de isPublished ha cambiado.
+
+00:02:29.276 --> 00:02:33.586 align:middle
+Pero espera, ¿por qué no hicimos
+esto de los "datos anteriores"
+
+00:02:33.586 --> 00:02:35.946 align:middle
+en el último tutorial para el validador?
+
+00:02:36.336 --> 00:02:38.026 align:middle
+La razón es sutil.
+
+00:02:38.526 --> 00:02:42.706 align:middle
+Para el validador, el objeto de
+nivel superior era un objeto User.
+
+00:02:43.256 --> 00:02:48.046 align:middle
+Cuando PHP clona un objeto, es un clon
+"superficial": cualquier propiedad string,
+
+00:02:48.046 --> 00:02:51.166 align:middle
+int o booleana se copia en el clon.
+
+00:02:51.546 --> 00:02:57.156 align:middle
+Pero cualquier propiedad del objeto -como
+los objetos DragonTreasure - no se copia:
+
+00:02:57.156 --> 00:03:01.286 align:middle
+tanto el clon como los objetos
+User originales apuntan
+
+00:03:01.286 --> 00:03:04.886 align:middle
+a los mismos objetos DragonTreasure en memoria.
+
+00:03:05.536 --> 00:03:08.356 align:middle
+Así que cuando se actualiza
+el owner de esos tesoros...
+
+00:03:08.646 --> 00:03:13.606 align:middle
+eso afecta tanto al objeto principal
+como al clon del "objeto anterior".
+
+00:03:14.076 --> 00:03:17.246 align:middle
+Por eso tuvimos que profundizar
+y utilizar UnitOfWork.
+
+00:03:18.336 --> 00:03:24.206 align:middle
+Pero en este caso, la propiedad isPublished
+es una aburrida propiedad booleana escalar.
+
+00:03:24.796 --> 00:03:30.876 align:middle
+Así que si podemos obtener los datos anteriores, eso
+tendrá el valor correcto, original, de isPublished.
+
+00:03:31.576 --> 00:03:32.636 align:middle
+¡Estupendo! Entonces...
+
+00:03:32.756 --> 00:03:34.536 align:middle
+¿cómo obtenemos los datos anteriores?
+
+00:03:35.346 --> 00:03:38.136 align:middle
+Observa que se nos pasa un
+argumento llamado $context...
+
+00:03:38.416 --> 00:03:40.716 align:middle
+que está lleno de información útil.
+
+00:03:41.206 --> 00:03:42.546 align:middle
+Vamos a dd().
+
+00:03:44.606 --> 00:03:48.176 align:middle
+A continuación, copia el nombre de la
+prueba en la que estamos trabajando y...
+
+00:03:48.326 --> 00:03:53.706 align:middle
+ejecútalo: Oooo: un montón
+de cosas buenas aquí.
+
+00:03:54.036 --> 00:03:56.026 align:middle
+Tenemos el objeto de operación actual...
+
+00:03:57.476 --> 00:04:01.316 align:middle
+y aquí está: previous_data.
+
+00:04:01.836 --> 00:04:06.246 align:middle
+Fíjate en esa preciosa propiedad
+isPublished: ¡es falsa!
+
+00:04:07.976 --> 00:04:10.786 align:middle
+Deshazte de dd().
+
+00:04:10.786 --> 00:04:15.586 align:middle
+En la parte inferior, pon $previousData
+= $context['previous_data'].
+
+00:04:16.396 --> 00:04:21.986 align:middle
+Y, si no está ahí -lo que ocurrirá
+para una petición POST - pon null.
+
+00:04:22.676 --> 00:04:27.576 align:middle
+Voy a pegar el resto del código que detecta
+si isPublished cambió de falso a verdadero.
+
+00:04:28.576 --> 00:04:29.276 align:middle
+En realidad...
+
+00:04:29.346 --> 00:04:33.676 align:middle
+este no es el mejor código que
+he escrito - es un poco confuso
+
+00:04:33.676 --> 00:04:36.786 align:middle
+y no te permitirá publicar
+inmediatamente a través de un POST...
+
+00:04:36.866 --> 00:04:38.996 align:middle
+pero funcionará para nuestros propósitos.
+
+00:04:39.666 --> 00:04:41.066 align:middle
+Dentro, añade un volcado.
+
+00:04:41.896 --> 00:04:43.136 align:middle
+¡Vamos a hacerlo!
+
+00:04:43.586 --> 00:04:46.766 align:middle
+Ejecuta la prueba: Y...
+
+00:04:46.946 --> 00:04:48.646 align:middle
+¡hacemos el volcado!
+
+00:04:49.426 --> 00:04:54.976 align:middle
+Nuestro proyecto tiene una entidad Notification
+sin usar que creé antes de grabar sólo
+
+00:04:54.976 --> 00:04:59.216 align:middle
+para esta función: se refiere
+a un tesoro y tiene un mensaje.
+
+00:04:59.486 --> 00:05:00.656 align:middle
+Nada del otro mundo.
+
+00:05:01.466 --> 00:05:03.856 align:middle
+Vamos a crear una de éstas
+cuando publiquemos...
+
+00:05:04.186 --> 00:05:07.246 align:middle
+haciendo primero pruebas para ello.
+
+00:05:07.926 --> 00:05:12.986 align:middle
+¡TDD! Al final de la prueba, di
+NotificationFactory -que es una fábrica de Foundry
+
+00:05:12.986 --> 00:05:20.936 align:middle
+que he creado-, ::repository() -para obtener un ayudante
+de repositorio- y luego ->assert()->count(1).
+
+00:05:21.896 --> 00:05:25.676 align:middle
+Con Foundry, nuestra base de datos siempre
+está vacía al inicio de una prueba:
+
+00:05:25.876 --> 00:05:28.426 align:middle
+así que comprobar 1 fila es perfecto.
+
+00:05:29.346 --> 00:05:31.746 align:middle
+De vuelta al procesador, elimina el dd()...
+
+00:05:32.006 --> 00:05:36.486 align:middle
+y comprueba que la prueba no supera
+nuestra nueva afirmación: ¡Excelente!
+
+00:05:37.236 --> 00:05:42.986 align:middle
+De vuelta, empieza por autocablear un
+EntityManagerInterface privado $entityManager.
+
+00:05:44.416 --> 00:05:50.206 align:middle
+A continuación, pegaré un aburrido código
+que crea un Notification y lo persiste.
+
+00:05:51.066 --> 00:05:53.846 align:middle
+Genial. Y el test dice...
+
+00:05:54.386 --> 00:05:56.266 align:middle
+... ¡que molamos!
+
+00:05:57.286 --> 00:06:04.756 align:middle
+Lo siguiente: es hora de volvernos locos creando una clase
+ApiResource totalmente personalizada que no sea una entidad.

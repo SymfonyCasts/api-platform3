@@ -6,7 +6,12 @@ Platform passes us the data and our job is just to save that... not return anyth
 
 However, *technically* the `process()` method *can* return something. And, for consistency,
 I *will* return something. Remove the `void` type and, at the bottom, return `$data`.
+
+[[[ code('fae1d3f405') ]]]
+
 I'll repeat this in `UserHashPasswordStateProcessor` for consistency.
+
+[[[ code('6844996198') ]]]
 
 Here's the deal: *if* you return something, *that* will be the "thing" that is
 ultimately serialized and returned as JSON. If you do *not* return anything,
@@ -26,6 +31,8 @@ to check if the *owner* of a `DragonTreasure` had changed. This logic lives in
 of `DragonTreasure` objects, loop over them, then use Doctrine's `UnitOfWork` to see
 what each `DragonTreasure` looked like when it was *originally* loaded
 from the database.
+
+[[[ code('66546bf2f1') ]]]
 
 Should we use that same trick here to see what the `isPublished` property
 originally looked like? We *could*... but there's an easier way!
@@ -50,8 +57,11 @@ So if we can get the previous data, that will have the correct, original, `isPub
 value.
 
 Great! So... how *do* we get the previous data? Notice we're passed an argument called
-`$context`... which is full of useful info. Let's `dd()` that. Then copy the test
-name we're working on and... run it:
+`$context`... which is full of useful info. Let's `dd()` that. 
+
+[[[ code('f876c16baa') ]]]
+
+Then copy the test name we're working on and... run it:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPublishTreasure
@@ -67,6 +77,8 @@ I'll paste in the rest of the code that detects if `isPublished` changed from
 false to true. Actually... this is not the *best* code I've ever
 written - it's kinda confusing and won't let you publish *immediately* via
 a `POST`... but it'll work for our purposes. Inside, add a dump.
+
+[[[ code('a39c200601') ]]]
 
 Let's do it! Run the test:
 
@@ -87,6 +99,8 @@ At the end of the test, say `NotificationFactory` - that's a Foundry factory tha
 I created, `::repository()` - to get a repository helper - then
 `->assert()->count(1)`.
 
+[[[ code('fe14151120') ]]]
+
 With Foundry, our database is always empty at the start of a test: so checking for
 1 row is perfect.
 
@@ -100,6 +114,8 @@ symfony php bin/phpunit --filter=testPublishTreasure
 Excellent! Back over, start by autowiring a private `EntityManagerInterface`
 `$entityManager`. Then, below, I'll paste in some boring code that creates a
 `Notification` and persists it.
+
+[[[ code('5f5a2dbcb7') ]]]
 
 Coolio. And the test says...
 
