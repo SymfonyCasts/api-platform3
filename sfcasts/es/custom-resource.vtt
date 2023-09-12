@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00:01.076 --> 00:00:05.366 align:middle
+Hasta ahora, tenemos dos clases de
+recursos API: DragonTreasure y User.
+
+00:00:05.736 --> 00:00:07.576 align:middle
+Y ambas son clases de entidad.
+
+00:00:07.976 --> 00:00:12.836 align:middle
+Pero tener tu atributo #[ApiResource] encima
+de una clase de entidad no es un requisito.
+
+00:00:13.316 --> 00:00:16.046 align:middle
+Puedes crear cualquier clase PHP
+normal y aburrida que quieras,
+
+00:00:16.266 --> 00:00:21.676 align:middle
+espolvorear este atributo
+#[ApiResource] encima, y ¡zas!
+
+00:00:22.096 --> 00:00:24.066 align:middle
+Se convierte en parte de tu API.
+
+00:00:25.166 --> 00:00:28.226 align:middle
+Bueno, queda algo de trabajo, pero
+eso lo veremos dentro de un momento.
+
+00:00:28.906 --> 00:00:33.786 align:middle
+¿Por qué querrías crear una clase personalizada
+para tu API en lugar de utilizar una entidad?
+
+00:00:34.266 --> 00:00:35.436 align:middle
+Por dos razones principales.
+
+00:00:35.696 --> 00:00:39.416 align:middle
+Primero: porque los datos que estás
+sirviendo no proceden de la base de datos...
+
+00:00:39.646 --> 00:00:42.966 align:middle
+o proceden de una mezcla de
+diferentes tablas de la base de datos.
+
+00:00:43.386 --> 00:00:47.076 align:middle
+O segundo: los datos que estás
+obteniendo proceden de la base de datos...
+
+00:00:47.376 --> 00:00:52.686 align:middle
+pero como tu API parece bastante diferente
+de tu entidad, quieres limpiar las cosas
+
+00:00:52.686 --> 00:00:57.446 align:middle
+teniendo una clase para tu API separada
+de tu clase de entidad. Vamos a
+
+00:00:57.936 --> 00:01:02.616 align:middle
+jugar con ambos casos, empezando por
+el primero: cuando tus datos proceden
+
+00:01:02.616 --> 00:01:04.466 align:middle
+de un lugar que no es una base de datos.
+
+00:01:05.216 --> 00:01:11.756 align:middle
+La situación es la siguiente: cada día, publicamos una
+búsqueda única para que la completen nuestros dragones.
+
+00:01:12.256 --> 00:01:16.006 align:middle
+Queremos exponer estas búsquedas
+como un nuevo recurso de la API.
+
+00:01:16.386 --> 00:01:20.996 align:middle
+Podrán listar todas las búsquedas
+anteriores, buscar una sola búsqueda por fecha
+
+00:01:21.196 --> 00:01:23.976 align:middle
+o actualizar el estado de una
+búsqueda si la completan.
+
+00:01:24.626 --> 00:01:25.876 align:middle
+Eso es bastante fácil.
+
+00:01:26.236 --> 00:01:30.176 align:middle
+Pero no vamos a almacenar estos
+datos en la base de datos.
+
+00:01:30.506 --> 00:01:33.226 align:middle
+Vamos a fingir que los datos
+proceden de otro sitio.
+
+00:01:33.876 --> 00:01:38.396 align:middle
+Así que, en lugar de crear una
+entidad, vamos a crear una clase nueva
+
+00:01:38.456 --> 00:01:41.596 align:middle
+y la pondremos en este directorio ApiResource/.
+
+00:01:42.246 --> 00:01:46.276 align:middle
+Este directorio nos lo añadió
+la receta de la API Platform
+
+00:01:46.306 --> 00:01:48.466 align:middle
+cuando la instalamos por primera vez...
+
+00:01:48.466 --> 00:01:52.456 align:middle
+y está destinado a ser el hogar
+de tus clases de recursos API.
+
+00:01:53.286 --> 00:01:54.546 align:middle
+Añade una nueva clase PHP...
+
+00:01:55.146 --> 00:01:57.436 align:middle
+y llamémosla DailyQuest.
+
+00:01:58.326 --> 00:02:02.966 align:middle
+Para que forme parte de tu API, sólo tienes
+que añadir #[ApiResource] encima de la clase.
+
+00:02:04.206 --> 00:02:04.596 align:middle
+Y ya está
+
+00:02:05.086 --> 00:02:06.556 align:middle
+Pásate por la documentación y...
+
+00:02:07.036 --> 00:02:11.006 align:middle
+¡tachán! ¡Ya está en la
+documentación de nuestra API!
+
+00:02:11.486 --> 00:02:16.766 align:middle
+Aunque tiene un aspecto un poco
+raro: falta la operación única GET.
+
+00:02:17.176 --> 00:02:23.086 align:middle
+Normalmente, veríamos algo
+como /api/daily_quests/{id}.
+
+00:02:23.736 --> 00:02:27.036 align:middle
+Descubriremos el misterio de
+por qué falta en un minuto.
+
+00:02:27.796 --> 00:02:32.076 align:middle
+Ah, por cierto: para encontrar todas
+nuestras clases de recursos API,
+
+00:02:32.286 --> 00:02:36.346 align:middle
+API Platform explora sólo dos directorios en
+
+00:02:36.346 --> 00:02:40.686 align:middle
+busca de este atributo:
+src/Entity/ y src/ApiResource.
+
+00:02:41.256 --> 00:02:42.806 align:middle
+Aunque, esto puede ajustarse
+
+00:02:42.806 --> 00:02:47.966 align:middle
+en /config/packages/api_platform.yaml
+con una configuración de rutas de mapeo.
+
+00:02:49.086 --> 00:02:49.916 align:middle
+Vale, entonces...
+
+00:02:49.916 --> 00:02:53.476 align:middle
+¿cómo es posible que esto
+ya forme parte de nuestra API?
+
+00:02:54.146 --> 00:02:55.996 align:middle
+Es sólo una clase.
+
+00:02:56.476 --> 00:02:59.226 align:middle
+Demonios, ¡ni siquiera tiene propiedades!
+
+00:02:59.936 --> 00:03:01.566 align:middle
+Prueba el punto final de la colección GET.
+
+00:03:02.156 --> 00:03:03.926 align:middle
+Pulsa "Ejecutar" y...
+
+00:03:04.326 --> 00:03:06.426 align:middle
+obtenemos un 404.
+
+00:03:06.776 --> 00:03:09.606 align:middle
+Así que... en realidad no funciona.
+
+00:03:10.206 --> 00:03:14.126 align:middle
+Si probamos la ruta POST -sólo
+estamos enviando datos vacíos-
+
+00:03:15.236 --> 00:03:18.686 align:middle
+devuelve un código de estado 201
+como si hubiera funcion ado...
+
+00:03:19.336 --> 00:03:22.926 align:middle
+pero entre bastidores, no ha
+pasado absolutamente nada.
+
+00:03:23.316 --> 00:03:25.696 align:middle
+No se ha creado ni guardado ningún dato.
+
+00:03:26.366 --> 00:03:29.356 align:middle
+Vuelve a mirar nuestra página favorita
+de "actualización" en la documentación
+
+00:03:29.796 --> 00:03:32.426 align:middle
+la que habla de proveedores y procesadores.
+
+00:03:33.116 --> 00:03:36.716 align:middle
+Si añadimos el atributo #[ApiResource]
+sobre una clase de entidad, obtendremos
+
+00:03:37.126 --> 00:03:40.176 align:middle
+gratuitamente estos procesadores y proveedores.
+
+00:03:40.746 --> 00:03:41.706 align:middle
+Resulta que...
+
+00:03:41.806 --> 00:03:45.636 align:middle
+ésta es realmente la única diferencia entre
+añadir #[ApiResource] encima de una clase
+
+00:03:45.636 --> 00:03:48.726 align:middle
+aleatoria y añadirlo encima de una entidad.
+
+00:03:49.296 --> 00:03:51.386 align:middle
+Cuando utilizas #[ApiResource]
+sobre una entidad,
+
+00:03:51.596 --> 00:03:54.866 align:middle
+API Platform te proporciona
+automáticamente procesadores y proveedores.
+
+00:03:55.766 --> 00:04:01.756 align:middle
+Cuando creas una clase personalizada,
+empiezas sin proveedores ni procesadores.
+
+00:04:02.086 --> 00:04:08.276 align:middle
+Esto significa que la API Platform no tiene ni idea de
+cómo cargar los datos cuando haces una petición a GET...
+
+00:04:08.606 --> 00:04:13.396 align:middle
+ni cómo procesar los datos al final
+de una petición a POST o PATCH.
+
+00:04:13.986 --> 00:04:16.416 align:middle
+¡Añadir esas piezas que
+faltan es nuestro trabajo!
+
+00:04:16.776 --> 00:04:18.276 align:middle
+Empecemos con eso a continuación.
