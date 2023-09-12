@@ -1,62 +1,13 @@
 # Entity Item Provider
 
-Coming soon...
+What about the item endpoint? We got the collection endpoint working, but if we go to `/users/6.jsonlod` (in my case)... it *looks* like it works, but this is just the collection endpoint returning a single item. As we saw earlier, there are actually *two* different core providers. There's the `CollectionProvider`, which is used on the collection endpoint, and there's also an *item* provider, whose job is to return one item or null. The item provider is what's used for the `GET` one endpoint, the `PUT` endpoint, `PATCH` endpoint, and also the `DELETE` endpoint. Right now, since we've set the `provider` to `EntityToDtoStateProvider`, it's using this one `provider` for *all* of those operations - the `CollectionProvider`. And that's not really an issue. We *could* create two separate providers, but I actually prefer to combine all of them into one for the sake of simplicity.
 
-Alright, what about the item endpoint? So we've got the collection endpoint working,
-but let's see here. Let's go to //users/.jsonlod in my case. And it looks like it
-works, but this is actually just the collection endpoint returning a single item. As
-we saw earlier, there are actually two different core providers, not just one.
-There's the collection provider, which is used on the collection endpoint, and
-there's also an item provider, whose job is to return one item or null. That item
-provider is what's used for the get one endpoint, the put endpoint, patch endpoint,
-and also the delete endpoint. Right now, because we have set the entity to
-DTOStateProvider, it's using this one provider for all of those operations, which
-means it's using the collection provider. So no worries, we could create two separate
-providers, but I actually like to combine them all into one for simplicity. So we saw
-how to do this earlier. This operation is going to be the key. We can say, if
-operation is an instance of collection operation interface, then we are dangerous. We
-can just wrap all of that in there. Perfect. And then down here, this will be our
-item interface. I'm going to DD that URI variables argument, which we also did
-earlier. And if we go over and try the item operation, perfect. That's what we
-expect. So we have the ID is kind of the dynamic part of our route. And so that
-passes us the ID. And that's what we can use. Now down here, our job, just like with
-the collection, we're not going to do the querying work manually, we're just going to
-offload that to the core, the core doctrine item provider. So up here, let's add a
-second argument. In fact, I'll copy the first argument, we'll call it item provider,
-the one from doctrine ORM. And this time, I'll call it item provider. Perfect. And
-down here, things just get easy. So I'll say entity equals this arrow item provider
-arrow provide, we'll pass the arguments that needs which is operation URI variables
-and context. And this will give us either an entity object or null. So I'm gonna say,
-if we don't have an entity object, let's just return null, that's going to trigger a
-404. But if we do have an entity object, we don't actually want to return that
-directly. Because remember, the whole point of this class is to take the entity
-object and transform it into our user API DTO. So instead, we're going to return this
-arrow map entity to DTO and pass that our entity. And boom, we are returning a user
-API object. And the endpoint works beautifully. And if we try something that is
-invalid, our provider returns null API platform takes care of doing the 404 for us.
-Also by the way, if you follow some of these related treasures, they may 404. So
-let's see we have 21 and 27. 21 works for me. How about 27? That 27 also works for
-me. So these both work for me. But the reason they might 404 is that right now, if I
-go back, these dragon treasures include all of the treasures related to this user,
-even the unpublished ones. But we have logic from our previous tutorial that will
-actually make unpublished dragon treasures return a 404. They won't be found thanks
-to this query extension. But anyways, originally, when we had our user entity as a as
-our API resource, we didn't return all of the treasures on that endpoint, we created
-a new get published dragon treasures, which only returns the published treasures in
-this is actually what we returned on the dragon treasures property. Right now in our
-state provider, you can see we're actually returning all of them. So this is an easy
-fix. We're just going to change this to get published. Dragon treasures. And now
-let's see what's any difference on this, let me actually go back to the collection
-endpoint here. Actually going to undo that, let's see if we can see a difference
-here. Ah, I see it 16 and 40 down there, I redo it and just show the published ones.
-40 is gone for years unpublished. So that was really easy to do. But it highlights a
-really cool thing before. In order to have this dragon treasures field kind of return
-something different, we had to have like a serialized name on top of here, we had to
-have this dedicated method. So we had this API property called dragon treasures that
-looked different than our actual entity property. As soon as we have this custom
-class, we don't need any weirdness at all, all of the kind of weirdness is handled in
-our state provider. When we're transferring the data, we can grab whatever data we
-want, and just put it on to our DTO. Our DTO just looks as simple as it could
-possibly be. There's nothing weird about it at all. And I really like that cleanness.
-All right, next up, let's get our user saving with a state processor. But we're still
-going to offload almost all of the work to the core doctrine state processor.
+We saw how to do this earlier, and this `$operation` is the key. Say `if($operation instanceof CollectionOperationInterface)`, and now, we're *dangerous*. We'll just wrap all of this code in here and... perfect! Then, down here, this will be our item interface, so let's `dd($uriVariables)`. If we go over and try the item operation... nice! That's what we expect to see. It's passing us the ID, which is the dynamic part of our route, and that's what we can use.
+
+Back over here, our job, just like with the collection, we're not going to do the querying work manually. We're just going to offload that to the core Doctrine item provider. Right here, let's add a second argument. In fact, we can just copy the first argument, call it `ItemProvider` (the one from Doctrine ORM), and over here, we'll also call it `$item provider`. Perfect! If you scroll down a little, lucky for us, things just got easier. Say `$entity = $this->itemProvider->provide()`, and we'll pass that the arguments it needs, which is `$operation`, `$uriVariables` and `$context`. This will give us either an `$entity` object or null, so if we *don't* have an `$entity` object, let's just `return null`. That's going to trigger a 404, but if we *do* have an `$entity` object, we don't actually want to return that directly. Because, remember, the whole point of this class is to take the `$entity` object and transform it into our `UserApi` `$dto`. So instead, we're going to `return $this->mapEntityToDto()` and pass that our `$entity`. And *boom*! We're returning a `UserApi` object... and the endpoint works *beautifully*. And if we try something that's *invalid*, our provider returns null and API Platform takes care of doing the 404 for us.
+
+By the way, if you follow some of these related treasures, they may 404 as well. Let's see... we have 21 and 27. 21 works for me, but how about 27? That 27 *also* works for me. These are both working, but the reason they *might* 404 is that, right now, if I go back, these `dragonTreasures` include *all* of the treasures related to this user - even the *unpublished* ones. We have logic from our previous tutorial that will actually make unpublished dragon treasures return a 404, but, thanks to this query extension, they won't be found.
+
+Anyway, originally, when we had our `User` entity as a as our API resource, we didn't return all of the treasures on that endpoint. We created `getPublishedDragonTreasures()`, which only returns the *published* treasures. *This* is actually what we returned on the `dragonTreasures` property. Right now, in our state provider, you can see that we're actually returning *all* of them. This is an easy fix. We're just going to change this to `getPublishedDragonTreasures()`. And... let's actually go back to the collection endpoint here. Undo that for a moment and... let's see if we can see a difference. Ah... we can see "16" and "40" here, and if we redo that and try again... "40" is *gone*. It's only showing us the published items, and "40" is *unpublished*. Nice! So that was *super easy*, and it also highlights something that's pretty cool. In order to have this `dragonTreasures` field return something different, we had to have a serialized name up here and a dedicated method. We had this API property called `dragonTreasures` that looked different than our actual `$entity` property. As soon as we implement this custom class, we don't need any of that weirdness. All of that is now handled in our state provider. When we're transferring the data, we can grab whatever data we want, and just add it to our DTO. Our DTO is as simple as it can possibly be and I *love* it. So shiny and clean!
+
+Next: Let's get our users *saving* with a state processor. But we're *still* going to offload almost all of the work to the core Doctrine state processor.
