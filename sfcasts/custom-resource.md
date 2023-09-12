@@ -32,6 +32,8 @@ and let's call it `DailyQuest`.
 
 To make this part of your API, just add `#[ApiResource]` above the class.
 
+[[[ code('5a3c9f2cf6') ]]]
+
 That's it! Swing by the docs and... tada! It's *already* in our API
 documentation! Though, it *does* look a bit odd: the single `GET` operation
 is missing. Normally, we would see something like `/api/daily_quests/{id}`. We'll
