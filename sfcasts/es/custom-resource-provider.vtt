@@ -1,0 +1,259 @@
+WEBVTT
+
+00:00:01.026 --> 00:00:03.826 align:middle
+Tenemos una nueva y reluciente
+clase de recursos API y...
+
+00:00:03.926 --> 00:00:06.126 align:middle
+en su mayor parte, la
+utilizaremos como de costumbre.
+
+00:00:06.926 --> 00:00:13.216 align:middle
+Por ejemplo, en lugar de DailyQuests, tal
+vez cambiemos shortName por sólo Quest.
+
+00:00:14.246 --> 00:00:18.486 align:middle
+Cuando echamos un vistazo a la documentación,
+como era de esperar, el título cambia...
+
+00:00:18.636 --> 00:00:20.236 align:middle
+junto con todas las URL.
+
+00:00:21.056 --> 00:00:26.356 align:middle
+Para poder cargar datos y que esta ruta
+de recolección no devuelva un 404,
+
+00:00:26.736 --> 00:00:28.676 align:middle
+necesitamos un proveedor de estado.
+
+00:00:28.676 --> 00:00:31.646 align:middle
+Y no se trata sólo de las rutas GET.
+
+00:00:32.116 --> 00:00:36.856 align:middle
+El punto final PUT utiliza un proveedor
+de estado, así como DELETE y PATCH:
+
+00:00:37.276 --> 00:00:41.646 align:middle
+todos ellos cargan primero el
+recurso, antes de editarlo o borrarlo.
+
+00:00:42.306 --> 00:00:44.696 align:middle
+Así que ¡hagamos un proveedor de estado!
+
+00:00:45.166 --> 00:00:46.356 align:middle
+Ya lo hemos hecho antes.
+
+00:00:47.156 --> 00:00:48.516 align:middle
+Ejecuta en tu terminal: ./bin/console
+
+00:00:48.776 --> 00:00:54.876 align:middle
+make:state-provider Llámalo
+DailyQuestStateProvider. ¡Un nombre impresionante
+
+00:00:55.756 --> 00:00:56.826 align:middle
+! Vuelve
+
+00:00:57.646 --> 00:01:00.436 align:middle
+a girar, abre el directorio State/ y... ¡ahí
+
+00:01:00.686 --> 00:01:02.186 align:middle
+está! Nuestro
+
+00:01:02.836 --> 00:01:09.356 align:middle
+trabajo es sencillo: devolver el objeto u
+objetos DailyQuest para la operación actual.
+
+00:01:10.116 --> 00:01:17.486 align:middle
+Empecemos de forma superbásica: devuelve un array
+con dos objetos new DailyQuest() codificados.
+
+00:01:18.166 --> 00:01:19.346 align:middle
+Ambos están vacíos... porque
+
+00:01:19.786 --> 00:01:22.326 align:middle
+esa clase no tiene propiedades. Para
+
+00:01:22.956 --> 00:01:27.816 align:middle
+decirle a API Platform que utilice el nuevo
+y brillante proveedor, en DailyQuest , añade
+
+00:01:28.066 --> 00:01:32.176 align:middle
+provider establecido en
+DailyQuestStateProvider::class. ¡ Vamos a probarlo
+
+00:01:32.176 --> 00:01:34.996 align:middle
+!
+
+00:01:35.516 --> 00:01:38.696 align:middle
+Vuelve a los documentos para
+"Ejecutar" la ruta de recogida. Y...
+
+00:01:39.156 --> 00:01:40.506 align:middle
+¡sí! ¡ Se acabó el
+
+00:01:40.666 --> 00:01:42.236 align:middle
+404!
+
+00:01:42.646 --> 00:01:43.906 align:middle
+Obtenemos un 200... ¡y
+
+00:01:44.266 --> 00:01:46.776 align:middle
+devuelve 2 elementos! Lo único que
+
+00:01:47.506 --> 00:01:53.466 align:middle
+tienen son los campos JSON-LD - @id y
+@type - pero eso tiene sentido, ya que
+
+00:01:53.466 --> 00:01:56.146 align:middle
+la clase no tiene ninguna
+otra propiedad. Así que,
+
+00:01:56.726 --> 00:02:02.456 align:middle
+¡bien! Pero, antes de desbocarnos y
+añadir más propiedades, tenemos que
+
+00:02:02.786 --> 00:02:06.446 align:middle
+hablar de por qué falta
+el punto final GET one.
+
+00:02:07.026 --> 00:02:11.656 align:middle
+Tenemos la ruta GET colección, pero
+no GET -un solo elemento . ¿Por qué?
+
+00:02:12.176 --> 00:02:16.116 align:middle
+Cada recurso de la API
+necesita un "identificador".
+
+00:02:16.706 --> 00:02:19.856 align:middle
+Ahora mismo, nuestra clase no
+tiene un identificador... y
+
+00:02:20.056 --> 00:02:23.656 align:middle
+eso hace que las dos rutas GET choquen. ¡ Deja
+
+00:02:23.656 --> 00:02:24.796 align:middle
+que te lo enseñe! Gira
+
+00:02:25.246 --> 00:02:31.296 align:middle
+y Ejecuta: php bin/console
+debug:router Esto me encanta. API
+
+00:02:31.636 --> 00:02:38.166 align:middle
+Platform crea una ruta real para cada
+operación de cada recurso API. Haré
+
+00:02:38.836 --> 00:02:40.536 align:middle
+esto un poco más pequeño... mejor.
+
+00:02:41.256 --> 00:02:44.246 align:middle
+Puedes ver todas las rutas para
+las búsquedas. Aquí está
+
+00:02:44.726 --> 00:02:50.106 align:middle
+la de _get_collection y, encima,
+la de _get_single... ¡pero
+
+00:02:50.406 --> 00:02:53.266 align:middle
+con la misma URL! Normalmente , la URL
+
+00:02:53.986 --> 00:02:59.646 align:middle
+sería /api/quests/{id}... donde
+
+00:03:00.156 --> 00:03:03.266 align:middle
+id se conoce como el identificador. Pero...
+
+00:03:03.826 --> 00:03:07.426 align:middle
+nuestro DailyQuest no tiene
+propiedades... así que
+
+00:03:07.796 --> 00:03:11.946 align:middle
+API Platform no tiene ni idea de qué
+utilizar para el identificador. Entonces,
+
+00:03:12.806 --> 00:03:14.236 align:middle
+¿cuál es la solución? La
+
+00:03:14.906 --> 00:03:19.116 align:middle
+más sencilla es añadir una
+propiedad $id: public int $id... y,
+
+00:03:19.626 --> 00:03:24.826 align:middle
+para simplificar, añadamos un constructor al
+que podamos pasar la propiedad int $id. Establece
+
+00:03:26.066 --> 00:03:27.476 align:middle
+la propiedad dentro.
+
+00:03:29.486 --> 00:03:35.126 align:middle
+En DailyQuestStateProvider, inventa unos
+cuantos ID: ¿qué tal 4 y 5. Genial,
+
+00:03:36.186 --> 00:03:41.826 align:middle
+ahora vuelve a volcar las
+rutas: ¡Contempla! El
+
+00:03:42.066 --> 00:03:46.386 align:middle
+único GET tiene una URL diferente con {id}. El
+
+00:03:47.136 --> 00:03:50.286 align:middle
+id también faltaba en
+put, patch, y delete... y
+
+00:03:50.686 --> 00:03:52.516 align:middle
+ahora también está. En
+
+00:03:53.186 --> 00:03:55.586 align:middle
+los documentos, al actualizar...
+
+00:03:56.016 --> 00:03:57.816 align:middle
+vemos lo mismo. El
+
+00:03:59.056 --> 00:04:02.326 align:middle
+identificador es importante
+porque se utiliza en las URL... y
+
+00:04:02.636 --> 00:04:08.576 align:middle
+también para generar la cadena
+IRI @id de cada elemento. Aquí
+
+00:04:09.486 --> 00:04:15.596 align:middle
+puedes ver que @id apunta
+ahora a /api/quests/4. Pero
+
+00:04:16.266 --> 00:04:23.546 align:middle
+espera, ¿cómo sabe API Platform que id
+es el importantísimo "identificador"... y
+
+00:04:23.836 --> 00:04:25.926 align:middle
+no una propiedad normal? Sinceramente...
+
+00:04:26.866 --> 00:04:28.146 align:middle
+sinceramente... no
+
+00:04:28.146 --> 00:04:29.246 align:middle
+estoy del todo seguro. Pero
+
+00:04:29.596 --> 00:04:32.946 align:middle
+parece que el nombre id es
+especial... en algún lugar
+
+00:04:33.286 --> 00:04:35.046 align:middle
+de API Platform. Si
+
+00:04:35.626 --> 00:04:41.306 align:middle
+nombras una propiedad id, API Platform dice:
+Oh, ¡ese debe ser tu identificador! Y...
+
+00:04:41.576 --> 00:04:43.716 align:middle
+¡normalmente no se equivoca! Pero,
+
+00:04:44.356 --> 00:04:49.756 align:middle
+hay una forma más explícita de decir que una
+propiedad es un identificador. A continuación,
+
+00:04:50.506 --> 00:04:56.266 align:middle
+en lugar de un identificador entero, veamos si
+podemos utilizar un identificador de fecha, de modo
+
+00:04:56.586 --> 00:05:03.716 align:middle
+que tengamos URL como /api/quests/2023-06-05.
