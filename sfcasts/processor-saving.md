@@ -1,30 +1,130 @@
-# Processor Saving
+# Leveraging the Core Processor
 
-In our state processor, we have *successfully* transformed the `UserApi` object into our `User` entity object. So let's save it! Saving things is pretty easy. We *could* inject the entity manager, persist and flush that entity, and be done with it. But we still want to offload as much work as we can to the core Doctrine processor. And, as it turns out, the Doctrine processor is *fairly* complex. It's called `PersistProcessor`, so let's search for that.
+Look at us go! In our state processor, we have *successfully* transformed the `UserApi`
+into a `User` entity. So let's save it! We *could* inject the entity manager, persist
+and flush... and call it a day. But I'd rather offload that work to the core
+`PersistProcessor`. Search for that file and open it.
 
-For the most part, it's doing things like persisting and flushing. But it *also* has some pretty complex logic here for things like `PUT` operations. We're not really using those, but it just goes to show that we have *a lot* more going on here. To save some time, let's use *this* instead of trying to roll our own logic.
+It does the simple persisting and flushing... but it *also* has some pretty complex
+logic for `PUT` operations. We're not really using those, but the point is:
+better to reuse this class than try to roll our own logic.
 
-The way we do this should be pretty familiar at this point. We're going to say `private ProcessorInterface $persistProcessor`. And so Symfony knows *precisely* which service we want, we'll use the `#[Autowire()]` attribute, pass `service`, and we can say `PersistProcessor` (in this case, there's only one `PersistProcessor` to choose from) `::class`. Very nice! Then, down here, we'll say `$this->persistProcessor->process()` with `$entity`, `$operation`, `$uriVariables`, and `$context`, which are all of the same arguments we're passing up here.
+## Calling the Core PersistProcessor
 
-Now, there's one thing you may have noticed here, which I mentioned earlier. When it generated this class, it generated it with a `void` return type. That's not exactly true. You don't *have to* return anything from the state processors, but you *can*. And whatever you *do* return - in this case, we'll return `$data` - will ultimately become the object that is serialized and returned back to the user. If you don't return it *anything*, it's going to use this by default. This won't really change anything, but it's important for you to at least be aware of it.
+*How* we do that should be familiar by this point. Add a
+`private ProcessorInterface $persistProcessor`... and so Symfony knows *precisely*
+which service we want, include the `#[Autowire()]` attribute, with `service` set
+to `PersistProcessor` (in this case, there's only one to choose from) `::class`.
 
-Okay, so this *should* save the database and serialize. Let's try it! (Famous last words...) And... it *doesn't* work. We're still getting a 400 error, and it's *still* `Unable to generate an IRI for the item`. So... what's going on? Let's think about it. Our `UserApi` object *still* doesn't have an ID. So we map it to a new `User` object, *save* the new `User` object, and Doctrine *gives* that new `User` object an ID. *But* we never put it back onto our `UserApi` object. Our ID is just floating around in space! But never fear! This is an easy fix. Right here, say `$data->id = $entity->getId()`... and if we try it now... it *still* fails, but we actually got a little further this time.
+Very nice! Below, save with `$this->persistProcessor->process()` passing
+`$entity`, `$operation`, `$uriVariables`, and `$context`... which are all the same
+arguments we have up here.
 
-We can see that the response *did* work. It has a 201 status code, and it returned with our new user information. It's *failing* on the part of the test where it tries to then *use* the password to log in. That's because our password is currently set to a `TODO`. We'll handle that in a moment, but *first*, I want you to notice something. When we set the `processor` on the top level `#[ApiResource]`, this becomes the processor for *all* of the operations: `POST`, `PUT`, `PATCH`, *and* `DELETE`. Now `POST`, `PUT`, and `PATCH` are all pretty much the same. They're just saving the object to the database. But `DELETE` is different, right? When we use `DELETE`, we're trying to *remove* something from the database. That's not really a problem. We just need to make sure that we handle that situation up here.
+Oh, and like before, when we generated this class, it generated `process()` with
+a `void` return type. That's not exactly correct. You don't *have to* return anything
+from state processors, but you *can*. And whatever you *do* return - in this
+case, we'll return `$data` - will ultimately become the "thing" that is serialized
+and returned back to the user. If you don't return anything, it will use
+`$data`.
 
-After we map our API object to the entity, we need to figure out if we actually need to *delete* that entity. To do that, we can check `if ($operation instanceof DeleteOperationInterface)`, and if it *is*, we want to *delete* that entity. Again, deleting isn't hard, but we're going to offload this to the core Doctrine remove processor. So, up here, copy this argument... and let's inject *another* processor. This one is going to be `RemoveProcessor`, and we'll rename this to `$removeProcessor` as well. Perfect! Then, down here, we can say `$this->removeProcessor->process()` and pass `$entity`, `$operation`, `uriVariables`, and `$context` just like the other processors. A key thing to note here is that we're going to `return null`. In the case of a `DELETE` operation, we don't return anything at all, so we're returning `null` from here, I don't have a test set up for that at the moment, but we'll take a leap of faith and just assume that works like it's supposed to.
+## Setting the id onto the DTO
 
-Now let's tackle our last problem, which is hashing the plain password. We've done this before, so nothing's super new here. We're going to check to see if our DTO has a password, but before we do that, we actually *need* a password. We haven't added that yet, so let's open `UserApi.php`. To add a password, say `public ?string $password = null`, and we'll also add a comment here. So, in the case of the API, this is always going to be the `plaintext` password. We're *never* going to pass around a hashed password on our API. That doesn't make any sense. We'll note that this is `The plaintext password when being set or changed.` Perfect.
+Ok, I think this should work (Famous last words...).
 
-Back in our processor, `if ($dto->password)`, *then* we know we need to hash that and save it on the user. The password *must* be there because all users will need that when they create an account. But if we were just *updating* a user, like changing their username to something else, that exchange wouldn't have a password, so there's nothing to hash. I'll undo that really quick. But if there *is* a password, that means the user is either setting a new password or updating an existing password. *That* will require hashing.
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
 
-Up here, we need to add one more argument: `private UserPasswordHasherInterface $userPasswordHasher`. And down here, say `$entity->setPassword()`, which is the hashed password, set to `$this->userPasswordHasher->hashPassword()`, passing that the `$entity` (the user object), and the plain password, which will be `$dto->password`. *Phew*. Let's try that again. And... it *fails*. My error says:
+And... it bombs. We're still getting a 400 error, and it's *still*
+`Unable to generate an IRI for the item`.
 
-`The annotation "@The" in property App\
-ApiResource\UserApi::$password was never imported.`
+So... what's going on? We map the `UserApi` to a new `User` object and *save* the new
+`User`... which causes Doctrine to assign the new `id` to that entity object. *But*
+we never take that new id and put it *back* onto our `UserApi`.
 
-So... this is me accidentally having an extra `@` in there and it thought it was an annotation. I'll remove that... and if we try again... it *passes*, which means it fully logged in using that password. It works! *But*, look at the dumped JSON response. This is after we `POST` to create the user. When it returns, it's returning the `password` property and the plain text password that the user just set. *Whoops*.
+To fix this, after saving, add `$data->id = $entity->getId()`.
 
-Okay, let's make sure we *completely* understand this. Our provider is used for all of the `READ` and `GET` endpoints, and it's also used for the `PATCH` endpoint. And one of the key things you'll notice here is that we're *not* setting a password, because we don't *need* to set the plain password onto our `UserApi`. We don't want to return that field to the `UserApi`, so we're, quite correctly, not mapping it from our entity to our DTO right. That's *good*. But when you do a `POST` request, this is the *one* situation where the provider is never called. This data is directly deserialized into our `UserApi` object that's passed to our processor. *That* means our DTO *does* have the plain password on it and, ultimately, it's *that* DTO with the plain password that's returned to the user. In any case, even if we made a `PATCH` request, it would load our `UserApi` object with *no* password and deserialize the password onto it, which means we would end up in the same situation with a `UserApi` object that *has* a password that's returned to the user.
+And if we try it now...
 
-This is a really long way of saying that, in `UserApi.php`, this password is meant to be a write-only field. The user should *never* be able to *read* this field, only *write* it. *So* let's talk about how we can do customizations like this inside of our `UserApi` class, while avoiding the *complexity* of serialization groups. That's *next*.
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+it *still* fails... but we got further this time! The response looks good. It returned
+a 201 status code with the new user info. It's *failing* on the part of the test
+where it tries to *use* the password to log in. That's because our password
+is currently set to... `TODO`. We'll fix that in a minute.
+
+## Handling the Delete Operation
+
+But *first*, when we set the `processor` on the top level `#[ApiResource]`, this
+became the processor for *all* operations: `POST`, `PUT`, `PATCH`, *and*
+`DELETE`. `POST`, `PUT`, and `PATCH` are all pretty much the same: save the object
+to the database. But `DELETE` is different: we're not saving, we're *removing*.
+
+To handle that, check `if ($operation instanceof DeleteOperationInterface)`.
+Like with saving, deleting isn't hard... but it's still better to offload
+this work to the core Doctrine remove processor. So, up here, copy the argument...
+and inject *another* processor: `RemoveProcessor`... and rename this to
+`$removeProcessor`.
+
+Back down here, say `$this->removeProcessor->process()` and pass `$entity`,
+`$operation`, `$uriVariables`, and `$context` just like the other processor.
+
+A key thing to note is that we're going to `return null`. In the case of a `DELETE`
+operation, we don't return *anything* in the response... which we accomplish by
+returning `null` from here. I don't have a test set up for this, but
+we'll take a leap of faith and assume it works. Ship it!
+
+## Hashing the Password
+
+Just one more problem to tackle: hashing the plain password. We've done this before,
+so no biggie. Before we do too much here, open `UserApi`... and add a
+`public ?string $password = null`... with a comment. This will *always* hold
+null or the "plaintext" password if the user sends one. We're *never* going to
+need to handle the *hashed* password in our API, so we don't need any space for
+that... which is nice!
+
+Back in the processor, `if ($dto->password)`, *then* we know we need to hash that and
+set it on the user. If a *new* user is being created, this will always be set...
+but when updating a user, we'll make this field optional. If it's not set,
+do nothing so the user's current password stays.
+
+To do the hashing, on top, add one more argument:
+`private UserPasswordHasherInterface $userPasswordHasher`. Then back below,
+`$entity->setPassword()` set to `$this->userPasswordHasher->hashPassword()`, passing
+`$entity` (the `User` object) and the plain password: `$dto->password`.
+
+*Phew*. Let's try the test again. And... it *fails*... with
+
+> The annotation "@The" in property `UserApi::$password` was never imported.
+
+So... that's me tripping on my keyboard and adding an extra `@`. Remove that...
+then try again:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+It *passes*! Which means it fully-logged in using that password! *Though*, uh oh,
+look at the dumped JSON response: this is after we `POST` to create the user. In
+the JSON response, it includes the plaintext `password` property that the user just
+set. *Whoops*!
+
+## The Flow of a Write Request
+
+Let's break this down. Our state provider is used for all `GET` operations
+as well as the `PATCH` operation. And notice, we are *not* setting the `password`
+*ever*. We don't want to return that field in the JSON, so we're, correctly, *not*
+mapping it from our entity to our DTO. That's *good*!
+
+But the `POST` operation is the *one* situation where the provider is never called.
+This data is deserialized directly into a new `UserApi` object and that's passed
+to our processor. *This* means that our DTO *does* have the plain password set on
+it... And, ultimately, *that* DTO object is what is serialized and sent back to
+the user.
+
+This is a long way of saying that, in `UserApi`, this password is meant to be a
+*write-only* field. The user should *never* be able to *read* this.
+Next: let's talk about how we can do customizations like this inside of
+`UserApi`, while avoiding the *complexity* of serialization groups.
