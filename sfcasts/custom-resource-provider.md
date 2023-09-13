@@ -9,6 +9,8 @@ For example, instead of `DailyQuests`, maybe we change the
 `shortName` to just `Quest`. When we peek at the docs, as expected, the title changes...
 along with all the URLs.
 
+[[[ code('81398c9919') ]]]
+
 ## Making the State Provider
 
 To be able to load data and have this collection endpoint *not* return a 404, we
@@ -27,11 +29,17 @@ Call it `DailyQuestStateProvider`. *Awesome* name!
 Spin back over, open the `State/` directory and... there it is! Our job is simple:
 to return the `DailyQuest` object or objects for the current operation.
 
+[[[ code('291fc8cd46') ]]]
+
 Let's start *super* basic: return an array with two hard-coded `new DailyQuest()`
 objects. They're both empty... because that class doesn't have any properties.
 
+[[[ code('8ee10b2a67') ]]]
+
 To tell API Platform to *use* the shiny new provider, in `DailyQuest`,
 add `provider` set to `DailyQuestStateProvider::class`.
+
+[[[ code('492ce3552c') ]]]
 
 Let's give this a whirl! Dash back over to the docs to "Execute" the collection endpoint.
 And... *yes*! No more 404! We get a 200... and it returned 2 items! All they
@@ -66,8 +74,13 @@ So what's the solution? The easiest is to add an `$id` property: `public int $id
 and, for simplicity, let's add a constructor where we can pass the `int $id`. Set
 the property inside.
 
-Over in `DailyQuestStateProvider`, invent a few IDs: how about `4` and `5`. Cool,
-*now* dump the routes again:
+[[[ code('082c89c577') ]]]
+
+Over in `DailyQuestStateProvider`, invent a few IDs: how about `4` and `5`. 
+
+[[[ code('00751c3309') ]]]
+
+Cool, *now* dump the routes again:
 
 ```terminal-silent
 php bin/console debug:router
