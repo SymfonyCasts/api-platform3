@@ -1,13 +1,67 @@
-# Entity Item Provider
+# Entity -> DTO Item State Provider
 
-What about the item endpoint? We got the collection endpoint working, but if we go to `/users/6.jsonlod` (in my case)... it *looks* like it works, but this is just the collection endpoint returning a single item. As we saw earlier, there are actually *two* different core providers. There's the `CollectionProvider`, which is used on the collection endpoint, and there's also an *item* provider, whose job is to return one item or null. The item provider is what's used for the `GET` one endpoint, the `PUT` endpoint, `PATCH` endpoint, and also the `DELETE` endpoint. Right now, since we've set the `provider` to `EntityToDtoStateProvider`, it's using this one `provider` for *all* of those operations - the `CollectionProvider`. And that's not really an issue. We *could* create two separate providers, but I actually prefer to combine all of them into one for the sake of simplicity.
+What about the item endpoint? If we go to `/api/users/6.jsonld`... it *looks* like
+it works... but this is just the collection endpoint returning a single item!
 
-We saw how to do this earlier, and this `$operation` is the key. Say `if($operation instanceof CollectionOperationInterface)`, and now, we're *dangerous*. We'll just wrap all of this code in here and... perfect! Then, down here, this will be our item interface, so let's `dd($uriVariables)`. If we go over and try the item operation... nice! That's what we expect to see. It's passing us the ID, which is the dynamic part of our route, and that's what we can use.
+We know that there are actually *two* core providers: `CollectionProvider` and
+an *item* provider, whose job is to return one item or null. Right now, because we've
+set `provider` to `EntityToDtoStateProvider`, it's using this *one* `provider`
+for *every* operation. And that's ok... as long as we make it smart enough to handle
+both cases.
 
-Back over here, our job, just like with the collection, we're not going to do the querying work manually. We're just going to offload that to the core Doctrine item provider. Right here, let's add a second argument. In fact, we can just copy the first argument, call it `ItemProvider` (the one from Doctrine ORM), and over here, we'll also call it `$item provider`. Perfect! If you scroll down a little, lucky for us, things just got easier. Say `$entity = $this->itemProvider->provide()`, and we'll pass that the arguments it needs, which is `$operation`, `$uriVariables` and `$context`. This will give us either an `$entity` object or null, so if we *don't* have an `$entity` object, let's just `return null`. That's going to trigger a 404, but if we *do* have an `$entity` object, we don't actually want to return that directly. Because, remember, the whole point of this class is to take the `$entity` object and transform it into our `UserApi` `$dto`. So instead, we're going to `return $this->mapEntityToDto()` and pass that our `$entity`. And *boom*! We're returning a `UserApi` object... and the endpoint works *beautifully*. And if we try something that's *invalid*, our provider returns null and API Platform takes care of doing the 404 for us.
+We saw how to do this earlier: `$operation` is the key. Add
+`if ($operation instanceof CollectionOperationInterface)`. Now we can warp all of
+this code up here and... lovely!
 
-By the way, if you follow some of these related treasures, they may 404 as well. Let's see... we have 21 and 27. 21 works for me, but how about 27? That 27 *also* works for me. These are both working, but the reason they *might* 404 is that, right now, if I go back, these `dragonTreasures` include *all* of the treasures related to this user - even the *unpublished* ones. We have logic from our previous tutorial that will actually make unpublished dragon treasures return a 404, but, thanks to this query extension, they won't be found.
+Down here, this will be our item provider. `dd($uriVariables)`.
 
-Anyway, originally, when we had our `User` entity as a as our API resource, we didn't return all of the treasures on that endpoint. We created `getPublishedDragonTreasures()`, which only returns the *published* treasures. *This* is actually what we returned on the `dragonTreasures` property. Right now, in our state provider, you can see that we're actually returning *all* of them. This is an easy fix. We're just going to change this to `getPublishedDragonTreasures()`. And... let's actually go back to the collection endpoint here. Undo that for a moment and... let's see if we can see a difference. Ah... we can see "16" and "40" here, and if we redo that and try again... "40" is *gone*. It's only showing us the published items, and "40" is *unpublished*. Nice! So that was *super easy*, and it also highlights something that's pretty cool. In order to have this `dragonTreasures` field return something different, we had to have a serialized name up here and a dedicated method. We had this API property called `dragonTreasures` that looked different than our actual `$entity` property. As soon as we implement this custom class, we don't need any of that weirdness. All of that is now handled in our state provider. When we're transferring the data, we can grab whatever data we want, and just add it to our DTO. Our DTO is as simple as it can possibly be and I *love* it. So shiny and clean!
+## Calling the Core Item Provider
 
-Next: Let's get our users *saving* with a state processor. But we're *still* going to offload almost all of the work to the core Doctrine state processor.
+When we try the item operation... nice! That's what we expect to see: the `id`
+value, which is the dynamic part of the route.
+
+Ok, just like with the collection provider, we do *not* want to do the querying work
+manually. Instead, we'll... "delegate" it the core Doctrine item provider. Add
+a second argument... we can just copy the first... type-hinted with `ItemProvider`
+(the one from Doctrine ORM), and called `$itemProvider`.
+
+I like it! Back below, let it do the work with
+`$entity = $this->itemProvider->provide()` passing `$operation`, `$uriVariables`
+and `$context`.
+
+This will give us an `$entity` object or null. If we *don't* have an `$entity` object,
+`return null`. That will trigger a 404. But if we *do* have an `$entity` object,
+we don't want to return that directly. Remember, the whole point of this class is
+to take the `$entity` object and *transform* it into a `UserApi` DTO.
+
+So instead, `return $this->mapEntityToDto($entity)`.
+
+*That* feels good. And.. the endpoint works *beautifully*. If we try an
+*invalid* id, our provider returns null and API Platform takes care of the 404.
+
+## Only Showing Published Dragon Treasures
+
+Side note: if you follow some of these related treasures, they *may* 404 as well.
+Let's see... we have 21 and 27. 21 works for me, but how about 27? That 27 *also*
+works for me, of course. The reason they *might* 404 is that, right now, if I go
+back, these `dragonTreasures` include *all* of the treasures related to this user:
+even the *unpublished* ones. But in a previous tutorial, we created a query extension
+that *prevented* unpublished treasures from being loaded.
+
+Originally, when the `User` entity was our API resource, we didn't return all of
+the treasures on that endpoint. We created `getPublishedDragonTreasures()` and
+made *that* the `dragonTreasures` property.
+
+But in our state provider, we're returning *all* of them. This is an easy fix:
+change this to `getPublishedDragonTreasures()`. Actually, undo that... then refresh
+the collection endpoint. Ok, we see treasures 16 and 40 down here... then after
+using the new method... only 16!  "40" is *unpublished*.
+
+That was *easy*! And it also highlights something pretty cool. In order to have a
+`dragonTreasures` field that returned something special when our `User` *entity*
+was an ApiResource, we needed a dedicated method and a `SerializedName` attribute.
+But with a custom class, we don't need any weirdness. We can do *whatever* we want
+in the state provider. So shiny and clean!
+
+Next: Let's get our users *saving* with a state processor... but come on, we all
+know by this point that we're going to make something *else* do most of the work.
