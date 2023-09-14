@@ -1,0 +1,184 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:02.746 align:middle
+Intentemos obtener un único elemento.
+
+00:00:04.646 --> 00:00:08.446 align:middle
+Cambiaré la fecha, pulsaré "Ejecutar" y...
+
+00:00:09.356 --> 00:00:10.946 align:middle
+código de estado 200.
+
+00:00:11.446 --> 00:00:12.276 align:middle
+Espera un momento...
+
+00:00:12.556 --> 00:00:18.246 align:middle
+esto devuelve una colección: ¡exactamente los
+mismos datos que nuestra ruta de colección!
+
+00:00:18.846 --> 00:00:21.886 align:middle
+Vale, cada operación puede
+tener su propio proveedor.
+
+00:00:22.246 --> 00:00:25.546 align:middle
+Pero si ponemos provider
+directamente bajo #[ApiResource],
+
+00:00:25.926 --> 00:00:28.776 align:middle
+éste se convierte en el
+proveedor de cada operación.
+
+00:00:29.266 --> 00:00:30.356 align:middle
+Eso está muy bien...
+
+00:00:30.626 --> 00:00:34.616 align:middle
+dado que no olvidas que algunas
+operaciones obtienen una colección
+
+00:00:34.616 --> 00:00:37.766 align:middle
+de recursos, mientras que otras
+obtienen un único elemento.
+
+00:00:37.766 --> 00:00:43.286 align:middle
+Dentro de nuestro proveedor, el $operation
+nos ayuda a conocer la diferencia.
+
+00:00:43.286 --> 00:00:44.036 align:middle
+dd() que...
+
+00:00:44.956 --> 00:00:53.056 align:middle
+Luego, por aquí, copia la URL, pégala en
+una nueva pestaña y añade .jsonld al final.
+
+00:00:54.066 --> 00:00:54.556 align:middle
+¡Ya está!
+
+00:00:54.916 --> 00:00:56.546 align:middle
+Se trata de una operación Get.
+
+00:00:56.546 --> 00:01:01.076 align:middle
+Si intentamos obtener la
+colección, es GetCollection. De
+
+00:01:02.456 --> 00:01:07.216 align:middle
+vuelta en el proveedor, if ($operation
+instanceof CollectionOperationInterface),
+
+00:01:09.316 --> 00:01:11.636 align:middle
+return $this->createQuests().
+
+00:01:13.386 --> 00:01:16.726 align:middle
+A continuación, sabemos que se
+trata de una operación "elemento".
+
+00:01:17.136 --> 00:01:20.296 align:middle
+Así que esto hace que la operación
+de colección siga funcionando.
+
+00:01:21.116 --> 00:01:24.746 align:middle
+Ahora, necesitamos una forma de
+extraer la cadena de fecha de la URL
+
+00:01:24.946 --> 00:01:27.696 align:middle
+para poder encontrar la búsqueda que coincida.
+
+00:01:28.446 --> 00:01:29.616 align:middle
+¿Cómo podemos conseguirlo?
+
+00:01:30.586 --> 00:01:33.186 align:middle
+dd($uriVariables).
+
+00:01:34.316 --> 00:01:35.466 align:middle
+Cuando actualizamos...
+
+00:01:35.956 --> 00:01:39.316 align:middle
+he aquí: ¡hay un dayString dentro!
+
+00:01:39.836 --> 00:01:45.186 align:middle
+Observa que, en DailyQuest, nunca
+configuramos el aspecto que debe tener la URL.
+
+00:01:45.706 --> 00:01:50.326 align:middle
+Puedes hacerlo, pero por defecto, API
+Platform calcula automáticamente cómo
+
+00:01:50.326 --> 00:01:52.516 align:middle
+deben ser la ruta y la URL.
+
+00:01:53.626 --> 00:02:03.786 align:middle
+Ejecuta: php bin/console debug:router Para los puntos
+finales de los elementos, es /api/quests/{dayString}:
+
+00:02:04.376 --> 00:02:07.696 align:middle
+el dayString es un comodín en la ruta. En
+
+00:02:08.336 --> 00:02:12.886 align:middle
+el proveedor, $uriVariables
+contendrá todas las partes variables
+
+00:02:12.886 --> 00:02:16.456 align:middle
+de la URI, así que dayString en nuestro caso.
+
+00:02:17.056 --> 00:02:19.076 align:middle
+Eso nos pone en peligro.
+
+00:02:20.106 --> 00:02:24.266 align:middle
+Aquí abajo, tenemos que devolver
+un único DailyQuest o null.
+
+00:02:24.316 --> 00:02:32.886 align:middle
+Digamos $quests = $this->createQuests(),
+luego return $quests[$uriVariables['dayString']]
+
+00:02:33.376 --> 00:02:35.356 align:middle
+o null si no está configurado.
+
+00:02:36.516 --> 00:02:41.036 align:middle
+Recuerda: esto funciona porque el array
+utiliza dayString para cada clave.
+
+00:02:41.916 --> 00:02:45.296 align:middle
+En una aplicación real, querríamos
+hacer esto de forma más eficiente:
+
+00:02:45.296 --> 00:02:48.116 align:middle
+no tiene sentido cargar cada búsqueda...
+
+00:02:48.116 --> 00:02:49.376 align:middle
+sólo para devolver una.
+
+00:02:49.686 --> 00:02:51.886 align:middle
+Pero para nuestra aplicación de
+prueba, esto funcionará bien.
+
+00:02:52.746 --> 00:02:54.706 align:middle
+Vale, prueba esa ruta.
+
+00:02:55.216 --> 00:02:57.056 align:middle
+Ya está Un resultado.
+
+00:02:57.576 --> 00:03:00.826 align:middle
+Y si probamos con una fecha
+aleatoria que no existe...
+
+00:03:00.826 --> 00:03:01.906 align:middle
+como "2013"...
+
+00:03:02.186 --> 00:03:04.606 align:middle
+obtenemos un 404.
+
+00:03:04.606 --> 00:03:09.486 align:middle
+API Platform ve que hemos devuelto
+null y gestiona el 404 por nosotros.
+
+00:03:10.256 --> 00:03:14.336 align:middle
+¡Ahora somos los orgullosos padres de un
+proveedor de estado totalmente funcional!
+
+00:03:14.476 --> 00:03:18.606 align:middle
+Aunque pronto hablaremos más de esto,
+incluyendo temas como la paginación.
+
+00:03:19.136 --> 00:03:24.766 align:middle
+Pero a continuación: vamos a centrarnos en crear un
+procesador de estado para nuestro recurso personalizado.
