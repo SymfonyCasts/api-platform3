@@ -8,8 +8,12 @@ Let's try it! In `DailyQuest`, instead of `public int $id`, say
 `public \DateTimeInterface $day`. And in the constructor, replace the argument with
 `\DateTimeInterface $day`... and `$this->day = $day`.
 
+[[[ code('2ac336b29d') ]]]
+
 Next, in `DailyQuestStateProvider`, we'll say... how about `new \DateTime('now')`
 and `new \DateTime('yesterday')`.
+
+[[[ code('8029c29ec2') ]]]
 
 When we refresh the docs... we're back to where we were before: we're missing
 the ID on `PUT`, `DELETE`, and `PATCH`, and our single `GET` is *gone*. That's because
@@ -22,6 +26,8 @@ What we want to do is tell API Platform:
 > Hey! This isn't a normal property: `day` is our identifier.
 
 We do that by adding an `#[ApiProperty]` attribute above this with `identifier: true`.
+
+[[[ code('6efb30b69a') ]]]
 
 ## Debugging IRI Generation Errors
 
@@ -62,6 +68,8 @@ we want: `Y-m-d`.
 The trick is to make this *method* the identifier: move the `ApiProperty`
 from the actual property... down above this.
 
+[[[ code('3d1ced3863') ]]]
+
 Perfect! Back over here... the routes still look correct. You can see we have
 `{dayString}` now. And when we try our `GET` collection endpoint... check it out!
 We see `"@id": "/api/quests/` and then the date string. That's *exactly* what we
@@ -78,12 +86,16 @@ Sure! And we don't even need to use serialization groups! We're going to go deep
 into this later, but above the `day` property, we can hide this *entirely* from
 our API by using an `#[Ignore]` attribute from Symfony's serializer.
 
+[[[ code('ca75691d0c') ]]]
+
 If we head over here and "Execute" that... boom! That field is gone: it can't
 be read or written.
 
 We *could* do the same thing for `getDayString()`. But *another* option is to say
 `readable: false`. This means it won't be *readable*, but it will still *technically*
 be writable. However, because there's no `setDayString`, it's not actually writable.
+
+[[[ code('1128443ed7') ]]]
 
 Now, when we "Execute" this... that field disappears too.
 
@@ -94,11 +106,15 @@ do *that*, we're going to build an Enum.
 Create a `src/Enum/` directory... and, inside, a new PHP class, or really enum, called
 `DailyQuestStatusEnum`. I'll paste some code here.
 
+[[[ code('8734a5dd3b') ]]]
+
 This is just a way for us to keep track of the *status* of each `DailyQuest`. Back
 over in that class, let's add some properties: `public string $questName`,
 `public string $description`.... and whatever other properties we need in our API,
 like `public int $difficultyLevel`, and a `public DailyQuestStatusEnum` called
 `$status`.
+
+[[[ code('49e90aa9c8') ]]]
 
 ## Null Fields are Hidden
 
@@ -112,6 +128,8 @@ shows that these *are* part of the API.
 Head over to `DailyQuestStateProvider` so we can populate them. Say
 `return $this->createQuests()`: a new private function we'll create. I'll paste
 that in as well: you can grab the code from the code block on this page.
+
+[[[ code('a6f723de8b') ]]]
 
 This creates *50* quests - each one a day further in the past - and populates
 simple data for the rest of the fields. Some of the quests will be `ACTIVE`, and
