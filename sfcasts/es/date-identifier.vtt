@@ -1,0 +1,389 @@
+WEBVTT
+
+00:00:00.036 --> 00:00:06.686 align:middle
+Para nuestras rutas de la API DailyQuest,
+establecemos un id como identificador.
+
+00:00:06.986 --> 00:00:09.606 align:middle
+Pero lo que realmente queremos es una fecha...
+
+00:00:09.756 --> 00:00:16.566 align:middle
+para que podamos tener URL extravagantes
+como /api/quests/2023-06-05.
+
+00:00:17.266 --> 00:00:17.986 align:middle
+¡Vamos a probarlo!
+
+00:00:18.476 --> 00:00:24.866 align:middle
+En DailyQuest, en lugar de public int
+$id, di public \DateTimeInterface $day.
+
+00:00:24.866 --> 00:00:32.006 align:middle
+Y en el constructor, sustituye el
+argumento por \DateTimeInterface $day...
+
+00:00:32.006 --> 00:00:33.956 align:middle
+y $this->day = $day.
+
+00:00:34.946 --> 00:00:38.006 align:middle
+A continuación, en
+DailyQuestStateProvider, diremos...
+
+00:00:38.486 --> 00:00:46.286 align:middle
+qué tal new \DateTime('now')
+y new \DateTime('yesterday').
+
+00:00:46.286 --> 00:00:49.206 align:middle
+Cuando actualicemos la documentación...
+
+00:00:49.206 --> 00:00:54.646 align:middle
+volvemos a estar como antes:
+nos falta el ID en PUT, DELETE,
+
+00:00:54.646 --> 00:00:58.166 align:middle
+y PATCH, y nuestro único GET ha desaparecido.
+
+00:00:58.906 --> 00:01:04.966 align:middle
+Eso se debe a que API Platform no sabe que la
+propiedad $day debe ser nuestro identificador.
+
+00:01:05.746 --> 00:01:08.216 align:middle
+Aunque, si probamos con la
+ruta de recolección GET...
+
+00:01:09.816 --> 00:01:14.956 align:middle
+¡hey! ¡El campo day sí aparece en
+el JSON como una propiedad normal!
+
+00:01:14.956 --> 00:01:18.776 align:middle
+Lo que queremos hacer es
+decirle a API Platform: ¡Eh!
+
+00:01:19.036 --> 00:01:23.686 align:middle
+Esto no es una propiedad normal:
+day es nuestro identificador.
+
+00:01:24.426 --> 00:01:30.496 align:middle
+Lo hacemos añadiendo un atributo #[ApiProperty]
+por encima de éste con identifier: true.
+
+00:01:31.816 --> 00:01:37.056 align:middle
+Cuando lo comprobamos, esto arregla,
+de hecho, todas nuestras rutas.
+
+00:01:37.576 --> 00:01:39.626 align:middle
+Pero cuando probamos la ruta de recogida...
+
+00:01:40.986 --> 00:01:47.186 align:middle
+obtenemos un error 400: Imposible generar
+un IRI para el elemento de tipo DailyQuest.
+
+00:01:47.876 --> 00:01:52.256 align:middle
+Así que API Platform cargó
+nuestros dos objetos DailyQuest...
+
+00:01:52.556 --> 00:01:59.926 align:middle
+pero cuando intentó generar la propiedad @id (el
+IRI), por alguna razón, ¡explotó! Para saber
+
+00:01:59.926 --> 00:02:03.646 align:middle
+más, baja a la barra de
+herramientas de depuración web
+
+00:02:03.826 --> 00:02:06.056 align:middle
+y abre esa petición en el perfilador.
+
+00:02:06.866 --> 00:02:13.626 align:middle
+En la pestaña Excepción, había dos excepciones en
+esta página: una situación de excepción anidada.
+
+00:02:14.496 --> 00:02:20.286 align:middle
+El nivel superior - Unable to generate an IRI -
+no nos dice realmente por qué había un problema.
+
+00:02:20.706 --> 00:02:26.996 align:middle
+Aquí abajo, podemos ver No hemos podido resolver el
+identificador que coincide con el parámetro "día".
+
+00:02:27.756 --> 00:02:31.096 align:middle
+Este error tampoco es súper
+claro, pero se acerca más.
+
+00:02:31.656 --> 00:02:33.676 align:middle
+En realidad está diciendo ¡Eh!
+
+00:02:33.996 --> 00:02:37.306 align:middle
+He intentado generar el IRI
+utilizando el campo day...
+
+00:02:37.686 --> 00:02:40.636 align:middle
+pero eso es un objeto DateTimeInterface...
+
+00:02:40.636 --> 00:02:43.466 align:middle
+y no sé cómo convertirlo en una cadena.
+
+00:02:44.226 --> 00:02:49.186 align:middle
+En realidad, hemos elegido un IRI bastante complicado
+con el que trabajar, y eso me parece genial.
+
+00:02:49.866 --> 00:02:54.536 align:middle
+La API Platform tiene un sistema llamado
+"transformador de variables URI".
+
+00:02:55.096 --> 00:02:58.036 align:middle
+El {day} es una variable en la ruta...
+
+00:02:58.036 --> 00:03:01.876 align:middle
+y puede ayudar a "transformar"
+el objeto DateTimeInterface
+
+00:03:01.876 --> 00:03:04.336 align:middle
+en algo que pueda utilizarse en esa cadena.
+
+00:03:04.856 --> 00:03:07.656 align:middle
+La documentación
+"Identificadores" habla de ello.
+
+00:03:08.286 --> 00:03:10.146 align:middle
+Pero también hay una solución sencilla.
+
+00:03:10.876 --> 00:03:14.716 align:middle
+Crea una nueva función llamada
+getDayString() que devuelva un string.
+
+00:03:15.616 --> 00:03:22.046 align:middle
+Dentro, return $this->day->format()
+con el formato que queramos: Y-m-d.
+
+00:03:23.156 --> 00:03:29.346 align:middle
+El truco está en hacer que este método sea el
+identificador: mueve el ApiProperty de la propiedad real...
+
+00:03:29.836 --> 00:03:31.506 align:middle
+por encima de esto.
+
+00:03:31.996 --> 00:03:34.626 align:middle
+Perfecto De vuelta por aquí...
+
+00:03:34.896 --> 00:03:36.506 align:middle
+las rutas siguen pareciendo correctas.
+
+00:03:37.126 --> 00:03:40.356 align:middle
+Puedes ver que ahora tenemos {dayString}.
+
+00:03:40.806 --> 00:03:43.176 align:middle
+Y cuando probamos nuestra
+ruta de recogida GET...
+
+00:03:44.246 --> 00:03:44.966 align:middle
+¡fíjate!
+
+00:03:45.126 --> 00:03:50.096 align:middle
+Vemos "@id": "/api/quests/
+y luego la cadena de fecha.
+
+00:03:50.526 --> 00:03:52.386 align:middle
+¡Eso es exactamente lo que queríamos!
+
+00:03:52.776 --> 00:03:56.286 align:middle
+Aunque, ahora tenemos un
+campo dayString en el JSON...
+
+00:03:56.376 --> 00:03:58.316 align:middle
+además del propio day.
+
+00:03:59.106 --> 00:03:59.766 align:middle
+Pensemos.
+
+00:04:00.226 --> 00:04:06.666 align:middle
+En realidad, no necesitamos en absoluto el campo day:
+existe internamente sólo para ayudar al dayString.
+
+00:04:07.316 --> 00:04:12.926 align:middle
+Y como el dayString está en la URL, tenerlo
+como campo también parece innecesario.
+
+00:04:13.746 --> 00:04:15.176 align:middle
+¿Podemos ocultarlos?
+
+00:04:15.646 --> 00:04:19.496 align:middle
+Por supuesto ¡Y ni siquiera necesitamos
+utilizar grupos de serialización!
+
+00:04:20.076 --> 00:04:23.686 align:middle
+Profundizaremos en esto más adelante,
+pero por encima de la propiedad day,
+
+00:04:24.086 --> 00:04:26.476 align:middle
+podemos ocultarla por completo de nuestra API
+
+00:04:26.856 --> 00:04:30.916 align:middle
+utilizando un atributo #[Ignore]
+del serializador de Symfony.
+
+00:04:30.986 --> 00:04:34.156 align:middle
+Si nos dirigimos aquí y "Ejecutamos" eso...
+
+00:04:34.876 --> 00:04:40.266 align:middle
+¡boom! Ese campo ha desaparecido:
+no se puede leer ni escribir.
+
+00:04:41.256 --> 00:04:43.836 align:middle
+Podríamos hacer lo mismo con getDayString().
+
+00:04:44.156 --> 00:04:47.756 align:middle
+Pero otra opción es decir readable: false.
+
+00:04:48.396 --> 00:04:53.726 align:middle
+Esto significa que no se podrá leer, pero
+técnicamente seguirá siendo escribible.
+
+00:04:54.116 --> 00:04:58.756 align:middle
+Sin embargo, como no hay setDayString,
+en realidad no es escribible.
+
+00:04:58.756 --> 00:05:00.816 align:middle
+Ahora, cuando "Ejecutamos" esto...
+
+00:05:01.196 --> 00:05:03.076 align:middle
+ese campo también desaparecerá.
+
+00:05:03.786 --> 00:05:05.536 align:middle
+¡Ésta es la configuración que queremos!
+
+00:05:05.916 --> 00:05:11.016 align:middle
+Tenemos el ID que queremos, no tenemos
+ningún campo extra que no queramos,
+
+00:05:11.326 --> 00:05:14.636 align:middle
+y ahora podemos añadir
+los campos que queramos.
+
+00:05:15.486 --> 00:05:18.006 align:middle
+Para ello, vamos a crear un Enum.
+
+00:05:18.686 --> 00:05:20.206 align:middle
+Crea un directorio src/Enum/...
+
+00:05:20.586 --> 00:05:27.186 align:middle
+y, dentro, una nueva clase PHP, o realmente
+enum, llamada DailyQuestStatusEnum.
+
+00:05:29.136 --> 00:05:30.296 align:middle
+Voy a pegar algo de código aquí.
+
+00:05:31.356 --> 00:05:35.406 align:middle
+Esto es sólo una forma de hacer un
+seguimiento del estado de cada DailyQuest.
+
+00:05:36.156 --> 00:05:39.336 align:middle
+De vuelta en esa clase, vamos
+a añadir algunas propiedades:
+
+00:05:39.926 --> 00:05:43.566 align:middle
+public string $questName
+public string $description....
+
+00:05:43.956 --> 00:05:49.956 align:middle
+y cualquier otra propiedad que necesitemos en
+nuestra API, como , public int $difficultyLevel
+
+00:05:50.606 --> 00:05:55.706 align:middle
+y un llamado public
+DailyQuestStatusEnum $status.
+
+00:05:55.706 --> 00:05:57.926 align:middle
+¡Estupendo! ¡Vamos a probar esto!
+
+00:05:58.656 --> 00:05:59.146 align:middle
+Dirígete...
+
+00:05:59.376 --> 00:06:00.816 align:middle
+y ¡Ejecuta!
+
+00:06:01.846 --> 00:06:04.866 align:middle
+Hmm, aún no vemos ninguno
+de los nuevos campos. Eso es
+
+00:06:05.556 --> 00:06:08.536 align:middle
+porque no están rellenados y, por defecto,
+
+00:06:08.706 --> 00:06:12.586 align:middle
+la API Platform oculta los
+campos nulos o no inicializados.
+
+00:06:13.256 --> 00:06:17.546 align:middle
+Pero si actualizamos la página y bajamos
+a la documentación de la respuesta...
+
+00:06:17.936 --> 00:06:20.556 align:middle
+se muestra que forman parte de la API.
+
+00:06:22.056 --> 00:06:25.376 align:middle
+Dirígete a para que podamos
+rellenarlos. DailyQuestStateProvider
+
+00:06:25.376 --> 00:06:31.336 align:middle
+Digamos : una nueva función privada que
+crearemos. return $this->createQuests()
+
+00:06:32.026 --> 00:06:36.406 align:middle
+También la pegaré: puedes coger el código
+del bloque de código de esta página.
+
+00:06:37.166 --> 00:06:41.916 align:middle
+Esto crea 50 búsquedas -cada
+una un día más en el pasado-
+
+00:06:42.196 --> 00:06:45.246 align:middle
+y rellena datos sencillos
+para el resto de los campos.
+
+00:06:45.346 --> 00:06:49.166 align:middle
+Algunas de las búsquedas serán
+, y otras . ACTIVE COMPLETED
+
+00:06:50.036 --> 00:06:54.096 align:middle
+Ah, y fíjate en que estoy utilizando como
+clave para esta matriz. getDayString()
+
+00:06:54.626 --> 00:06:59.006 align:middle
+No hace falta que lo hagas: las
+claves de la matriz devuelta
+
+00:06:59.006 --> 00:07:01.776 align:middle
+por tu proveedor de
+colecciones no son importantes.
+
+00:07:02.436 --> 00:07:05.576 align:middle
+Sólo lo he hecho porque será
+útil dentro de unos minutos
+
+00:07:05.806 --> 00:07:08.166 align:middle
+, cuando creemos la operación get one.
+
+00:07:08.166 --> 00:07:09.956 align:middle
+¡Hora de probar!
+
+00:07:10.506 --> 00:07:14.736 align:middle
+Muévete, vuelve a darle a "Ejecutar" y...
+
+00:07:15.076 --> 00:07:16.446 align:middle
+¡mira esto!
+
+00:07:16.816 --> 00:07:20.476 align:middle
+Tenemos 50 elementos con datos en todos ellos.
+
+00:07:20.676 --> 00:07:22.136 align:middle
+¡Es una pasada!
+
+00:07:22.136 --> 00:07:26.506 align:middle
+A continuación: Hagamos que nuestro proveedor
+funcione para las operaciones con elementos:
+
+00:07:26.826 --> 00:07:28.956 align:middle
+es decir, cuando obtenemos un único elemento.
+
+00:07:29.546 --> 00:07:34.326 align:middle
+El proveedor de elementos se utiliza para las
+operaciones GET uno, , y . PUT PATCH DELETE
