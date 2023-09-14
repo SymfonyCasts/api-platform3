@@ -6,18 +6,23 @@ Let's try to get a *single* item. I'll change the date, hit "Execute", and...
 
 ## Collection vs Item Operations
 
-Ok, each *operation* can have its own provider. But when we put `provider` direclty
+Ok, each *operation* can have its own provider. But when we put `provider` directly
 under `#[ApiResource]`, *this* becomes the provider for *every* operation. That's
 peachy... given you don't forget that *some* operations fetch a *collection*
 of resources while other fetch a *single* item.
 
 Inside our provider, the `$operation` helps us know the difference. `dd()` that...
-then, over here, copy the URL, paste it in a new tab and add `.jsonld` to the end.
+
+[[[ code('8f939b320f    ') ]]]
+
+Then, over here, copy the URL, paste it in a new tab and add `.jsonld` to the end.
 There we go! This is a `Get` operation. If we try to fetch the collection, it's
 `GetCollection`.
 
 Back in the provider, `if ($operation instanceof CollectionOperationInterface)`,
 `return $this->createQuests()`.
+
+[[[ code('5ca226a5c3') ]]]
 
 Below, we know this is an "item" operation.
 
@@ -26,6 +31,8 @@ Below, we know this is an "item" operation.
 So this *does* keep the *collection* operation working. Now, we need a way to extract the date
 string from the URL so we can find the *one* quest that matches. How can we get
 that? `dd($uriVariables)`.
+
+[[[ code('c8274c01f4') ]]]
 
 When we refresh... behold: there's a `dayString` inside! Notice that, in `DailyQuest`,
 we never configure what the URL should look like. You *can* do that, but by default,
@@ -45,6 +52,8 @@ variable part of the URI - so `dayString` in our case. That makes us *dangerous*
 Down here, we need to return a *single* `DailyQuest` or *null*. Say
 `$quests = $this->createQuests()`, then
 `return $quests[$uriVariables['dayString']]` or `null` if it's not set.
+
+[[[ code('1a461433ba') ]]]
 
 Remember: this works because the array uses `dayString` for each key.
 In a *real* app, we would want to do this more efficiently:
