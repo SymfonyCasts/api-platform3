@@ -1,0 +1,355 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:04.306 align:middle
+No hemos configurado la clave
+operations en nuestro #[ApiResource].
+
+00:00:04.646 --> 00:00:07.736 align:middle
+Y así, obtenemos todas las
+operaciones por defecto.
+
+00:00:08.136 --> 00:00:09.726 align:middle
+Pero en realidad sólo necesitamos unas pocas.
+
+00:00:10.596 --> 00:00:20.246 align:middle
+Añade operations con un new GetCollection(), new Get()
+para obtener una única búsqueda y new Patch() para
+
+00:00:20.246 --> 00:00:24.546 align:middle
+que los usuarios puedan actualizar el estado
+de una búsqueda existente cuando la completen.
+
+00:00:25.336 --> 00:00:27.016 align:middle
+Al actualizar...
+
+00:00:27.376 --> 00:00:28.386 align:middle
+¡Me encanta!
+
+00:00:28.796 --> 00:00:32.276 align:middle
+Hablando de esa operación
+Patch, cuando se utilice,
+
+00:00:32.506 --> 00:00:35.616 align:middle
+API Platform llamará al procesador
+de estado, para que podamos guardar...
+
+00:00:35.836 --> 00:00:37.396 align:middle
+o hacer lo que queramos.
+
+00:00:37.886 --> 00:00:40.336 align:middle
+Todavía no tenemos uno, así que
+ése será nuestro próximo trabajo.
+
+00:00:40.886 --> 00:00:42.766 align:middle
+Pero empecemos con una prueba.
+
+00:00:43.306 --> 00:00:48.216 align:middle
+Abajo, en tests/Functional/, crea una
+nueva clase llamada DailyQuestResourceTest.
+
+00:00:49.586 --> 00:00:56.266 align:middle
+Haz que ésta extienda la ApiTestCase que creamos
+en el último tutorial y la use ResetDatabase
+
+00:00:56.266 --> 00:01:00.896 align:middle
+de Foundry para asegurarnos de que nuestra base
+de datos está vacía al inicio de cada prueba.
+
+00:01:01.426 --> 00:01:03.196 align:middle
+También use Factories.
+
+00:01:04.166 --> 00:01:05.976 align:middle
+Vale, no necesitamos esto...
+
+00:01:05.976 --> 00:01:08.176 align:middle
+ya que no vamos a hablar
+con la base de datos...
+
+00:01:08.436 --> 00:01:11.076 align:middle
+pero si decidimos hacerlo más
+adelante, estamos preparados.
+
+00:01:11.976 --> 00:01:15.876 align:middle
+Aquí abajo, añade public function
+testPatchCanUpdateStatus().
+
+00:01:17.086 --> 00:01:22.516 align:middle
+Lo primero que necesitamos es un new
+\DateTime() que represente $yesterday: -1 day.
+
+00:01:23.726 --> 00:01:29.896 align:middle
+Recuerda: en nuestro proveedor, estamos creando
+búsquedas diarias desde hoy hasta los últimos 50 días.
+
+00:01:30.656 --> 00:01:35.606 align:middle
+Cuando hacemos una petición a PATCH, se llama a nuestro
+proveedor de objetos para que "cargue" el objeto.
+
+00:01:36.046 --> 00:01:38.816 align:middle
+Así que tenemos que utilizar una fecha
+que sepamos que se va a encontrar.
+
+00:01:40.576 --> 00:01:42.776 align:middle
+Ahora digamos $this->browser(),
+->patch()...
+
+00:01:42.916 --> 00:01:49.656 align:middle
+y la URL: /api/quests/ con
+$yesterday->format('Y-m-d').
+
+00:01:50.436 --> 00:01:55.676 align:middle
+Pasa un segundo argumento de opciones con json
+y un array con 'status' => 'completed'.
+
+00:01:57.316 --> 00:01:59.566 align:middle
+El campo status es un enum...
+
+00:01:59.826 --> 00:02:03.756 align:middle
+pero como está respaldado por una
+cadena, el serializador lo deserializará
+
+00:02:03.756 --> 00:02:05.976 align:middle
+a partir de la cadena
+active o completed. Termina
+
+00:02:05.976 --> 00:02:12.766 align:middle
+con ->assertStatus(200), ->dump()
+(que será útil en un segundo),
+
+00:02:13.266 --> 00:02:18.316 align:middle
+y luego ->assertJsonMatches() para
+comprobar que status cambió a completed.
+
+00:02:19.646 --> 00:02:20.386 align:middle
+¡Maravilloso!
+
+00:02:20.386 --> 00:02:23.466 align:middle
+En realidad no vamos a guardar
+el estado actualizado...
+
+00:02:23.846 --> 00:02:27.876 align:middle
+pero al menos deberíamos ver que el
+JSON final tiene status completed .
+
+00:02:28.746 --> 00:02:29.776 align:middle
+Copia este nombre de prueba...
+
+00:02:30.316 --> 00:02:39.356 align:middle
+y por aquí, ejecuta: symfony php
+bin/phpunit --filter= y pega ese nombre: Y...
+
+00:02:39.706 --> 00:02:43.786 align:middle
+¡Uy! Obtenemos un 415.
+
+00:02:43.786 --> 00:02:48.036 align:middle
+El error dice El tipo de contenido
+application/json no es compatible.
+
+00:02:48.796 --> 00:02:51.876 align:middle
+Ah... olvidé añadir una
+cabecera a mi petición PATCH.
+
+00:02:52.596 --> 00:02:59.646 align:middle
+Añade headers a una matriz con
+Content-Type, application/merge-patch+json.
+
+00:03:01.056 --> 00:03:06.356 align:middle
+Ya hablamos de esto en el último tutorial: esto
+indica al sistema qué tipo de parche tenemos.
+
+00:03:06.956 --> 00:03:10.516 align:middle
+Éste es el único que se admite ahora
+mismo, pero sigue siendo necesario.
+
+00:03:10.686 --> 00:03:13.676 align:middle
+Si probamos esto...
+
+00:03:13.726 --> 00:03:15.146 align:middle
+¡pasa!
+
+00:03:15.196 --> 00:03:17.896 align:middle
+Pero espera, ¡creo que me
+he engañado a mí mismo!
+
+00:03:18.456 --> 00:03:22.696 align:middle
+Comenta el status y luego la prueba...
+
+00:03:22.786 --> 00:03:24.156 align:middle
+¿sigue pasando?
+
+00:03:25.316 --> 00:03:28.526 align:middle
+Sí, cambia eso por -2 days...
+
+00:03:28.666 --> 00:03:30.956 align:middle
+y $yesterday a sólo $day.
+
+00:03:31.866 --> 00:03:35.896 align:middle
+En nuestro proveedor, hacemos que cualquier
+otra búsqueda esté activa o completa:
+
+00:03:36.196 --> 00:03:39.136 align:middle
+y la de ayer comienza como completa.
+
+00:03:39.436 --> 00:03:41.726 align:middle
+¡Vaya! Cuando intentamos la prueba ahora...
+
+00:03:42.076 --> 00:03:48.446 align:middle
+falla. Volvemos a añadir
+el status al JSON y ahora...
+
+00:03:49.226 --> 00:03:51.256 align:middle
+¡ya está! ¡La prueba pasa!
+
+00:03:52.126 --> 00:03:54.226 align:middle
+Entre bastidores, éste es el proceso
+
+00:03:54.636 --> 00:04:00.516 align:middle
+Uno: la API Platform llama a nuestro proveedor para
+obtener el DailyQuest correspondiente a esta fecha.
+
+00:04:01.186 --> 00:04:06.606 align:middle
+Dos: el serializador actualiza ese DailyQuest
+utilizando el JSON enviado en la petición.
+
+00:04:06.746 --> 00:04:09.276 align:middle
+Tres: se llama al procesador de estado.
+
+00:04:09.726 --> 00:04:13.826 align:middle
+Y cuatro: el DailyQuest se
+serializa de nuevo en JSON.
+
+00:04:14.316 --> 00:04:17.736 align:middle
+Excepto que... en nuestro
+caso, no hay paso tres...
+
+00:04:17.816 --> 00:04:20.416 align:middle
+¡porque aún no hemos creado
+un procesador de estado!
+
+00:04:20.826 --> 00:04:21.866 align:middle
+¡Añadamos uno!
+
+00:04:21.866 --> 00:04:27.936 align:middle
+php bin/console make:state-processor y
+llamémoslo DailyQuestStateProcessor.
+
+00:04:28.276 --> 00:04:31.016 align:middle
+Otro nombre chispeante de genialidad.
+
+00:04:31.666 --> 00:04:36.036 align:middle
+Ve a comprobarlo: está
+vacío y lleno de potencial.
+
+00:04:36.736 --> 00:04:40.566 align:middle
+En DailyQuest, el procesador debe
+utilizarse para la operación Patch,
+
+00:04:40.946 --> 00:04:45.136 align:middle
+así que añade processor:
+DailyQuestStateProcessor::class.
+
+00:04:46.716 --> 00:04:51.296 align:middle
+Para demostrar que esto funciona, dd($data).
+
+00:04:51.296 --> 00:04:54.306 align:middle
+¡Vale! Vuelve a hacer la prueba: Y...
+
+00:04:54.706 --> 00:04:58.126 align:middle
+¡boom! El status se
+establece en completed. Por
+
+00:04:59.216 --> 00:05:03.516 align:middle
+cierto, hemos añadido la opción processor
+directamente a la operación Patch(),
+
+00:05:03.776 --> 00:05:07.896 align:middle
+pero también podemos ponerla aquí abajo,
+en el atributo #[ApiResource()] directamente.
+
+00:05:08.416 --> 00:05:09.856 align:middle
+Eso no supone ninguna diferencia...
+
+00:05:10.026 --> 00:05:15.106 align:middle
+porque ésta es la única operación que
+tenemos que utiliza siquiera un procesador:
+
+00:05:15.486 --> 00:05:18.386 align:middle
+Las operaciones del método GET
+nunca llaman a un procesador.
+
+00:05:19.146 --> 00:05:22.406 align:middle
+De todos modos, aquí es donde
+normalmente guardaríamos los datos o...
+
+00:05:22.406 --> 00:05:29.506 align:middle
+haríamos algo, como enviar un correo electrónico si se
+tratara de un recurso de la API "restablecer contraseña".
+
+00:05:29.506 --> 00:05:33.686 align:middle
+Para hacer las cosas un poco realistas,
+añadamos una propiedad $lastUpdated
+
+00:05:33.686 --> 00:05:35.656 align:middle
+a DailyQuest y actualicémosla aquí.
+
+00:05:35.656 --> 00:05:39.616 align:middle
+Añade public \DateTimeInterface $lastUpdated.
+
+00:05:40.456 --> 00:05:42.876 align:middle
+Luego rellénalo dentro
+del proveedor de estado:
+
+00:05:44.156 --> 00:05:47.576 align:middle
+$quest->lastUpdated igual
+a new \DateTimeImmutable()...
+
+00:05:48.266 --> 00:05:52.566 align:middle
+con algo de aleatoriedad:
+entre 10 y 100 días atrás.
+
+00:05:54.316 --> 00:05:57.186 align:middle
+Por último, dirígete al procesador de estado.
+
+00:05:57.886 --> 00:06:01.366 align:middle
+Sabemos que sólo se utiliza
+para los objetos DailyQuest...
+
+00:06:01.726 --> 00:06:04.256 align:middle
+así que $data será uno de ellos.
+
+00:06:04.786 --> 00:06:10.306 align:middle
+Ayuda a tu editor con assert($data
+instanceof DailyQuest) y, más abajo,
+
+00:06:10.306 --> 00:06:15.166 align:middle
+$data->lastUpdated = new
+\DateTimeImmutable('now').
+
+00:06:16.486 --> 00:06:22.016 align:middle
+¡Genial! No tenemos una aserción de prueba para
+ese campo, pero seguimos volcando la respuesta...
+
+00:06:22.426 --> 00:06:24.256 align:middle
+y podemos verla aquí.
+
+00:06:24.926 --> 00:06:26.896 align:middle
+Estoy mirando mi reloj y...
+
+00:06:27.046 --> 00:06:30.356 align:middle
+es la hora correcta en mi
+pequeño rincón del mundo.
+
+00:06:30.696 --> 00:06:33.336 align:middle
+¡Nuestro procesador estatal está vivo!
+
+00:06:34.236 --> 00:06:37.686 align:middle
+Celébralo volviendo a la
+prueba y eliminando ese volcado.
+
+00:06:38.906 --> 00:06:42.466 align:middle
+A continuación: Hagamos nuestro recurso
+más interesante añadiendo una relación
+
+00:06:42.466 --> 00:06:47.006 align:middle
+con otro recurso de la API: una
+relación con el tesoro del dragón.
