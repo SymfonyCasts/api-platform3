@@ -6,6 +6,8 @@ get *every* default operation. But we really only need a few. Add
 quest and `new Patch()` so users can update the status of an *existing* quest
 when they complete it.
 
+[[[ code('e89482bebf') ]]]
+
 Upon refreshing... I love it!
 
 Speaking of that `Patch` operation, when it's used, API Platform will call the
@@ -19,11 +21,15 @@ called `DailyQuestResourceTest`. Make this extend the `ApiTestCase` that we crea
 in the last tutorial and `use ResetDatabase` from Foundry to make sure our database
 is *empty* at the start of every test. Also `use Factories`.
 
+[[[ code('2c769d7f47') ]]]
+
 Ok, we don't *need* these... since we're not going to talk to the database...
 but if we decide to later on, we're *ready*.
 
 Down here, add `public function testPatchCanUpdateStatus()`. The first thing we need
 is a `new \DateTime()` that represents `$yesterday`: `-1 day`.
+
+[[[ code('8d13f439a1') ]]]    
 
 Remember: in our provider, we're creating daily quests for today through the last
 50 days. When we make a `PATCH` request, our item provider is called to "load" the
@@ -37,6 +43,8 @@ The `status` field is an enum... but because it's backed by a string, the serial
 will deserialize it from the string `active` or `completed`. Finish with
 `->assertStatus(200)`, `->dump()` (that will be handy in a second), and then
 `->assertJsonMatches()` to check that `status` changed to `completed`.
+
+[[[ code('11e5afb43e') ]]]
 
 Wonderful! We're not really going to *save* the updated status... but we should at
 least see that the final JSON has `status` `completed`. Copy this test name... and
@@ -52,6 +60,8 @@ And... whoops! We get a 415. The error says:
 
 Ah... I forgot to add a header to my `PATCH` request. Add `headers` set to an
 array with `Content-Type`, `application/merge-patch+json`.
+
+[[[ code('352959afa8') ]]]
 
 We talked about this in the last tutorial: this tells the system what *type* of patch
 we have. This is the only one that's supported right now, but it's still required.
@@ -81,10 +91,18 @@ php bin/console make:state-processor
 and call it `DailyQuestStateProcessor`.
 
 Yet another name *sparkling* with genius. Go check it out: it's empty and *full*
-of potential. In `DailyQuest`, the processor should be used for the `Patch`
+of potential. 
+
+[[[ code('7b8df4998c') ]]]
+
+In `DailyQuest`, the processor should be used for the `Patch`
 operation, so add `processor: DailyQuestStateProcessor::class`.
 
+[[[ code('2a0d14c881') ]]]
+
 To prove that this is working, `dd($data)`.
+
+[[[ code('df8863e830') ]]]
 
 Okay! Try the test again:
 
@@ -96,6 +114,9 @@ And... boom! The `status` is set to `completed`.
 
 By the way, we added the `processor` option directly to the `Patch()` operation,
 but we can *also* put it down here on the `#[ApiResource()]` attribute directly.
+
+[[[ code('488aa261c2') ]]]
+
 That makes no difference... because this is the only operation we have that even
 *uses* a processor: GET method operations *never* call a processor.
 
@@ -108,14 +129,20 @@ To make things a *bit* realistic, let's add a `$lastUpdated` property to
 `DailyQuest` and update it here. Add
 `public \DateTimeInterface $lastUpdated`.
 
+[[[ code('dffca36726') ]]]
+
 Then populate that inside the state provider:
 `$quest->lastUpdated` equals `new \DateTimeImmutable()`... with some
 randomness: between 10 and 100 days ago.
+
+[[[ code('2756e62cad') ]]]
 
 Finally, head over to the state processor. We know that this
 is only used for `DailyQuest` objects... so `$data` *will* be one of those. Help
 your editor with `assert($data instanceof DailyQuest)` and, below,
 `$data->lastUpdated = new \DateTimeImmutable('now')`.
+
+[[[ code('0e0227c99c') ]]]
 
 Cool! We don't have a test assertion for that field, but we *are* still dumping the
 response... and we can see it here. I'm looking at my watch and... that *is* the
