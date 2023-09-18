@@ -8,11 +8,11 @@ establecemos un id como identificador.
 Pero lo que realmente queremos es una fecha...
 
 00:00:09.756 --> 00:00:16.566 align:middle
-para que podamos tener URL extravagantes
+para poder tener URL extravagantes
 como /api/quests/2023-06-05.
 
 00:00:17.266 --> 00:00:17.986 align:middle
-¡Vamos a probarlo!
+¡Vamos a intentarlo!
 
 00:00:18.476 --> 00:00:24.866 align:middle
 En DailyQuest, en lugar de public int
@@ -379,11 +379,11 @@ Tenemos 50 elementos con datos en todos ellos.
 
 00:07:22.136 --> 00:07:26.506 align:middle
 A continuación: Hagamos que nuestro proveedor
-funcione para las operaciones con elementos:
+funcione para las operaciones de ítems:
 
 00:07:26.826 --> 00:07:28.956 align:middle
-es decir, cuando obtenemos un único elemento.
+es decir, cuando obtenemos un único ítem.
 
 00:07:29.546 --> 00:07:34.326 align:middle
 El proveedor de elementos se utiliza para las
-operaciones GET uno, , y . PUT PATCH DELETE
+operaciones GET one, PUT, PATCH y DELETE
