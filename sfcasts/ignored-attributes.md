@@ -1,81 +1,117 @@
-# IGNORED_ATTRIBUTES
+# Other Conditional Field Strategies
 
-Coming soon...
+Let's keep playing with how we can hide or show fields. Remove the `#[ApiProperty]`.
+Then, on top, set the `normalizationContext` option. We used this in previous
+tutorials... but this time, instead of `groups`, we're going to set a key called
+`AbstractNormalizer::IGNORED_ATTRIBUTES` and *then* set to an array. Inside, put
+`flameThrowingDistance`.
 
-There's one other way you can do this, and both ways are functionally identical, so
-you can use whichever you prefer. We'll set the `normalizationContext` up here, which
-is something we set on our entities in previous tutorials, but instead of `groups`,
-we're going to set a key called `AbstractNormalizer::IGNORED_ATTRIBUTES`, which we'll
-*then* set to an array. And here, we can say `flameThrowingDistance`. This basically
-says `When we're normalizing (when we're *going* to JSON), I want to ignore that
-property`. This should make it *writable*, but not *readable*. When we try it... just
-as expected, it's writable, but *not* readable. And we can do the same thing with
-`denormalizationContext`. Copy that, put a "de" on the front of it, and now, it
-shouldn't be writable *or* readable. And... yep! The "flameThrowingDistance" is "1",
-so it was *not* writable, and down here... it's not readable either. *Sweet*. Again,
-these are just different options, but they should all work the same. You may also
-find that occasionally, for some reason, one doesn't work quite the way you expect it
-to, so it's good to know that you have options. Let's go ahead and delete those.
+Whether a field is readable or writable really comes down to the serializer. This
+tells the serializer:
 
-Another way you can do this, which is nice and convenient, is to just ignore it
-completely. Down here, we can use an attribute called `#[Ignore]`. This comes from
-Symfony's serializer system, and it makes it *not* readable and *not* writable. It's
-just ignored entirely. Over here, we can see that it was *not* written and it's not
-readable. Cool!
+> Yo! When you're normalizing - so going *to* JSON - ignore this property.
 
-Okay, let's reset all that dummy code. Get rid of the `#[Ignore]`... and let's see if
-we have any extra `use` statements up here. Then, over in our processor, we'll get
-rid of that `->dump()`... and in our test, we'll get rid of that extra field and the
-other `->dump()` down here. Cool.
+This should make it *writable*, but not *readable*. When we try it...
 
-One more thing I want to point out here is that, right now, we can actually change
-the `id` in a `PATCH` request. We'll set this to `47`, which I just made up, and...
-it *fails* with a 500 error. If we open this really quick, it says `Entity 47 not
-found`, and that's coming from our state processor. So it's actually coming from down
-here. It reads the `id` up here and attempts to find that in the database, but it's
-not there. If we *had* used a valid `id`, it would have changed to and updated a
-different `User` entity. So... that's a *big* no-no. We do *not* want the `id` to be
-writable.
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
 
-So the full flow is this: Our provider found the original `User` entity with this
-`id`, mapped that over to a `UserApi` object, the `id` on the `UserApi` object was
-then *changed* to `47`, and then we tried to query for an entity with that `id`,
-which is *ultimately* what we would have saved to the database.
+That's exactly what happens! To make it *not* writable, do the same thing with
+`denormalizationContext`. Copy that, put a "de" on the front of it, and now when
+we try it:
 
-Over in `UserApi.php`, to fix this, we're going to add `writable: false`, and we can
-also use the the `#[Ignore]` attribute that we saw a second ago, since we don't
-really want this to be readable *or* writable. The `id` property really just ends up
-being the IRI, but it's not actually part of our API. If we run that test now... it
-*passes* because it's *ignoring* that new `id`. It's not trying to query for it. Life
-is *good*.
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
 
-All right, while we're here, over in `UserApi.php`, there's two other properties
-that, at least for now, we want to make read-only. Above `$dragonTreasures`, let's
-make this `writable: false`. We'll talk about this more later, and maybe we'll allow
-`$dragonTreasures` to be created or *set* on a user, but for now, we'll just say
-`writable: false`. Down here, let's do the same thing for `$flameThrowingDistance`,
-because this is really just a fake property that we're generating as a random number
-anyway.
+Yup! `flameThrowingDistance` is "1" - so it is *not* writable, and down here...
+it's not readable either. *Sweet*.
 
-One other way to control whether a field is readable or writable, and we will see
-this in a second, is the `security` attribute. For example, if
-`$flameThrowingDistance` were, perhaps, only readable or writable if you had a
-certain *role*, then you could use the `security` attribute to check for that role
-here. That's relatepertains more to security than just general functionality, but
-it's one more handy way to *show* or *not show* and *write* or *not write* a field.
+So this is just a different option that should work the same as `ApiProperty`...
+though I *have* seen complex cases where this context option worked when the
+`ApiProperty` solution did not. Anyway, delete those.
 
-Something else I should mention, even though we're not actually going to do it, is
-that if your input and output for your class starts to look really different, it *is*
-possible to have separate classes for your input and your output. You could have
-something like a `UserApiRead` and a *separate* `UserApiWrite`. The `UserApiRead`
-would just be used for the *read* operations like `GET` and `GET` collection. And
-`UserApiWrite` would be used for `PUT`, `PATCH`, and `POST` operations. Full
-disclosure, I haven't actually done this before, and there's probably a couple of
-things we would need to worry about. This might be a case where, with `UserApiWrite`,
-we would actually need to set the `output` to `UserApiRead` so that the user can
-*send* data. Anyway, I don't want to go into too much detail, and if that doesn't
-make sense to you, don't worry about it. But for those of you that *might* have that
-case, I wanted to at least raise that as a possibility. As I said, that's not
-something I have *personally* experimented with yet, but it's something to consider.
+## The #[Ignore] Attribute
+
+The last way to ignore a field - if you want to ignore it completely - is to
+add an attribute called... `#[Ignore]`! This comes from Symfony's serializer system.
+When we try the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+Perfect: is is *not* writable nor readable. Cool!
+
+Okay, let's reset all that dummy code. Get rid of the `#[Ignore]`... and let's see
+if we have any extra `use` statements up here. Then, over in our processor, remove
+the `->dump()`... and in our test, get rid of that extra field and the other
+`->dump()`. All clean!
+
+## Avoiding Writable on the Identifier
+
+On this topic of readable and writable, right now, we can actually *change* the
+`id` field in a `PATCH` request. Watch: set this to `47`... which I just made up,
+and... it *fails* with a 500 error!
+
+Open up the error:
+
+> Entity 47 not found.
+
+That's coming from *our* state processor. It's coming from down here... it reads
+the `id` up here and tries to find that in the database... but it's not there. If
+we *had* used a valid `id`, it would have queried for that *other* `User` entity
+and updated the proeprties onto *that*!. That's a *big* no-no. We do *not* want
+the `id` to be writable
+
+Let's look at the full flow. First, our provider found the original `User` entity
+with the `id` from the URL... and mapped that over to a `UserApi` object. Good
+so far. Then, during deserialization, the `id` on the `UserApi` object was 
+*changed* to `47`. Finally, in the state processor, we tried to query for an entity
+with `id=47`... which is *ultimately* what we would have saved to the database.
+
+Over in `UserApi`, to fix this, above `id`, add `writable: false`. Or we could
+use the `#[Ignore]` attribute that we saw a second ago... since we don't want this
+to be readable *or* writable. The `id` property really just helps generate the IRI...
+but it's not *really* part of our API.
+
+If we run that test now... it *passes* because it's *ignoring* new `id` field
+in the JSON. Life is *good
+
+Ok, while we're here, in `UserApi`, there are two other properties that, for now,
+I want to make read-only. Above `$dragonTreasures`, make this `writable: false`...
+though we *are* going to make this writable later.
+
+Below, do the same thing for `$flameThrowingDistance`... because this is a
+fake property that we're generating as a random number.
+
+## Using "security" to hide/show a field
+
+Oh, and another way to control whether a field is readable or writable is the
+`security` attribute. For example, if `$flameThrowingDistance` were only readable
+or writable if you had a certain *role*, you could use the `security` attribute
+to check for that role. We'll see this a bit later.
+
+## Different Input/Output Classes?
+
+Finally, I want to mention one last strategy for conditional fields... even though
+we won't do it. If the input JSON and output JSON for your API resource start to
+look *really* different, it *is* possible to have separate classes for your input
+and your output. You could have something like a `UserApiRead` and a *separate*
+`UserApiWrite`. The `UserApiRead` would be used for the *read* operations like
+`GET` and `GET` collection. And `UserApiWrite` would be used for `PUT`, `PATCH`,
+and `POST` operations.
+
+Though, full disclosure: I haven't actually played with this yet. It should work,
+but there are probably some road bumps and details along the way. One other thing
+to keep in mind is that, on `UserApiWrite`, you could, in theory, set the `output`
+to `UserApiRead`. That would allow the user to send data in the format of
+`UserApiWrite`, but be returned JSON from `UserApiRead`. But, to make this work,
+after saving the `UserApiWrite` in your state processor, you would need to turn
+it into a `UserApiRead` and return *that*.
+
+Anyway, that's definitely more advanced, but if that's interesting and you try it
+out, let me know!
 
 Next up: Let's polish our new API resource by re-adding validation and security.
