@@ -1,43 +1,98 @@
-# Control Fields
+# Controlling Fields without Groups
 
-When your API resource is on an entity, serialization groups are a *must* because you'll definitely have certain properties that you want to show or *not* show. But serialization groups add *complexity*. One of the biggest benefits of having a separate class for your API is not needing serialization groups *at all*, since your API class is meant to represent your API, so all of these properties should already be part of your API. But that's not always the case, and we just ran into a situation where we realized that `password` should be a write-only field. *So* let's try to replicate some of the complexity that our `User` entity *originally* had in our API by avoiding serialization groups.
+When your APP resource is on an entity, serialization groups are a *must* because
+you'll definitely have some properties that you want to show or *not* show. But
+serialization groups add *complexity*. One of the biggest benefits of having a
+separate class for your API is not needing serialization groups *at all*. The
+while point of your API class is to represent your API... so, in theory, you'll
+want every property to be part of your API.
 
-First, in `UserResourceTest.php`, down here, we're going to remove `->dump()`... and after we `->assertStatus(201)`, we're going to assert that the `password` property is *not* returned. To do that, we can say `->use(function(Json $json))`. This is a little syntax from browser. We call `->use()` and then there's a few different things we can type in here and the library will actually detect what we're typehinting and passes us that object. One of the things we can typehint is a helper JSON object. It'll take the JSON that was returned from this response, put it in this little JSON object for us, and then we can alter this a bit. Say `$json->assertMissing('password')`. If we try that now... it *fails* because `password` *does* exist.
+But, in the real world, that's not always the case. And we just ran into this:
+`password` should be a write-only field. Let's try to replicate some of the complexity
+that our `User` entity *originally* had, but by avoiding serialization groups
 
-Okay, let's check out some of the options for customizing our properties. One of the easiest ones to use (and, coincidentally, my *favorite*) is to use `#[ApiProperty()]`. In this case, there's a `readable: false`. We want this to be *writable*, but not *readable*. And... that fixes things! *Beautiful*.
+In `UserResourceTest`, down here, remove the `->dump()`... and after we
+`->assertStatus(201)`, assert that the `password` property is *not* returned. To
+do that, we can say `->use(function(Json $json))`. The `use()` function comes
+from browser and there are a few different objects - like `Json` that you can
+*ask* it to pass you via the type-hint. In this case, browser takes the JSON from
+the last response, puts it into a `Json` object and passes it to us. Use it by
+saying `$json->assertMissing('password')`.
 
-Now let's repeat that for `id`. This `id` is a pretty useless field since we have our IRI, but if we run that... it passes and `id` is being returned. Over here, we'll copy this... or rather just the `readable: false` part, and  up here, say `#ApiProperty(readable: false)]`. While we're here, we'll also add `identifier: true`. We don't *need* to do that, since it's going to guess that anyway, but having it makes me feel a little better. And now... that *passes*.
+If we try that now:
 
-All right, moving forward, let's dive a little deeper into some of our other options. Copy the next test name - `testPatchToUpdateUser` - and run that:
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+It *fails* because `password` *does* exist.
+
+## readable: false
+
+Okay, let's take a tour of *how* we can customize our API fields without groups.
+One of the easiest, (and, coincidentally, my *favorite*) is to use `#[ApiProperty()]`
+with `readable: false`.
+
+We want this to be *writable*, but not *readable*.
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+And... that fixes things! *Beautiful*.
+
+Let's repeat that for `id`... because `id` is pretty useless since we have `@id`.
+When we run that... it fails because `id` *is* being returned. So now, copy...
+just the `readable: false` part... add `#[ApiProperty]` above `id`, paste and
+I'll also add `identifier: true`... just to be explicit.
+
+And now...
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+That *passes*.
+
+## writable: false
+
+Let's keep going. Copy the next test name - `testPatchToUpdateUser` - and run
+that:
 
 ```terminal
 symfony php bin/phpunit --filter=testPatchToUpdateUser
 ```
 
-And... it passes *immediately*, which is *pretty* amazing. So our `->patch()` is already working. I love that! Now let's take a look at a few other options for hiding fields in specific cases.
+It passes *immediately*! Yay! `->patch()` is already working. To dive deeper into
+other ways we can hide or show fields, also send a `flameThrowingDistance` field
+in the JSON set to 999. And down here, `->dump()` the response.
 
-We're going to add a new *fake* field here that we're going to update. We're doing a `PATCH` request, and now we're going to pretend that we're trying to update a field called `flameThrowingDistance`, which we'll set to `999`. And down here, we're going to `->dump()` so we can see what the response looks like. And before we try this, let's do one other thing over in `EntityClassDtoStateProcessor.php`. Right after we set the `id`, we're going to `dump($data)` here as well. And now let's run the test. That's going to help you understand what I'm getting at here.
+Before we try this, find the `EntityClassDtoStateProcessor` class. Right after we
+set the `id`, `dump($data)`. Those two dumps are going to help us understand
+*exactly* how this all works.
 
-When we run that, we can see that we have a dump up here with "flameThrowingDistance" of "999", and it *returns* "999". What I'm showing here is the fact that, right now, this field is readable *and* writable. It's just a normal field, and we're demonstrating that by saying `Hey, we're allowed to pass 999`. And *ultimately*, that's what's passed to our processor. Then, when it's *serialized*, the field is *also* readable. So this is showing that it was *writable*, and *this* is showing that it's *readable*.
+*Now* run the test:
 
-Now that we have this cool situation set up, let's try a few things. In `UserApi.php`, we'll start with that same `#[ApiProperty()]`, and we'll say `readable: false`. We've already seen this part. When we run the test, we can see up here that the "999" was still deserialized on the `UserApi`. So it's still *writable*, but it doesn't show up down here, meaning it's no longer *readable*. Cool! And if we *also* pass `writable: false`, you can see that up here, in our state processor, it's just "10". Our provider sets this to a random number between 0 and 10, which means this is *not* writable, and it's *still* not *readable*. Awesome!
+```terminal-silent
+symfony php bin/phpunit --filter=testPatchToUpdateUser
+```
 
-There's one other way you can do this, and both ways are functionally identical, so you can use whichever you prefer. We'll set the `normalizationContext` up here, which is something we set on our entities in previous tutorials, but instead of `groups`, we're going to set a key called `AbstractNormalizer::IGNORED_ATTRIBUTES`, which we'll *then* set to an array. And here, we can say `flameThrowingDistance`. This basically says `When we're normalizing (when we're *going* to JSON), I want to ignore that property`. This should make it *writable*, but not *readable*. When we try it... just as expected, it's writable, but *not* readable. And we can do the same thing with `denormalizationContext`. Copy that, put a "de" on the front of it, and now, it shouldn't be writable *or* readable. And... yep! The "flameThrowingDistance" is "1", so it was *not* writable, and down here... it's not readable either. *Sweet*. Again, these are just different options, but they should all work the same. You may also find that occasionally, for some reason, one doesn't work quite the way you expect it to, so it's good to know that you have options. Let's go ahead and delete those.
+And... awesome. The first dump on top - from the state processor - shows
+`flameThrowingDistance` 999, which means the field is *writable*. And below,
+the response returned 999, which means the field is also *readable*. Yup...
+this is a normal, boring field. If the user sends the field in JSON, that new
+value *is* deserialized onto the object.
 
-Another way you can do this, which is nice and convenient, is to just ignore it completely. Down here, we can use an attribute called `#[Ignore]`. This comes from Symfony's serializer system, and it makes it *not* readable and *not* writable. It's just ignored entirely. Over here, we can see that it was *not* written and it's not readable. Cool!
+Ok, experimentation time! In `UserApi`, above the property, start with the same
+`#[ApiProperty()]` and `readable: false`. We've already seen this.
 
-Okay, let's reset all that dummy code. Get rid of the `#[Ignore]`... and let's see if we have any extra `use` statements up here. Then, over in our processor, we'll get rid of that `->dump()`... and in our test, we'll get rid of that extra field and the other `->dump()` down here. Cool.
+And when we run the test, on top, the "999" was *written* onto the `UserApi`,
+but it doesn't show up in the response. It's writable, but not readable.
 
-One more thing I want to point out here is that, right now, we can actually change the `id` in a `PATCH` request. We'll set this to `47`, which I just made up, and... it *fails* with a 500 error. If we open this really quick, it says `Entity 47 not found`, and that's coming from our state processor. So it's actually coming from down here. It reads the `id` up here and attempts to find that in the database, but it's not there. If we *had* used a valid `id`, it would have changed to and updated a different `User` entity. So... that's a *big* no-no. We do *not* want the `id` to be writable.
+If we *also* pass `writable: false`... and try again. On top, the value is
+just "10". The field is *not* writable, so the field in the JSON was ignored.
+It's also not in the response: it's not readable or writable.
 
-So the full flow is this: Our provider found the original `User` entity with this `id`, mapped that over to a `UserApi` object, the `id` on the `UserApi` object was then *changed* to `47`, and then we tried to query for an entity with that `id`, which is *ultimately* what we would have saved to the database.
-
-Over in `UserApi.php`, to fix this, we're going to add `writable: false`, and we can also use the the `#[Ignore]` attribute that we saw a second ago, since we don't really want this to be readable *or* writable. The `id` property really just ends up being the IRI, but it's not actually part of our API. If we run that test now... it *passes* because it's *ignoring* that new `id`. It's not trying to query for it. Life is *good*.
-
-All right, while we're here, over in `UserApi.php`, there's two other properties that, at least for now, we want to make read-only. Above `$dragonTreasures`, let's make this `writable: false`. We'll talk about this more later, and maybe we'll allow `$dragonTreasures` to be created or *set* on a user, but for now, we'll just say `writable: false`. Down here, let's do the same thing for `$flameThrowingDistance`, because this is really just a fake property that we're generating as a random number anyway.
-
-One other way to control whether a field is readable or writable, and we will see this in a second, is the `security` attribute. For example, if `$flameThrowingDistance` were, perhaps, only readable or writable if you had a certain *role*, then you could use the `security` attribute to check for that role here. That's relatepertains more to security than just general functionality, but it's one more handy way to *show* or *not show* and *write* or *not write* a field.
-
-Something else I should mention, even though we're not actually going to do it, is that if your input and output for your class starts to look really different, it *is* possible to have separate classes for your input and your output. You could have something like a `UserApiRead` and a *separate* `UserApiWrite`. The `UserApiRead` would just be used for the *read* operations like `GET` and `GET` collection. And `UserApiWrite` would be used for `PUT`, `PATCH`, and `POST` operations. Full disclosure, I haven't actually done this before, and there's probably a couple of things we would need to worry about. This might be a case where, with `UserApiWrite`, we would actually need to set the `output` to `UserApiRead` so that the user can *send* data. Anyway, I don't want to go into too much detail, and if that doesn't make sense to you, don't worry about it. But for those of you that *might* have that case, I wanted to at least raise that as a possibility. As I said, that's not something I have *personally* experimented with yet, but it's something to consider.
-
-Next up: Let's polish our new API resource by re-adding validation and security.
+The readable/writable options alone are probably going to solve most situations.
+But next, let's learn some other tricks and learn why you probably want to make
+sure that your identifier is *not* writable.

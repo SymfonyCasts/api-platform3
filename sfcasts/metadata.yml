@@ -21,6 +21,7 @@ chapters:
     - entity-state-processor
     - processor-saving
     - control-fields
+    - ignored-attributes
     - validation-security
     - micro-mapper
     - generic
