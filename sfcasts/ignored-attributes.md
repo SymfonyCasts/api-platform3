@@ -1,10 +1,10 @@
 # Other Conditional Field Strategies
 
-Let's keep playing with how we can hide or show fields. Remove the `#[ApiProperty]`.
-Then, on top, set the `normalizationContext` option. We used this in previous
-tutorials... but this time, instead of `groups`, we're going to set a key called
-`AbstractNormalizer::IGNORED_ATTRIBUTES` and *then* set to an array. Inside, put
-`flameThrowingDistance`.
+Let's keep playing with how we can hide or show fields. Remove the `#[ApiProperty]`
+attribute. Then, on top, set the `normalizationContext` option. We used this in previous
+tutorials... but this time, instead of `groups`, set a key called
+`AbstractNormalizer::IGNORED_ATTRIBUTES` and *then* set that to an array. Inside,
+put `flameThrowingDistance`.
 
 Whether a field is readable or writable really comes down to the serializer. This
 tells the serializer:
@@ -17,8 +17,8 @@ This should make it *writable*, but not *readable*. When we try it...
 symfony php bin/phpunit --filter=testPostToCreateUser
 ```
 
-That's exactly what happens! To make it *not* writable, do the same thing with
-`denormalizationContext`. Copy that, put a "de" on the front of it, and now when
+That's exactly what happens! To wrap it in a "do not write" sign, duplicate this move
+with `denormalizationContext`. Copy that, put a "de" on the front of it, and now when
 we try it:
 
 ```terminal-silent
@@ -42,12 +42,12 @@ When we try the test:
 symfony php bin/phpunit --filter=testPostToCreateUser
 ```
 
-Perfect: is is *not* writable nor readable. Cool!
+Perfect: It is *not* writable nor readable. Cool!
 
-Okay, let's reset all that dummy code. Get rid of the `#[Ignore]`... and let's see
-if we have any extra `use` statements up here. Then, over in our processor, remove
-the `->dump()`... and in our test, get rid of that extra field and the other
-`->dump()`. All clean!
+Alrighty, let's hit the reset button on all that dummy code. Get rid of the
+`#[Ignore]`... and let's see if we have any extra `use` statements up here. Then,
+over in our processor, remove the `->dump()`... and in our test, get rid of that
+extra field and the other `->dump()`. All clean!
 
 ## Avoiding Writable on the Identifier
 
@@ -61,9 +61,10 @@ Open up the error:
 
 That's coming from *our* state processor. It's coming from down here... it reads
 the `id` up here and tries to find that in the database... but it's not there. If
-we *had* used a valid `id`, it would have queried for that *other* `User` entity
-and updated the proeprties onto *that*!. That's a *big* no-no. We do *not* want
-the `id` to be writable
+we *had* used a valid `id`, it would have queried for that *other* `User` entity...
+then we would have updated the properties on *that*!. That's a *big* no-no. At
+least with how our code is written, by making `id` writable, we're allowing the
+user to *change* which user is being modified.
 
 Let's look at the full flow. First, our provider found the original `User` entity
 with the `id` from the URL... and mapped that over to a `UserApi` object. Good
@@ -73,17 +74,17 @@ with `id=47`... which is *ultimately* what we would have saved to the database.
 
 Over in `UserApi`, to fix this, above `id`, add `writable: false`. Or we could
 use the `#[Ignore]` attribute that we saw a second ago... since we don't want this
-to be readable *or* writable. The `id` property really just helps generate the IRI...
+to be readable *or* writable. The `id` property helps generate the IRI...
 but it's not *really* part of our API.
 
-If we run that test now... it *passes* because it's *ignoring* new `id` field
-in the JSON. Life is *good
+If we run that test now... it *passes* because it's *ignoring* the new `id` field
+in the JSON. Life is *good*.
 
-Ok, while we're here, in `UserApi`, there are two other properties that, for now,
+While we're here, in `UserApi`, there are two other properties that, for now,
 I want to make read-only. Above `$dragonTreasures`, make this `writable: false`...
 though we *are* going to make this writable later.
 
-Below, do the same thing for `$flameThrowingDistance`... because this is a
+Below, do the same for `$flameThrowingDistance`... because this is a
 fake property that we're generating as a random number.
 
 ## Using "security" to hide/show a field
@@ -91,7 +92,7 @@ fake property that we're generating as a random number.
 Oh, and another way to control whether a field is readable or writable is the
 `security` attribute. For example, if `$flameThrowingDistance` were only readable
 or writable if you had a certain *role*, you could use the `security` attribute
-to check for that role. We'll see this a bit later.
+to check for that. We'll see this a bit later.
 
 ## Different Input/Output Classes?
 
@@ -111,7 +112,7 @@ to `UserApiRead`. That would allow the user to send data in the format of
 after saving the `UserApiWrite` in your state processor, you would need to turn
 it into a `UserApiRead` and return *that*.
 
-Anyway, that's definitely more advanced, but if that's interesting and you try it
-out, let me know!
+Anyway, that's definitely more advanced, but if it's interesting, and you try it,
+let me know!
 
 Next up: Let's polish our new API resource by re-adding validation and security.
