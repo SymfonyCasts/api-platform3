@@ -110,7 +110,7 @@ the same problem we saw earlier, and the fix is the same.
 I *do* want to point out one interesting thing about this, though. When it embeds
 the `dragonTreasures`, one of the properties is `owner`. Right now, that *owner*
 is actually the `User` entity. Since the `User` *entity* is no longer an API resource,
-it embeds it and uses the random `genid` thing.
+it adds this random `genid` thing.
 
 I'll talk about this more in a bit, but once we start creating DTOs and using *those*
 instead of entities, we'll probably want to use DTOs for *all* of our API resources...
