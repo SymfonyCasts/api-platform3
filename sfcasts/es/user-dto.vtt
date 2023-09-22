@@ -1,0 +1,229 @@
+WEBVTT
+
+00:00:01.086 --> 00:00:04.036 align:middle
+La forma más rápida de empezar
+a utilizar la API Platform es
+
+00:00:04.036 --> 00:00:08.466 align:middle
+añadir estos atributos #[ApiResource]
+sobre tus clases de entidad.
+
+00:00:09.036 --> 00:00:13.076 align:middle
+Esto se debe a que la API Platform te proporciona
+proveedores de estado gratuitos que consultan
+
+00:00:13.076 --> 00:00:18.726 align:middle
+desde la base de datos (lo que incluye paginación
+y filtros) y procesadores de estado gratuitos
+
+00:00:18.726 --> 00:00:20.876 align:middle
+que guardan cosas en la base de datos.
+
+00:00:21.356 --> 00:00:25.766 align:middle
+Pero, como hemos visto con
+DailyQuest, eso no es necesario.
+
+00:00:26.206 --> 00:00:31.586 align:middle
+Y si tu API empieza a ser muy diferente de
+tus entidades -por ejemplo, si tienes campos
+
+00:00:31.586 --> 00:00:37.466 align:middle
+en tu API que no existen en tu entidad o
+tienen nombres diferentes-, podría tener
+
+00:00:37.466 --> 00:00:41.306 align:middle
+sentido separar tus clases
+de entidad y de recurso API.
+
+00:00:42.106 --> 00:00:45.006 align:middle
+Ahora mismo, nuestras
+entidades son recursos API...
+
+00:00:45.366 --> 00:00:47.866 align:middle
+y eso ha añadido cierta complejidad.
+
+00:00:48.406 --> 00:00:52.576 align:middle
+Por ejemplo, tenemos un campo
+personalizado isMine que se alimenta
+
+00:00:52.576 --> 00:00:57.876 align:middle
+de esta propiedad isOwnedByAuthenticatedUser:
+una propiedad no persistente
+
+00:00:57.876 --> 00:01:00.416 align:middle
+que rellenamos mediante un proveedor de estado.
+
+00:01:01.036 --> 00:01:06.116 align:middle
+Y una de las cosas más notables es nuestro
+enorme uso de grupos de serialización. Tenemos
+
+00:01:06.676 --> 00:01:10.776 align:middle
+que utilizar grupos de
+serialización, como treasure:read,
+
+00:01:11.036 --> 00:01:15.606 align:middle
+para poder incluir las propiedades que
+queremos y evitar las que no queremos.
+
+00:01:16.936 --> 00:01:18.706 align:middle
+Esto nos ha ahorrado algo de tiempo...
+
+00:01:19.156 --> 00:01:20.616 align:middle
+pero ha aumentado la complejidad.
+
+00:01:21.126 --> 00:01:26.676 align:middle
+Así que vamos a volvernos locos y utilizar desde
+el principio una clase dedicada para nuestra API.
+
+00:01:27.196 --> 00:01:31.926 align:middle
+A menudo se denomina "DTO", u
+"Objeto de Transferencia de Datos".
+
+00:01:32.376 --> 00:01:37.646 align:middle
+Utilizaré mucho ese término, pero para
+nosotros sólo significa "la clase dedicada a
+
+00:01:37.676 --> 00:01:41.036 align:middle
+nuestra API", como la clase DailyQuest.
+
+00:01:41.856 --> 00:01:44.336 align:middle
+Muy bien, amigos, ¡comienza la limpieza!
+
+00:01:44.736 --> 00:01:51.066 align:middle
+Es hora de limpiar toda la mugre relacionada
+con la API de nuestra prístina entidad User.
+
+00:01:51.836 --> 00:01:53.876 align:middle
+Elimina el atributo #[ApiResource()]...
+
+00:01:54.176 --> 00:01:56.966 align:middle
+ambos, filtros y validación.
+
+00:01:57.706 --> 00:02:02.756 align:middle
+Puede que aún quieras restricciones de validación si
+estás utilizando tu entidad con el sistema de formularios...
+
+00:02:03.046 --> 00:02:05.116 align:middle
+pero como no es así, vamos a borrarlo.
+
+00:02:05.116 --> 00:02:08.846 align:middle
+También voy a despejar todo lo
+relacionado con la serialización...
+
+00:02:09.176 --> 00:02:12.476 align:middle
+...y buscaré, con suerte,
+todo lo que esté oculto.
+
+00:02:13.916 --> 00:02:17.236 align:middle
+Vaya. Esta clase es mucho más pequeña ahora.
+
+00:02:17.956 --> 00:02:18.926 align:middle
+Creo que eso es todo...
+
+00:02:19.406 --> 00:02:21.256 align:middle
+las declaraciones use en la
+parte superior se ven bien...
+
+00:02:21.556 --> 00:02:22.766 align:middle
+así que... ¡genial!
+
+00:02:23.736 --> 00:02:28.366 align:middle
+Vamos a eliminar también el procesador de estados para
+User, que realiza el hash de la contraseña simple. Vamos a
+
+00:02:29.736 --> 00:02:33.266 align:middle
+volver a implementar muchas de las
+cosas que acabamos de eliminar,
+
+00:02:33.486 --> 00:02:36.306 align:middle
+pero quiero empezar con un
+aspecto limpio de las cosas.
+
+00:02:37.066 --> 00:02:39.186 align:middle
+Muy bien, ve a consultar
+los documentos de la API.
+
+00:02:40.176 --> 00:02:43.166 align:middle
+Nos hemos reducido a "Búsqueda" y "Tesoro".
+
+00:02:43.406 --> 00:02:44.376 align:middle
+Me encanta
+
+00:02:45.336 --> 00:02:47.426 align:middle
+Vamos a empezar como hicimos con el DailyQuest.
+
+00:02:47.816 --> 00:02:52.706 align:middle
+En el directorio src/ApiResource/,
+crea una nueva clase llamada UserApi...
+
+00:02:53.296 --> 00:02:56.576 align:middle
+para indicar que es la clase
+de usuario de nuestra API.
+
+00:02:57.626 --> 00:03:00.136 align:middle
+Dentro, añade #[ApiResource] encima.
+
+00:03:00.926 --> 00:03:04.956 align:middle
+Hasta aquí, esto es como cualquier
+otro recurso personalizado de la API.
+
+00:03:05.456 --> 00:03:07.206 align:middle
+Aparece en los documentos...
+
+00:03:07.576 --> 00:03:12.796 align:middle
+y si intentamos la operación de
+recopilación GET, falla con un 404.
+
+00:03:13.526 --> 00:03:18.596 align:middle
+Diablos, incluso nos falta la parte "ID" en
+la URL de las operaciones de los elementos.
+
+00:03:19.286 --> 00:03:25.486 align:middle
+Para solucionarlo, en UserApi, añade
+una propiedad public ?int $id = null...
+
+00:03:26.016 --> 00:03:30.296 align:middle
+porque nuestros usuarios seguirán siendo
+identificados por su id de base de datos.
+
+00:03:31.046 --> 00:03:34.706 align:middle
+Ah, y estoy utilizando una propiedad
+pública sólo para facilitarnos la vida...
+
+00:03:35.156 --> 00:03:38.666 align:middle
+y porque esta clase seguirá siendo
+sencilla, así que no es gran cosa.
+
+00:03:39.676 --> 00:03:41.036 align:middle
+En el momento en que hagamos esto...
+
+00:03:41.296 --> 00:03:48.036 align:middle
+API Platform reconoce que id es el identificador,
+y nuestras operaciones se ven bien.
+
+00:03:48.786 --> 00:03:51.796 align:middle
+Ya que estamos aquí, vamos a
+modificar también el shortName.
+
+00:03:52.466 --> 00:03:59.836 align:middle
+Este se llama UserApi, que es un nombre terrible,
+así que cambiémoslo: shortName: 'User'.
+
+00:04:02.646 --> 00:04:03.336 align:middle
+De repente...
+
+00:04:03.646 --> 00:04:06.606 align:middle
+¡esto empieza a parecerse
+a lo que teníamos antes!
+
+00:04:07.056 --> 00:04:13.316 align:middle
+Las grandes piezas que faltan, como en DailyQuest,
+son el proveedor de estado y el procesador de estado.
+
+00:04:14.276 --> 00:04:16.146 align:middle
+Añadamos el proveedor de
+estado a continuación....
+
+00:04:16.386 --> 00:04:22.936 align:middle
+pero con un giro que aprovecha una nueva función
+que nos va a ahorrar un montón de trabajo.
