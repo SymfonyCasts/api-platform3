@@ -1,0 +1,438 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:05.236 align:middle
+Cuando buscamos la colección
+de misiones, ¡vemos las 50!
+
+00:00:05.796 --> 00:00:07.356 align:middle
+No hay paginación...
+
+00:00:07.606 --> 00:00:13.896 align:middle
+un hecho que puedo probar porque, en la parte inferior
+no vemos ningún dato extra sobre la paginación.
+
+00:00:14.506 --> 00:00:15.486 align:middle
+Normalmente...
+
+00:00:15.706 --> 00:00:17.846 align:middle
+si echamos un vistazo a la colección
+de tesoros... en la parte inferior
+
+00:00:18.186 --> 00:00:23.326 align:middle
+de la respuesta, API Platform
+añade un campo hydra:view
+
+00:00:23.326 --> 00:00:26.816 align:middle
+que describe cómo se puede paginar
+a través de estos recursos.
+
+00:00:27.326 --> 00:00:29.146 align:middle
+Pero aquí, para las búsquedas...
+
+00:00:29.436 --> 00:00:34.316 align:middle
+¡nada! Pero, ¿de dónde viene
+la paginación en API Platform?
+
+00:00:34.316 --> 00:00:41.066 align:middle
+Resulta que la paginación es completamente
+responsabilidad de tu proveedor de estado.
+
+00:00:41.456 --> 00:00:43.276 align:middle
+Es... bastante sencillo en realidad.
+
+00:00:43.906 --> 00:00:49.046 align:middle
+Sea lo que sea lo que devuelve tu proveedor de
+colecciones, ya sea una matriz de búsquedas...
+
+00:00:49.366 --> 00:00:54.236 align:middle
+o algún tipo de iterable de búsquedas
+- es lo que se serializa a JSON.
+
+00:00:54.786 --> 00:00:58.416 align:middle
+Pero si devuelve un objeto it erable que
+
+00:00:58.416 --> 00:01:03.386 align:middle
+implementa un PaginatorInterface
+especial, la API Platform lo verá
+
+00:01:03.386 --> 00:01:06.696 align:middle
+y mostrará los detalles de
+paginación de hydra:view.
+
+00:01:07.216 --> 00:01:11.946 align:middle
+Así que, si queremos que nuestra colección
+admita la paginación, el primer paso es,
+
+00:01:12.216 --> 00:01:17.286 align:middle
+en lugar de devolver esta matriz, devolver
+un objeto que implemente esa interfaz.
+
+00:01:17.766 --> 00:01:21.906 align:middle
+Y, afortunadamente, ¡la API Platform
+ya tiene una clase que puede ayudarnos!
+
+00:01:22.866 --> 00:01:24.886 align:middle
+Establece la matriz en una variable $quests.
+
+00:01:25.556 --> 00:01:29.936 align:middle
+A continuación, devuelve new
+TraversablePaginator desde la API Platform.
+
+00:01:30.596 --> 00:01:31.976 align:middle
+Esto toma unos cuantos argumentos.
+
+00:01:32.416 --> 00:01:38.576 align:middle
+En primer lugar, un traversable -básicamente los
+resultados que deberían mostrarse para la página actual.
+
+00:01:39.596 --> 00:01:43.056 align:middle
+De momento, seguiremos
+utilizando las 50 búsquedas.
+
+00:01:43.506 --> 00:01:46.016 align:middle
+Oh, excepto que esto tiene
+que ser un iterable...
+
+00:01:46.296 --> 00:01:48.766 align:middle
+así que envuélvelo en
+un nuevo ArrayIterator. Lo
+
+00:01:48.806 --> 00:01:55.356 align:middle
+siguiente es la página actual, que por ahora
+será 1, luego los objetos por página, que serán
+
+00:01:55.566 --> 00:02:00.236 align:middle
+10, y por último el número total de objetos,
+
+00:02:00.326 --> 00:02:04.576 align:middle
+que por ahora contaré en $quests.
+
+00:02:04.686 --> 00:02:12.606 align:middle
+Aún no es un paginador muy inteligente: siempre estará
+en la página 1 y mostrará todos los resultados.
+
+00:02:13.346 --> 00:02:15.866 align:middle
+Pero cuando pasamos, actualizamos...
+
+00:02:16.136 --> 00:02:21.056 align:middle
+y nos desplazamos hasta la parte inferior,
+¡vemos la información de la paginación!
+
+00:02:21.426 --> 00:02:24.616 align:middle
+Según esto, hay 5 páginas de resultados...
+
+00:02:24.996 --> 00:02:29.166 align:middle
+lo que tiene sentido: 10 elementos
+por página y 50 elementos en total.
+
+00:02:29.816 --> 00:02:33.316 align:middle
+Pero también verás que seguimos
+devolviendo 50 elementos.
+
+00:02:33.646 --> 00:02:35.976 align:middle
+¡No hay paginación real!
+
+00:02:36.586 --> 00:02:40.996 align:middle
+¿Por qué? Porque depende de nosotros
+averiguar en qué página estamos
+
+00:02:40.996 --> 00:02:44.966 align:middle
+y pasar sólo los resultados
+correctos al paginador.
+
+00:02:45.466 --> 00:02:48.756 align:middle
+Si le pasamos 50 elementos, mostrará 50
+elementos, independientemente de lo que
+
+00:02:48.976 --> 00:02:52.386 align:middle
+le digamos que es el máximo por página.
+
+00:02:53.386 --> 00:02:58.276 align:middle
+Para ayudarnos a hacerlo, vamos a establecer unas
+cuantas variables: $currentPage codificada a 1,
+
+00:02:58.276 --> 00:03:02.766 align:middle
+$itemsPerPage codificada a 10 y $totalItems.
+
+00:03:02.766 --> 00:03:08.726 align:middle
+Para ello, llama a un nuevo
+método privado countTotalQuests().
+
+00:03:08.726 --> 00:03:11.196 align:middle
+Pulsaré Alt+Enter y añadiré
+ese método al final.
+
+00:03:12.116 --> 00:03:13.586 align:middle
+Esto devolverá un int...
+
+00:03:14.036 --> 00:03:16.046 align:middle
+y sólo devolveré 50 ...
+
+00:03:16.286 --> 00:03:20.656 align:middle
+porque ese es el total de búsquedas posibles
+que tenemos en nuestra base de datos "falsa".
+
+00:03:21.256 --> 00:03:25.346 align:middle
+Si estuvieras utilizando una base de datos,
+contarías todas las filas disponibles.
+
+00:03:26.056 --> 00:03:30.256 align:middle
+Cambia el código en
+createQuests() para utilizar esto.
+
+00:03:30.256 --> 00:03:32.066 align:middle
+Probablemente esto parezca un poco tonto:
+
+00:03:32.706 --> 00:03:36.766 align:middle
+¿por qué estoy creando un método
+privado para devolver algo tan simple?
+
+00:03:37.536 --> 00:03:42.866 align:middle
+Bueno, lo que realmente quiero destacar son
+las dos "tareas" distintas de la paginación.
+
+00:03:42.866 --> 00:03:49.076 align:middle
+En primer lugar, devolver el subconjunto correcto de
+los 50 resultados, lo que haremos dentro de un momento.
+
+00:03:49.076 --> 00:03:53.596 align:middle
+En segundo lugar, devolver el recuento
+del número total de elementos.
+
+00:03:54.386 --> 00:03:58.686 align:middle
+Cuando utilizas Doctrine, ejecuta
+2 consultas distintas para esto:
+
+00:03:59.306 --> 00:04:03.396 align:middle
+una para obtener los resultados de la
+página actual con un LIMIT y un OFFSET,
+
+00:04:03.846 --> 00:04:07.306 align:middle
+y una segunda consulta
+COUNT para contar cada fila.
+
+00:04:08.416 --> 00:04:14.986 align:middle
+Bien, volviendo al principio, utilicemos estas
+variables $currentPage, $itemsPerPage y $totalItems.
+
+00:04:16.356 --> 00:04:17.066 align:middle
+Vale, genial...
+
+00:04:17.436 --> 00:04:22.626 align:middle
+pero lo que realmente necesitamos es
+determinar la página actual y utilizarla
+
+00:04:22.626 --> 00:04:25.516 align:middle
+para devolver sólo un
+subconjunto de los resultados.
+
+00:04:25.906 --> 00:04:27.976 align:middle
+Por ejemplo, si estamos
+mostrando 10 por página...
+
+00:04:28.146 --> 00:04:32.566 align:middle
+y estamos en la página 2, deberíamos
+devolver las búsquedas 11 a 20.
+
+00:04:33.606 --> 00:04:40.746 align:middle
+La paginación funciona mediante un parámetro de consulta
+?page: ?page=2 debería significar que estamos en la página 2.
+
+00:04:41.466 --> 00:04:43.216 align:middle
+Pero nuestro código aún
+no está leyendo esto.
+
+00:04:43.646 --> 00:04:45.896 align:middle
+Mira: sigue pensando que
+estamos en la página 1...
+
+00:04:46.106 --> 00:04:47.796 align:middle
+porque así lo hemos codificado.
+
+00:04:48.586 --> 00:04:53.236 align:middle
+Para obtener la página correcta, podríamos intentar
+leer directamente el parámetro de consulta...
+
+00:04:53.566 --> 00:04:55.236 align:middle
+¡pero no hace falta!
+
+00:04:55.526 --> 00:05:00.096 align:middle
+API Platform nos proporciona un servicio que ya contiene
+toda la información sobre la paginación. Arriba,
+
+00:05:00.726 --> 00:05:04.706 align:middle
+añade un segundo argumento constructor
+llamado private Pagination -
+
+00:05:04.706 --> 00:05:06.786 align:middle
+de la plataforma API $pagination.
+A continuación, establece
+
+00:05:07.976 --> 00:05:11.836 align:middle
+$currentPage en
+$this->pagination->getPage(),
+
+00:05:12.166 --> 00:05:15.576 align:middle
+que necesita el $context que tenemos como argumento
+en este método. A continuación, establece
+
+00:05:16.266 --> 00:05:17.746 align:middle
+$itemsPerPage a
+
+00:05:17.746 --> 00:05:24.196 align:middle
+$this->pagination->getLimit()
+pasando $operation y $context.
+
+00:05:24.196 --> 00:05:28.726 align:middle
+También podemos obtener un $offset de forma
+similar, lo que es súper práctico. Si estamos
+
+00:05:30.886 --> 00:05:33.526 align:middle
+en la página 2 y el límite es 10,
+
+00:05:33.826 --> 00:05:38.256 align:middle
+el servicio Pagination calculará
+que el desplazamiento debe ser 11.
+
+00:05:39.376 --> 00:05:41.296 align:middle
+Vuelca las cuatro variables a continuación.
+
+00:05:43.716 --> 00:05:44.616 align:middle
+¡Vamos a comprobarlo!
+
+00:05:45.106 --> 00:05:49.276 align:middle
+Vuelve a la página 1, actualiza y ¡mira esto!
+
+00:05:49.606 --> 00:05:54.126 align:middle
+Página 1, 30 elementos por página,
+el límite y el desplazamiento 0.
+
+00:05:54.126 --> 00:06:02.146 align:middle
+Si vamos a page=2, entonces es la página 2, el número
+por página sigue siendo 30 y el desplazamiento es 30.
+
+00:06:03.046 --> 00:06:05.726 align:middle
+¿De dónde saca 30 como número
+de elementos por página?
+
+00:06:06.316 --> 00:06:09.436 align:middle
+Ese es el valor por defecto en API
+Platform para cualquier recurso.
+
+00:06:09.766 --> 00:06:13.176 align:middle
+Pero es algo que puedes configurar
+en tu atributo #[ApiResource]:
+
+00:06:13.976 --> 00:06:17.686 align:middle
+cambia paginationItemsPerPage
+a, qué te parece, 10.
+
+00:06:18.896 --> 00:06:19.626 align:middle
+Ahora pruébalo.
+
+00:06:20.976 --> 00:06:23.706 align:middle
+Eso cambia a 10 y el desplazamiento es 10.
+
+00:06:24.136 --> 00:06:28.066 align:middle
+Si vamos a la página 3, nuestro
+por página sigue siendo 10.
+
+00:06:28.246 --> 00:06:33.926 align:middle
+Y ahora dice Oye, como estamos en la página
+3, deberías empezar por el resultado 20.
+
+00:06:34.556 --> 00:06:36.736 align:middle
+Ahora estamos en buena forma.
+
+00:06:37.206 --> 00:06:41.866 align:middle
+Nuestro trabajo final es utilizar esta
+información para devolver el subconjunto correcto
+
+00:06:41.866 --> 00:06:45.286 align:middle
+de resultados, en lugar
+de todas las búsquedas.
+
+00:06:45.286 --> 00:06:49.646 align:middle
+Para ello, pasa $offset y
+$itemsPerPage a createQuests().
+
+00:06:51.086 --> 00:06:55.396 align:middle
+Aquí abajo, añade int $offset y int
+$limit con un valor predeterminado de 50.
+
+00:06:57.126 --> 00:07:04.256 align:middle
+Y utiliza esos: $i = $offset y
+luego $i <= $offset más $limit.
+
+00:07:06.296 --> 00:07:07.706 align:middle
+Ok equipo ¡comprobadlo!
+
+00:07:08.056 --> 00:07:09.956 align:middle
+Estamos en la página 3 y...
+
+00:07:10.476 --> 00:07:12.806 align:middle
+¡estos son los elementos de la página 3!
+
+00:07:13.796 --> 00:07:15.826 align:middle
+Es más obvio si vamos a la página 1.
+
+00:07:15.896 --> 00:07:20.986 align:middle
+Mira las descripciones: descripción
+1, 2, 3 y así sucesivamente.
+
+00:07:21.046 --> 00:07:24.836 align:middle
+Así pues, ¡la paginación
+funciona en nuestra colección!
+
+00:07:25.246 --> 00:07:29.836 align:middle
+Aunque, en este sencillo ejemplo, tengo que
+asegurarme de no romper el proveedor de artículos.
+
+00:07:30.586 --> 00:07:36.106 align:middle
+Como estamos buscando la cadena del día como clave de
+un array, necesitamos devolver todas las búsquedas.
+
+00:07:36.516 --> 00:07:39.046 align:middle
+Para asegurarnos de que
+eso ocurre, pasa 0 y 50.
+
+00:07:39.886 --> 00:07:43.606 align:middle
+En una aplicación real, harías esto
+de forma más inteligente, por ejemplo,
+
+00:07:43.856 --> 00:07:46.486 align:middle
+consultando por el único
+elemento que necesitas...
+
+00:07:46.706 --> 00:07:48.496 align:middle
+en lugar de cargarlos todos.
+
+00:07:49.296 --> 00:07:52.236 align:middle
+Eso es la paginación de
+un recurso personalizado.
+
+00:07:52.576 --> 00:07:53.996 align:middle
+¿Y el filtrado?
+
+00:07:54.456 --> 00:07:57.966 align:middle
+Hablaremos de la creación de filtros
+personalizados en un próximo tutorial.
+
+00:07:58.356 --> 00:08:02.676 align:middle
+Pero alerta de spoiler: la lógica
+de filtrado también es algo
+
+00:08:02.676 --> 00:08:06.046 align:middle
+que ocurre aquí mismo, dentro
+del proveedor de la colección.
+
+00:08:06.986 --> 00:08:12.286 align:middle
+A continuación: vamos a eliminar todo el material
+del recurso API de nuestra entidad User y a añadirlo
+
+00:08:12.286 --> 00:08:15.736 align:middle
+a una nueva clase que se
+dedicará a nuestra API.
+
+00:08:16.516 --> 00:08:16.866 align:middle
+Woh.
