@@ -1,9 +1,13 @@
 # Relating Custom ApiResources
 
-Inside `DailyQuest`, add a new property: `public array $treasures`. This will
-hold an array of *dragon treasures* that you can *win* if you complete this quest:
-treasures like a fancy magician's hat... a talking frog... the world's *second*
-largest slinky... or *all four* corner pieces of a brownie! Mmmmmm...
+Inside `DailyQuest`, add a new property: `public array $treasures`. 
+
+[[[ code('b238d7ff93') ]]]
+
+This will hold an array of *dragon treasures* that you can *win* if you complete 
+this quest: treasures like a fancy magician's hat... a talking frog... 
+the world's *second* largest slinky... or *all four* corner pieces of a brownie! 
+Mmmmmm...
 
 ## Adding an array Relations Property
 
@@ -11,25 +15,39 @@ In PHP land, this is just like any other property. Over in our provider,
 populate it: `$quest->treasures = `... and then we'll set that to something.
 Instead of a boring empty array, we need some `DragonTreasure` objects. Up at
 the top, add `public function __construct()` to autowire a
-`private DragonTreasureRepository $treasureRepository`. Below, grab some treasures:
+`private DragonTreasureRepository $treasureRepository`. 
+
+[[[ code('078cb1a36a') ]]]
+
+Below, grab some treasures:
 `$treasures = $this->treasureRepository->findBy()` passing an empty array for the
-criteria - so it'll return everything - *no* `orderBy`, and a limit of `10`. Yea,
-we're just finding the first 10 treasures in the database. I'll paste in some boring
+criteria - so it'll return everything - *no* `orderBy`, and a limit of `10`.
+
+[[[ code('8e4df2b8f8') ]]]
+
+Yea, we're just finding the first 10 treasures in the database. I'll paste in some boring
 code that will grab a random *set* of these `DragonTreasure` objects. Put *that*
 onto the `treasures` property.
+
+[[[ code('627f54872c') ]]]
 
 Cool! And, even though we don't care right now, to make sure our test keeps passing,
 at the top here, add `DragonTreasureFactory::createMany(5)`... because if there are
 *zero* treasures, weird things will happen in our provider... and the dragons will
 stage their fiery uprising.
 
+[[[ code('6a4dc937fd') ]]]
+
 Ok, does this new property show up in our API? Head to `/api/quests.jsonld` to see..
 a familiar error:
 
 > You must call `setIsOwnedByAuthenticatedUser()` before `isOwnedByAuthenticatedUser()`.
 
-We know this: it comes from `DragonTreasure`... all the way at the bottom. Apparently,
-the serializer is trying to access this field, but we never set it... which makes
+We know this: it comes from `DragonTreasure`... all the way at the bottom. 
+
+[[[ code('23a13478e8') ]]]
+
+Apparently, the serializer is trying to access this field, but we never set it... which makes
 sense... because the provider and processor for `DragonTreasure` aren't called
 when we're using a `DailyQuest` endpoint.
 
@@ -37,9 +55,13 @@ when we're using a `DailyQuest` endpoint.
 
 But... hold on a second. This shouldn't even be a problem. Let me show you what I
 mean. To temporarily silence this error, and understand what's going on, find that
-property... there it is... and give it a default value of `false`. Spin over, refresh,
-and... *whoa*! It *works*! Here's our daily quest... and *here* are the treasures.
-*But*... this is not, *quite* what we expected. Each treasure is an *embedded object*.
+property... there it is... and give it a default value of `false`. 
+
+[[[ code('53d1538e76') ]]]
+
+Spin over, refresh, and... *whoa*! It *works*! Here's our daily quest... 
+and *here* are the treasures. *But*... this is not, *quite* what we expected. 
+Each treasure is an *embedded object*.
 
 Remember: when you have a relationship to an object that is an `ApiResource`, like
 `DragonTreasure`, that object should only be *embedded* if the parent class and
@@ -64,6 +86,8 @@ the Doctrine relationship metadata to figure out that a property is a *collectio
 of some *other* `#[ApiResource]` object. Long story short, this is simple
 to fix... it's just hard to understand at first. Above the property, add some
 PHPDoc to help the serializer: `@var DragonTreasure[]`.
+
+[[[ code('0057997dec') ]]]
 
 Try it now... bam! We get IRI strings! I won't bother, but we could
 undo the default value we added because this object won't be serialized...which
