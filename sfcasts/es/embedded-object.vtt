@@ -1,0 +1,255 @@
+WEBVTT
+
+00:00:01.116 --> 00:00:03.556 align:middle
+Uno de los objetivos del recurso
+de las misiones diarias es
+
+00:00:03.556 --> 00:00:09.186 align:middle
+mostrar los abundantes tesoros que puede
+ganar un dragón al completar una misión.
+
+00:00:09.776 --> 00:00:15.636 align:middle
+Incrustar una matriz de objetos DragonTreasure
+y mostrar sus IRI es una buena forma de hacerlo
+
+00:00:16.026 --> 00:00:17.866 align:middle
+Pero no es la única manera.
+
+00:00:18.586 --> 00:00:23.096 align:middle
+Hora de las ideas: olvídate de
+señalar los tesoros exactos.
+
+00:00:23.836 --> 00:00:26.986 align:middle
+¿Y si simplemente mostramos
+el nombre, el factor "cool"
+
+00:00:26.986 --> 00:00:31.206 align:middle
+y el valor de cada uno como una matriz
+personalizada de datos incrustados?
+
+00:00:32.256 --> 00:00:32.696 align:middle
+Compruébalo.
+
+00:00:33.096 --> 00:00:37.586 align:middle
+En el directorio src/ApiResource/, aunque
+esta clase podría vivir en cualquier parte,
+
+00:00:37.916 --> 00:00:41.176 align:middle
+crea una nueva clase
+llamada DailyQuestTreasure.
+
+00:00:41.956 --> 00:00:45.816 align:middle
+Ésta representará el tesoro que
+podrías ganar completando un DailyQuest.
+
+00:00:46.566 --> 00:00:51.106 align:middle
+Dentro, crea un public function
+__construct con un public string $name,
+
+00:00:52.246 --> 00:00:56.396 align:middle
+public int $value y public
+int $coolFactor. Voy a
+
+00:00:57.336 --> 00:01:02.286 align:middle
+utilizar propiedades públicas por simplicidad
+e incluso voy a incluir las tres como argumentos
+
+00:01:02.286 --> 00:01:05.026 align:middle
+del constructor para
+facilitarte aún más las cosas.
+
+00:01:05.716 --> 00:01:09.626 align:middle
+Pero no voy a hacer de esto un ApiResource.
+
+00:01:10.356 --> 00:01:12.156 align:middle
+Bueno, podríamos hacerlo...
+
+00:01:12.316 --> 00:01:17.546 align:middle
+si necesitamos que nuestros usuarios de la API puedan
+obtener directamente los datos de DailyQuestTreasure...
+
+00:01:17.546 --> 00:01:18.526 align:middle
+o actualizarlos.
+
+00:01:18.896 --> 00:01:20.836 align:middle
+Pero ése no es el objetivo de esta clase.
+
+00:01:21.376 --> 00:01:25.856 align:middle
+Será simplemente una estructura de
+datos que adjuntaremos a DailyQuest.
+
+00:01:26.926 --> 00:01:31.866 align:middle
+En DailyQuest, ya no contendrá una
+matriz de objetos DragonTreasure:
+
+00:01:32.156 --> 00:01:35.196 align:middle
+contendrá una matriz de objetos QuestTreasure.
+
+00:01:35.876 --> 00:01:38.346 align:middle
+En realidad, para ser más breves...
+
+00:01:38.756 --> 00:01:39.286 align:middle
+ya está...
+
+00:01:39.756 --> 00:01:41.216 align:middle
+llámalo QuestTreasure...
+
+00:01:42.376 --> 00:01:44.206 align:middle
+y aquí, QuestTreasure.
+
+00:01:45.926 --> 00:01:50.606 align:middle
+Ahora que tenemos la propiedad configurada,
+dirígete al proveedor para rellenarla.
+
+00:01:50.606 --> 00:01:54.036 align:middle
+En lugar de poner directamente los
+tesoros aleatorios del dragón,
+
+00:01:54.206 --> 00:01:57.466 align:middle
+tenemos que crear una matriz
+de objetos QuestTreasure.
+
+00:01:58.856 --> 00:02:01.386 align:middle
+Para cada uno sobre los tesoros
+aleatorios como $treasure...
+
+00:02:02.256 --> 00:02:10.356 align:middle
+entonces $questTreasures[] es igual a nuevo QuestTreasure
+y pasamos los datos: $treasure->getName(),
+
+00:02:11.106 --> 00:02:15.396 align:middle
+$treasure->getValue() y
+$treasure->getCoolFactor().
+
+00:02:17.386 --> 00:02:21.116 align:middle
+Termina con $quest->treasures
+= $questTreasures.
+
+00:02:22.516 --> 00:02:27.256 align:middle
+Antes y después de este cambio, nuestra
+clase DailyQuest tenía una propiedad
+
+00:02:27.256 --> 00:02:29.576 align:middle
+que contenía una matriz de objetos.
+
+00:02:30.156 --> 00:02:36.836 align:middle
+La diferencia clave es que, antes, contenía una
+matriz de objetos que eran recursos de la API.
+
+00:02:37.266 --> 00:02:43.006 align:middle
+Pero ahora contiene una matriz de objetos normales
+y aburridos que no son recursos de la API.
+
+00:02:43.656 --> 00:02:45.336 align:middle
+¿Qué diferencia hay?
+
+00:02:46.006 --> 00:02:46.606 align:middle
+Compruébalo.
+
+00:02:47.686 --> 00:02:50.096 align:middle
+¡Pum! ¡Objetos incrustados!
+
+00:02:50.826 --> 00:02:53.686 align:middle
+Cuando la API Platform serializa
+la propiedad treasures,
+
+00:02:54.326 --> 00:02:58.236 align:middle
+ve que nuestro QuestTreasure
+no es un ApiResource.
+
+00:02:58.616 --> 00:03:03.566 align:middle
+Así que lo serializa de la forma
+normal: incrustando cada propiedad.
+
+00:03:04.136 --> 00:03:05.976 align:middle
+Esto es maravillosamente sencillo.
+
+00:03:05.976 --> 00:03:10.736 align:middle
+Y es algo que quiero que recuerdes:
+siempre puedes crear nuevas clases de datos
+
+00:03:10.736 --> 00:03:12.786 align:middle
+si quieres incrustar datos adicionales.
+
+00:03:13.416 --> 00:03:18.946 align:middle
+Pero seguro que has notado este
+extraño @id con .well-known/genId.
+
+00:03:19.476 --> 00:03:24.566 align:middle
+Esto... es una cadena generada
+aleatoriamente que existe, creo,
+
+00:03:24.916 --> 00:03:29.446 align:middle
+porque se supone que los
+recursos JSON-LD tienen un @id.
+
+00:03:30.006 --> 00:03:34.776 align:middle
+Pero como en realidad no tenemos un lugar donde
+puedas obtener Tesoros de Búsqueda individuales...
+
+00:03:35.016 --> 00:03:37.496 align:middle
+API Platform nos da este falso.
+
+00:03:38.816 --> 00:03:44.136 align:middle
+Ahora, en teoría, podrías desactivarlo
+diciendo #[ApiProperty()] con genId: false.
+
+00:03:45.356 --> 00:03:49.166 align:middle
+Por desgracia, esto no parece funcionar
+para las propiedades de matriz...
+
+00:03:49.626 --> 00:03:50.916 align:middle
+quizás estoy haciendo algo mal.
+
+00:03:51.356 --> 00:03:52.606 align:middle
+Me sale ese id.
+
+00:03:53.146 --> 00:03:55.426 align:middle
+Pero sí funciona para objetos individuales.
+
+00:03:56.276 --> 00:03:59.256 align:middle
+Para probarlo, cambia esto
+por un único QuestTreasure.
+
+00:03:59.856 --> 00:04:03.286 align:middle
+Ya no necesitamos nuestro @var
+porque ahora tiene un tipo adecuado.
+
+00:04:05.316 --> 00:04:09.756 align:middle
+En nuestro proveedor, cambiaré
+algunas cosas muy rápidamente...
+
+00:04:10.456 --> 00:04:13.336 align:middle
+para obtener sólo un QuestTreasure aleatorio .
+
+00:04:15.216 --> 00:04:19.466 align:middle
+Termina con $quest->treasure
+igual a este QuestTreasure.
+
+00:04:20.386 --> 00:04:22.786 align:middle
+Utiliza $randomTreasure para todos
+los nombres de las variables.
+
+00:04:23.746 --> 00:04:24.366 align:middle
+¡Me encanta!
+
+00:04:25.296 --> 00:04:26.566 align:middle
+Ahora cuando actualicemos...
+
+00:04:27.866 --> 00:04:32.496 align:middle
+vemos un objeto incrustado y
+ningún campo @id generado.
+
+00:04:33.666 --> 00:04:38.046 align:middle
+Lo siguiente: con un recurso personalizado
+como éste, no obtenemos paginación
+
+00:04:38.046 --> 00:04:40.266 align:middle
+en nuestro recurso de
+colección automáticamente.
+
+00:04:40.816 --> 00:04:43.586 align:middle
+Sí, devuelve los 50 elementos.
+
+00:04:44.016 --> 00:04:45.286 align:middle
+Así que vamos a añadir eso.
