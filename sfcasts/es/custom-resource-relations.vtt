@@ -1,0 +1,264 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:05.356 align:middle
+Dentro de DailyQuest, añade una nueva
+propiedad: public array $treasures.
+
+00:00:06.156 --> 00:00:10.986 align:middle
+Ésta contendrá una serie de tesoros de dragón
+que podrás ganar si completas esta búsqueda:
+
+00:00:11.356 --> 00:00:13.336 align:middle
+tesoros como un elegante sombrero de mago...
+
+00:00:13.466 --> 00:00:14.536 align:middle
+una rana parlante...
+
+00:00:14.756 --> 00:00:16.636 align:middle
+el segundo slinky más grande del mundo...
+
+00:00:16.876 --> 00:00:20.016 align:middle
+¡o las cuatro esquinas de un brownie!
+
+00:00:20.616 --> 00:00:25.226 align:middle
+Mmmmmm... En la tierra de PHP, esto
+es como cualquier otra propiedad.
+
+00:00:25.896 --> 00:00:30.456 align:middle
+En nuestro proveedor, la rellenamos:
+$quest->treasures = ...
+
+00:00:30.856 --> 00:00:32.676 align:middle
+y luego la estableceremos en algo.
+
+00:00:33.226 --> 00:00:37.626 align:middle
+En lugar de una aburrida matriz vacía,
+necesitamos algunos objetos DragonTreasure. Arriba,
+
+00:00:38.316 --> 00:00:40.996 align:middle
+añade public function __construct()
+
+00:00:40.996 --> 00:00:45.506 align:middle
+para autoconectar un private
+DragonTreasureRepository $treasureRepository. Abajo
+
+00:00:46.916 --> 00:00:54.556 align:middle
+, coge algunos tesoros: $treasures =
+$this->treasureRepository->findBy() pasando una matriz
+
+00:00:54.556 --> 00:01:01.476 align:middle
+vacía por los criterios - para que lo
+devuelva todo - no orderBy, y un límite de 10.
+
+00:01:02.026 --> 00:01:05.196 align:middle
+Sí, sólo encontraremos los 10
+primeros tesoros de la base de datos.
+
+00:01:06.146 --> 00:01:11.306 align:middle
+Voy a pegar un código aburrido que cogerá un
+conjunto aleatorio de estos objetos DragonTreasure.
+
+00:01:12.066 --> 00:01:14.356 align:middle
+Ponlo en la propiedad treasures.
+
+00:01:15.856 --> 00:01:21.336 align:middle
+¡Genial! Y, aunque ahora no nos importe, para
+asegurarnos de que nuestra prueba sigue pasando,
+
+00:01:21.636 --> 00:01:26.716 align:middle
+aquí arriba, añade
+DragonTreasureFactory::createMany(5)...
+
+00:01:27.456 --> 00:01:31.926 align:middle
+porque si hay cero tesoros, pasarán
+cosas raras en nuestro proveedor...
+
+00:01:32.246 --> 00:01:35.546 align:middle
+y los dragones escenificarán
+su ardiente levantamiento.
+
+00:01:36.586 --> 00:01:39.276 align:middle
+Vale, ¿aparece esta nueva
+propiedad en nuestra API?
+
+00:01:40.256 --> 00:01:45.456 align:middle
+Dirígete a /api/quests.jsonld para ver..
+
+00:01:45.786 --> 00:01:50.616 align:middle
+un error familiar: Debes llamar
+a setIsOwnedByAuthenticatedUser()
+
+00:01:50.616 --> 00:01:52.896 align:middle
+antes que a isOwnedByAuthenticatedUser().
+
+00:01:53.616 --> 00:01:56.196 align:middle
+Lo sabemos: viene de DragonTreasure...
+
+00:01:56.496 --> 00:01:57.836 align:middle
+hasta el final.
+
+00:01:59.186 --> 00:02:04.896 align:middle
+Aparentemente, el serializador está intentando
+acceder a este campo, pero nunca lo configuramos...
+
+00:02:05.096 --> 00:02:06.456 align:middle
+lo cual tiene sentido...
+
+00:02:06.706 --> 00:02:10.736 align:middle
+porque el proveedor y el procesador
+de DragonTreasure no se llaman
+
+00:02:10.736 --> 00:02:13.116 align:middle
+cuando utilizamos una ruta DailyQuest.
+
+00:02:13.926 --> 00:02:15.626 align:middle
+Pero... espera un segundo.
+
+00:02:15.916 --> 00:02:17.416 align:middle
+Esto ni siquiera debería ser un problema.
+
+00:02:18.356 --> 00:02:19.476 align:middle
+Deja que te muestre lo que quiero decir.
+
+00:02:19.996 --> 00:02:22.046 align:middle
+Para silenciar temporalmente este error,
+
+00:02:22.536 --> 00:02:25.746 align:middle
+y entender lo que está
+pasando, busca esa propiedad...
+
+00:02:27.146 --> 00:02:28.146 align:middle
+ahí está...
+
+00:02:28.366 --> 00:02:30.886 align:middle
+y dale un valor por defecto de false.
+
+00:02:32.456 --> 00:02:34.636 align:middle
+Gira, actualiza y...
+
+00:02:35.066 --> 00:02:37.086 align:middle
+¡Guau! ¡Funciona!
+
+00:02:37.756 --> 00:02:38.956 align:middle
+Aquí está nuestra búsqueda diaria...
+
+00:02:39.146 --> 00:02:41.276 align:middle
+y aquí están los tesoros.
+
+00:02:42.056 --> 00:02:45.806 align:middle
+Pero... esto no es, exactamente,
+lo que esperábamos.
+
+00:02:46.276 --> 00:02:49.376 align:middle
+Cada tesoro es un objeto incrustado.
+
+00:02:50.196 --> 00:02:55.076 align:middle
+Recuerda: cuando tienes una relación
+con un objeto que es un ApiResource,
+
+00:02:55.266 --> 00:03:00.466 align:middle
+como DragonTreasure, ese objeto sólo
+debe estar incrustado si la clase padre
+
+00:03:00.466 --> 00:03:04.176 align:middle
+y la clase hija comparten
+grupos de serialización.
+
+00:03:04.766 --> 00:03:10.486 align:middle
+Por ejemplo, si tuviéramos normalizationContext
+con groups fijado a quest:read así... donde
+
+00:03:10.826 --> 00:03:16.266 align:middle
+el grupo quest:read está por encima de
+$treasures, y, en DragonTreasure , tuviéramos
+
+00:03:16.636 --> 00:03:22.096 align:middle
+al menos una propiedad que
+también tuviera quest:read.
+
+00:03:22.866 --> 00:03:27.956 align:middle
+Pero, si no te encuentras en esta situación
+-demonios, no estamos utilizando grupos en absoluto-
+
+00:03:28.636 --> 00:03:34.126 align:middle
+, entonces el serializador debería representar
+cada DragonTreasure como una cadena IRI.
+
+00:03:34.656 --> 00:03:38.846 align:middle
+Debería ser una matriz de
+cadenas, ¡no objetos incrustados!
+
+00:03:39.486 --> 00:03:45.206 align:middle
+El problema es que el serializador mira
+esta propiedad $treasures y no se da cuenta
+
+00:03:45.206 --> 00:03:48.496 align:middle
+de que contiene una matriz
+de objetos DragonTreasure.
+
+00:03:48.826 --> 00:03:55.756 align:middle
+Sabe que es una matriz, pero antes de empezar
+a serializar, no sabe qué hay dentro.
+
+00:03:55.926 --> 00:04:01.376 align:middle
+Y así, en lugar de enviarlos a través del
+sistema que serializa los objetos ApiResource,
+
+00:04:01.876 --> 00:04:05.806 align:middle
+los envía a través del código que
+serializa los objetos normales...
+
+00:04:06.206 --> 00:04:09.376 align:middle
+lo que hace que sólo serialice
+todas las propiedades.
+
+00:04:10.126 --> 00:04:13.846 align:middle
+Esto no es un problema con las entidades
+porque el serializador es inteligente:
+
+00:04:14.376 --> 00:04:19.976 align:middle
+lee los metadatos de relación de Doctrine para
+averiguar que una propiedad es una colección
+
+00:04:20.026 --> 00:04:22.896 align:middle
+de algún otro objeto de #[ApiResource].
+
+00:04:23.586 --> 00:04:27.016 align:middle
+Resumiendo, esto es sencillo de arreglar...
+
+00:04:27.096 --> 00:04:29.526 align:middle
+sólo que al principio es difícil de entender.
+
+00:04:30.096 --> 00:04:35.986 align:middle
+Encima de la propiedad, añade algo de PHPDoc para
+ayudar al serializador: @var DragonTreasure[].
+
+00:04:36.036 --> 00:04:39.376 align:middle
+Pruébalo ahora...
+
+00:04:40.696 --> 00:04:44.056 align:middle
+¡bam! ¡Obtenemos cadenas IRI!
+
+00:04:44.796 --> 00:04:48.586 align:middle
+No me molestaré, pero podríamos deshacer
+el valor por defecto que añadimos
+
+00:04:48.886 --> 00:04:54.256 align:middle
+porque este objeto no se serializará... que
+es lo que nos dio este error en primer lugar.
+
+00:04:54.346 --> 00:04:57.886 align:middle
+Así que, aparte de la
+sorpresa del objeto incrustado,
+
+00:04:58.466 --> 00:05:01.566 align:middle
+¡añadir relaciones a nuestro
+recurso personalizado no es gran cosa!
+
+00:05:02.516 --> 00:05:06.056 align:middle
+A continuación: en lugar de incrustar
+directamente objetos DragonTreasure, vamos a
+
+00:05:06.486 --> 00:05:11.926 align:middle
+ver cómo podemos inventar una nueva clase y una nueva
+estructura de datos para representar estos tesoros.
