@@ -33,6 +33,8 @@ Next is the current page - hardcode that to 1 for now - then items per page - ha
 that to 10 - and finally the total number of items, which for now, I'm just going
 to count `$quests`.
 
+[[[ code('da08790a13') ]]]
+
 This is *not* a very smart paginator yet: it will always be on page 1 and will
 show every result. But when we go over, refresh... and scroll to the bottom, we *do*
 see the pagination info! According to this, there are 5 pages of results... which
@@ -47,9 +49,16 @@ items, regardless of what we tell it are the max per page.
 
 To help us do that, let's set a few variables: `$currentPage` hardcoded to 1,
 `$itemsPerPage` hardcoded to 10 and `$totalItems`. For this, call a new private method
-`countTotalQuests()`. I'll hit Alt+Enter and add that method at the bottom.
-This will return an `int`... and I'm just going to return 50... because that's
-the *total* possible quests we have in our "fake" database. If you were using a
+`countTotalQuests()`. 
+
+[[[ code('facde9f673') ]]]
+
+I'll hit Alt+Enter and add that method at the bottom.
+This will return an `int`... and I'm just going to return 50...
+
+[[[ code('19cfced077') ]]]
+
+because that's the *total* possible quests we have in our "fake" database. If you were using a
 database, you'd count every available row. Change the code in `createQuests()`
 to use this.
 
@@ -66,6 +75,8 @@ second COUNT query to count *every* row.
 Ok, back on top, let's use these variables: `$currentPage`, `$itemsPerPage` and
 `$totalItems`.
 
+[[[ code('87acc17371') ]]]
+
 Ok cool... but what we *really* need to do is determine the *actual* current
 page and then use that to return only a *subset* of the results. Like, if we're
 showing 10 per page... and we're on page 2, we should return quests 11 through 20.
@@ -77,12 +88,18 @@ query parameter directly... but we don't need to! API Platform gives us a servic
 that already holds *all* the pagination info.
 
 On top, add a second constructor argument called `private Pagination` - from API
-platform `$pagination`. Below, set `$currentPage` to `$this->pagination->getPage()`,
+platform `$pagination`. 
+
+[[[ code('67280de16b') ]]]
+
+Below, set `$currentPage` to `$this->pagination->getPage()`,
 which needs the `$context` that we have as an argument on this method.
 Then `$itemsPerPage` set to `$this->pagination->getLimit()` passing `$operation`
 and `$context`. We can also get an `$offset` in a similar way, which is *super*
 handy. If we're on page 2 and the limit is 10, the `Pagination` service will
 calculate that the offset should be 11. Dump all four variables below.
+
+[[[ code('048a668faa') ]]]
 
 Let's check this out! Go back to page 1, refresh and look at that! Page 1, 30 items
 per page, the limit and offset 0. If we go to `page=2`, then it's page 2, the number
@@ -91,6 +108,8 @@ per page is still 30 and the offset is 30.
 Where is it getting 30 as the items per page? That's the default in API
 Platform for any resource. But this is something you can configure on your
 `#[ApiResource]` attribute: change `paginationItemsPerPage` to, how about, 10.
+
+[[[ code('afed7cfd4e') ]]]
 
 Now try it. That changes to 10 and the offset is 10. If we go to page
 3, our per page is still 10. And now it's saying:
@@ -103,8 +122,12 @@ We're in *great* shape now. Our *final* job is to use this info to return the
 correct *subset* of results, instead of *all* the quests. To do that,
 pass `$offset` and `$itemsPerPage` to `createQuests()`.
 
+[[[ code('6d06f0224f') ]]]
+
 Down here, add `int $offset` and `int $limit` with a default of 50. And use those:
 `$i = $offset` and then `$i <=` `$offset` plus `$limit`.
+
+[[[ code('2dc502dcb6') ]]]
 
 Ok team check it out! We're on page 3 and... these are the items from page 3!
 It's more obvious if we go to page 1. See the descriptions: description 1, 2, 3
@@ -113,6 +136,8 @@ and so on. So, pagination is working on our collection!
 Though, in this simple example, I need to make sure I don't break the item provider.
 Because we're looking up the day string as an array key, we need to return *all*
 the quests. To make sure that happens, pass 0 and 50.
+
+[[[ code('01cea93220') ]]]
 
 In a real app, you would make this smarter by, for example, querying for the *one*
 item you need... instead of loading *all* of them.
