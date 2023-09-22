@@ -50,6 +50,8 @@ We're going to start like we did with the `DailyQuest`. In the `src/ApiResource/
 directory, create a new class called `UserApi`... to indicate this is the *user*
 class for our API. Inside, add `#[ApiResource]` above it.
 
+[[[ code('56fc6ad442') ]]]
+
 So far, this is just like any other custom API resource. It shows up in the docs...
 and if we try the `GET` collection operation, it fails with a 404. Heck, we're
 even missing the "ID" part in the URL of the item operations.
@@ -59,11 +61,15 @@ users *will* still be identified by their database id. Oh, and I'm using a publi
 property *just* to make life easier... and because this class will stay simple,
 so it's not a big deal.
 
+[[[ code('f222a7cb25') ]]]
+
 The moment we do this... API Platform *recognizes* that `id` as the identifier, and
 our operations are *looking good*.
 
 While we're here, let's also tweak the `shortName`. This is called `UserApi`, which
 is a *terrible* name - so change it: `shortName: 'User'`.
+
+[[[ code('7592f4dcdc') ]]]
 
 Suddenly... this is *starting* to look like what we had before!
 
