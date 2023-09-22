@@ -17,6 +17,8 @@ a `public string $name`, `public int $value` and `public int $coolFactor`.
 I'm using public properties for simplicity and even including all three as arguments
 to the constructor to make life *even* easier.
 
+[[[ code('e80338d482') ]]]
+
 But, I am *not* going to make this an `ApiResource`. Well, we *could* do that...
 if we need our API users to be able to fetch `DailyQuestTreasure` data directly...
 or update them. But that's not the point of this class. This will simply be
@@ -26,12 +28,16 @@ Over in `DailyQuest`, this will no longer hold an array of `DragonTreasure` obje
 it will hold an array of `QuestTreasure` objects. Oh, actually, to keep things
 shorter... there we go... call it `QuestTreasure`... then over here, `QuestTreasure`.
 
+[[[ code('9994cb8186') ]]]
+
 Now that we have the property set up, head to the provider to populate it. Instead
 of setting the random dragon treasures onto this *directly*, we need to create
 an array of `QuestTreasure` objects. For each over the random treasures as
 `$treasure`... then `$questTreasures[]` equals new `QuestTreasure` and pass in
 the data: `$treasure->getName()`, `$treasure->getValue()` and
 `$treasure->getCoolFactor()`. Finish with `$quest->treasures = $questTreasures`.
+
+[[[ code('50d3dd7daa') ]]]
 
 ## "Relations" that are Normal Objects
 
@@ -59,14 +65,20 @@ fake one.
 Now, in theory, you could turn that off by saying `#[ApiProperty()]` with
 `genId: false`.
 
+[[[ code('6b1c8ea46a') ]]]
+
 Unfortunately, this doesn't seem to work for array properties... maybe I'm doing
 something wrong. I get that id. But it *does* work for single objects.
 To prove it, change this to a single `QuestTreasure`. We don't need our `@var`
 anymore because this now has a proper type.
 
+[[[ code('4a6206a518') ]]]
+
 Over in our provider, I'll change a few things *super* quickly... to get just *one*
 random `QuestTreasure`. Finish with `$quest->treasure` equals this one `QuestTreasure`.
 Use `$randomTreasure` for all the variable names.
+
+[[[ code('35a83c33e1') ]]]
 
 I love it! Now when we refresh... we see *one* embedded object and *no* generated
 `@id` field.
