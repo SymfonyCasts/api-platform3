@@ -20,7 +20,7 @@ of cookies, that request will be authenticated.
 In new API Platform projects, the default `config/packages/api_platform.yaml` file
 has configuration that makes your endpoints "stateless":
 
-```yml
+```yaml
 # config/packages/api_platform.yaml
 api_platform:
     # ...
