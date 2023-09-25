@@ -28,7 +28,7 @@ Para ayudarnos a hacerlo, vamos a establecer unas cuantas variables: `$currentPa
 
 [[[ code('facde9f673') ]]]
 
-Pulsaré Alt+Enter y añadiré ese método al final. Esto devolverá un `int`... y yo sólo voy a devolver 50...
+Pulsaré Alt+Enter y añadiré ese método al final. Esto devolverá un `int`... y sólo devolveré 50...
 
 [[[ code('19cfced077') ]]]
 
