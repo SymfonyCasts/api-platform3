@@ -1,52 +1,9 @@
 # Generic
 
-Coming soon...
+Our `UserAPI` is now a *fully functional* API resource class! We've got our `EntityToDtoStateProvider`, which calls the core state provider from Doctrine, and *that* gives us all the good stuff, like querying, filtering, and pagination. Then, down here, we leverage the `microMapper` system to convert the `$entity` objects into our `UserApi` DTO. We do the *same* thing with the processor. We use the `microMapper` to go *from* our `UserApi` *to* our `$entity`, and then we call the core Doctrine state processor to actually do the saving or deleting. I love that!
 
-UserAPI is now a fully functional API resource class. We've got our Entity2DTO state
-provider that calls the core state provider from Doctrine which gives us querying,
-filtering, pagination, all that good stuff. Then down here we leverage the
-Micromapper system to convert the UserEntity objects into our UserAPI DTO. And we do
-the same thing with the processor. We use the Micromapper to go from our UserAPI to
-our UserEntity. And then we call the core Doctrine state processor to actually do the
-saving or deleting. I love that! At this point, my ultimate goal is to create a
-Dragon Treasure API and repeat all this magic we just did. And if we can make these
-processor and provider classes completely generic, that is going to be super easy. So
-let's start in the provider. If you search for user, there's only one spot we're
-using it. That's where we're telling the Micromapper what class to convert our
-UserEntity into. So can we fetch this dynamically? Well up here, our provider has
-passed the operation and also some context. Those are two really good pieces of
-information. So I'm actually going to dump both of those. And since this is our
-provider, we can just go refresh collection endpoint and boom! So you see we get our
-getCollection operation. And one of the key things is that every operation stores the
-class that it's attached to. So this is real simple here. We can say resource class
-equals operation getClass. Now that we've got that, down here, we can make that an
-argument. String resource class, and we'll pass that instead. Now we just need to put
-that resource class as the argument when we call mapped entity to DTO there. And
-right there. And just like that, once I get rid of this use statement, the word user
-is mentioned nowhere in the provider, and it still works. All right, so let's do the
-same thing for processor. If I search for user here, it's the same problem, except
-this time we need the UserEntity class. We need to figure out that that's what we're
-converting to. So up on top, I'm going to DD operation. And for this, I will run one
-of my tests so I can hit the dump. And beautiful. Okay, so you can see here's our
-post operation. And the class is, of course, the user API. But in this case, we want
-to figure out that what we really need is that we're is the user class. The cool
-thing here is that, remember, in our user API, we've specified the state options.
-This state options is what says that our user API is tied to this UserEntity class.
-And this is something we can read off of the operation. So let's see down here, I
-believe. So let's see if we scroll down a little bit. There it is. Check it out.
-There's state options property with this options object with the entity class on it.
-It's a little bit deeper, but we can fetch that out. So check this out. So check this
-out. In our processor, I'll go back up. Start by saying state options equals
-operation arrow get state options. And then just to help my editor and also in case
-we have any misconfiguration, I'm going to assert that state options is an instance
-of options from doctrine ORM, you can technically put different option classes for
-your state options. Our processor is meant to work in the cases where we're using the
-doctrine ORM state options. So this is meant to work for this exact case right here.
-Then below that, we can say entity class equals state options arrow get entity class.
-We don't need this assert down here anyways. And now I can pass that entity class to
-map DTO to entity and use that down here. So add a string entity class argument. Pass
-that there. And now when I search for user, get rid of those two use statements, no
-more instances of user inside of here. And our test passes. All right, we have a
-totally reusable provider and processor system. So next, let's create a dragon
-treasure API class and repeat this magic and see how quickly we can get things to
-fall into place.
+At this point, the *ultimate* goal is to create a `DragonTreasureApi` and repeat *all* of this magic. If we can make these processor and provider classes completely generic, that's going to be *super* easy. So let's start in the provider. If you search for "user", there's only one spot we're using it. That's where we're telling the `microMapper` which class to convert our `$entity` into. So... can we fetch this *dynamically*? Up here, our provider has passed the `$operation` along with the `$context`. That's good info, so we're actually going to dump *both* of those. And since this is our provider, we can just go refresh the Collection endpoint and... *boom*! You can see that we got our `GetCollection` operation. And a key thing to note is that *every* operation stores the *class* that it's attached to. So over here, very simply, we can say `$resourceClass = $operation->getClass()`. Now that we've got that, down here, we can make that an argument - `string $resourceClass` - and we'll pass *that* instead. Finally, we need to add `$resourceClass` as the argument when we call `$mapEntityToDto` there... *and* right there. Once I get rid of this `use` statement we don't need anymore... just like that, it *still* works!
+
+Okay, let's do the same thing for processor! If we search for "user" here, we have the *same* problem except, this time, we need the `UserEntity` class. We need to let this know that *that's* what we're converting to. So, up on top, we'll `dd($operation)`, and for this, we'll run one of our tests so we can hit the dump. And... beautiful! You can see our `Post` operation here, and the class is, of course, the `UserApi`. *But*, in this case, what we *really* need is the `User` class. If you remember, in our `UserApi`, we specified the `stateOptions`. This lets us know that our `UserApi` is tied to this `User` `entityClass`, and we can read this from the operation. If we scroll down a little bit... there it is... there's a `stateOptions` property with this `Options` object and the `entityClass` on it. That's a little deeper, but that's no problem. And check this out! In our processor, towards the top... get rid of this `dd()` and start by saying `$stateOptions = $operation->getStateOptions()`. Then, just to help my editor (and also in case of any misconfiguration), we'll `assert($stateOptions instanceof Options)` (the one from Doctrine ORM). You can *technically* use *different* `Options` classes for your `$stateOptions`, but *our* processor is meant to work in cases where we're using the Doctrine ORM `$stateOptions`, *so*... this *exact* case right here. Below that, we can say `$entityClass = $stateOptions->getEntityClass()`. And we don't need this `assert()` down here, so we can get rid of that. *Now* we can pass that `$entityClass` to `mapDtoToEntity()`. Finally, we'll use that down here with `string $entityClass`... and we'll also pass it here. When we search for "user" now... we can get rid of those two `use` statements so there are no more instances of "user" inside of here. If we try that now... our test passes!
+
+All right! We now have a reusable provider and processor system! *Next*, let's create a `DragonTreasureApi` class, repeat this magic, and see how quickly we can get things to fall into place.
