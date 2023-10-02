@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index 9e7efa89..8d48a562 100644
+index 9e7efa8..8d48a56 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -32,6 +32,7 @@ class DailyQuest
@@ -11,7 +11,7 @@ index 9e7efa89..8d48a562 100644
      public function __construct(\DateTimeInterface $day)
      {
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index 99cc1822..5891e2fa 100644
+index 99cc182..5891e2f 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -7,9 +7,16 @@ use ApiPlatform\Metadata\Operation;

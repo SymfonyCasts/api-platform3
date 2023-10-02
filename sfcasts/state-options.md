@@ -24,6 +24,8 @@ yolo this thing and try to!
 Head over to `UserApi`, say `provider`, and point to `CollectionProvider`
 (the one from Doctrine ORM).
 
+[[[ code('a16d4e789d') ]]]
+
 Let's see what happens! At the browser, go to the endpoint *directly* -
 `/api/users.jsonld`. And... we get an *error*:
 
@@ -39,6 +41,8 @@ that data for this class should come from the `User` entity. It looks like this:
 `stateOptions` set it to a `new Options` object (making sure to grab the one from
 ORM), and inside, `entityClass: User::class`.
 
+[[[ code('da8ec4d921') ]]]
+
 Let's see what happens now! When we head over and refresh... whoa! It looks like
 that worked! We see "totalItems: 11"... with items 1-11 all right here. We only have
 an `$id` property, but I guess that makes sense... since we only have an `$id`
@@ -47,6 +51,8 @@ property inside our `UserApi`.
 Let's add a few more properties! How about `public ?string $email = null`
 and `public ?string $username = null`. Both of these properties also live in
 our `User` entity.
+
+[[[ code('ba9416335d') ]]]
 
 When we refresh... those pop up too! This is *working*.... but how? What the heck
 is going on?
@@ -67,6 +73,8 @@ In fact, as soon as we have this `stateOptions` + `entityClass` thing, API Platf
 sets the provider and the processor *automatically* to the core Doctrine ones.
 So we don't even *need* to have the `provider` key: it's set for us.
 
+[[[ code('f8615b323f') ]]]
+
 Okay, but if the provider is querying for `User` *entity* objects, *how* and *when*
 is that converted to `UserApi` objects... so that they can be serialized to JSON?
 The *answer* is *during* serialization... and it's a bid odd. Thanks to
@@ -83,6 +91,8 @@ This seems to work well... but with one, major limitation.
 Add a property that is *not* on our entity, like
 `public int $flameThrowingDistance = 0`. There is *no* `$flameThrowingDistance`
 property over on `User`.
+
+[[[ code('5e00b6d3ca') ]]]
 
 When we try this... *explosion*! If we scroll down a bit, we see that this comes
 from the *normalizer* system... which is part of the serializer. It
@@ -103,6 +113,8 @@ Let's add another property: `public array $dragonTreasures = []`? We *do*
 have a `$dragonTreasures` property over on `User` that holds a collection of
 `DragonTreasure` objects.
 
+[[[ code('e24167298c') ]]]
+
 So if we go over and test this out... it works fine! Though, *surprisingly*,
 it's *embedding* the `dragonTreasures` instead of returning them as IRIs. This is
 the same problem we saw earlier, and the fix is the same.
@@ -119,6 +131,8 @@ instead of mixing entities and DTOs... because it creates issues like this.
 Anyway, fix this by advertising that this is an `array` of `DragonTreasure`. I'm
 using a slightly different array syntax there, but it doesn't really matter.
 
+[[[ code('3b79478941') ]]]
+
 If we try this again... back to IRIs! Woo!
 
 ## Built-in Pagination
@@ -134,6 +148,8 @@ some *very* important other side effects. First, we get pagination *for free*. A
 `paginationItemsPerPage: 5`, go over, and refresh. We see that the total number of
 items is "11"... but it only shows *five*... and the pages are down here.
 
+[[[ code('ed5ccf46b5') ]]]
+
 Second, the collection provider also makes the query extension system work. We don't
 have any query extensions for `User`, but we *do* have one for `DragonTreasure`.
 Later on, when we convert `DragonTreasure` to its own DTO class, this extension is
@@ -142,6 +158,8 @@ Later on, when we convert `DragonTreasure` to its own DTO class, this extension 
 The third and final goodie is that the *filter* system still works! Watch:
 above `UserApi`, add `#[ApiFilter()]` with `SearchFilter::class` and `properties:`
 with `username` set to `partial`.
+
+[[[ code('e58d562495') ]]]
 
 Go back and look at the documentation... *whoops*. I autocompleted the
 `SearchFilter` from ODM. Delete that, then I'll hit Alt+Enter to grab the one

@@ -1,7 +1,7 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 4836672c..ef19fd66 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index f6c725c..5f7f61e 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
 @@ -2,6 +2,7 @@
  
  namespace App\State;
@@ -10,7 +10,7 @@ index 4836672c..ef19fd66 100644
  use ApiPlatform\Doctrine\Orm\Paginator;
  use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
  use ApiPlatform\Metadata\Operation;
-@@ -21,20 +22,24 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -21,20 +22,24 @@ class EntityToDtoStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {

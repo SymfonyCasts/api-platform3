@@ -1,5 +1,5 @@
 diff --git a/src/Security/Voter/DragonTreasureApiVoter.php b/src/Security/Voter/DragonTreasureApiVoter.php
-index 98a8b6a6..6db66e04 100644
+index 98a8b6a..6db66e0 100644
 --- a/src/Security/Voter/DragonTreasureApiVoter.php
 +++ b/src/Security/Voter/DragonTreasureApiVoter.php
 @@ -2,7 +2,7 @@
