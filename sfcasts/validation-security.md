@@ -24,7 +24,7 @@ that validation will happen on the `UserApi` object, not the entity.
 
 ## Configuration the Operations
 
-But before run wild and add constraints, let's specify the `operations`... so we
+But before we run wild and add constraints, let's specify the `operations`... so we
 only have the ones we need: `new Get()`, `new GetCollection()`, `new Post()`... we'll
 add some config to *that* in a moment... as well as `new Patch()` and `new Delete()`.
 

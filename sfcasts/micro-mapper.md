@@ -166,7 +166,7 @@ going to instantiate a fresh new `UserApi()`. Set the ID onto it with
 `$dto->id = $entity->getId()`... then `return $dto`.
 
 Ok, the job of the `load()` method is *really* to create the `$to` object and...
-*at least* make sure it has its identifier.
+*at least* make sure it has its identifier if there is one.
 
 Everything else we need to do is down here in `populate()`. Start our usual way:
 `$entity = $from`, `$dto = $to` and two asserts: `assert($entity instanceof User)`
