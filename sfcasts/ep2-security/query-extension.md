@@ -50,7 +50,7 @@ because right now, in `DragonTreasureFactory`, `isPublished` is set to a random 
 Awesome! And we *still* want to assert that this returns just 5 items. So...
 let's make sure it fails:
 
-```terminal
+```terminal-silent
 symfony php bin/console phpunit --filter=testGetCollectionOfTreasures
 ```
 
