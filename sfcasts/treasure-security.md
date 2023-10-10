@@ -1,37 +1,215 @@
-# Treasure Security
+# DTO & Security
 
-Our `DragonTreasureApi` is looking great! We added *quite* a few customizations last time and we tested each one carefully. *Now* we're just putting the pieces back together to see how we can simplify the implementation of some of those custom items with our new setup. If you run all of the tests right now, you can see that we have quite a few failures. *One* of them is:
+Our `DragonTreasureApi` is looking great! Back when this resource was our on entity,
+we added *quite* a few customizations *and* included tests for those. The plan
+*now* is to put those back piece-by-piece and see how we can simplify the
+implementation inside our new DTO-powered setup.
 
-`Current response status code is 422, but 403 expected.` 
+Run all the dragon treasure tests:
 
-This `testPostToCreateTreasureDeniedWithoutScope` is related to security, and that makes sense. We haven't added any of the security stuff to our `DragonTreasureApi` yet. Let's do that now.
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php
+```
 
-We're going to start like we did with the `UserApi`, by specifying the exact operations we want. Right now, we're supporting *all* of them, including `PUT` and `PATCH`. To make things simple, let's use the same ones we had before. Right here, say `new Get()`, `new GetCollection()`, and `new Post()`. When we used `Post()` earlier, we added `security`, so we'll say `security: 'is_granted()'`. We have a role in our system called `ROLE_TREASURE_CREATE`, and it actually has to do with that test that failed. It's checking to see if we have an API token that *has* that role on it. If I spell "create" correctly, at least. And then we also had `new Patch()`... with `security` for that as well. This is calling a *voter*, and we'll talk about that in a second. Our custom voter is checking to see if you can `EDIT` this Dragon Treasure. And *finally*, we have `new Delete()`. Last time, we just said `Hey, only admins can delete.` So say `is_granted("ROLE_ADMIN")`. Cool! We're back to the same permissions that we had before.
+Quite a few fail... and *one* of them says:
 
-Okay, we had *six* failures earlier. If we try the test now... *slightly* better. We now have *five* failures. Let's zoom in on this `testPatchToUpdateTreasure` and run *just* that test. Back over here, let's take a look at what that's doing. The *first* thing this does is create a user and a treasure, logs in as the owner, tries to change the *value* of that treasure, makes sure we get a 200 status code, and finally, makes sure we see the updated value. Right now, we're getting a 403 status code when a 200 was expected. A *403* code is a *security* failure. For some reason, we're not allowed to make a `Patch()` request to this treasure, even though we're the owner.
+> Current response status code is 422, but 403 expected.
 
-If we rewind to a moment ago, our `Patch()` request is using `is_granted("EDIT", object)`. That's something we built in the previous tutorial, and this `"EDIT", object` thing is handled by a custom voter called `DragonTreasureVoter`. For *some reason*, this voter is either *not* being called or it's failing.
+This `testPostToCreateTreasureDeniedWithoutScope` is related to security, and that
+makes sense. We haven't added any of the security stuff to `DragonTreasureApi`.
+So let's do that!
 
-To see what's going on under the hood, let's `dump($attribute, $subject)`. This `supports()` method is supposed to be called any time a security decision is made across the entire system, so that *should* be getting hit. If we run this again... yeah! It *is* being hit, and we're passing it `EDIT`. This is coming from our `Patch()` request here. We're passing it `EDIT` as well as the `object`. But here's the kicker: The *object* is now `DragonTreasureApi`. That makes sense. We're inside of that object right now. *But* our `DragonTreasureVoter` was written to work with our *entity*, *not* our API objects.
+## Adding Security Back
 
-Luckily, the fix for this is pretty simple: We're going to rewrite this to work with our API class. Just for clarity, let's *rename* this to `DragonTreasureApiVoter`. *Then*, we'll support if `DragonTreasureApi` is the `$subject`. Down here, this `$subject` should also be `DragonTreasureApi`. Let's `dd($subject)` right here... and below, let's go ahead and fix this code. *This* says that if you don't have this role (actually a *scope*, which relates to the token scopes), and it returns `false`. The *real* logic here checks to see if `$subject` - our `DragonTreasureApi` - equals a `$user`, which is the *currently authenticated* user. We'll comment out this `dd()` really quick... and what we probably want to do for this is say something like `$subject->owner`. That's not *quite* right, and if we put that `dd()` back, you can see why. If we run that again... what dumps here is a `DragonTreasureApi`. And remember, the `owner` property isn't a `$user` entity - it's the `UserApi` object. So we can't just *compare* the `UserApi` object to the `$user` entity object. That's *not* going to match each other. We *also* need to be careful here because of our mapper. Notice that the `UserApi` *isn't* populated. It's *shallow* mapping here. But that's okay. We *do* have the ID we can use. That was basically the long way of saying that we can check the owner's `id` against the currently authenticated user's `getId()`. As you can see, it didn't autocomplete this `getId()`. That's just because, up here, we can make this `instanceof` check a little more specific by adding our `User` entity.
+Start like we did with the `UserApi`: by specifying the exact operations we want.
+Start with `new Get()`, `new GetCollection()`, and `new Post()`. In our original
+system, `Post()` had a `security` option set to `'is_granted("ROLE_TREASUURE_CREATE)`.
 
-Now, down here, we can say `getId()`. We'll code defensively and add a `?` here too, just to make sure this won't explode if thesubject doesn't have an owner. If we head over and try it now... ah! Progress! The current response status code is now *415*, when 200 was expected. This is actually a really small detail we've talked about a couple of times:
+This is directly related to that test failure, which checks to make sure that our
+API token *has* that role on it. Well... if I spell "create" correctly, at least.
 
-`The content-type \"application/json\" is not
-supported. Supported MIME types are
-\"application/merge-patch+json\".`
+We also had a `new Patch()` operation and that *also* had a `security` option,
+which leveraged a custom voter to check if the current user can `EDIT` this treasure.
+More on that in a minute.
 
-So whenever we make a patch request, we need to have `headers` here set to `Content-Type` with `application/merge-patch+json`. The reason we didn't have to have that before, as I mentioned in one of the previous tutorials, is due to some of our funny business with formats which made that unnecessary. *But* now we do. Let's go ahead and quickly add that to all of our `patch()` requests here. There's a *bunch* of them. Done!
+And *finally*, we had `new Delete()`. Last time, we said:
 
-Okay, now let's see if we hit any luck. And... *ooh*... it *dies*. It hits our dump. As a reminder, that dump is coming from our `DragonTreasureApiToEntityMapper` when the `owner` is being set. Let's comment this out for now so we can see the full picture. All right, the
+> Hey, only admins can delete.
 
-`Current response status code is 200, but 422 expected.`
+Repeat that with `is_granted("ROLE_ADMIN")`.
 
-This is coming down from line 157. If we look at our test, *most* of it passes. Line 157 is *way* down here. That means we're able to send a `patch()` request and have that update. The *flow* here is pretty cool. When we make a `patch()` request to a treasure, it will start by using our data provider to find the `DragonTreasure` entity, and then it will *map* that to the `DragonTreasureApi` object. *Then* the new value is serialized onto our `DragonTreasureApi`. Finally, in our processor, we map the *updated* `DragonTreasureApi` *back* to a `DragonTreasure` entity, and *that* is ultimately what saves. The `DragonTreasureApi` is then *returned* in the JSON. So this *is* working. It's just cool to think about how all of the different pieces come together.
+Okay, we had *six* failures earlier and now:
 
-Where we're *failing* is all the way down here. This is actually checking to see if we're allowed to change the `owner` to someone else. What we're doing here is logging in as `$user`, editing our *own* treasure, but then trying to change the treasure to another owner. Previously, we had a custom validator that prevented that, so let's add that in again. Go to `DragonTreasureApi` and, find the `$owner` property. Previously, we had an `#[IsValidOwner]` validator. If we look in the `/Validator` directory, this is going to work exactly the same, except that *this* validator expects to be put on top of a property that holds a `User` entity. *We're* putting it on a property that holds a `UserApi`, so just like we would with anything else, we just need to *adjust* it to its new situation.
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php
+```
 
-Right here, we'll `assert()` that this is an `instanceof UserApi`... and we'll do the same thing down here. We just need to see if the value (meaning the `UserApi` that's on this property) is *not* equal to the currently authenticated user. Once again, we'll use the `id`s to compare this. And just like last time, we're going to use `assert()` to help our editor. And now... it's happy about the `getId()`. Whoops! And let me add my semicolon up here.
+We're down to five. Progress! Let's zoom in on `testPatchToUpdateTreasure` and
+run *just* that:
 
-When we run the test now... it passes! This is just part of the process, putting all of the pieces back together again. Now let's see what happens when we run *all* of our dragon resource tests. Ah! We're down to just *three* failures, and if we look into these, they're all related to the same thing: the `isPublished` property. Our `DragonTreasureApi` doesn't have an `isPublished` property yet. We saved *that* one for last because it's a *little* different. Let's tackle that *next*.
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+Back over here... let's take a look at what that's doing. Ok, it creates a `User`,
+a treasure, logs in as the owner, tries to change the *value* of that treasure,
+makes sure we get a 200 status code, and finally, checks that we see the updated
+value. Right now, we're getting a 403 status code instead of 200.
+
+## Updating the Security Voter for the DTO
+
+A *403* status is a *security* failure. For some reason, we're not allowed to make
+a `Patch()` request to this treasure, even though we're the owner!
+
+Let's think: our `Patch()` request is using `is_granted("EDIT", object)`. This
+`"EDIT", object` thing is handled by a custom voter called `DragonTreasureVoter`
+that we created in a previous tutorial. So, either this voter is not being
+called or its saying that we shouldn't have access.
+
+To see what's going on under the hood, let's `dump($attribute, $subject)`. This
+`supports()` method is called *any* time a security decision is made across the entire
+system, so that *should* get hit.
+
+When we run the test again:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+There's the dump! It dumps `EDIT`, which comes from the `Patch()` operation.
+But here's the kicker: the *object* is now a `DragonTreasureApi`. And that makes
+sense. *But* our `DragonTreasureVoter` was written to work with the *entity*, *not*
+`DragonTreasureApi`.
+
+No problem! Let's update this voter to work with `DragonTreausreApi`. For clarity,
+*rename* this to `DragonTreasureApiVoter`. *Then*, we'll support if
+`DragonTreasureApi` is the `$subject`. And down here, this `$subject` should also
+be `DragonTreasureApi`. `dd($subject)` here... and below, let's fix the code. This
+says that if the user doesn't have this role (actually a *scope*, which relates to
+the token scopes), then return `false`.
+
+Then, the most important part is this: if the `$subject` - which is a
+`DragonTreasureApi` - has an owner that equals `$user` - the currently authenticated -
+then return true: access granted
+
+Comment out this `dd()` really quick. What we need now is `$subject->owner`.
+
+Well, that's not *quite* right... and if we put that `dd()` back, we can see why.
+Run the test:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+This dump - the `$subject` is, of course, a `DragonTreasureApi`. And remember, its
+`owner` property *isn't* a `User` entity: it's a `UserApi` object. So we can't
+just *compare* the `UserApi` object to the `$user` entity object.
+
+We *also* need to be careful because of our mapper. Thanks to the depth, the `UserApi`
+*isn't* populated: it's a *shallow* object. That's okay - we can compare the id
+of the objects - just keep this in mind.
+
+So, the tl;dr is: compare the `id` property to `$user->getId()`. Oh, and it
+didn't autocomplete `getId()`... but we can help our editor by making this
+`instanceof` check specifically that this is a `User` entity, which it always
+will be in our app.
+
+*Now* use `getId()`... and I'll code defensively by adding a `?`... in case
+this `DragonTreasureApi` doesn't have an owner - like for a treasure we're creating
+right now.
+
+Ok! Head over and try it now!
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+## Adding the application/merge-patch+json Header
+
+Progress! The current response status code is now *415*. This is thanks to a small
+detail we talked about a few times:
+
+> The content-type `application/json` is not supported. Supported MIME types are
+> `application/merge-patch+json`.
+
+Whenever we make a PATCH request, we need to have a `headers` key with `Content-Type`
+set to `application/merge-patch+json`. The reason we didn't have to have that before,
+as I mentioned in a previous tutorials... is due to some funny business with formats
+which made that, accidentally, unnecessary for this resource. *But* now we *do*
+need it.
+
+Let's quickly add that to all of our `patch()` requests. There's a *bunch* of them.
+Done!
+
+Let's see if we have any luck!
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+And... *ooh*... it *dies*. It hit our dump! That's coming from
+`DragonTreasureApiToEntityMapper`: when the `owner` is sent in the JSON. Let's comment
+this out for a moment so we can see the full picture. Run the test again:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+> Current response status code is 200, but 422 expected.
+
+Coming from down on line 157. So, looking at our test, *most* of it passes. Line
+157 is *way* down here. This means that we *are* able to send a `patch()` request
+and have that update.
+
+And the full *flow* here is really interesting! When we make a `patch()` request
+to a treasure, API Platform starts by using our data provider to find the
+`DragonTreasure` entity. Then we *map* that to a `DragonTreasureApi` object. Next,
+the new `value` is deserialized onto that `DragonTreasureApi`. Finally, in our
+processor, we map the *updated* `DragonTreasureApi` *back* to a `DragonTreasure`
+entity, and *that* is ultimately what saves. The `DragonTreasureApi` is then
+*serialized* and returned as JSON.
+
+So this *is* working... and I *love* how all the pieces come together.
+
+## Updating the Custom Validator
+
+Where we're *failing* is all the way down here. This checks to see if we're allowed
+to change the `owner` to someone else. We log in in as `$user` and edit our *own*
+treasure... but trying to change the treasure to *another* owner. This is like
+a super generous dragon that sneaks into other dragon's caves and leaves treasure
+there. That's super nice... but not something we want to allow.
+
+Previously, we had a custom validator that prevented this. So let's re-add that!
+
+Open `DragonTreasureApi` and find the `$owner` property. ADd `#[IsValidOwner]`:
+a validator we created in an earlier tutorial.
+
+Look in the `src/Validator/` directory. Previously, this validator expected its
+constraint to be used above a property that held a `User` *entity*. *We're* putting
+it on a property that holds a `UserApi`. So like with the voter, we need to update
+it for the new reality.
+
+Right here, `assert()` that `$value` is an `instanceof UserApi`.
+
+Down here, we need to see check if the value (meaning the `UserApi` that's on this
+property) is *not* equal to the currently authenticated user. Once again, we'll use
+the `id`s to compare this. And... *also* once again, I'll use `assert()` to help
+my editor. Now... it's happy about the `getId()`... but not about my missing
+semicolon!
+
+Moment of truth! Run that test:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPatchToUpdateTreasure
+```
+
+And... it passes! Try *everything*:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php
+```
+
+And... ah! We're down to just *three* failures. And these are all related to the
+same thing: the `isPublished` property. Our `DragonTreasureApi` doesn't have an
+`isPublished` property yet. We saved *that* for last because it's a *little*
+different and interesting. Let's tackle it *next*.
