@@ -8,28 +8,27 @@ good one! Over in your terminal, run it:
 symfony php bin/phpunit --filter=testPostToCreateTreasure
 ```
 
-And... it *explodes*. It ran a *few* tests... and they all say the same thing:
+And... it goes kaboom! It ran a *few* tests... and they all say the same thing:
 
 > No mapper found for `DragonTreasureApi` -> `DragonTreasure`
 
-If we follow the logic, we see what's happening internally. When we POST,
-it *deserializes* the JSON into a new `DragonTreasureApi` object and then calls our
-processor. Our processor takes that API object and tries to use MicroMapper
-to map it to the `DragonTreasure` entity. And since we're *missing* the mapper
-from `DragonTreasureApi` to `DragonTreasure`, kablooie!
+Ok, when we POST, it *deserializes* the JSON into a new `DragonTreasureApi` object
+and then calls our processor. Our processor takes that API object and tries to use 
+MicroMapper to map it to the `DragonTreasure` entity. Since we're *missing*
+the mapper from `DragonTreasureApi` to `DragonTreasure`, kablooie!
 
 ## Creating the Mapper
 
 We know the drill! In `src/Mapper/`, create a new `DragonTreasureApiToEntityMapper`.
-Inside, implement `MapperInterface`, and use `#[AsMapper()]` to say that
+Inside, implement `MapperInterface`, use `#[AsMapper()]` to say that
 we are mapping `from: DragonTreasureApi::class`, `to: DragonTreasure::class`...
-and add two methods.
+and add the two methods.
 
 This will be very similar to our `UserApiToEntityMapper`. In `load()`, if we have
-an ID, we want to *query* for that object. So add a constructor, with
-`private DragonTreasureRepository $repository`. Down here, add our now-familiar
+an ID, we want to *query* for that object. Add a constructor, with
+`private DragonTreasureRepository $repository`. Down here, include the now-familiar
 `$dto = $from`, and `assert` that `$dto` is an `instanceof DragonTreasureApi`.
-To live even easier, steal some code from our other mapper. Copy this code...
+To make life even easier, steal some code from our other mapper. Copy this...
 and plop it over here. But Hit "Cancel" because we don't need that `use` statement...
 and rename this to just `$entity`. So if the `$dto` has an `id`, it means we're
 editing it and we want to find the existing one. *Else*, we're going to create a
@@ -38,32 +37,31 @@ in case the treasure wasn't found.
 
 One interesting thing about the `DragonTreasure` entity is that it has a
 constructor argument: the *name*. And we *don't* have a `setName()` method: the
-only way to it is through the constructor.
-
-So, to transfer the `name` from the `$dto` *onto* the entity, pass it to the constructor.
+only way to set it is through the constructor. So, to transfer the `name` from the
+`$dto` *onto* the entity, pass it to the constructor.
 
 Two quick notes about this. Yes, this means that you can't *change* the name of
-an existing treasure in your API. And that's expected: if we've written our
+an existing treasure via the API. And that's expected: if we've written our
 `DragonTreasure` without a `setName()` method, then we're intending for the name
-to be set one and never changed. Second, this is the *one* case where we *do*
-populate a *bit* of data from `load()`. We normally save that work for `populate()`,
-but it can't be avoided here and that's ok.
+to be set once and never changed. Second, this is the *one* case where we *do*
+populate a *bit* of data inside `load()`. We normally save that work for `populate()`,
+but it can't be avoided here, and that's ok.
 
 Head down to `populate()` and start with the same code from `load()`. Also add
 `$entity = $to`... and one more `assert()` that `$entity instanceof DragonTreasure`.
-Then.. just say `TODO` for a moment.
+Just say `TODO` for a moment.
 
-Ok, I want to see if our mapper is at least being called. Earlier, when we ran the
+I want to make sure our mapper is at least being called. Earlier, when we ran the
 test, it executed *three* tests that match the name. So let's make the method
-a but more unique. This is called `testPostToCreateTreasure()` and it uses the normal
-login mechanism, so add `WithLogin` at the end. If we run the test with
+a bit more unique. This is called `testPostToCreateTreasure()` and it uses the normal
+login mechanism, so add `WithLogin` at the end. When we run the test with
 the new name:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPostToCreateTreasureWithLogin
 ```
 
-Okay! We get a 500 error! Let's see what's going on? Okay, good! We got further!
+A 500 error! Let's see what's going on. Okay, good! We got further!
 It's *now* exploding when it hits the *database*. So it *is* trying to save,
 and it's complaining because `owner_id` is null.
 
@@ -73,14 +71,14 @@ Reminder time: the `owner` field is *supposed* to be optional. If we *don't* pas
 an owner, it should automatically be set to the authenticated user. We *had* code
 for that before, and we'll re-add it in a moment.
 
-But this failure is actually coming from *earlier*" from line 71, right here. The
-first thing this test does is check our validation. It submits *no* JSON, and
+But this failure is actually coming from *earlier*: from line 71, right here. This
+test starts by checking our validation. It submits *no* JSON, and
 makes sure that our validation constraints save the day. We don't *have* any
 validation constraints, so instead of *failing* validation, it tries to save. Boo.
 
 Let's re-add the constraints... this time to our API class. For `$name`,
 `#[NotBlank]`, `$description`, `#[NotBlank]`, `$value` will be
-`#[GreaterThanOrEqual(0)]`, `$coolFactor` will be `#[GreaterThanOrEqual(0)]`
+`#[GreaterThanOrEqual(0)]` and `$coolFactor` will be `#[GreaterThanOrEqual(0)]`
 and *also* `#[LessThanOrEqual(10)]`.
 
 Try the test again.
@@ -103,13 +101,13 @@ This is one of the great things about these mapper objects. In
 we can *also* do custom things - like setting weird fields that require calculations
 or... setting the owner to the currently-authenticated user.
 
-Check it out:  `if ($dto->owner)`, then we're going to set that onto the entity.
-But we won't do it *yet*, just `dd()` for now. This would be if we *do* include
-the `owner` field in the JSON... and we'll talk more about that soon.
+Check it out: `if ($dto->owner)`, then we're going to set that onto the entity.
+Well, we won't do it *yet*, just `dd()` for now. This is the case where we *do*
+include the `owner` field in the JSON... and we'll talk more about that soon.
 
-For the `else`, this is when the user does *not* send an `owner` in the JSON.
-To set to the currently authenticated user, on top, inject the `Security` service.
-Then back below, set owner to `$this->security->getUser()`.
+For the `else`, this is when the user does *not* send an `owner` field.
+To set it to the currently authenticated user, on top, inject the `Security` service
+onto a new property. Then back below, set `owner` to `$this->security->getUser()`.
 
 Beautiful! We *are* still missing the other field setting... so if we try to run
 the test... it will *still* hit a 500. *But*, if you check out the error, it's failing
@@ -127,7 +125,7 @@ Ok, run the test now:
 symfony php bin/phpunit --filter=testPostToCreateTreasureWithLogin
 ```
 
-And... it *passes*. Woo! Now try *all* the tests from `DragonTreasure`:
+And... it *passes*. Woo! Try *all* the tests from `DragonTreasure`:
 
 ```terminal
 symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php

@@ -1,50 +1,48 @@
 # Dtos, Mapping & Max Depth of Relations
 
-Before we keep going, head to `/api/users.jsonld` to see... a circular reference
-coming from the serializer. Yikes! Ok, let's think: API Platform serializes
+Head to `/api/users.jsonld` to see... a circular reference
+coming from the serializer. Yikes! Let's think: API Platform serializes
 whatever we return from the state provider. So head there.... and find where
-the collection is created. Dump the DTOs: these are what's being serialized, so the
-problem must be here.
+the collection is created. Dump the DTOs. These are what's being serialized, so
+the problem must be here.
 
 Refresh and... no surprise: we see 5 `UserApi` objects. Ah, but *here's* the problem:
 the `dragonTreasures` field holds an array of `DragonTreasure` *entity* objects...
 and each has an `owner` that points to a `User` entity... and that points *back*
 to a collection of `DragonTreasure` entities... which causes the serializer to
-serializer forever and ever. But that's not even the *real* problem. I know, I'm
+serializer forever and ever. But that's not even the *real* problem! I know, I'm
 full of good news. The real problem is that the `UserApi` object should *really*
-relate to a `DragonTreasureApi`, not a `DragonTreasure` entity. If we're using DTOs
-for our API... we should use DTOs everywhere and consistently! Let's fix that.
+relate to a `DragonTreasureApi`, not a `DragonTreasure` entity.
 
 Over in `UserApi`, this will now be an `array` of `DragonTreasureApi`. Once we start
 going the DTO route, for maximum smoothness, we should relate DTOs to other DTOs...
 instead of mixing them with entities.
 
-To populate DTO objects, go to the mapper: `UserEntityToApiMapper`. Down here, for
-`dragonTreasures`, we can't do *this* anymore because that's going to be
+To populate the DTO objects, go to the mapper: `UserEntityToApiMapper`. Down here,
+for `dragonTreasures`, we can't do *this* anymore because that will give us
 `DragonTreasure` *entity* objects. What we basically want to do is convert *from*
-`DragonTreasure` to `DragonTreasureApi`. And so, once again, micro mapper is our
-friend!
+`DragonTreasure` to `DragonTreasureApi`. And so, once again, it's micro mapper to
+the rescue!
 
 ## Micro-Mapping DragonTreasure -> DragonTreasureApi
 
 Add `public function __construct()` with `private MicroMapperInterface $microMapper`.
 Down here, add some *fancy* code: `$dto->dragonTreasures =` set to `array_map()`,
-with a `DragonTreasure` argument. We'll finish that method in a second, but first
-pass the array that it will loop over:
+with a function that has a `DragonTreasure` argument. We'll finish that in a second...
+but first pass the array that it will loop over:
 `$entity->getPublishedDragonTreasures()->toArray()`.
 
-To walk through this: we get an array of the published `DragonTreasure` objects
-and then PHP loops over them and calls our function for each one - passing the
-each `DragonTreasure`. Whatever we return from this will become an item inside
-a new array that's set onto `dragonTreasures`.
-
-So what we want to return from this is a `DragonTreasureApi` object. Do that by
-returning `$this->microMapper->map($dragonTreasure, DragonTreasureApi::class)`.
+So: we get an array of the published `DragonTreasure` objects and
+PHP loops over them and calls our function for each one - passing the
+`DragonTreasure`. Whatever we return will become an item inside
+a new array that's set onto `dragonTreasures`. And what we want to return
+is a `DragonTreasureApi` object. Do that with
+`$this->microMapper->map($dragonTreasure, DragonTreasureApi::class)`.
 
 ## Circular Relationships
 
-Cool! And when we refresh to try it... we're greeted with a *different* circular
-reference problem. Fun! This one's coming from MicroMapper... and it's a problem
+Cool! When we refresh to try it... we're greeted with a *different* circular
+reference problem. Fun! This one comes from MicroMapper... and it's a problem
 that will happen whenever you have relationships that refer to each other.
 
 Think about it: we ask Micro Mapper to convert a `DragonTreasure` entity to
@@ -57,12 +55,12 @@ is that same `User` entity.
 
 ## Setting Mapping Depth
 
-The fix for this lives in your mapper when calling the `map()` function. Pass
-a *third* argument, which is a "context"... sort of an array of options. You
-can pass whatever you want here, but Micro Mapper itself only has 1 option that
+The fix lives in your mapper, when calling the `map()` function. Pass
+a *third* argument, which is a "context"... kind of an array of options. You
+can pass whatever you want, but Micro Mapper itself only has 1 option that
 it cares about. Set `MicroMapperInterface::MAX_DEPTH` to 1. 
 
-I'll show you what that does. When we refresh... look at the dump, which comes
+Let's see what that does. When we refresh... look at the dump, which comes
 from the state provider. It maps the `User` entities to `UserApi` objects... and
 we see 5. We can *also* see that the `dragonTreasures` property *is* populated with
 `DragonTreasureApi` objects. So it *did* do the mapping from `DragonTreasure` to
@@ -76,28 +74,28 @@ When we pass `MAX_DEPTH => 1`, we're saying:
 > skip that.
 
 Well, not exactly *skip*. When the mapper is called the 2nd time to map the
-`User` entity to `UserApi`, it calls the `load()` method of that mapper... but
+`User` entity to `UserApi`, it calls the `load()` method on that mapper... but
 *not* `populate()`. So we end up with a `UserApi` object with an `id`... but nothing
-else. That fixes our circular loop. And, we don't really *care* that the `owner`
-property is an empty object... because our JSON will never render that deeply!
+else. That fixes our circular loop. And, we don't really care that the `owner`
+property is an empty object... because our JSON never renders that deeply!
 
 Watch. Remove the `dd()` so we can see the results. And... perfect! The result is
 *exactly* what we expect! For `DragonTreasures`, we're only showing the IRI.
 
 So, as a rule, when calling micro mapper from inside a mapper class, you'll probably
 want to set `MAX_DEPTH` to `1`. Heck, we *could* set `MAX_DEPTH` to `0`! Though
-the only reason to do that would be a *slightly* performance improvement.
+the only reason to do that would be a *slight* performance improvement.
 
-Put that `dd()` back. This time, when we map `$dragonTreasure` to `DragonTreasureApi`,
+Put the `dd()` back. This time, when we map `$dragonTreasure` to `DragonTreasureApi`,
 try `MAX_DEPTH => 0`. This will cause the depth to be hit *immediately*. When it
 goes to map the `DragonTreasure` entity to `DragonTreasureApi`, it will use the
 mapper, but *only* call the `load()` method. The `populate()` method will *never*
 be called. What we end up with is a *shallow* object for `DragonTreasureApi`.
 
 This might seem weird, but it's *technically* okay... because this `dragonTreasures`
-array is going to be rendered as IRI strings... and the only thing it needs to achieve
-that is... the `id`! Check it out! Remove the dump and reload the page. It looks
-*exactly* the same. We just saved ourselves a little bit of work.
+array is going to be rendered as IRI strings... and the only thing API Platform
+needs to build that IRI is... the `id`! Check it out! Remove the dump and reload
+the page. It looks *exactly* the same. We just saved ourselves a tiny bit of work.
 
 So, to be on the safe side - in case you embed the object - use `MAX_DEPTH => 1`.
 But if you know that you're using IRIs, you *can* set `MAX_DEPTH` to `0`.
@@ -116,6 +114,6 @@ serialized to JSON it looks like an *associative* array, or an "object" in JSON.
 If we change the `toArray()` to `getValues()` and refresh the page... perfect! We're
 back to a regular array of items.
 
-Next: We can *read* from our new `DragonTreasure` resource, but we can't *write* to
+Next: We can *read* from our new `DragonTreasureApi` resource, but we can't *write* to
 it yet. Let's create a `DragonTreasureApiToEntityMapper` and re-add things like
 security and validation.
