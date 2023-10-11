@@ -1,4 +1,4 @@
-# Quick! Create a DragonTreasureDto
+# Quick! Create a DragonTreasure DTO
 
 Time to convert our `DragonTreasure` ApiResource into a *proper* DTO class!
 We'll start by deleting a *ton* of stuff: *everything* related to API Platform
