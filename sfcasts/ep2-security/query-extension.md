@@ -51,7 +51,7 @@ Awesome! And we *still* want to assert that this returns just 5 items. So...
 let's make sure it fails:
 
 ```terminal-silent
-symfony php bin/console phpunit --filter=testGetCollectionOfTreasures
+symfony php bin/phpunit --filter=testGetCollectionOfTreasures
 ```
 
 And... yea! It returns 6 items.
