@@ -29,7 +29,7 @@ Luego añade uno más con `createOne()` y `isPublished` falsos:
 ¡Impresionante! Y aún queremos afirmar que esto devuelve sólo 5 elementos. Así que... asegurémonos de que falla:
 
 ```terminal-silent
-symfony php bin/console phpunit --filter=testGetCollectionOfTreasures
+symfony php bin/phpunit --filter=testGetCollectionOfTreasures
 ```
 
 Y... ¡sí! Devuelve 6 elementos.
