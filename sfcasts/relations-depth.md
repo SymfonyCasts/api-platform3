@@ -86,11 +86,12 @@ So, as a rule, when calling micro mapper from inside a mapper class, you'll prob
 want to set `MAX_DEPTH` to `1`. Heck, we *could* set `MAX_DEPTH` to `0`! Though
 the only reason to do that would be a *slight* performance improvement.
 
-Put the `dd()` back. This time, when we map `$dragonTreasure` to `DragonTreasureApi`,
+This time, when we map `$dragonTreasure` to `DragonTreasureApi`,
 try `MAX_DEPTH => 0`. This will cause the depth to be hit *immediately*. When it
 goes to map the `DragonTreasure` entity to `DragonTreasureApi`, it will use the
 mapper, but *only* call the `load()` method. The `populate()` method will *never*
-be called. What we end up with is a *shallow* object for `DragonTreasureApi`.
+be called. Put the `dd()` back. What we end up with is a *shallow* object
+for `DragonTreasureApi`.
 
 This might seem weird, but it's *technically* okay... because this `dragonTreasures`
 array is going to be rendered as IRI strings... and the only thing API Platform
