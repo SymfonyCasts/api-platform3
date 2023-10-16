@@ -29,6 +29,7 @@ chapters:
     - relations-depth
     - dragon-treasure-write
     - treasure-security
+    - patch-field-security
     - publish
     - write-relation
     - collection-relation-write
