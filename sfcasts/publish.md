@@ -1,74 +1,91 @@
 # Triggering a "Publish"
 
+We're down to just one test failure... it's in `testPublishTreasure`. Let's check
+it out. Ok, this tests to make sure that a notification is created in the database
+when the status of a treasure changes from `'isPublished' => false` to `'isPublished'
+=> true`. Previously, we implemented this via a custom state processor.
 
+But now, we *could* put this into the mapping! In `DragonTreasureApiToEntityMapper`,
+we could check to see if the entity *was* `'isPublished' => false` and is now
+*changing* to `'isPublished' => true`. If it *is*, create a notification right
+there. And if this sounds good to you, go for it!
 
-This is our *notification* test. Over here... in `testPublishTreasure`, let's check
-that out. Earlier, we were testing to see if a notification is created in the database
-when the status changes from `'isPublished' => false` to `'isPublished' => true`.
-We did that previously via a custom state processor. We could *also* do that in the
-mapper. When we're using our `DragonTreasureApiToEntityMapper`, we could check to
-see if the entity *was* `'isPublished' => false` and is now *changing* to
-`'isPublished' => true`, and if it *is*, create a notification right there. *But*
-this doesn't feel like the right place to do that. Data mappers should really just
-be all about mapping data.
+However, for me, putting the logic here doesn't *quite* feel like the right place...
+just because it's a "data mapper", so it feels weird to do something *beyond* just
+mapping the data.
 
-*So* let's try a different solution: Creating a *custom state processor*. Over at you
-terminal, say:
+## Creating the State Processor
 
-```terminal
-./bin/console make:state-processor
-```
-
-And then we'll call that:
+*So*, let's to back to our original solution: creating a *state processor*. Over
+at you terminal, run:
 
 ```terminal
-DragonTreasureStateProcessor
+php bin/console make:state-processor
 ```
 
-There it is! And now we're going to decorate this just like our normal
-`EntityClassDtoStateProcessor`. We'll add a `__construct()` method with `private
-EntityClassDtoStateProcessor $innerProcessor`. And down here, we'll just return that
-with `return $this->innerProcessor->process()` and pass it the arguments it needs:
-`$data`, `$operation`, `$uriVariables`, and `$context`. Ah, and you can see that this
-is highlighted in red here. We don't *have to* do this, but this isn't really a
-`void` method, so we can remove that.
+And call it `DragonTreasureStateProcessor`. Our goal should feel familiar: we'll
+add some custom logic here, but call the *normal* state processor to let it do
+the heavy lifting.
 
-Now that we have this new processor (it's going to use our original one), we can just
-hook this up inside of here. So on `DragonTreasureApi`, instead of using the *core*
-processor, we're going to use the `DragonTreasureStateProcessor`.
+To do that, add a `__construct()` method with
+`private EntityClassDtoStateProcessor $innerProcessor`. Down here, use that with
+`return $this->innerProcessor->process()` passing the arguments it needs: `$data`,
+`$operation`, `$uriVariables`, and `$context`. Ah, and you can see that this is
+highlighted in red. This isn't really a `void` method, so remove that.
 
-At this point, we have changed *nothing*, and if we rerun the test, everything still
-works except for that last failure. *So* let's add our notification code! Earlier,
-the way we figured out if we're changing from `'isPublished' => false` to
-`'isPublished => true`, is by using the previous data that's inside of the context.
-So right here, let's `dd($context['previous_data']`. Now let's head over and run
-*just* that test:
+Ok, let's hook our API resource to use this! Inside `DragonTreasureApi`, change
+the processor to `DragonTreasureStateProcessor`.
 
-```terminal
---filter=testPublishTreasure
+At this point, we haven't really changed anything: the system will call our new
+processor... which just calls the *old* one. And so when we rerun the tests:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php
 ```
 
-Cool! We can see that our previous data is the `DragonTreasureApi` with `isPublished:
-false`. This is the *original* one that we had inside of our test when we started.
-Let's also dump `$data` so our result is even more interesting.
+## Detecting the isPublished Change
 
-Okay, the original one has `isPublished: false`, and the *new* one has the JSON on it
-and `isPublished: true`. And just like before, that's what we're going to focus on to
-send the notification. We wrote some of this code before, so let's go borrow that...
-*paste*, and that will add a couple of `use` statements. This isn't *super*
-interesting. We just have the `$previousData`, we're showing that it `isPublished`,
-and then we're creating a `Notification` down here. The only thing that's *kind of*
-interesting is that the `Notification` is related to a `DragonTreasure` `$entity`. So
-we're actually querying for the `$entity` using the `repository` and grabbing the
-`id` off of the API.
+Everything still works except for that last failure. So let's add our notification
+code! Earlier, we figured out if `isPublished` was changing from `false` to
+`true` by using the "previous data" that's inside of the `$context`. Dump
+`$context['previous_data']` to see what that looks like.
 
-Now we need to inject a couple of things here. The first is `private
-EntityManagerInterface $entityManager` so we can save, and then `private
-DragonTreasureRepository $repository`. There we go! That makes a little more sense
-now. So we're grabbing the `id` off of the `DragonTreasureApi`, *querying* for the
-`$entity`, and then we relay that on the `Notification` entity and save everything.
-If we try our test now... it *passes*! And check this out! All of our
-`DragonTreasure` tests pass. Everything is back where it should be. *Amazing*!
+Now, run *just* this test:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPublishTreasure
+```
+
+Cool! We see that previous data is the `DragonTreasureApi` with `isPublished: false`,
+because that's the value our entity starts with in the test. Let's also dump `$data`.
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPublishTreasure
+```
+
+Okay, the original one has `isPublished: false`, and the *new* one has
+`isPublished: true`! And *that* makes us dangerous.
+
+Back over, we already wrote the notification code before... so I'll just paste it
+back in. This is delightfully boring code! We use` $previousData` and `$data` to
+detect the state change from `isPublished` false to true... then create a
+`Notification`.
+
+The only thing that's *kind of* interesting part is that the `Notification` entityis
+related to a `DragonTreasure` `$entity`.... so we're querying for the `$entity` using
+the `repository` and the `id` from the DTO class.
+
+Let's inject the services we need: `private EntityManagerInterface $entityManager`
+so we can save and `private DragonTreasureRepository $repository`.
+
+There we go! Moment of truth:
+
+```terminal-silent
+symfony php bin/phpunit tests/Functional/DragonTreasureResourceTest.php --filter=testPublishTreasure
+```
+
+The test *passes*! Heck, at this point, *all* of our treasure tests pass! We've
+completely converted this complex API resource to our DTO-powered system.
 
 Next: Let's make it possible to *write* the `$dragonTreasures` property on *user*.
 This involves a trick that's going to help us better understand how API Platform
