@@ -1,99 +1,140 @@
 # Writable Collection via the PropertyAccessor
 
-Coming soon..
+To see what's going on here, head to the mapper - `UserApiToEntityMapper`. The
+`patch()` request will take this data, populate it onto `UserApi`... then we map
+it *back* to the entity in this mapper.
 
-To see what's going on here, let's head up to the mapper -
-`UserApiToEntityMapper.php`. Okay, we're making this `patch()` request that will take
-this data and put it onto the `UserApi`. Now we want to see what's happening with
-that `UserApi` object when we're mapping it to the entity. And... ah! The reason
-`dragonTreasures` isn't changing in the database is because we're not even mapping
-that from the DTO to the entity. We left that as a `TODO` earlier. Down here, let's
-`dump($dto)` so we can at least see what our DTO looks like after the request. Run
-that again, and... whoa. Check this out! There are *still* two `dragonTreasures` in
-the DTO and they're *still* the original two. This tells us that this field here is
-being completely ignored. It *should* change to "1" and "3". The *reason* for that,
-which some of you may have already guessed, is that, inside of `UserApi`, the
-`$dragonTreasures` property *isn't* `writable`. It's pretty cool to see `writable:
-false` doing its job and preventing that from being writable. If we spin over and try
-it now, you'll see the difference. And... perfect! Lookit. We have *two* treasures,
-but the IDs are "1" and "3".
+And... the reason the test is failing is pretty obvious: we're not mapping the
+`dragonTreasures` property from the DTO to the entity!
 
-Our `UserApi` is now updated correctly, but our test is still failing because we're
-not actually *doing* anything with those DTOs. We need to set that back onto our user
-`$entity`. In this case, we need to take an array of `DragonTreasureApi[]` objects
-and map them to `DragonTreasure[]` objects so we can set that onto the `User` object.
-Once again, we need our mapper. Head to the top... and at this point, this should be
-pretty familiar. Say `private MicroMapperInterface $microMapper`... and back down
-here... say `$dragonTreasureEntities = []`. We're going to keep it super simple this
-time and use a good old fashioned `foreach`. We're going to loop over
-`$dto->dragonTreasures as $dragonTreasureApi`. We're keeping our variables very clear
-here so we can keep our API and entity objects straight. And then we'll say
-`$dragonTreasureEntities[]`, and we'll append that array with
-`$this->microMapper->map()`, passing our `$dragonTreasureApi`, which we'll map to
-`DragonTreasure::class`. And as you may have already guessed, we're also going to
-pass `MicroMapperInterface::MAX_DEPTH` set to `0`. Again, `0` is fine here because we
-just need to make sure that the dragon treasure mapper just queries for the correct
-`DragonTreasure` entity. If we were allowing *embedded* data to be passed, we'd want
-to have a `MAX_DEPTH` of `1` so that the individual *properties* of each
-`DragonTreasureApi` are mapped onto the `DragonTreasure`. That's not something we're
-worried about right now. We just need to make sure that we have the right entity
-object from the database. Down here, we're going to `dd($dragonTreasureEntities)`.
-Cool. Let's try it out! And... *okay*. It looks good! We have `2`, `DragonTreasure`,
-with `id: 1` that was queried from the database, and down here, we have
-`DragonTreasure` with `id: 3`.
+Let's `dump($dto)` so we can see what it looks like after deserializing the
+data.
 
-The *last* thing we need to do is set that onto the user `$entity`. We'll say
-`$entity->set`... but... uh oh... we don't have a `setDragonTreasures()` method. And
-that's by design! If you look inside of your `User` entity, there's a
-`getDragonTreasures()` method, but there's no `setDragonTreasures()` method.
-*Instead*, there's an `addDragonTreasure()` method and a `removeDragonTreasure()`
-method. I won't dive too deeply into why we can't have a setter, but it has to do
-with setting the *owning* side of the Doctrine relationship. The point is, we need to
-call the *adders* and *removers*.
+Run the test again:
 
-If you think about it, it's a little more complicated than that. What we *really*
-need to do is look at which `$dragonTreasureEntities` we have here, which
-`$dragonTreasureEntities` are already *on* this field (like 1 and 3), and then call
-the correct adders and removers. In our specific case, we'll want to call the
-`removeDragonTreasure()` method for this middle one and `addDragonTreasure()` for
-this third one. So we almost need to create a *diff* between the *new* entities and
-the *existing* `dragonTreasureEntities`, and then call the adders and removers
-accordingly. That sounds... *annoying*... and kind of complicated. *Fortunately*,
-Symfony already *has* something that can do that - a service called the "Property
-Accessor".
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
 
-Head up here... and add `private PropertyAccessorInterface $propertyAccessor`. This
-is a cool service! Property Accessor is good at *setting properties*. It can detect
-if a property is a setter, adder, or remover method, and it's pretty handy! Here,
-let's say `$this->propertyAccessor->setValue()`, and we'll pass it the object that
-we're setting data onto, which is our user `$entity`. We'll also pass it the property
-path - `dragonTreasures` - and finally, the *value* - `$dragonTreasureEntities`. Down
-here, let's `dd($entity)` so we can see what's happening.
+And... whoa. The `dragonTreasures` in the DTO and *still* the original two. This
+tells us that this field here is being completely ignored: it's *not* being
+deserialized. And I bet you know the reason. Inside `UserApi`, the `$dragonTreasures`
+property *isn't* `writable`. But it *is* pretty cool to see `writable: false` doing
+its job.
 
-Okay, when we run this... and scroll up... here's our `User` object, and look at
-`DragonTreasure`! It has *two*: `id: 1` and `id:3`. It correctly updated the
-`DragonTreasure` property! How the heck did it do that? By calling the adder and
-remover methods. It's actually doing that *diff* of the *new* `dragonTreasures` and
-the *existing* `dragonTreasures`, and calling the adder and remover method. I'll show
-you! Down here, we'll add `dump('Removing treasure'.$treasure->getId())`. When we run
-the test again... there it is - `Removing treasure 2`! It has detected that that one
-is missing from the new entities so it calls the remover, and *life is good*. Let's
-remove this `dump()`... as well as the other one over here. And if we run that
-again... the test *passes*! We can see the final response after we fetch it where we
-get `1` and `3` back. What happened to `2`? That was actually *deleted* from the
-database *entirely*. Behind the scenes, its owner was set to `null`. *Then*, thanks
-to `orphanRemoval`, any time the *owner* of one of these `dragonTreasures` is set to
-`null`, it gets *deleted*. It's called an "orphan", and that's something we talked
-about in a previous tutorial.
+When we run the test again, you'll see the difference.
 
-This is awesome! Our dragon treasure is now *writable*. Before we move on, we need to
-clean up something in `testTreasuresCanBeRemoved()`. Let's remove the part where we
-are *stealing* `$dragonTreasure3`. We'll get rid of that object there, the part where
-we set it down here, change the length to `1`, and we'll just test *that one*. So now
-this is truly just a test for *removing* a `DragonTreasure`. And... it *still*
-passes! We can remove this `->dump()` as well.
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
 
-Next: Let's look back at `testTreasuresCannotBeStolen()`. As it turns out, they *can*
-be stolen. We are *so* close to getting this polished off. We're just missing a
-custom validator that we created in a previous tutorial. We'll fix that, and when we
-do, that validator is going to be *much* simpler in the new DTO system.
+Yup! Still two treasures but the IDs are "1" and "3". So `UserApi` looks correct.
+
+## Going from DragonTreasureApi -> DragonTreasure
+
+Now, we need to take this array of `DragonTreasureApi` objects and map them to
+`DragonTreasure` entity objects so we can set them onto the `User` entity. Once again,
+we need our mapper!
+
+You know the drill: add `private MicroMapperInterface $microMapper`... and back down
+here... start with `$dragonTreasureEntities = []`. I'm going to keep this simple
+and use a good old fashioned `foreach`. Loop over `$dto->dragonTreasures` as
+`$dragonTreasureApi`. Then say `$dragonTreasureEntities[]` equals
+`$this->microMapper->map()`, passing `$dragonTreasureApi` and `DragonTreasure::class`.
+And as you may have already guessed, we're going to pass
+`MicroMapperInterface::MAX_DEPTH` set to `0`.
+
+`0` is fine in this case because we're just need to make sure that the dragon treasure
+mapper queries for the correct `DragonTreasure` entity. If it has a relation,
+like `owner`, we don't care if *that* object is correctly populated.
+Down here, `dd($dragonTreasureEntities)`.
+
+Let's try it out!
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+And... it looks good! We have 2 treasures with `id: 1`... and way down here
+`id: 3`.
+
+## Calling the Adder/Remover Methods
+
+So all we need to do now is set that onto the `User` object. Say `$entity->set`...
+but... uh oh. We don't have a `setDragonTreasures()` method! And that's on purpose!
+Look inside the `User` entity. It has a `getDragonTreasures()` method, but
+no `setDragonTreasures()`. *Instead*, it has an `addDragonTreasure()` method
+and a `removeDragonTreasure()` method.
+
+I won't dive too deeply into why we can't have a setter, but it relates to the
+fact that we need to set the *owning* side of the Doctrine relationship. We talk
+about this in our Doctrine relations tutorial.
+
+The point is, if we *were* able to just call `->setDragonTreasures()`, it wouldn't
+save correctly. We need to call the adder and remover methods.
+
+And this is tricky! We need to look at `$dragonTreasureEntities`, compare that with
+the *current* `dragonTreasures` property, then call the correct adders and removers.
+In our case, we need to call `removeDragonTreasure()` for the middle one and
+`addDragonTreasure()` for this third one.
+
+Writing this code sounds... *annoying*... and complicated. *Fortunately*, Symfony
+already *has* something that can do this! It's a service called the "Property Accessor".
+
+Head up here... and add `private PropertyAccessorInterface $propertyAccessor`.
+Property Accessor is good at *setting properties*. It can detect if a property is
+public... or if it has a setter method... or even adder, or remover methods.
+To use it, say `$this->propertyAccessor->setValue()` passing the object that we're
+setting data onto - the `User` `$entity`, the property we're setting -
+`dragonTreasures` - and finally, the *value* - `$dragonTreasureEntities`.
+
+Down here, let's `dd($entity)` so we can see how it looks.
+
+Deep breath. Try this:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+Ok, scroll up... to the `User` object. Look at `dragonTreasures`! It has *two*
+items with `id: 1` and `id: 3`! It correctly updated the `DragonTreasure` property!
+How the heck did it do that? By calling `addDragonTreasure()` for id 3 and
+`removeDragonTreasure()` for id 2.
+
+I an prove it. Down here, add `dump('Removing treasure'.$treasure->getId())`.
+
+When we run the test again...
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+There it is! Removing treasure 2! Life is good. Remove this `dump()`... as well as
+the other one over here.
+
+Let's see some green. Run the test one last time... hopefully
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+It *passes*! The final response contains treasures `1` and `3`. What happened
+to treasure `2`? It was actually *deleted* from the database *entirely*. Behind the
+scenes, its owner was set to `null`. *Then*, thanks to `orphanRemoval`, any time
+the *owner* of one of these `dragonTreasures` is set to `null`, it gets *deleted*.
+That's something we talked about in a previous tutorial.
+
+Before we move on, we need to clean up `testTreasuresCanBeRemoved()`. Remove the
+part where we are *stealing* `$dragonTreasure3`. We'll get rid of that object there,
+the part where we set it down here, change the length to `1`, and just test
+*that one*. So now this truly is a test for *removing* a `DragonTreasure`.
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+And... it *still* passes! Celebrate by removing this `->dump()`.
+
+Next: Let's look back at `testTreasuresCannotBeStolen()`. Right now, treasures *can*
+be stolen, which is lame. Let's fix the validator for this... but also make it
+a lot simpler, thanks to the DTO system.
