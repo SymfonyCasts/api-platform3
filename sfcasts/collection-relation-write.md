@@ -1,40 +1,91 @@
-# Collection Relation Write
+# Writing to a Collection Relation
 
-We are *so close* to completely re-implementing our API using these custom classes. Let's start by running all of our tests to see where we stand. And... oooh! We're almost there! Everything passes except *one*. This failing test is coming from `UserResourceTest::testTreasuresCannotBeStolen`. Let's take a look at that. Over in `tests/Functional/UserResourceTest.php`, we'll search for that and... there it is - `testTreasuresCannotBeStolen()`.
+We are *so close* to completely re-implementing our API using these custom classes.
+So excited!
 
-In this test, we're updating a specific user and attempting to change this `dragonTreasures` property so it's set to someone else's treasure. So we're basically writing a collection relation property in our API.
-
-First and foremost, I would recommend *against* allowing collection relationship properties like this to be modified. It just adds a lot of complexity to your system, and you'll need to worry about things like this, where by setting the `dragonTreasures` property *here*, you're actually modifying this dragon treasure's owner to be *somebody else*. There's a *different* way to do this where we make a `patch()` request to this specific treasure and change the owner to a *different* owner, and that would avoid this modifiable collection relationship issue. It's really best to just avoid this altogether if you can, but if you *must* allow this, here's how.
-
-We're going to start by duplicating this test. *Perfect*. And we're going to call *this* `testTreasuresCanBeRemoved`. Now we can dress this test up a bit. We have `$user` and `$otherUser`, and we're going to make this first `$dragonTreasure` owned by `$user`. Now we'll make a *second* `$dragonTreasure`  owned by this `$user`, but we won't need a variable here. You'll see why in a second. And then we'll make a *third* `$dragonTreasure` called `$dragonTreasure3`, which is owned by `$otherUser`.
-
-All right, we now have *three* `dragonTreasures`. *Two* of them are owned by `$user`, and the third is owned by `$otherUser`. Down here, we're *patching* to modify this one `$user`, and when we *do* (we can actually remove `username`, since we don't need that), we're going to send *two* `dragonTreasures` to it - the *first* `$dragonTreasure` and the *third* `$dragonTreasure`, `$dragonTreasure3->getId()`. Right now, this test is going to test *two* things.
-
-*First* it checks to see if this second `$dragonTreasure` has been removed. If you think about it, since `$user` *started* with these two treasures, the fact that this *second* treasure's IRI is not being sent means that we actually want that to be *removed* from the `$user`. That's exactly what we're testing with this. We threw in this `$dragonTreasure3` *temporarily* to show that treasures can be *stolen*. This is currently owned by `$otherUser`. We're going to pass it down here and verify that the *owner* of this `$dragonTreasure3` changes from `$otherUser` to `$user`. That's not the end behavior we want, but we want to get all of the writing of this relation working first, then we'll worry about *preventing* that.
-
-Down here, we're going to `->assertStatus(200)` because we *want* this to be allowed for now, and then we're going to extend the test by saying `->get('/api/users/' . $user->getId())`. So we're *fetching* this user, and then we're going to `->dump()` this so we can see it. Next, we're going to assert that we're getting the results back that we want, like, for example, the `length()` of the `dragonTreasures` field. Whoops, I need to put that in quotes. And this should be `2`, because we should have treasures *one* and *three*. *Then* we'll assert that `dragonTreasures[0]` is equal to `'/api/treasures/'.`, followed by this first one here, so `$dragonTreasure->getId()`. Now we can copy that and duplicate it. We expect the *other* `$dragonTreasure` to be `$dragonTreasure3`. Perfect!
-
-That test was a little complicated, but it's really useful for making sure that `$dragonTreasure` *two* will ultimately be removed, and `$dragonTreasure3` will have its owner change to this `$user`. So let's give this a try! Copy this and, over at your terminal, run:
+Let's run *every* test to see where we stand.
 
 ```terminal
-symfony php bin/phpunit --filter=
-testTreasuresCannotBeRemoved
+symfony php bin/phpunit
 ```
 
-And by "*cannot* be removed", I, of course, mean that it *can* be removed. That was some good 'ol copy/paste madness right there. There we go. And... it *fails*. We can see that it's failing down here in `UserResourceTest.php` on line 81. This request is *technically* successful, but the two `$dragonTreasures` we have are still the original two. We see `/api/treasures/2` instead of `/api/treasures/3`. So... basically *no* changes were made to the treasures.
+And... everything passes except *one*. This problematic test is
+`UserResourceTest::testTreasuresCannotBeStolen`. Let's go check that out.
 
-To see what's going on here, let's head up to the mapper - `UserApiToEntityMapper.php`. Okay, we're making this `patch()` request that will take this data and put it onto the `UserApi`. Now we want to see what's happening with that `UserApi` object when we're mapping it to the entity. And... ah! The reason `dragonTreasures` isn't changing in the database is because we're not even mapping that from the DTO to the entity. We left that as a `TODO` earlier. Down here, let's `dump($dto)` so we can at least see what our DTO looks like after the request. Run that again, and... whoa. Check this out! There are *still* two `dragonTreasures` in the DTO and they're *still* the original two. This tells us that this field here is being completely ignored. It *should* change to "1" and "3". The *reason* for that, which some of you may have already guessed, is that, inside of `UserApi`, the `$dragonTreasures` property *isn't* `writable`. It's pretty cool to see `writable: false` doing its job and preventing that from being writable. If we spin over and try it now, you'll see the difference. And... perfect! Lookit. We have *two* treasures, but the IDs are "1" and "3".
+Open `tests/Functional/UserResourceTest.php` and search for
+`testTreasuresCannotBeStolen()`. Here it is.
 
-Our `UserApi` is now updated correctly, but our test is still failing because we're not actually *doing* anything with those DTOs. We need to set that back onto our user `$entity`. In this case, we need to take an array of `DragonTreasureApi[]` objects and map them to `DragonTreasure[]` objects so we can set that onto the `User` object. Once again, we need our mapper. Head to the top... and at this point, this should be pretty familiar. Say `private MicroMapperInterface $microMapper`... and back down here... say `$dragonTreasureEntities = []`. We're going to keep it super simple this time and use a good old fashioned `foreach`. We're going to loop over `$dto->dragonTreasures as $dragonTreasureApi`. We're keeping our variables very clear here so we can keep our API and entity objects straight. And then we'll say `$dragonTreasureEntities[]`, and we'll append that array with `$this->microMapper->map()`, passing our `$dragonTreasureApi`, which we'll map to `DragonTreasure::class`. And as you may have already guessed, we're also going to pass `MicroMapperInterface::MAX_DEPTH` set to `0`. Again, `0` is fine here because we just need to make sure that the dragon treasure mapper just queries for the correct `DragonTreasure` entity. If we were allowing *embedded* data to be passed, we'd want to have a `MAX_DEPTH` of `1` so that the individual *properties* of each `DragonTreasureApi` are mapped onto the `DragonTreasure`. That's not something we're worried about right now. We just need to make sure that we have the right entity object from the database. Down here, we're going to `dd($dragonTreasureEntities)`. Cool. Let's try it out! And... *okay*. It looks good! We have `2`, `DragonTreasure`, with `id: 1` that was queried from the database, and down here, we have `DragonTreasure` with `id: 3`. 
+Let's read the story. We update a user and attempt to change its `dragonTreasures`
+property to contain a treasure owned by someone else. The test looks for a 422 status
+code - because we want to prevent stealing treasures - but the test failed with
+a 200.
 
-The *last* thing we need to do is set that onto the user `$entity`. We'll say `$entity->set`... but... uh oh... we don't have a `setDragonTreasures()` method. And that's by design! If you look inside of your `User` entity, there's a `getDragonTreasures()` method, but there's no `setDragonTreasures()` method. *Instead*, there's an `addDragonTreasure()` method and a `removeDragonTreasure()` method. I won't dive too deeply into why we can't have a setter, but it has to do with setting the *owning* side of the Doctrine relationship. The point is, we need to call the *adders* and *removers*.
+But actually, the more important thing right now is that this tests *writes* to a
+collection relation field. And right now, our `dragonTreasures` field is *not*
+writable at all.
 
-If you think about it, it's a little more complicated than that. What we *really* need to do is look at which `$dragonTreasureEntities` we have here, which `$dragonTreasureEntities` are already *on* this field (like 1 and 3), and then call the correct adders and removers. In our specific case, we'll want to call the `removeDragonTreasure()` method for this middle one and `addDragonTreasure()` for this third one. So we almost need to create a *diff* between the *new* entities and the *existing* `dragonTreasureEntities`, and then call the adders and removers accordingly. That sounds... *annoying*... and kind of complicated. *Fortunately*, Symfony already *has* something that can do that - a service called the "Property Accessor".
+## Avoid Writable Collection Fields?
 
-Head up here... and add `private PropertyAccessorInterface $propertyAccessor`. This is a cool service! Property Accessor is good at *setting properties*. It can detect if a property is a setter, adder, or remover method, and it's pretty handy! Here, let's say `$this->propertyAccessor->setValue()`, and we'll pass it the object that we're setting data onto, which is our user `$entity`. We'll also pass it the property path - `dragonTreasures` - and finally, the *value* - `$dragonTreasureEntities`. Down here, let's `dd($entity)` so we can see what's happening.
+First, I'd recommend *against* allowing collection relationship fields like this
+to be writable. I mean, you absolutely *can*... but it adds complexity. For example,
+like this test shows, we need to worry about how setting the `dragonTreasures`
+property changes the *owner* on that treasure. And there's already a *different*
+way to do this: make a `patch()` request to this specific treasure and change
+the `owner`. Simple.
 
-Okay, when we run this... and scroll up... here's our `User` object, and look at `DragonTreasure`! It has *two*: `id: 1` and `id:3`. It correctly updated the `DragonTreasure` property! How the heck did it do that? By calling the adder and remover methods. It's actually doing that *diff* of the *new* `dragonTreasures` and the *existing* `dragonTreasures`, and calling the adder and remover method. I'll show you! Down here, we'll add `dump('Removing treasure'.$treasure->getId())`. When we run the test again... there it is - `Removing treasure 2`! It has detected that that one is missing from the new entities so it calls the remover, and *life is good*. Let's remove this `dump()`... as well as the other one over here. And if we run that again... the test *passes*! We can see the final response after we fetch it where we get `1` and `3` back. What happened to `2`? That was actually *deleted* from the database *entirely*. Behind the scenes, its owner was set to `null`. *Then*, thanks to `orphanRemoval`, any time the *owner* of one of these `dragonTreasures` is set to `null`, it gets *deleted*. It's called an "orphan", and that's something we talked about in a previous tutorial.
+But, if you still want to allow your collection relation to be writable within
+your DTO system, here's how to do it.
 
-This is awesome! Our dragon treasure is now *writable*. Before we move on, we need to clean up something in `testTreasuresCanBeRemoved()`. Let's remove the part where we are *stealing* `$dragonTreasure3`. We'll get rid of that object there, the part where we set it down here, change the length to `1`, and we'll just test *that one*. So now this is truly just a test for *removing* a `DragonTreasure`. And... it *still* passes! We can remove this `->dump()` as well.
+## Testing the Collection Write
 
-Next: Let's look back at `testTreasuresCannotBeStolen()`. As it turns out, they *can* be stolen. We are *so* close to getting this polished off. We're just missing a custom validator that we created in a previous tutorial. We'll fix that, and when we do, that validator is going to be *much* simpler in the new DTO system.
+Start by duplicating this test... then rename it to `testTreasuresCanBeRemoved`.
+I totally misnamed that - mine says `cannot`, which is the *opposite* of what
+I want to test - so make sure you get that right in your code.
+
+Now we can dress this test up a bit. Make the first `$dragonTreasure` owned by
+`$user`. Then make a *second* `$dragonTreasure` *also* owned by `$user`, but we
+won't need a variable this time... you'll see. Finally add *third* `$dragonTreasure`
+called `$dragonTreasure3` that's owned by `$otherUser`.
+
+Ok: we have *three* `dragonTreasures`, *Two*  owned by `$user`, and one by
+`$otherUser`. Down here, we patch to modify `$user`. Remove `username` - we don't
+care about that - then send *two* `dragonTreasures`: the *first* and the *third*:
+`/api/treasures/` `$dragonTreasure3->getId()`.
+
+We're going to test for *two* thing. First, that the second `DragonTreasure` is
+removed from this user. Think about it: `$user` *started* with these two treasures...
+and the fact that this *second* treasure's IRI is *not* sent means that we want
+that to be *removed* from the `$user`.
+
+Second, I added `$dragonTreasure3` *temporarily* to prove that treasures *can* be
+stolen. This is currently owned by `$otherUser`, but we pass it to `dragonTreasures`
+and we're going to verify that the *owner* of `$dragonTreasure3` changes from
+`$otherUser` to `$user`. That's not the end behavior we want, but it'll help us
+get all of the relation writing working. *Then* we'll worry about *preventing*
+that.
+
+Down here, `->assertStatus(200)` then extend the test by saying
+`->get('/api/users/' . $user->getId())` then `->dump()`.
+
+I want to see what the user looks like *after* the update. Finally, assert that
+the `length` of the `dragonTreasures` field - I need quotes on that - is 2,
+for treasures 1 and 3. Then assert that `dragonTreasures[0]` is equal to
+`'/api/treasures/'.`, followed by `$dragonTreasure->getId()`. Copy that, paste,
+and assert that the 1 key is `$dragonTreasure3`.
+
+Lovely! That test took some work, but it's doing to be *super* useful. The
+`dragonTreasures` field still isn't writable but, pff, let's try it anyway.
+Copy the method name and, over at your terminal, run:
+
+```terminal
+symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
+```
+
+And by "*cannot* be removed", I, of course, mean that it *can* be removed. That was
+some good 'ol copy/paste madness right there. There we go. And... it *fails*,
+on line 81. This means that the request was successful... but the two
+`$ragonTreasures` are still the original two: `/api/treasures/2` instead of
+`/api/treasures/3`. No changes were made to the treasures.
+
+Next: let's make this field writable and see how we can leverage the property
+accessor component to make sure the changes save correctly.

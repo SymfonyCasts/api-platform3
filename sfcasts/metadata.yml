@@ -33,4 +33,5 @@ chapters:
     - publish
     - write-relation
     - collection-relation-write
+    - collection-relation-setting
     - simpler-validator
