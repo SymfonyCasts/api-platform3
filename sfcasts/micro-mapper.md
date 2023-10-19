@@ -68,7 +68,7 @@ in `src/`. Inside of *that*, add a new PHP class called... how about
 
 This class needs 2 things. First, to implement `MapperInterface`. 
 
-[[[ code('5f71984855') ]]
+[[[ code('5f71984855') ]]]
 
 And second, above the class, to describe what it's mapping *to* and *from*, 
 we need an `#[AsMapper()]` attribute with `from: UserApi::class` and `to: User::class`.
