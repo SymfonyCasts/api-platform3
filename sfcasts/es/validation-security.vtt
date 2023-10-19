@@ -1,0 +1,336 @@
+WEBVTT
+
+00:00:00.036 --> 00:00:02.736 align:middle
+¡Hablemos de validación!
+
+00:00:03.186 --> 00:00:07.386 align:middle
+Cuando ->post() a nuestra ruta, el objeto
+interno será nuestro objeto UserApi...
+
+00:00:07.596 --> 00:00:09.906 align:middle
+lo que significa que eso
+es lo que se validará.
+
+00:00:10.726 --> 00:00:14.316 align:middle
+Observa. No envíes ningún
+campo a la petición POST...
+
+00:00:14.316 --> 00:00:20.366 align:middle
+y ejecuta la prueba: Oh uh: ¡error 500!
+
+00:00:20.816 --> 00:00:22.656 align:middle
+Y... Apuesto a que puedes adivinar por qué.
+
+00:00:23.296 --> 00:00:28.036 align:middle
+Dice: User::setEmail(): Argument
+#1 ($email) must be of type string
+
+00:00:28.036 --> 00:00:30.226 align:middle
+Procedente de nuestro procesador
+de estado en la línea 59.
+
+00:00:30.666 --> 00:00:37.956 align:middle
+Como no hay ninguna restricción de validación
+en UserApi, la propiedad email sigue siendo null.
+
+00:00:38.656 --> 00:00:44.086 align:middle
+Entonces, aquí en la línea 59, intentamos
+transferir ese nulo email a nuestra entidad.
+
+00:00:44.646 --> 00:00:48.466 align:middle
+No le gusta, hay una breve pelea
+a puñetazos, y vemos este error.
+
+00:00:48.956 --> 00:00:53.706 align:middle
+E incluso si aceptara un valor nulo,
+acabaría fallando en la base de datos
+
+00:00:53.986 --> 00:00:56.526 align:middle
+porque allí no se permite que
+el correo electrónico sea n ulo.
+
+00:00:57.336 --> 00:00:58.986 align:middle
+Nos falta validación.
+
+00:00:59.356 --> 00:01:01.136 align:middle
+Afortunadamente, es fácil añadirla...
+
+00:01:01.256 --> 00:01:06.086 align:middle
+una vez que sepas que la validación tendrá
+lugar en el objeto UserApi, no en la entidad.
+
+00:01:06.696 --> 00:01:11.936 align:middle
+Pero antes de desbocarnos y añadir
+restricciones, especifiquemos el operations...
+
+00:01:12.136 --> 00:01:20.126 align:middle
+para que sólo tengamos las que necesitamos:
+new Get(), new GetCollection(), new Post()...
+
+00:01:20.586 --> 00:01:22.916 align:middle
+le añadiremos algo de
+configuración en un momento...
+
+00:01:23.266 --> 00:01:25.986 align:middle
+así como new Patch() y new Delete().
+
+00:01:27.886 --> 00:01:30.606 align:middle
+Antes, cuando nuestra entidad
+User era la #[ApiResource],
+
+00:01:30.676 --> 00:01:34.326 align:middle
+la operación Post() tenía una
+opción extra validationContext
+
+00:01:34.356 --> 00:01:38.216 align:middle
+con groups establecida en
+Default y postValidation.
+
+00:01:38.276 --> 00:01:42.366 align:middle
+Gracias a ello, cuando se
+producía la operación Post(),
+
+00:01:42.676 --> 00:01:48.426 align:middle
+se ejecutaban todos los validadores normales más
+los que estuvieran en este grupo postValidation.
+
+00:01:48.686 --> 00:01:50.676 align:middle
+Veremos por qué necesitamos
+esto dentro de un momento.
+
+00:01:51.776 --> 00:01:53.496 align:middle
+Vale, ¡hora de las restricciones!
+
+00:01:53.786 --> 00:01:55.466 align:middle
+$id ni siquiera es escribible...
+
+00:01:55.776 --> 00:01:58.076 align:middle
+queremos que $email sea #[NotBlank]...
+
+00:01:58.426 --> 00:01:59.246 align:middle
+y sea un #[Email].
+
+00:01:59.246 --> 00:02:03.016 align:middle
+Queremos que $username sea #[NotBlank]...
+
+00:02:03.406 --> 00:02:05.386 align:middle
+entonces $password es interesante.
+
+00:02:05.386 --> 00:02:10.876 align:middle
+$password debería poder estar en blanco si
+hacemos una petición a PATCH para editarlo...
+
+00:02:11.286 --> 00:02:13.646 align:middle
+pero obligatorio en una petición a POST.
+
+00:02:14.226 --> 00:02:20.266 align:middle
+Para conseguirlo, añade #[NotBlank] pero con
+una opción groups establecida en postValidation.
+
+00:02:21.586 --> 00:02:26.036 align:middle
+Esta restricción sólo se ejecutará cuando
+estemos validando el grupo postValidation...
+
+00:02:26.396 --> 00:02:30.026 align:middle
+lo que significa que sólo se
+ejecutará para la operación Post().
+
+00:02:30.836 --> 00:02:31.966 align:middle
+Bien, ¡con esto debería bastar!
+
+00:02:32.576 --> 00:02:36.516 align:middle
+Ejecuta ahora la prueba: Y...
+
+00:02:36.816 --> 00:02:40.796 align:middle
+¡un bonito código de estado 422! Por
+
+00:02:40.796 --> 00:02:44.216 align:middle
+cierto, otra de las restricciones
+de validación que teníamos antes
+
+00:02:44.216 --> 00:02:46.816 align:middle
+en la entidad User era #[UniqueEntity].
+
+00:02:47.396 --> 00:02:52.186 align:middle
+Eso impedía que alguien creara dos
+usuarios con el mismo email o username.
+
+00:02:52.556 --> 00:02:56.696 align:middle
+No la tenemos en UserApi,
+pero deberíamos tenerla.
+
+00:02:57.406 --> 00:03:02.426 align:middle
+La restricción #[UniqueEntity], por
+desgracia, sólo funciona en entidades...
+
+00:03:02.546 --> 00:03:06.786 align:middle
+así que tendríamos que crear un validador
+personalizado para tenerla en UserApi.
+
+00:03:07.626 --> 00:03:11.036 align:middle
+No vamos a preocuparnos por
+eso, pero quería señalarlo.
+
+00:03:11.566 --> 00:03:14.826 align:middle
+De todos modos, de vuelta a la
+prueba, vuelve a añadir los campos.
+
+00:03:15.276 --> 00:03:16.776 align:middle
+Validación, ¡comprobada!
+
+00:03:17.406 --> 00:03:23.716 align:middle
+Lo siguiente que tenemos que volver a añadir
+-código que solía estar en User - es la seguridad.
+
+00:03:24.176 --> 00:03:29.996 align:middle
+Aquí arriba, en el nivel API, para todo el
+recurso, se requiere is_granted("ROLE_USER").
+
+00:03:30.836 --> 00:03:36.136 align:middle
+Esto significa que tenemos que iniciar sesión para
+utilizar cualquiera de las operaciones de este recurso...
+
+00:03:36.216 --> 00:03:37.406 align:middle
+por defecto.
+
+00:03:37.826 --> 00:03:39.756 align:middle
+Entonces anulamos eso.
+
+00:03:40.636 --> 00:03:46.416 align:middle
+En Post(), definitivamente no podemos estar conectados
+todavía porque estamos registrando a nuestro usuario.
+
+00:03:46.886 --> 00:03:50.686 align:middle
+Digamos que security está configurado
+como is_granted("PUBLIC_ACCESS")
+
+00:03:51.016 --> 00:03:54.996 align:middle
+, que es un atributo
+especial que siempre pasará.
+
+00:03:54.996 --> 00:03:59.646 align:middle
+Aquí abajo para Patch(), teníamos
+security('is_granted("ROLE_USER_EDIT")').
+
+00:04:00.406 --> 00:04:05.346 align:middle
+En nuestra aplicación, hemos decidido que es necesario
+tener este tole especial para poder editar usuarios.
+
+00:04:06.236 --> 00:04:08.716 align:middle
+De acuerdo Vamos a ejecutar
+todas las pruebas para User:
+
+00:04:09.556 --> 00:04:16.446 align:middle
+symfony php bin/phpunit
+tests/Functional/UserResourceTest.php Y...
+
+00:04:16.796 --> 00:04:18.056 align:middle
+oh. ¡No está mal!
+
+00:04:18.326 --> 00:04:19.226 align:middle
+¡Tres de cuatro!
+
+00:04:19.936 --> 00:04:23.136 align:middle
+El fallo viene de .
+testTreasuresCannotBeStolen()
+
+00:04:23.396 --> 00:04:24.736 align:middle
+¡Eso no suena bien!
+
+00:04:25.226 --> 00:04:26.616 align:middle
+Si lo comprobamos...
+
+00:04:27.106 --> 00:04:31.416 align:middle
+ésta es una prueba interesante: hacemos
+que actualice un , ->patch() $user
+
+00:04:31.816 --> 00:04:37.986 align:middle
+y luego intentamos establecer la propiedad a un tesoro
+que es propiedad de un usuario diferente dragonTreasures.
+
+00:04:38.506 --> 00:04:41.796 align:middle
+Puedes ver que este es propiedad
+de ... $dragonTreasure $otherUser
+
+00:04:42.186 --> 00:04:44.306 align:middle
+pero actualmente estamos actualizando . $user
+
+00:04:44.906 --> 00:04:48.476 align:middle
+Lo que estamos intentando hacer
+es robar este $dragonTreasure
+
+00:04:48.476 --> 00:04:51.316 align:middle
+de y convertirlo en parte de . $otherUser $user
+
+00:04:51.956 --> 00:04:57.746 align:middle
+A los dragones no les gusta que les roben, así que estamos
+afirmando que se trata de un código de estado 422...
+
+00:04:58.196 --> 00:05:02.726 align:middle
+porque antes teníamos un validador
+personalizado que lo impedía.
+
+00:05:03.156 --> 00:05:07.416 align:middle
+Bueno, todavía existe -es este -
+TreasuresAllowedOwnerChangeValidator
+
+00:05:07.856 --> 00:05:09.776 align:middle
+pero no se está aplicando a UserApi...
+
+00:05:09.776 --> 00:05:12.556 align:middle
+y hay que actualizarlo
+para que funcione con él.
+
+00:05:12.866 --> 00:05:14.356 align:middle
+Lo haremos más adelante.
+
+00:05:14.896 --> 00:05:20.056 align:middle
+Y lo que es más importante ahora mismo, ¡la
+propiedad ni siquiera es escribible! dragonTreasures
+
+00:05:20.686 --> 00:05:25.856 align:middle
+En , encima de , tenemos . UserApi
+$dragonTreasures writable: false
+
+00:05:25.856 --> 00:05:30.736 align:middle
+Dentro de un rato, vamos a cambiar eso para
+que podamos volver a escribir . dragonTreasures
+
+00:05:31.036 --> 00:05:35.956 align:middle
+Y cuando lo hagamos, traeremos de vuelta ese
+validador y nos aseguraremos de que esta prueba pasa.
+
+00:05:37.216 --> 00:05:40.596 align:middle
+Siguiente: Si observas el procesador
+o el proveedor que hemos creado,
+
+00:05:40.786 --> 00:05:42.526 align:middle
+estas clases son bastante genéricas.
+
+00:05:42.956 --> 00:05:48.696 align:middle
+Casi podrían servir para y una futura
+clase ... UserApi DragonTreasureApi
+
+00:05:48.866 --> 00:05:52.366 align:middle
+y cualquier otra clase DTO que
+creemos vinculada a una entidad.
+
+00:05:52.856 --> 00:05:57.086 align:middle
+La única parte que es específica
+de es el código que mapea hacia User
+
+00:05:57.236 --> 00:06:01.076 align:middle
+y desde la entidad y la clase . User UserApi
+
+00:06:01.196 --> 00:06:03.596 align:middle
+Si pudiéramos manejar ese mapeo...
+
+00:06:03.786 --> 00:06:07.466 align:middle
+en algún sistema que viva fuera de
+nuestro proveedor y procesador...
+
+00:06:07.746 --> 00:06:09.416 align:middle
+podríamos reutilizarlos.
+
+00:06:09.986 --> 00:06:13.256 align:middle
+¡Hagamos esto realidad a continuación!
