@@ -1,0 +1,512 @@
+WEBVTT
+
+00:00:01.086 --> 00:00:03.516 align:middle
+¡Nuestro DragonTreasureApi
+tiene un aspecto estupendo!
+
+00:00:03.806 --> 00:00:06.096 align:middle
+Cuando este recurso era una entidad,
+
+00:00:06.226 --> 00:00:10.646 align:middle
+añadimos unas cuantas personalizaciones
+geniales e incluimos pruebas para ellas.
+
+00:00:11.066 --> 00:00:12.826 align:middle
+El pasado "nos" mola.
+
+00:00:13.256 --> 00:00:16.506 align:middle
+El plan ahora es volver a
+poner esas cosas pieza a pieza
+
+00:00:16.696 --> 00:00:21.886 align:middle
+y ver cómo podemos simplificar la implementación dentro
+de nuestra nueva configuración potenciada por DTO.
+
+00:00:22.846 --> 00:00:28.146 align:middle
+Vuélvete loco y ejecuta todas las pruebas
+del tesoro del dragón: Bastantes fallan...
+
+00:00:28.316 --> 00:00:33.696 align:middle
+y una de ellas dice El código de estado de
+respuesta actual es 422, pero se esperaba 403.
+
+00:00:34.296 --> 00:00:40.866 align:middle
+Este testPostToCreateTreasureDeniedWithoutScope
+está relacionado con la seguridad, y tiene sentido.
+
+00:00:41.156 --> 00:00:44.376 align:middle
+DragonTreasureApi ¡falta
+por completo la seguridad!
+
+00:00:44.436 --> 00:00:49.956 align:middle
+Empieza como hicimos con UserApi:
+especificando las operaciones que queremos.
+
+00:00:51.326 --> 00:00:55.976 align:middle
+Empieza con new Get(), new
+GetCollection(), y new Post().
+
+00:00:56.876 --> 00:01:00.616 align:middle
+En el sistema original, Post() tenía
+una opción security establecida
+
+00:01:00.616 --> 00:01:03.236 align:middle
+en 'is_granted("ROLE_TREASURE_CREATE").
+
+00:01:03.236 --> 00:01:08.316 align:middle
+Esto está directamente relacionado con
+ese fallo de la prueba, que comprueba
+
+00:01:08.316 --> 00:01:10.706 align:middle
+que nuestro token de la API tiene esa función.
+
+00:01:11.556 --> 00:01:14.286 align:middle
+Bueno... si escribo "crear"
+correctamente, al menos.
+
+00:01:15.336 --> 00:01:19.186 align:middle
+También teníamos una operación Patch()
+y eso también tenía una opción security.
+
+00:01:19.616 --> 00:01:24.856 align:middle
+Esto aprovechaba un votador personalizado para
+comprobar si el usuario actual puede EDIT este tesoro.
+
+00:01:25.166 --> 00:01:26.566 align:middle
+Más sobre esto dentro de un minuto.
+
+00:01:27.606 --> 00:01:32.566 align:middle
+Y, por último, teníamos new Delete(), que decidimos
+que sólo podían hacer los administradores.
+
+00:01:33.056 --> 00:01:35.746 align:middle
+Lo reforzamos con is_granted("ROLE_ADMIN").
+
+00:01:37.766 --> 00:01:46.186 align:middle
+Vale, antes tuvimos seis fallos
+y ahora Hemos bajado a cinco.
+
+00:01:46.576 --> 00:01:50.656 align:middle
+¡Progreso! Acerquémonos
+a testPatchToUpdateTreasure
+
+00:01:50.876 --> 00:01:55.846 align:middle
+y ejecutémoslo: Vuelve aquí...
+
+00:01:56.196 --> 00:01:57.456 align:middle
+comprueba lo que está haciendo.
+
+00:01:58.546 --> 00:02:04.996 align:middle
+Vale, crea un User, un tesoro, se registra
+como propietario, intenta cambiar el valor
+
+00:02:04.996 --> 00:02:09.196 align:middle
+de ese tesoro, se asegura de que obtenemos
+un código de estado 200 y, por último,
+
+00:02:09.296 --> 00:02:11.276 align:middle
+comprueba que vemos el valor actualizado.
+
+00:02:12.426 --> 00:02:15.506 align:middle
+Ahora mismo, estamos recibiendo
+un 403 en lugar de un 200.
+
+00:02:15.506 --> 00:02:19.256 align:middle
+Un estado 403 es un fallo de seguridad.
+
+00:02:19.656 --> 00:02:24.106 align:middle
+Por alguna razón, no se nos permite hacer
+una petición a Patch() a este tesoro...
+
+00:02:24.366 --> 00:02:25.896 align:middle
+¡aunque seamos el propietario!
+
+00:02:26.096 --> 00:02:30.966 align:middle
+¡Grosero! Vale: Patch() está
+utilizando is_granted("EDIT", object).
+
+00:02:31.446 --> 00:02:36.536 align:middle
+Esto de "EDIT", object lo gestiona un votante
+personalizado llamado DragonTreasureVoter
+
+00:02:36.706 --> 00:02:38.916 align:middle
+que creamos en un tutorial anterior.
+
+00:02:39.556 --> 00:02:45.916 align:middle
+Así que, o no se está llamando a este votante
+o está diciendo que no deberíamos tener acceso.
+
+00:02:45.976 --> 00:02:49.806 align:middle
+Para ver lo que ocurre bajo el
+capó, dump($attribute, $subject).
+
+00:02:50.986 --> 00:02:55.246 align:middle
+Este método supports() es llamado cada
+vez que se toma una decisión de seguridad
+
+00:02:55.246 --> 00:02:59.056 align:middle
+en todo el sistema, por lo
+que debería ser llamado.
+
+00:02:59.796 --> 00:03:03.106 align:middle
+Cuando volvamos a ejecutar la
+prueba: ¡Ahí está el volcado!
+
+00:03:03.556 --> 00:03:07.136 align:middle
+Vuelca EDIT, que procede
+de la operación Patch().
+
+00:03:07.946 --> 00:03:14.196 align:middle
+Pero aquí está el truco: el objeto es ahora
+un DragonTreasureApi, ¡lo que tiene sentido!
+
+00:03:14.646 --> 00:03:20.766 align:middle
+Pero nuestro DragonTreasureVoter se escribió para
+trabajar con la entidad, no con DragonTreasureApi.
+
+00:03:21.716 --> 00:03:22.796 align:middle
+¡No hay problema!
+
+00:03:23.366 --> 00:03:25.626 align:middle
+Actualicemos este votante
+para que funcione con el DTO.
+
+00:03:26.126 --> 00:03:30.086 align:middle
+Para mayor claridad, cámbiale el
+nombre a DragonTreasureApiVoter.
+
+00:03:31.946 --> 00:03:36.476 align:middle
+Entonces, apoyaremos si
+DragonTreasureApi es el $subject.
+
+00:03:37.036 --> 00:03:40.626 align:middle
+Y aquí abajo, este $subject también
+debería ser DragonTreasureApi.
+
+00:03:41.486 --> 00:03:42.496 align:middle
+dd($subject)...
+
+00:03:42.966 --> 00:03:44.986 align:middle
+y abajo, vamos a arreglar el código.
+
+00:03:45.696 --> 00:03:50.636 align:middle
+Esto dice que si el usuario no tiene
+este rol (en realidad un ámbito,
+
+00:03:50.636 --> 00:03:53.586 align:middle
+que se relaciona con los ámbitos
+de los tokens), devuelve false.
+
+00:03:54.156 --> 00:03:58.906 align:middle
+La parte más importante es la siguiente: si
+el $subject -que es un DragonTreasureApi -
+
+00:03:59.446 --> 00:04:03.806 align:middle
+tiene un propietario que es igual a $user
+-el usuario autenticado actualmente-,
+
+00:04:03.956 --> 00:04:07.006 align:middle
+entonces devuelve true: ¡acceso concedido!
+
+00:04:08.166 --> 00:04:10.016 align:middle
+Comenta este dd() rápidamente.
+
+00:04:10.326 --> 00:04:12.536 align:middle
+Lo que necesitamos ahora es $subject->owner.
+
+00:04:12.536 --> 00:04:15.356 align:middle
+Bueno, eso no está del todo bien...
+
+00:04:15.586 --> 00:04:18.626 align:middle
+y si volvemos a poner ese
+dd(), veremos por qué.
+
+00:04:19.476 --> 00:04:26.186 align:middle
+Ejecuta la prueba: Este volcado -el $subject
+- es, por supuesto, un DragonTreasureApi.
+
+00:04:26.956 --> 00:04:33.596 align:middle
+Pero recuerda que su propiedad owner no
+es una entidad User: es un objeto UserApi.
+
+00:04:33.946 --> 00:04:38.066 align:middle
+Así que no podemos comparar sin más el
+objeto UserApi con el objeto entidad $user.
+
+00:04:38.596 --> 00:04:41.306 align:middle
+También debemos tener cuidado
+debido a nuestro mapeador.
+
+00:04:41.406 --> 00:04:47.526 align:middle
+Gracias a la profundidad, el UserApi no
+está poblado: es un objeto superficial.
+
+00:04:48.146 --> 00:04:53.346 align:middle
+No pasa nada, podemos comparar el id
+de los objetos, pero tenlo en cuenta.
+
+00:04:53.516 --> 00:04:59.666 align:middle
+Así que el tl;dr es: compara la
+propiedad id con $user->getId().
+
+00:05:00.166 --> 00:05:02.936 align:middle
+Ah, y no autocompletó getId()...
+
+00:05:03.146 --> 00:05:07.556 align:middle
+pero podemos ayudar a nuestro editor haciendo
+que instanceof compruebe específicamente
+
+00:05:07.826 --> 00:05:11.916 align:middle
+que se trata de una entidad User, que
+siempre lo será en nuestra aplicación.
+
+00:05:12.806 --> 00:05:14.376 align:middle
+Ahora utiliza getId()...
+
+00:05:14.796 --> 00:05:17.716 align:middle
+y codificaré a la defensiva añadiendo un ?...
+
+00:05:18.196 --> 00:05:21.486 align:middle
+por si este DragonTreasureApi
+no tiene propietario:
+
+00:05:21.696 --> 00:05:24.056 align:middle
+como para un tesoro que
+estamos creando ahora mismo.
+
+00:05:24.146 --> 00:05:27.786 align:middle
+¡Uf! ¡Ve y pruébalo ahora!
+
+00:05:29.226 --> 00:05:32.996 align:middle
+¡Progreso! El código de estado
+de respuesta actual es ahora 415.
+
+00:05:33.436 --> 00:05:36.406 align:middle
+Esto es gracias a un pequeño detalle
+del que hemos hablado varias veces:
+
+00:05:36.956 --> 00:05:39.566 align:middle
+El tipo de contenido
+application/json no es compatible.
+
+00:05:39.676 --> 00:05:44.706 align:middle
+Los tipos MIME admitidos son
+application/merge-patch+json.
+
+00:05:44.706 --> 00:05:48.066 align:middle
+Cuando hacemos una petición PATCH,
+necesitamos tener una clave headers
+
+00:05:48.066 --> 00:05:52.566 align:middle
+con Content-Type establecida en
+application/merge-patch+json.
+
+00:05:53.626 --> 00:05:58.176 align:middle
+La razón por la que antes no necesitábamos
+eso, como mencioné en un tutorial anterior...
+
+00:05:58.526 --> 00:06:02.746 align:middle
+se debe a un extraño asunto
+con los formatos que hizo que,
+
+00:06:02.746 --> 00:06:05.816 align:middle
+accidentalmente, no fuera
+necesario para este recurso.
+
+00:06:06.196 --> 00:06:07.866 align:middle
+Pero ahora sí lo necesitamos.
+
+00:06:08.646 --> 00:06:11.646 align:middle
+Añadámoslo rápidamente a todas
+nuestras peticiones de patch().
+
+00:06:11.946 --> 00:06:13.726 align:middle
+Hay un montón de ellas.
+
+00:06:14.086 --> 00:06:18.086 align:middle
+¡Zoom! ¡Veamos si tenemos suerte!
+
+00:06:19.056 --> 00:06:20.536 align:middle
+Y... ooh...
+
+00:06:20.666 --> 00:06:22.956 align:middle
+se muere. ¡Ha golpeado nuestro vertedero!
+
+00:06:23.286 --> 00:06:26.636 align:middle
+Eso viene de DragonTreasureApiToEntityMapper:
+
+00:06:26.916 --> 00:06:29.296 align:middle
+cuando se envía el owner en el JSON.
+
+00:06:30.356 --> 00:06:33.246 align:middle
+Comenta esto un momento para que
+podamos ver la imagen completa.
+
+00:06:33.816 --> 00:06:39.436 align:middle
+Ejecuta de nuevo la prueba: El código de estado
+de respuesta actual es 200, pero se espera 422.
+
+00:06:39.796 --> 00:06:42.546 align:middle
+Procedente de la línea 157.
+
+00:06:42.966 --> 00:06:46.346 align:middle
+Así que, mirando nuestra
+prueba, la mayor parte pasa.
+
+00:06:46.346 --> 00:06:49.516 align:middle
+La línea 157 está muy abajo.
+
+00:06:50.076 --> 00:06:54.356 align:middle
+Esto significa que podemos enviar una
+petición a patch() ¡y que se actualiza!
+
+00:06:54.706 --> 00:06:57.586 align:middle
+¡Y el flujo completo aquí es fascinante!
+
+00:06:57.806 --> 00:07:03.686 align:middle
+Cuando hacemos una petición patch() a un tesoro, API
+Platform empieza utilizando nuestro proveedor de datos
+
+00:07:03.796 --> 00:07:05.786 align:middle
+para encontrar la entidad DragonTreasure.
+
+00:07:06.246 --> 00:07:09.986 align:middle
+A continuación, la asignamos
+a un objeto DragonTreasureApi.
+
+00:07:10.386 --> 00:07:15.676 align:middle
+A continuación, el nuevo value se deserializa
+en ese DragonTreasureApi. Por último
+
+00:07:15.906 --> 00:07:21.706 align:middle
+, en nuestro procesador, volvemos a
+mapear el DragonTreasureApi actualizado a
+
+00:07:21.706 --> 00:07:26.476 align:middle
+una entidad DragonTreasure, y eso
+es en definitiva lo que se guarda.
+
+00:07:27.206 --> 00:07:30.896 align:middle
+A continuación, el DragonTreasureApi
+se serializa y se devuelve como JSON.
+
+00:07:31.536 --> 00:07:33.066 align:middle
+Así que esto está funcionando...
+
+00:07:33.266 --> 00:07:35.716 align:middle
+y me encanta cómo encajan todas las piezas.
+
+00:07:36.526 --> 00:07:39.086 align:middle
+Donde estamos fallando es aquí abajo.
+
+00:07:39.696 --> 00:07:43.726 align:middle
+Esto comprueba si se nos permite
+cambiar el owner por otro.
+
+00:07:44.286 --> 00:07:47.786 align:middle
+Entramos como $user y editamos
+nuestro propio tesoro...
+
+00:07:48.276 --> 00:07:51.546 align:middle
+¡pero intentamos cambiar el
+tesoro a otro propietario!
+
+00:07:52.156 --> 00:07:56.696 align:middle
+Esto es como un Papá Noel dragón que
+se cuela en las cuevas de otros dragones
+
+00:07:56.696 --> 00:07:59.096 align:middle
+para hacer una entrega nocturna de tesoros.
+
+00:07:59.436 --> 00:08:00.416 align:middle
+Eso es muy bonito...
+
+00:08:00.606 --> 00:08:02.376 align:middle
+pero no es algo que queramos permitir.
+
+00:08:03.216 --> 00:08:06.566 align:middle
+Antes teníamos un validador
+personalizado que lo impedía.
+
+00:08:06.906 --> 00:08:08.886 align:middle
+Así que vamos a volver a añadirlo
+
+00:08:09.556 --> 00:08:12.706 align:middle
+Abre DragonTreasureApi y
+busca la propiedad $owner.
+
+00:08:13.916 --> 00:08:18.756 align:middle
+Añade #[IsValidOwner]: un validador
+que creamos en un tutorial anterior.
+
+00:08:19.396 --> 00:08:21.216 align:middle
+Lo encontrarás en src/Validator/.
+
+00:08:22.686 --> 00:08:26.316 align:middle
+Anteriormente, este validador esperaba
+que su restricción se utilizara
+
+00:08:26.316 --> 00:08:29.086 align:middle
+sobre una propiedad que
+contuviera una entidad User.
+
+00:08:29.586 --> 00:08:33.166 align:middle
+Nosotros lo pondremos sobre una
+propiedad que contenga una UserApi.
+
+00:08:34.046 --> 00:08:38.186 align:middle
+Así que, al igual que con el votante, tenemos
+que actualizarlo para la nueva realidad.
+
+00:08:38.956 --> 00:08:42.906 align:middle
+Justo aquí, assert() que $value es
+un instanceof UserApi. Aquí abajo
+
+00:08:43.986 --> 00:08:48.776 align:middle
+, tenemos que comprobar si el
+valor (es decir, el UserApi que hay
+
+00:08:48.776 --> 00:08:53.016 align:middle
+en esta propiedad) no es igual al
+usuario autenticado actualmente.
+
+00:08:53.756 --> 00:08:58.196 align:middle
+Una vez más, utilizaremos
+el ids para comparar esto.
+
+00:08:58.196 --> 00:09:02.546 align:middle
+Y... también una vez más, utilizaré
+assert() para ayudar a mi editor.
+
+00:09:03.896 --> 00:09:06.426 align:middle
+Ahora... está contento con getId()...
+
+00:09:06.796 --> 00:09:08.756 align:middle
+¡pero no por el punto y coma que me falta!
+
+00:09:10.746 --> 00:09:12.416 align:middle
+¡El momento de la verdad!
+
+00:09:12.636 --> 00:09:16.896 align:middle
+Ejecuta la prueba: ¡Pasa!
+
+00:09:17.186 --> 00:09:20.086 align:middle
+Prueba todo: Y...
+
+00:09:20.696 --> 00:09:23.316 align:middle
+¡ah! Sólo nos quedan tres fallos.
+
+00:09:23.356 --> 00:09:27.676 align:middle
+Y todos están relacionados con lo
+mismo: la propiedad isPublished.
+
+00:09:28.276 --> 00:09:32.576 align:middle
+Nuestro DragonTreasureApi ni siquiera
+tiene aún la propiedad isPublished.
+
+00:09:32.866 --> 00:09:36.916 align:middle
+La hemos dejado para el final porque
+es un poco diferente e interesante.
+
+00:09:37.376 --> 00:09:38.736 align:middle
+Vamos a abordarla a continuación.
