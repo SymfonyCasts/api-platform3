@@ -1,0 +1,428 @@
+WEBVTT
+
+00:00:01.116 --> 00:00:04.836 align:middle
+Dirígete a /api/users.jsonld para ver...
+
+00:00:05.536 --> 00:00:08.526 align:middle
+una referencia circular
+procedente del serializador.
+
+00:00:08.756 --> 00:00:14.686 align:middle
+¡Caramba! Pensemos: API Platform serializa
+todo lo que devolvemos del proveedor de estado.
+
+00:00:15.076 --> 00:00:15.986 align:middle
+Así que dirígete a ....
+
+00:00:16.286 --> 00:00:18.486 align:middle
+y busca dónde se crea la colección.
+
+00:00:19.916 --> 00:00:21.476 align:middle
+Vuelca los DTOs.
+
+00:00:21.846 --> 00:00:25.406 align:middle
+Esto es lo que se está serializando,
+así que el problema debe estar aquí.
+
+00:00:25.406 --> 00:00:27.536 align:middle
+Actualiza y...
+
+00:00:27.956 --> 00:00:31.156 align:middle
+ninguna sorpresa: vemos 5 objetos UserApi.
+
+00:00:31.656 --> 00:00:36.656 align:middle
+Ah, pero aquí está el problema: el
+campo dragonTreasures contiene una matriz
+
+00:00:36.656 --> 00:00:39.376 align:middle
+de objetos de entidad DragonTreasure...
+
+00:00:39.606 --> 00:00:43.346 align:middle
+y cada uno tiene un owner que
+apunta a una entidad User...
+
+00:00:43.556 --> 00:00:47.176 align:middle
+y que vuelve a apuntar a una colección
+de entidades DragonTreasure...
+
+00:00:47.406 --> 00:00:51.416 align:middle
+lo que hace que el serializador
+serialice eternamente.
+
+00:00:51.416 --> 00:00:53.766 align:middle
+¡Pero ése ni siquiera
+es el verdadero problema!
+
+00:00:54.136 --> 00:00:55.686 align:middle
+Lo sé, estoy lleno de buenas noticias.
+
+00:00:56.146 --> 00:01:00.066 align:middle
+El verdadero problema es que el objeto
+UserApi debería referirse realmente
+
+00:01:00.066 --> 00:01:04.256 align:middle
+a una entidad DragonTreasureApi,
+no a una DragonTreasure.
+
+00:01:04.886 --> 00:01:09.136 align:middle
+En UserApi, ahora será un
+array de DragonTreasureApi.
+
+00:01:09.136 --> 00:01:14.626 align:middle
+Una vez que empecemos a seguir la ruta de
+los DTO, para conseguir la máxima fluidez,
+
+00:01:14.916 --> 00:01:18.276 align:middle
+deberíamos relacionar los DTO con otros DTO...
+
+00:01:18.276 --> 00:01:20.416 align:middle
+en lugar de mezclarlos con entidades.
+
+00:01:21.216 --> 00:01:26.726 align:middle
+Para rellenar los objetos DTO, ve
+al mapeador: UserEntityToApiMapper.
+
+00:01:27.716 --> 00:01:31.946 align:middle
+Aquí abajo, en dragonTreasures,
+ya no podemos hacerlo
+
+00:01:31.946 --> 00:01:35.726 align:middle
+porque eso nos dará objetos
+entidad DragonTreasure.
+
+00:01:35.726 --> 00:01:41.406 align:middle
+Lo que queremos hacer básicamente es convertir
+de DragonTreasure a DragonTreasureApi.
+
+00:01:42.056 --> 00:01:45.586 align:middle
+Y así, una vez más, ¡es
+el micro mapeador al rescate!
+
+00:01:45.586 --> 00:01:52.056 align:middle
+Añade public function __construct() con
+private MicroMapperInterface $microMapper.
+
+00:01:54.616 --> 00:02:02.036 align:middle
+Aquí abajo, añade algo de código extravagante:
+$dto->dragonTreasures = ajustado a array_map(),
+
+00:02:02.506 --> 00:02:05.206 align:middle
+con una función que tiene
+un argumento DragonTreasure.
+
+00:02:05.946 --> 00:02:07.486 align:middle
+Terminaremos eso en un segundo...
+
+00:02:07.836 --> 00:02:10.486 align:middle
+pero primero pasa el array
+sobre el que hará el bucle:
+
+00:02:10.626 --> 00:02:14.096 align:middle
+$entity->getPublishedDragonTreasures()->toArray().
+Entonces
+
+00:02:14.136 --> 00:02:20.166 align:middle
+obtenemos un array de los objetos DragonTreasure
+publicados y PHP hace un bucle sobre ellos y
+
+00:02:20.306 --> 00:02:23.636 align:middle
+llama a nuestra función para cada uno
+- pasándole el DragonTreasure. Lo que
+
+00:02:24.226 --> 00:02:30.446 align:middle
+devolvamos se convertirá en un elemento dentro de
+un nuevo array que se establece en dragonTreasures. Y
+
+00:02:30.956 --> 00:02:34.556 align:middle
+lo que queremos devolver es
+un objeto DragonTreasureApi.
+
+00:02:34.826 --> 00:02:35.076 align:middle
+Hazlo
+
+00:02:35.076 --> 00:02:38.686 align:middle
+con $this->microMapper->map($dragonTreasure,
+DragonTreasureApi::class).
+
+00:02:38.826 --> 00:02:42.336 align:middle
+¡Genial!
+
+00:02:42.376 --> 00:02:45.006 align:middle
+Cuando refrescamos para probarlo ... nos
+
+00:02:45.356 --> 00:02:48.546 align:middle
+encontramos con un problema de referencia
+circular diferente. ¡Qué divertido!
+
+00:02:48.776 --> 00:02:51.676 align:middle
+Éste viene de MicroMapper... y es
+
+00:02:52.146 --> 00:02:57.536 align:middle
+un problema que ocurrirá siempre que tengas
+relaciones que hagan referencia unas a otras.
+
+00:02:57.596 --> 00:03:04.176 align:middle
+Piénsalo: pedimos a Micro Mapper que convierta una
+entidad de DragonTreasure a DragonTreasureApi. Simple.
+
+00:03:04.696 --> 00:03:08.536 align:middle
+Para ello, utiliza nuestro mapeador. ¿Y
+
+00:03:09.096 --> 00:03:10.166 align:middle
+adivina qué? En nuestro mapeador, le pedimos
+
+00:03:10.506 --> 00:03:17.336 align:middle
+que convierta la owner -una entidad User - en una
+instancia de UserApi . Para ello, Micro Mapper
+
+00:03:18.116 --> 00:03:24.146 align:middle
+vuelve a UserEntityToApiMapper y... el
+
+00:03:24.216 --> 00:03:26.076 align:middle
+proceso se repite. Estamos en
+
+00:03:26.356 --> 00:03:32.746 align:middle
+un bucle: para convertir una entidad User, necesitamos
+convertir una entidad DragonTreasure... lo que
+
+00:03:33.066 --> 00:03:35.436 align:middle
+significa que necesitamos
+convertir su owner... que
+
+00:03:35.736 --> 00:03:38.286 align:middle
+es esa misma entidad User. La solución
+
+00:03:38.286 --> 00:03:42.826 align:middle
+está en tu mapeador, al llamar
+a la función map(). Pasa
+
+00:03:43.476 --> 00:03:46.566 align:middle
+un tercer argumento, que es
+un "contexto" ... una especie
+
+00:03:46.806 --> 00:03:48.696 align:middle
+de matriz de opciones.
+
+00:03:48.956 --> 00:03:54.096 align:middle
+Puedes pasar lo que quieras, pero el propio Micro
+Mapper sólo tiene 1 opción que le interese.
+
+00:03:54.446 --> 00:03:57.956 align:middle
+PonMicroMapperInterface::MAX_DEPTH a 1.
+
+00:03:57.956 --> 00:04:00.356 align:middle
+Veamos qué hace eso. Cuando
+
+00:04:00.766 --> 00:04:01.806 align:middle
+actualizamos...
+
+00:04:02.556 --> 00:04:05.026 align:middle
+mira el volcado, que viene
+del proveedor de estado.
+
+00:04:05.566 --> 00:04:08.946 align:middle
+Mapea las entidades User a objetos UserApi... y
+
+00:04:08.996 --> 00:04:10.346 align:middle
+vemos 5.
+
+00:04:11.126 --> 00:04:15.696 align:middle
+También podemos ver que la propiedad
+dragonTreasures se rellena con
+
+00:04:15.696 --> 00:04:18.146 align:middle
+objetosDragonTreasureApi. Así que
+
+00:04:18.426 --> 00:04:22.516 align:middle
+hizo el mapeo de DragonTreasure
+a DragonTreasureApi. Pero
+
+00:04:22.516 --> 00:04:29.066 align:middle
+cuando fue a mapear el owner de ese
+DragonTreasure a un UserApi , está ahí... pero
+
+00:04:29.416 --> 00:04:30.926 align:middle
+está vacío. Es
+
+00:04:31.416 --> 00:04:33.016 align:middle
+un mapeo superficial. Cuando
+
+00:04:33.016 --> 00:04:38.766 align:middle
+pasamos MAX_DEPTH =>
+1, estamos diciendo: ¡Eh!
+
+00:04:39.086 --> 00:04:44.286 align:middle
+Quiero que mapees completamente esta entidad
+DragonTreasure a DragonTreasureApi. Ésa
+
+00:04:45.196 --> 00:04:46.656 align:middle
+es la profundidad 1. Pero
+
+00:04:47.236 --> 00:04:52.656 align:middle
+si se vuelve a llamar al micro mapeador para
+mapear algo más profundo, salta eso. Bueno,
+
+00:04:53.226 --> 00:04:55.016 align:middle
+no saltar exactamente.
+Cuando se llama al mapeador
+
+00:04:55.496 --> 00:04:59.686 align:middle
+la 2ª vez para mapear la
+entidad User a UserApi,
+
+00:05:00.026 --> 00:05:02.466 align:middle
+se llama al método load()
+de ese mapeador... pero
+
+00:05:02.996 --> 00:05:04.706 align:middle
+no a populate(). Así que acabamos
+
+00:05:05.186 --> 00:05:08.976 align:middle
+con un objeto UserApi con un id... pero
+
+00:05:09.456 --> 00:05:10.676 align:middle
+nada más. Eso
+
+00:05:11.116 --> 00:05:13.076 align:middle
+soluciona nuestro bucle circular. Y,
+
+00:05:13.766 --> 00:05:17.406 align:middle
+en realidad, no nos importa que la propiedad
+owner sea un objeto vacío... ¡porque
+
+00:05:17.866 --> 00:05:20.376 align:middle
+nuestro JSON nunca se renderiza
+tan profundamente! Observa.
+
+00:05:21.636 --> 00:05:25.716 align:middle
+Elimina el dd() para que
+podamos ver los resultados. Y...
+
+00:05:25.716 --> 00:05:27.696 align:middle
+¡perfecto! ¡ El
+
+00:05:27.856 --> 00:05:30.126 align:middle
+resultado es exactamente el esperado! Para
+
+00:05:30.216 --> 00:05:33.686 align:middle
+DragonTreasures, sólo
+mostramos el IRI. Así que , por
+
+00:05:34.116 --> 00:05:38.896 align:middle
+regla general, cuando llames a un micro
+mapeador desde dentro de una clase mapeadora,
+
+00:05:39.176 --> 00:05:42.346 align:middle
+probablemente querrás establecer
+MAX_DEPTH en 1. ¡Diablos,
+
+00:05:42.926 --> 00:05:45.836 align:middle
+podríamos establecer MAX_DEPTH en 0! Aunque
+
+00:05:46.056 --> 00:05:49.686 align:middle
+la única razón para hacerlo sería
+una ligera mejora del rendimiento. Esta
+
+00:05:50.926 --> 00:05:57.216 align:middle
+vez, cuando mapeemos $dragonTreasure a DragonTreasureApi,
+prueba con MAX_DEPTH => 0. Esto hará que
+
+00:05:57.216 --> 00:06:01.186 align:middle
+la profundidad sea golpeada
+inmediatamente. Cuando
+
+00:06:01.766 --> 00:06:05.676 align:middle
+vaya a mapear la entidad
+DragonTreasure a DragonTreasureApi,
+
+00:06:05.766 --> 00:06:09.886 align:middle
+utilizará el mapeador, pero sólo
+llamará al método load(). El método
+
+00:06:10.776 --> 00:06:13.156 align:middle
+populate() nunca será llamado.
+
+00:06:14.346 --> 00:06:15.556 align:middle
+Vuelve a colocar el dd(). Lo que obtenemos
+
+00:06:15.556 --> 00:06:21.546 align:middle
+es un objeto superficial
+para DragonTreasureApi. Esto
+
+00:06:22.466 --> 00:06:25.986 align:middle
+puede parecer raro, pero
+técnicamente está bien... porque
+
+00:06:26.396 --> 00:06:31.996 align:middle
+esta matriz dragonTreasures se va
+a representar como cadenas IRI... y
+
+00:06:32.266 --> 00:06:36.346 align:middle
+lo único que necesita API Platform
+para construir ese IRI es... ¡el
+
+00:06:36.566 --> 00:06:39.526 align:middle
+id! ¡Compruébalo! Elimina
+
+00:06:39.906 --> 00:06:41.936 align:middle
+el volcado y vuelve a cargar la página. Tiene
+
+00:06:42.986 --> 00:06:45.006 align:middle
+exactamente el mismo aspecto.
+
+00:06:45.626 --> 00:06:48.046 align:middle
+Acabamos de ahorrarnos un poquito
+de trabajo. Así que, para ir sobre
+
+00:06:48.606 --> 00:06:54.116 align:middle
+seguro -en caso de que incrustes el
+objeto- utiliza MAX_DEPTH => 1. Pero
+
+00:06:54.606 --> 00:06:59.436 align:middle
+si sabes que utilizas IRI,
+puedes poner MAX_DEPTH en 0. Por
+
+00:07:01.066 --> 00:07:07.876 align:middle
+aquí, hagamos lo mismo: MicroMapperInterface::MAX_DEPTH
+ajustado a 0 porque sabemos que
+
+00:07:08.606 --> 00:07:12.006 align:middle
+aquí también sólo mostramos el IRI.
+
+00:07:13.256 --> 00:07:19.126 align:middle
+Otra cosa que habrás notado es que dragonTreasures
+de repente parece un objeto, con sus
+
+00:07:19.366 --> 00:07:22.496 align:middle
+corchetes en lugar de corchetes. Bueno,
+
+00:07:23.276 --> 00:07:29.986 align:middle
+en PHP es una matriz - array_map devuelve una
+matriz con la clave 0 establecida en algo y
+
+00:07:30.506 --> 00:07:32.286 align:middle
+la clave 2 establecida en algo. Pero debido a
+
+00:07:32.996 --> 00:07:37.946 align:middle
+que falta la clave 1, cuando
+se serializa a JSON parece
+
+00:07:37.946 --> 00:07:41.406 align:middle
+una matriz asociativa, o
+un "objeto" en JSON. Si
+
+00:07:41.406 --> 00:07:46.736 align:middle
+cambiamos toArray() por getValues() y
+actualizamos la página... ¡perfecto!
+
+00:07:47.246 --> 00:07:50.826 align:middle
+Volvemos a tener una matriz
+normal de elementos. Siguiente:
+
+00:07:50.826 --> 00:07:57.266 align:middle
+Podemos leer de nuestro nuevo recurso
+DragonTreasureApi, pero aún no podemos escribir en él.
+
+00:07:57.806 --> 00:08:04.126 align:middle
+Creemos un DragonTreasureApiToEntityMapper y volvamos
+a añadir cosas como la seguridad y la validación.
