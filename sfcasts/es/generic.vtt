@@ -1,0 +1,230 @@
+WEBVTT
+
+00:00:01.076 --> 00:00:05.026 align:middle
+¡Nuestro UserAPI es ahora una clase
+de recursos API totalmente funcional!
+
+00:00:05.326 --> 00:00:10.446 align:middle
+Tenemos nuestro EntityToDtoStateProvider, que
+llama al proveedor de estado central de Doctrine,
+
+00:00:10.796 --> 00:00:15.596 align:middle
+y que nos proporciona todo lo bueno, como
+la consulta, el filtrado y la paginación.
+
+00:00:16.256 --> 00:00:19.656 align:middle
+Luego, aquí abajo, aprovechamos
+el sistema MicroMapper
+
+00:00:19.696 --> 00:00:23.256 align:middle
+para convertir los objetos
+$entity en objetos UserApi.
+
+00:00:23.596 --> 00:00:25.696 align:middle
+Y hacemos lo mismo en el procesador.
+
+00:00:26.136 --> 00:00:30.556 align:middle
+Utilizamos MicroMapper para pasar
+de UserApi a nuestra entidad User...
+
+00:00:31.066 --> 00:00:36.036 align:middle
+y luego llamamos al procesador de estados del núcleo
+de Doctrine para que se encargue de guardar o borrar.
+
+00:00:36.376 --> 00:00:37.566 align:middle
+¡Me encanta!
+
+00:00:38.176 --> 00:00:43.336 align:middle
+Nuestro sueño es crear un
+DragonTreasureApi y repetir toda esta magia.
+
+00:00:43.336 --> 00:00:48.076 align:middle
+Y si podemos hacer que estas clases de procesador
+y proveedor sean completamente genéricas...
+
+00:00:48.386 --> 00:00:50.226 align:middle
+eso será superfácil.
+
+00:00:50.686 --> 00:00:51.576 align:middle
+Así que ¡hagámoslo!
+
+00:00:52.236 --> 00:00:53.276 align:middle
+Empieza en el proveedor. Si buscas
+
+00:00:53.806 --> 00:00:58.186 align:middle
+"usuario", sólo hay un lugar:
+donde le decimos a MicroMapper
+
+00:00:58.186 --> 00:01:00.606 align:middle
+en qué clase convertir nuestro $entity.
+
+00:01:01.246 --> 00:01:03.646 align:middle
+¿Podemos... obtenerlo dinámicamente?
+
+00:01:04.266 --> 00:01:08.276 align:middle
+Aquí arriba, nuestro proveedor recibe
+los archivos $operation y $context.
+
+00:01:08.556 --> 00:01:10.316 align:middle
+Vamos a volcar ambos.
+
+00:01:12.326 --> 00:01:13.956 align:middle
+Como esto está en nuestro proveedor...
+
+00:01:14.346 --> 00:01:17.136 align:middle
+podemos refrescar la ruta de la Colección y...
+
+00:01:17.606 --> 00:01:20.626 align:middle
+¡boom! Se trata de una
+operación GetCollection...
+
+00:01:20.916 --> 00:01:22.236 align:middle
+y compruébalo.
+
+00:01:22.646 --> 00:01:27.476 align:middle
+¡El objeto de la operación almacena la
+clase ApiResource a la que está unido!
+
+00:01:28.306 --> 00:01:34.086 align:middle
+Así que aquí es sencillo: $resourceClass
+= $operation->getClass().
+
+00:01:35.006 --> 00:01:38.266 align:middle
+Ahora que tenemos eso, aquí abajo,
+conviértelo en un argumento -
+
+00:01:38.756 --> 00:01:42.246 align:middle
+string $resourceClass - y pásalo en su lugar.
+
+00:01:44.816 --> 00:01:50.596 align:middle
+Por último, tenemos que añadir $resourceClass como
+argumento cuando llamemos a mapEntityToDto() ahí...
+
+00:01:51.306 --> 00:01:52.466 align:middle
+y justo ahí.
+
+00:01:53.906 --> 00:01:57.526 align:middle
+Elimina la declaración use
+que ya no necesitamos y...
+
+00:01:58.176 --> 00:01:58.886 align:middle
+así de fácil...
+
+00:01:59.106 --> 00:02:00.616 align:middle
+¡sigue funcionando!
+
+00:02:01.096 --> 00:02:02.066 align:middle
+¡Estamos en racha!
+
+00:02:02.386 --> 00:02:05.006 align:middle
+Dirígete al procesador y busca "usuario".
+
+00:02:05.786 --> 00:02:11.036 align:middle
+Ah, tenemos el mismo problema excepto que,
+esta vez, necesitamos la clase de entidad User.
+
+00:02:11.806 --> 00:02:14.486 align:middle
+¡Vale! Arriba, dd($operation).
+
+00:02:14.916 --> 00:02:20.896 align:middle
+Y para ello, necesitamos ejecutar una de
+nuestras pruebas: symfony php bin/phpunit
+
+00:02:20.966 --> 00:02:24.546 align:middle
+--filter=testPostToCreateUser Y...
+
+00:02:24.856 --> 00:02:27.426 align:middle
+¡lo conseguimos! Vemos la operación Post...
+
+00:02:27.616 --> 00:02:30.616 align:middle
+y la clase es, por supuesto, UserApi.
+
+00:02:30.956 --> 00:02:33.606 align:middle
+Pero esta vez necesitamos la clase User.
+
+00:02:34.506 --> 00:02:41.826 align:middle
+Recuerda: en UserApi, utilizamos stateOptions para
+decir que UserApi está vinculada a la entidad User.
+
+00:02:42.636 --> 00:02:46.006 align:middle
+Y ahora, podemos leer esta
+información de la operación.
+
+00:02:46.676 --> 00:02:48.216 align:middle
+Si nos desplazamos un poco hacia abajo...
+
+00:02:48.716 --> 00:02:55.106 align:middle
+ahí está: la propiedad stateOptions con
+el objeto Options, y entityClass dentro.
+
+00:02:55.686 --> 00:02:58.846 align:middle
+¡Genial! De vuelta al
+procesador, hacia arriba...
+
+00:02:59.106 --> 00:03:04.576 align:middle
+quita el dd() y empieza con $stateOptions
+= $operation->getStateOptions().
+
+00:03:05.236 --> 00:03:09.116 align:middle
+Luego, para ayudar a mi editor (y
+también por si configuro algo mal),
+
+00:03:09.116 --> 00:03:14.266 align:middle
+assert($stateOptions instanceof
+Options) (el del ORM Doctrine).
+
+00:03:14.916 --> 00:03:18.376 align:middle
+Puedes utilizar diferentes clases
+Options para $stateOptions...
+
+00:03:18.586 --> 00:03:23.926 align:middle
+por ejemplo, si estás obteniendo datos de ElasticSearch,
+pero sabemos que estamos utilizando esta de Doctrine.
+
+00:03:25.056 --> 00:03:29.566 align:middle
+A continuación, digamos $entityClass
+= $stateOptions->getEntityClass().
+
+00:03:30.716 --> 00:03:37.996 align:middle
+Y... no necesitamos este assert() de aquí abajo,
+entonces pasa $entityClass a mapDtoToEntity().
+
+00:03:38.076 --> 00:03:42.776 align:middle
+Por último, úsalo con string $entityClass...
+
+00:03:42.776 --> 00:03:44.446 align:middle
+y pásalo también aquí.
+
+00:03:46.446 --> 00:03:47.716 align:middle
+Cuando ahora busquemos "usuario"...
+
+00:03:47.926 --> 00:03:50.096 align:middle
+podemos deshacernos de las
+dos declaraciones use...
+
+00:03:50.476 --> 00:03:52.506 align:middle
+y... ¡estamos limpios!
+
+00:03:52.686 --> 00:03:53.756 align:middle
+¡Es genérico!
+
+00:03:54.276 --> 00:03:55.346 align:middle
+¡Prueba el test!
+
+00:03:57.016 --> 00:03:57.806 align:middle
+¡Ya está!
+
+00:03:57.806 --> 00:03:58.816 align:middle
+¡Estamos listos!
+
+00:03:59.066 --> 00:04:01.616 align:middle
+¡Tenemos un proveedor y un
+procesador reutilizables!
+
+00:04:02.476 --> 00:04:07.236 align:middle
+A continuación, creemos una clase
+DragonTreasureApi, repitamos esta magia,
+
+00:04:07.366 --> 00:04:10.746 align:middle
+¡y veamos lo rápido que
+conseguimos que las cosas enc ajen!
