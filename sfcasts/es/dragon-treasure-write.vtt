@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:03.896 align:middle
+Vamos a hacer que nuestras rutas de
+escritura funcionen en DragonTreasureApi
+
+00:00:04.786 --> 00:00:08.466 align:middle
+Si miras aquí abajo, tenemos una prueba
+llamada testPostToCreateTreasure().
+
+00:00:08.876 --> 00:00:10.266 align:middle
+¡Suena bien!
+
+00:00:10.746 --> 00:00:15.176 align:middle
+En tu terminal, ejecútalo:
+symfony php bin/phpunit
+
+00:00:15.176 --> 00:00:18.476 align:middle
+--filter=testPostToCreateTreasure Y...
+
+00:00:18.716 --> 00:00:20.526 align:middle
+¡hace kaboom!
+
+00:00:21.236 --> 00:00:22.646 align:middle
+Ejecuta unas cuantas pruebas...
+
+00:00:22.646 --> 00:00:29.606 align:middle
+y todas dicen lo mismo: No se ha encontrado ningún
+mapeador para DragonTreasureApi -> DragonTreasure Vale,
+
+00:00:29.736 --> 00:00:33.026 align:middle
+cuando hacemos POST, se deserializa el JSON
+
+00:00:33.026 --> 00:00:37.426 align:middle
+en un nuevo objeto DragonTreasureApi
+y luego se llama a nuestro procesador.
+
+00:00:37.816 --> 00:00:42.816 align:middle
+Nuestro procesador toma ese objeto
+API e intenta utilizar MicroMapper
+
+00:00:42.816 --> 00:00:45.396 align:middle
+para mapearlo a la entidad DragonTreasure.
+
+00:00:45.816 --> 00:00:51.156 align:middle
+Como nos falta el mapeador de
+DragonTreasureApi a DragonTreasure, ¡kablooie!
+
+00:00:51.906 --> 00:00:53.126 align:middle
+¡Ya sabemos cómo funciona!
+
+00:00:53.566 --> 00:00:57.576 align:middle
+En src/Mapper/, crea un nuevo
+DragonTreasureApiToEntityMapper.
+
+00:00:59.586 --> 00:01:06.096 align:middle
+Dentro, implementa MapperInterface, utiliza
+#[AsMapper()] para decir que estamos mapeando desde:
+
+00:01:06.096 --> 00:01:10.356 align:middle
+DragonTreasureApi::class,
+to: DragonTreasure::class...
+
+00:01:10.996 --> 00:01:12.736 align:middle
+y añade los dos métodos.
+
+00:01:13.616 --> 00:01:17.046 align:middle
+Esto será muy similar a
+nuestro UserApiToEntityMapper.
+
+00:01:17.626 --> 00:01:21.916 align:middle
+En load(), si tenemos un ID,
+queremos consultar ese objeto.
+
+00:01:22.796 --> 00:01:27.646 align:middle
+Añade un constructor, con private
+DragonTreasureRepository $repository.
+
+00:01:29.116 --> 00:01:33.416 align:middle
+Aquí abajo, incluye el
+ya familiar $dto = $from,
+
+00:01:33.416 --> 00:01:37.406 align:middle
+y assert que $dto es un
+instanceof DragonTreasureApi.
+
+00:01:38.926 --> 00:01:42.536 align:middle
+Para hacernos la vida aún más fácil, roba
+algo de código de nuestro otro mapeador.
+
+00:01:44.516 --> 00:01:45.456 align:middle
+Copia esto...
+
+00:01:45.796 --> 00:01:47.146 align:middle
+y ponlo aquí.
+
+00:01:48.686 --> 00:01:51.456 align:middle
+Pero pulsa "Cancelar" porque no
+necesitamos esa declaración use...
+
+00:01:51.736 --> 00:01:53.836 align:middle
+y cámbiale el nombre a $entity.
+
+00:01:53.876 --> 00:02:00.306 align:middle
+Así que si el $dto tiene un id, significa que lo
+estamos editando y queremos encontrar el existente.
+
+00:02:00.736 --> 00:02:03.516 align:middle
+Si no, vamos a crear un new DragonTreasure().
+
+00:02:03.956 --> 00:02:08.146 align:middle
+Y aunque no debería ocurrir, tenemos un
+Exception por si no encontramos el tesoro.
+
+00:02:09.086 --> 00:02:12.176 align:middle
+Una cosa interesante de la
+entidad DragonTreasure es
+
+00:02:12.176 --> 00:02:15.736 align:middle
+que tiene un argumento constructor: el nombre.
+
+00:02:16.176 --> 00:02:21.566 align:middle
+Y no tenemos un método setName(): la única forma
+de establecerlo es a través del constructor.
+
+00:02:21.976 --> 00:02:26.746 align:middle
+Así que, para transferir el name del
+$dto a la entidad, pásalo al constructor.
+
+00:02:27.666 --> 00:02:29.226 align:middle
+Dos notas rápidas sobre esto.
+
+00:02:29.516 --> 00:02:35.236 align:middle
+Sí, esto significa que no puedes cambiar el
+nombre de un tesoro existente a través de la API.
+
+00:02:35.886 --> 00:02:41.526 align:middle
+Y eso es lo esperado: si hemos escrito nuestro
+DragonTreasure sin un método setName(),
+
+00:02:41.706 --> 00:02:45.806 align:middle
+entonces pretendemos que el nombre se
+establezca una vez y nunca se cambie.
+
+00:02:46.376 --> 00:02:52.656 align:middle
+En segundo lugar, éste es el único caso en el que
+rellenamos un poco de información dentro de load().
+
+00:02:53.246 --> 00:02:58.286 align:middle
+Normalmente dejamos ese trabajo para populate(),
+pero aquí no se puede evitar, y no pasa nada.
+
+00:02:59.046 --> 00:03:01.996 align:middle
+Dirígete a populate() y empieza
+con el mismo código de load().
+
+00:03:02.686 --> 00:03:05.306 align:middle
+Añade también $entity = $to...
+
+00:03:05.306 --> 00:03:08.996 align:middle
+y un assert() más que $entity
+instanceof DragonTreasure.
+
+00:03:10.046 --> 00:03:11.926 align:middle
+Digamos TODO por un momento.
+
+00:03:11.986 --> 00:03:15.196 align:middle
+Quiero asegurarme de que al menos
+se llama a nuestro mapeador.
+
+00:03:15.986 --> 00:03:21.166 align:middle
+Antes, cuando ejecutamos la prueba, ejecutó
+tres pruebas que coinciden con el nombre.
+
+00:03:21.466 --> 00:03:24.176 align:middle
+Así que hagamos que el método
+sea un poco más único.
+
+00:03:24.556 --> 00:03:26.696 align:middle
+Se llama testPostToCreateTreasure()
+
+00:03:26.906 --> 00:03:31.586 align:middle
+y utiliza el mecanismo de inicio de sesión
+normal, así que añade WithLogin al final.
+
+00:03:32.226 --> 00:03:37.276 align:middle
+Cuando ejecutemos la prueba con
+el nuevo nombre: ¡Un error 500!
+
+00:03:37.776 --> 00:03:38.966 align:middle
+Veamos qué ocurre.
+
+00:03:40.416 --> 00:03:41.346 align:middle
+Vale, ¡bien!
+
+00:03:41.626 --> 00:03:42.596 align:middle
+¡Hemos llegado más lejos!
+
+00:03:42.936 --> 00:03:45.876 align:middle
+Ahora está explotando cuando
+llega a la base de datos.
+
+00:03:46.176 --> 00:03:50.216 align:middle
+Así que está intentando guardar, y se
+está quejando porque owner_id es nulo.
+
+00:03:50.686 --> 00:03:55.276 align:middle
+Recordatorio: se supone que
+el campo owner es opcional.
+
+00:03:55.806 --> 00:04:00.946 align:middle
+Si no pasamos un propietario, debería establecerse
+automáticamente en el usuario autenticado.
+
+00:04:01.356 --> 00:04:05.106 align:middle
+Antes teníamos código para eso, y lo
+volveremos a añadir dentro de un momento.
+
+00:04:05.406 --> 00:04:10.276 align:middle
+Pero este fallo en realidad viene de
+antes: de la línea 71, justo aquí.
+
+00:04:10.956 --> 00:04:13.746 align:middle
+Esta prueba comienza
+comprobando nuestra validación.
+
+00:04:14.136 --> 00:04:19.446 align:middle
+No envía ningún JSON, y se asegura de que nuestras
+restricciones de validación salvan el día.
+
+00:04:19.966 --> 00:04:25.836 align:middle
+No tenemos restricciones de validación, así que
+en lugar de fallar la validación, intenta guardar.
+
+00:04:26.076 --> 00:04:28.786 align:middle
+Boo. Volvamos a añadir las restricciones...
+
+00:04:29.066 --> 00:04:31.566 align:middle
+esta vez a nuestra clase API.
+
+00:04:31.566 --> 00:04:37.026 align:middle
+Para $name, #[NotBlank],
+$description, #[NotBlank],
+
+00:04:38.386 --> 00:04:40.886 align:middle
+$value será #[GreaterThanOrEqual(0)]
+
+00:04:41.606 --> 00:04:46.956 align:middle
+y $coolFactor será #[GreaterThanOrEqual(0)]
+y también #[LessThanOrEqual(10)].
+
+00:04:48.186 --> 00:04:49.586 align:middle
+Vuelve a hacer la prueba.
+
+00:04:49.586 --> 00:04:52.816 align:middle
+Probablemente nos encontremos
+con el mismo error y...
+
+00:04:53.006 --> 00:04:54.666 align:middle
+sip - error 500.
+
+00:04:55.176 --> 00:04:58.486 align:middle
+Pero ¡mira! ¡Ahora viene de la línea 78!
+
+00:04:58.846 --> 00:05:02.416 align:middle
+Eso significa que aquí estamos obteniendo
+el código de estado de error de validación.
+
+00:05:02.846 --> 00:05:07.836 align:middle
+A continuación, cuando enviamos datos válidos,
+intenta guardarlos en la base de datos,
+
+00:05:08.096 --> 00:05:13.616 align:middle
+pero no puede porque, como hemos visto hace
+un segundo, el owner_id sigue siendo nulo.
+
+00:05:14.356 --> 00:05:17.266 align:middle
+Esta es una de las grandes cosas
+de estos objetos mapeadores.
+
+00:05:17.676 --> 00:05:22.426 align:middle
+En DragonTreasureApiToEntityMapper,
+normalmente, vamos a hacer cosas
+
+00:05:22.426 --> 00:05:29.326 align:middle
+como $entity->setValue($dto->value):
+simplemente transferir datos de uno a otro.
+
+00:05:29.756 --> 00:05:37.036 align:middle
+Pero también podemos hacer cosas personalizadas, como
+establecer campos raros que requieran cálculos o...
+
+00:05:37.156 --> 00:05:40.326 align:middle
+establecer el propietario en el
+usuario autenticado en ese momento.
+
+00:05:40.866 --> 00:05:46.776 align:middle
+Compruébalo: if ($dto->owner) y
+luego vamos a establecerlo en la entidad.
+
+00:05:47.356 --> 00:05:50.316 align:middle
+Bueno, no lo haremos todavía,
+sólo dd() por ahora.
+
+00:05:50.316 --> 00:05:55.986 align:middle
+Este es el caso en el que sí
+incluimos el campo owner en el JSON...
+
+00:05:56.116 --> 00:05:57.606 align:middle
+y pronto hablaremos más de ello.
+
+00:05:57.706 --> 00:06:03.426 align:middle
+Para el else, esto es cuando el
+usuario no envía un campo owner.
+
+00:06:04.146 --> 00:06:07.676 align:middle
+Para establecerlo en el usuario
+autenticado actualmente , arriba,
+
+00:06:07.806 --> 00:06:10.386 align:middle
+inyecta el servicio Security
+en una nueva propiedad.
+
+00:06:11.756 --> 00:06:15.846 align:middle
+Luego, abajo, establece owner en
+$this->security->getUser().
+
+00:06:15.846 --> 00:06:18.156 align:middle
+¡Estupendo!
+
+00:06:18.606 --> 00:06:21.026 align:middle
+Aún nos falta la
+configuración del otro campo...
+
+00:06:21.476 --> 00:06:24.456 align:middle
+así que si intentamos ejecutar la prueba...
+
+00:06:24.456 --> 00:06:26.146 align:middle
+seguirá dando un 500.
+
+00:06:26.716 --> 00:06:31.686 align:middle
+Pero, si compruebas el error, está
+fallando porque description es nulo.
+
+00:06:32.096 --> 00:06:33.706 align:middle
+Se está configurando owner.
+
+00:06:34.356 --> 00:06:40.556 align:middle
+Así que vamos a rellenar los otros campos:
+$entity->setDescription($dto->description),
+
+00:06:40.556 --> 00:06:47.736 align:middle
+$entity->setCoolFactor($dto->coolFactor),
+y $entity->setValue($dto->value).
+
+00:06:48.176 --> 00:06:50.476 align:middle
+Trabajo aburrido pero claro.
+
+00:06:51.026 --> 00:06:53.766 align:middle
+Incluye también un TODO abajo para published.
+
+00:06:54.056 --> 00:06:55.576 align:middle
+Hablaremos más de ello en breve.
+
+00:06:56.666 --> 00:06:59.506 align:middle
+Ejecuta ahora la prueba: Y...
+
+00:06:59.896 --> 00:07:01.406 align:middle
+pasa.
+
+00:07:01.566 --> 00:07:04.886 align:middle
+¡Guau! Prueba todas las
+pruebas de DragonTreasure:
+
+00:07:05.406 --> 00:07:12.296 align:middle
+symfony php bin/phpunit
+tests/Functional/DragonTreasureResourceTest.php
+
+00:07:12.296 --> 00:07:12.836 align:middle
+Y...
+
+00:07:12.836 --> 00:07:19.016 align:middle
+ooo. Tenemos varios fallos, relacionados
+con la falta de cabeceras, la seguridad, la
+
+00:07:19.016 --> 00:07:23.916 align:middle
+validación, etc. Vamos a
+ponerlo verde a continuación.
