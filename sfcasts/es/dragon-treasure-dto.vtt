@@ -1,0 +1,531 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:06.226 align:middle
+¡Es hora de convertir nuestro DragonTreasure
+ApiResource en una clase DTO adecuada!
+
+00:00:06.566 --> 00:00:10.126 align:middle
+Empezaremos borrando un montón
+de cosas: todo lo relacionado
+
+00:00:10.126 --> 00:00:12.106 align:middle
+con API Platform en DragonTreasure...
+
+00:00:12.276 --> 00:00:14.906 align:middle
+para empezar de cero.
+
+00:00:15.566 --> 00:00:17.926 align:middle
+Volveremos a añadir lo que
+necesitemos poco a poco.
+
+00:00:18.386 --> 00:00:19.626 align:middle
+Adiós a las cosas del filtro...
+
+00:00:19.626 --> 00:00:21.266 align:middle
+los validadores...
+
+00:00:21.596 --> 00:00:23.716 align:middle
+todas las cosas del grupo de serialización...
+
+00:00:24.166 --> 00:00:26.796 align:middle
+y luego podemos hacer algo de
+limpieza en nuestras propiedades.
+
+00:00:27.356 --> 00:00:29.526 align:middle
+Teníamos aquí un código bastante complejo...
+
+00:00:29.816 --> 00:00:34.016 align:middle
+y aunque no lo añadiremos todo de nuevo,
+añadiremos las cosas más importantes.
+
+00:00:35.336 --> 00:00:37.036 align:middle
+Deja que me desplace hacia abajo para
+asegurarme de que lo tenemos todo.
+
+00:00:37.976 --> 00:00:39.036 align:middle
+Sí, ¡eso debería ser todo!
+
+00:00:39.536 --> 00:00:43.186 align:middle
+Ahora tenemos una buena y
+aburrida clase de entidad.
+
+00:00:43.706 --> 00:00:47.926 align:middle
+En src/ApiPlatform/, vamos a eliminar
+también AdminGroupsContextBuilder.
+
+00:00:48.786 --> 00:00:53.226 align:middle
+Esta era una forma compleja de hacer que los campos
+fueran legibles o escribibles por nuestro administrador...
+
+00:00:53.226 --> 00:00:56.016 align:middle
+pero vamos a solucionarlo con
+la seguridad de ApiProperty.
+
+00:00:57.156 --> 00:00:59.256 align:middle
+Deshazte también del
+normalizador personalizado...
+
+00:00:59.496 --> 00:01:01.816 align:middle
+que añadía un campo y un grupo extra.
+
+00:01:05.286 --> 00:01:08.606 align:middle
+Y, por último, elimina las clases
+personalizadas DragonTreasureStateProvider
+
+00:01:08.686 --> 00:01:11.286 align:middle
+y DragonTreasureStateProcessor.
+
+00:01:12.036 --> 00:01:17.046 align:middle
+Pero conservamos una cosa:
+DragonTreasureIsPublishedExtension.
+
+00:01:17.506 --> 00:01:21.436 align:middle
+Como el nuevo sistema seguirá utilizando
+el núcleo de Doctrine CollectionProvider,
+
+00:01:21.726 --> 00:01:25.636 align:middle
+este material de extensión de consulta
+seguirá funcionando y se seguirá llamando.
+
+00:01:26.396 --> 00:01:29.136 align:middle
+Es una cosa menos de la que
+tenemos que preocuparnos.
+
+00:01:30.186 --> 00:01:32.126 align:middle
+Ve y actualiza la documentación.
+
+00:01:33.216 --> 00:01:35.356 align:middle
+De acuerdo Sólo Quest y User.
+
+00:01:35.876 --> 00:01:39.026 align:middle
+Aunque, puede que notes algunas cosas
+de DragonTreasure aquí abajo...
+
+00:01:39.366 --> 00:01:43.646 align:middle
+porque UserApi tiene relación
+con la entidad DragonTreasure.
+
+00:01:44.016 --> 00:01:48.696 align:middle
+Así que, aunque DragonTreasure no sea un recurso
+de la API, la API Platform sigue intentando
+
+00:01:48.696 --> 00:01:51.606 align:middle
+documentar qué es ese campo en User.
+
+00:01:51.676 --> 00:01:54.816 align:middle
+En realidad no importa,
+porque vamos a arreglar eso
+
+00:01:54.816 --> 00:02:00.136 align:middle
+y a utilizar completamente clases API
+en todas partes En src/ApiResource/,
+
+00:02:00.136 --> 00:02:03.676 align:middle
+crea la nueva clase: DragonTreasureApi.
+
+00:02:03.756 --> 00:02:10.146 align:middle
+A continuación, en UserApi, roba parte del
+código básico de nuestro #[ApiResource]...
+
+00:02:11.616 --> 00:02:16.256 align:middle
+pégalo aquí y, por ahora, borra operations.
+
+00:02:17.296 --> 00:02:20.646 align:middle
+También podemos deshacernos
+de estas declaraciones use.
+
+00:02:20.646 --> 00:02:24.246 align:middle
+¡Perfecto! Utilizaremos
+un shortName - Treasure -
+
+00:02:25.216 --> 00:02:29.076 align:middle
+le daremos a este 10 elementos por página,
+y eliminaremos la línea security . Lo
+
+00:02:29.566 --> 00:02:34.956 align:middle
+más importante es que tenemos provider
+y processor (tal y como están aquí),
+
+00:02:35.366 --> 00:02:40.076 align:middle
+y stateOptions, que apuntará
+a DragonTreasure::class.
+
+00:02:42.916 --> 00:02:44.796 align:middle
+También coge la propiedad $id.
+
+00:02:45.816 --> 00:02:48.966 align:middle
+Como antes, en realidad no queremos
+que esto forme parte de nuestra API,
+
+00:02:49.376 --> 00:02:52.046 align:middle
+así que es readable: false y writable: false.
+
+00:02:53.156 --> 00:02:56.086 align:middle
+Aquí abajo, añade public
+?string $name = null.
+
+00:02:57.296 --> 00:02:58.566 align:middle
+¡Buen comienzo!
+
+00:02:58.896 --> 00:03:00.776 align:middle
+Tenemos una clase pequeñita y...
+
+00:03:01.076 --> 00:03:03.176 align:middle
+qué demonios, ¡vamos a probarla!
+
+00:03:03.636 --> 00:03:04.776 align:middle
+Actualiza la documentación.
+
+00:03:06.586 --> 00:03:09.386 align:middle
+¡Sí! ¡Ya están aquí
+nuestras operaciones Tesoro!
+
+00:03:09.386 --> 00:03:11.576 align:middle
+Si probamos la ruta de recogida...
+
+00:03:12.086 --> 00:03:19.366 align:middle
+obtenemos No se ha encontrado ningún mapeador para
+DragonTreasure -> DragonTreasureApi ¡Fantástico!
+
+00:03:19.766 --> 00:03:23.436 align:middle
+El único trabajo real que tenemos que
+hacer es implementar esos mapeadores.
+
+00:03:23.606 --> 00:03:24.836 align:middle
+Así que ¡adelante!
+
+00:03:25.826 --> 00:03:31.006 align:middle
+En el directorio src/Mapper/, crea una clase
+llamada DragonTreasureEntityToApiMapper.
+
+00:03:32.516 --> 00:03:36.186 align:middle
+Ya lo hemos hecho antes:
+implementa MapperInterface
+
+00:03:36.466 --> 00:03:38.666 align:middle
+y añade el atributo #[AsMapper()].
+
+00:03:39.536 --> 00:03:47.196 align:middle
+Vamos a from: DragonTreasure::class
+to: DragonTreasureApi::class .
+
+00:03:47.196 --> 00:03:50.256 align:middle
+Y así de fácil, el micro mapeador
+sabe que debe utilizar esto.
+
+00:03:50.826 --> 00:03:54.216 align:middle
+Genera los dos métodos de la
+interfaz: load() y populate().
+
+00:03:54.216 --> 00:04:01.976 align:middle
+Por cordura, añade $entity = $from, y assert()
+que $entity es un instanceof DragonTreasure.
+
+00:04:03.376 --> 00:04:08.956 align:middle
+Aquí abajo, crea el objeto DTO
+con $dto = new DragonTreasureApi().
+
+00:04:08.956 --> 00:04:12.966 align:middle
+Y recuerda, el trabajo de
+load() es crear el objeto
+
+00:04:13.186 --> 00:04:16.536 align:middle
+y ponerle un identificador si lo tiene.
+
+00:04:17.346 --> 00:04:20.956 align:middle
+Así que añade $dto->id
+= $entity->getId().
+
+00:04:20.956 --> 00:04:24.546 align:middle
+Por último, return $dto.
+
+00:04:24.546 --> 00:04:29.586 align:middle
+Para populate(), roba unas líneas de arriba
+que establezcan la variable $entity... entonces
+
+00:04:31.616 --> 00:04:35.656 align:middle
+también di $dto = $to, y
+añade una más assert() que
+
+00:04:35.696 --> 00:04:38.646 align:middle
+$dto es un instanceof DragonTreasureApi.
+
+00:04:39.856 --> 00:04:42.936 align:middle
+La única propiedad que tenemos en
+nuestro DTO ahora mismo es name,
+
+00:04:43.166 --> 00:04:47.576 align:middle
+así que todo lo que necesitamos es
+$dto->name = $entity->getName().
+
+00:04:48.636 --> 00:04:51.836 align:middle
+Al final, return $dto.
+
+00:04:51.836 --> 00:04:53.196 align:middle
+Y, ¡gente!
+
+00:04:53.456 --> 00:04:57.596 align:middle
+Acabamos de crear una clase que
+mapea desde la entidad al DTO...
+
+00:04:57.596 --> 00:05:01.066 align:middle
+y nuestro proveedor de estado
+utiliza internamente micro mapper...
+
+00:05:01.246 --> 00:05:02.826 align:middle
+así que creo que esto debería...
+
+00:05:02.976 --> 00:05:04.066 align:middle
+¡funcionar!
+
+00:05:04.696 --> 00:05:06.756 align:middle
+Y... ¡funciona!
+
+00:05:06.886 --> 00:05:11.786 align:middle
+¡Vaya! Con sólo la clase Recurso
+API y este único ma peador,
+
+00:05:12.146 --> 00:05:16.086 align:middle
+ya tenemos una clase Recurso API personalizada
+y potenciada por la base de datos.
+
+00:05:16.316 --> 00:05:19.446 align:middle
+¡Guau! Ahora las cosas se ponen interesantes.
+
+00:05:19.966 --> 00:05:25.476 align:middle
+Cada entidad DragonTreasure tiene un propietario,
+que es una relación con la entidad User.
+
+00:05:26.116 --> 00:05:29.896 align:middle
+En nuestra API, vamos a
+tener la misma relación.
+
+00:05:30.416 --> 00:05:33.546 align:middle
+Pero en lugar de ser una
+relación de DragonTreasureApi
+
+00:05:33.546 --> 00:05:38.726 align:middle
+con un objeto de entidad User,
+lo será con un objeto UserApi.
+
+00:05:39.686 --> 00:05:40.156 align:middle
+¡Compruébalo!
+
+00:05:40.376 --> 00:05:43.206 align:middle
+Digamos public ?UserApi $owner = null.
+
+00:05:45.246 --> 00:05:47.646 align:middle
+Vamos a rellenarlo en el mapeador.
+
+00:05:47.986 --> 00:05:51.056 align:middle
+Aquí abajo, digamos $dto->owner =...
+
+00:05:51.326 --> 00:05:52.916 align:middle
+pero... espera un segundo.
+
+00:05:53.376 --> 00:05:56.796 align:middle
+Esto no es tan sencillo como
+decir $entity->getOwner(),
+
+00:05:57.166 --> 00:06:00.036 align:middle
+porque ése es un objeto entidad de usuario.
+
+00:06:00.276 --> 00:06:02.856 align:middle
+¡Necesitamos un objeto UserApi!
+
+00:06:03.476 --> 00:06:09.086 align:middle
+¿Se te ocurre algo que sea realmente bueno
+convirtiendo una entidad User en UserApi?
+
+00:06:09.086 --> 00:06:12.116 align:middle
+Así es, ¡MicroMapper!
+
+00:06:13.486 --> 00:06:18.476 align:middle
+Aquí arriba, inyecta private
+MicroMapperInterface $microMapper...
+
+00:06:19.476 --> 00:06:26.706 align:middle
+y, aquí abajo, di $dto->owner =
+$this->microMapper->map() para mapear
+
+00:06:26.706 --> 00:06:33.606 align:middle
+de $entity->getOwner() -el objeto
+entidad User - a UserApi::class.
+
+00:06:33.906 --> 00:06:35.436 align:middle
+¿No es genial?
+
+00:06:36.256 --> 00:06:40.036 align:middle
+Una cosa que debes tener en
+cuenta es que si, en tu sistema,
+
+00:06:40.036 --> 00:06:44.386 align:middle
+$entity->getOwner() puede ser
+null, debes codificar para ello.
+
+00:06:45.026 --> 00:06:49.786 align:middle
+Por ejemplo, si tienes un propietario, llama al
+mapeador; si no, simplemente establece owner en null...
+
+00:06:49.936 --> 00:06:51.456 align:middle
+o no lo pongas.
+
+00:06:51.546 --> 00:06:56.546 align:middle
+En nuestro caso, siempre vamos a tener un
+propietario, así que esto debería ser seguro.
+
+00:06:56.546 --> 00:06:57.866 align:middle
+Vamos a probarlo
+
+00:06:57.966 --> 00:06:59.176 align:middle
+Actualiza y...
+
+00:06:59.526 --> 00:07:03.846 align:middle
+oooh. Tenemos un campo owner y es un IRI.
+
+00:07:05.106 --> 00:07:07.596 align:middle
+¿Por qué aparece como un IRI?
+
+00:07:08.026 --> 00:07:13.806 align:middle
+Porque API Platform reconoce que el
+objeto UserApi es un recurso API.
+
+00:07:14.026 --> 00:07:17.256 align:middle
+¿Y cómo muestra los recursos
+API que son relaciones?
+
+00:07:17.486 --> 00:07:18.356 align:middle
+Exacto
+
+00:07:18.626 --> 00:07:20.696 align:middle
+Los muestra como un IRI.
+
+00:07:21.056 --> 00:07:22.936 align:middle
+Así que eso es exactamente
+lo que queríamos ver.
+
+00:07:23.646 --> 00:07:27.646 align:middle
+Rellenemos el resto de los campos que
+necesitamos: Voy a repasar esto superrápido.
+
+00:07:30.936 --> 00:07:33.376 align:middle
+Uno de los campos que voy a
+añadir es $shortDescription.
+
+00:07:33.806 --> 00:07:35.986 align:middle
+Antes era un campo personalizado...
+
+00:07:36.256 --> 00:07:37.726 align:middle
+pero ahora será más sencillo.
+
+00:07:38.236 --> 00:07:43.836 align:middle
+Otro campo personalizado que teníamos era $isMine,
+que también será simplemente una propiedad normal.
+
+00:07:44.836 --> 00:07:47.286 align:middle
+En nuestro mapeador, vamos a configurarlo todo.
+
+00:07:47.926 --> 00:07:49.776 align:middle
+Pasaré rápidamente por las partes aburridas.
+
+00:07:52.086 --> 00:07:54.616 align:middle
+Pero $shortDescription es un poco interesante.
+
+00:07:55.146 --> 00:07:59.366 align:middle
+Antes, en DragonTreasure, teníamos
+un método getShortDescription()
+
+00:07:59.556 --> 00:08:03.446 align:middle
+y eso se exponía directamente
+como campo de la API.
+
+00:08:04.006 --> 00:08:07.756 align:middle
+Con la nueva configuración, es una
+propiedad normal como cualquier otra,
+
+00:08:08.026 --> 00:08:12.906 align:middle
+y nos encargamos de establecer los datos personalizados
+en nuestro mapeador: $shortDescription es igual
+
+00:08:12.906 --> 00:08:15.266 align:middle
+a $entity->getShortDescription().
+
+00:08:17.316 --> 00:08:22.486 align:middle
+Por último, para $dto->isMine, lo
+codificamos temporalmente como true.
+
+00:08:23.516 --> 00:08:24.116 align:middle
+¡Vamos a comprobarlo!
+
+00:08:24.536 --> 00:08:25.606 align:middle
+Actualiza y...
+
+00:08:26.036 --> 00:08:27.526 align:middle
+¡es precioso!
+
+00:08:28.436 --> 00:08:32.386 align:middle
+En tests/Functional/, tenemos
+DragonTreasureResourceTest.
+
+00:08:33.026 --> 00:08:38.316 align:middle
+Aquí, tenemos
+testGetCollectionOfTreasures(), que comprueba
+
+00:08:38.316 --> 00:08:40.716 align:middle
+que sólo vemos elementos publicados.
+
+00:08:41.316 --> 00:08:44.596 align:middle
+Si nuestra extensión de consulta
+sigue funcionando, esto pasará.
+
+00:08:45.166 --> 00:08:47.866 align:middle
+Esto también comprueba que
+vemos las claves correctas.
+
+00:08:48.476 --> 00:08:58.536 align:middle
+Veamos si funciona: symfony php bin/phpunit
+--filter=testGetCollectionOfTreasures Funciona.
+
+00:08:58.586 --> 00:09:00.056 align:middle
+Alucinante.
+
+00:09:00.056 --> 00:09:04.366 align:middle
+Antes de terminar, vamos a
+arreglar el código true de isMine.
+
+00:09:05.246 --> 00:09:09.926 align:middle
+Esto es fácil, pero demuestra lo agradable
+que es trabajar con campos personalizados.
+
+00:09:10.456 --> 00:09:13.106 align:middle
+En nuestro mapeador, esto es un servicio,
+
+00:09:13.436 --> 00:09:18.206 align:middle
+así que podemos inyectar otros
+servicios como el de $security.
+
+00:09:18.206 --> 00:09:21.286 align:middle
+Luego, podemos rellenarlo
+con los datos que queramos.
+
+00:09:22.066 --> 00:09:28.076 align:middle
+Así que isMine es verdadero si
+$this->security->getUser() es igual a DragonTreasure,
+
+00:09:28.076 --> 00:09:31.346 align:middle
+getOwner() (que es un objeto de entidad User ).
+
+00:09:33.216 --> 00:09:36.836 align:middle
+Prueba la prueba una vez más para
+asegurarte de que funciona, y...
+
+00:09:37.216 --> 00:09:38.926 align:middle
+funciona. ¡Guau!
+
+00:09:39.826 --> 00:09:45.046 align:middle
+Lo siguiente: Quiero profundizar en las
+relaciones en nuestra API potenciada por DTO.
+
+00:09:45.786 --> 00:09:50.666 align:middle
+Porque, si no tienes cuidado, ¡podemos
+llegar a la temida recursividad infinita!
