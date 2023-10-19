@@ -1,0 +1,540 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:07.636 align:middle
+Hacer la transformación de datos, de UserApi a
+la entidad User, o de la entidad User a UserApi,
+
+00:00:07.726 --> 00:00:12.806 align:middle
+es la única parte de nuestro proveedor y
+procesador que no es genérica y reutilizable.
+
+00:00:13.166 --> 00:00:18.726 align:middle
+¡Rayos! Si no fuera por ese código,
+podríamos crear una clase DragonTreasureApi
+
+00:00:18.796 --> 00:00:23.346 align:middle
+y volver a hacer todo esto sin apenas trabajo
+
+00:00:23.486 --> 00:00:27.596 align:middle
+Afortunadamente, se trata de un problema
+bien conocido llamado "mapeo de datos".
+
+00:00:27.746 --> 00:00:31.396 align:middle
+Para este tutorial, he probado
+algunas bibliotecas de mapeo de datos,
+
+00:00:31.536 --> 00:00:38.036 align:middle
+sobre todo jane-php/automapper-bundle, que es
+superrápida, avanzada y divertida de usar.
+
+00:00:38.416 --> 00:00:42.256 align:middle
+Sin embargo, no es tan
+flexible como yo necesitaba...
+
+00:00:42.536 --> 00:00:44.706 align:middle
+y ampliarla parecía complejo.
+
+00:00:45.216 --> 00:00:45.946 align:middle
+Sinceramente...
+
+00:00:45.946 --> 00:00:48.006 align:middle
+Me quedé atascado en algunos sitios...
+
+00:00:48.066 --> 00:00:51.846 align:middle
+aunque sé que se está trabajando para
+que este paquete sea aún más amigable.
+
+00:00:52.316 --> 00:00:55.826 align:middle
+El caso es que no vamos a
+utilizar esa biblioteca.
+
+00:00:56.206 --> 00:01:01.016 align:middle
+En su lugar, para manejar el mapeo,
+he creado un pequeño paquete propio.
+
+00:01:01.216 --> 00:01:04.916 align:middle
+Es fácil de entender, y
+nos da un control total...
+
+00:01:05.236 --> 00:01:08.576 align:middle
+aunque no sea tan genial
+como el automapper de Jane.
+
+00:01:08.946 --> 00:01:10.426 align:middle
+Así que ¡a instalarlo!
+
+00:01:10.726 --> 00:01:15.546 align:middle
+Ejecuta: composer require
+symfonycasts/micro-mapper Eso suena a superhéroe.
+
+00:01:17.186 --> 00:01:22.116 align:middle
+Ahora que lo tenemos en nuestra aplicación,
+tenemos un nuevo servicio micromapper que sirve
+
+00:01:22.116 --> 00:01:25.266 align:middle
+para convertir datos de un objeto a otro.
+
+00:01:25.976 --> 00:01:28.386 align:middle
+Empecemos por utilizarlo en nuestro procesador.
+
+00:01:28.956 --> 00:01:34.626 align:middle
+Arriba, autocablea un private
+MicroMapperInterface $microMapper.
+
+00:01:35.506 --> 00:01:40.216 align:middle
+Y aquí abajo, para todas las cosas
+del mapeo, copia la lógica existente,
+
+00:01:40.346 --> 00:01:41.746 align:middle
+porque la necesitaremos en un minuto.
+
+00:01:42.746 --> 00:01:46.616 align:middle
+Sustitúyela por return
+$this->microMapper->map().
+
+00:01:47.346 --> 00:01:50.636 align:middle
+Esto tiene dos argumentos
+principales: El objeto $from,
+
+00:01:50.756 --> 00:01:56.166 align:middle
+que será $dto y la clase
+toClass, así que User::class.
+
+00:01:56.986 --> 00:01:58.436 align:middle
+¡Listo! Bueno...
+
+00:01:58.436 --> 00:02:02.296 align:middle
+no del todo, pero probemos a ejecutar
+testPostToCreateUser de todos modos.
+
+00:02:04.016 --> 00:02:07.466 align:middle
+Y... falla con un error 500.
+
+00:02:07.896 --> 00:02:11.696 align:middle
+Lo interesante es lo que dice ese error 500.
+
+00:02:12.216 --> 00:02:14.906 align:middle
+Vamos a "Ver la fuente de la
+página" para poder leerlo mejor.
+
+00:02:15.656 --> 00:02:17.366 align:middle
+Dice No mapper found
+
+00:02:17.366 --> 00:02:21.686 align:middle
+for App\UserResource\UserApi ->
+App\Entity\User Y esto viene de MicroMapper.
+
+00:02:22.336 --> 00:02:28.866 align:middle
+Esto dice básicamente: ¡Eh, no sé cómo
+convertir un objeto UserApi en un objeto User!
+
+00:02:29.536 --> 00:02:31.706 align:middle
+¡Alto! MicroMapper no es magia...
+
+00:02:31.746 --> 00:02:33.166 align:middle
+en realidad es todo lo contrario.
+
+00:02:33.706 --> 00:02:36.456 align:middle
+Para enseñar a MicroMapper
+cómo hacer esta conversión,
+
+00:02:36.746 --> 00:02:39.956 align:middle
+tenemos que crear una clase
+que explique lo que queremos.
+
+00:02:40.286 --> 00:02:42.266 align:middle
+Eso se llama una clase mapeadora.
+
+00:02:42.466 --> 00:02:43.256 align:middle
+¡Y éstas son divertidas!
+
+00:02:43.856 --> 00:02:45.676 align:middle
+Empezaré cerrando algunas cosas...
+
+00:02:46.046 --> 00:02:49.306 align:middle
+y luego creando un nuevo
+directorio Mapper/ en src/.
+
+00:02:50.096 --> 00:02:52.886 align:middle
+Dentro de él, añade una
+nueva clase PHP llamada...
+
+00:02:53.216 --> 00:03:00.186 align:middle
+UserApiToEntityMapper, porque vamos
+a pasar de UserApi a la entidad User.
+
+00:03:01.076 --> 00:03:02.656 align:middle
+Esta clase necesita 2 cosas.
+
+00:03:03.036 --> 00:03:05.436 align:middle
+Primero, implementar MapperInterface.
+
+00:03:05.956 --> 00:03:10.726 align:middle
+Y segundo, por encima de la clase, para
+describir a qué y desde qué se está mapeando,
+
+00:03:10.886 --> 00:03:19.676 align:middle
+necesitamos un atributo #[AsMapper()] con
+from: UserApi::class y to: User::class.
+
+00:03:21.186 --> 00:03:24.946 align:middle
+Para ayudar a la interfaz, ve a "Generar
+código" (o "comando" + "N" en un Mac)
+
+00:03:25.306 --> 00:03:28.876 align:middle
+y genera los dos métodos que
+necesita: load() y populate().
+
+00:03:28.876 --> 00:03:34.316 align:middle
+Para empezar, vamos a dd($from, $toClass).
+
+00:03:34.416 --> 00:03:39.246 align:middle
+Ahora, sólo con crear esto y darle
+#[AsMapper], cuando utilicemos MicroMapper
+
+00:03:39.246 --> 00:03:42.696 align:middle
+para hacer esta transformación,
+debería llamar a nuestro método load().
+
+00:03:43.456 --> 00:03:44.346 align:middle
+¡Veamos si lo hace!
+
+00:03:44.916 --> 00:03:47.086 align:middle
+Ejecuta la prueba: Y...
+
+00:03:47.696 --> 00:03:54.116 align:middle
+¡lo conseguimos! Ahí está el objeto UserApi que le
+estamos pasando, y nos está pasando la clase User.
+
+00:03:54.976 --> 00:03:59.286 align:middle
+El propósito de load() es cargar
+el objeto $toClass y devolverlo,
+
+00:03:59.436 --> 00:04:03.246 align:middle
+por ejemplo, consultando una
+entidad User o creando una nueva.
+
+00:04:04.556 --> 00:04:08.056 align:middle
+Para hacer la consulta, arriba,
+añade public function __construct()
+
+00:04:08.666 --> 00:04:11.946 align:middle
+e inyecta el UserRepository
+$userRepository normal.
+
+00:04:13.296 --> 00:04:16.716 align:middle
+Aquí abajo, esto contendrá el
+mismo código que vimos antes.
+
+00:04:16.826 --> 00:04:23.386 align:middle
+Me gusta decir $dto = $from y
+assert($dto instanceof UserApi).
+
+00:04:24.046 --> 00:04:26.806 align:middle
+Eso ayuda a mi cerebro y a mi editor.
+
+00:04:27.876 --> 00:04:37.066 align:middle
+A continuación, si nuestro $dto tiene un id, entonces
+llama a $this->userRepository->find($dto->id).
+
+00:04:37.066 --> 00:04:39.896 align:middle
+Si no, crea un objeto new User() de marca.
+
+00:04:40.456 --> 00:04:41.486 align:middle
+Así de sencillo.
+
+00:04:41.996 --> 00:04:45.616 align:middle
+Y si, por alguna razón,
+no tenemos un $userEntity,
+
+00:04:45.876 --> 00:04:50.406 align:middle
+throw new \Exception('User not found'),
+similar a lo que hicimos antes.
+
+00:04:51.086 --> 00:04:53.126 align:middle
+Aquí abajo, return $userEntity.
+
+00:04:53.206 --> 00:04:57.356 align:middle
+Así que hemos inicializado nuestro
+objeto $to y lo hemos devuelto.
+
+00:04:57.356 --> 00:05:03.046 align:middle
+Y ese es el objetivo de load(): hacer el menor
+trabajo posible para obtener el objeto $to...
+
+00:05:03.386 --> 00:05:05.426 align:middle
+pero sin rellenar los datos.
+
+00:05:06.396 --> 00:05:11.146 align:middle
+Internamente, después de llamar a load(),
+el micro mapeador llamará a populate()
+
+00:05:11.146 --> 00:05:14.176 align:middle
+y nos pasará el objeto entidad
+User que acabamos de devolver.
+
+00:05:14.966 --> 00:05:17.766 align:middle
+Para ver esto, vamos a dd($from, $to).
+
+00:05:19.216 --> 00:05:22.836 align:middle
+Ejecuta la prueba: ¡Perfecto!
+
+00:05:23.066 --> 00:05:27.696 align:middle
+Aquí está nuestro objeto "de"
+UserApi, y la nueva entidad User.
+
+00:05:28.566 --> 00:05:33.946 align:middle
+Ahora... puede que te estés preguntando por qué
+tenemos un método load() y un método populate()...
+
+00:05:34.156 --> 00:05:37.216 align:middle
+cuando parece que podrían ser un solo método.
+
+00:05:37.716 --> 00:05:39.206 align:middle
+¡Y en gran parte tendrías razón!
+
+00:05:39.566 --> 00:05:44.476 align:middle
+Pero hay una razón técnica por la que están
+separados, y te resultará útil más adelante
+
+00:05:44.476 --> 00:05:46.106 align:middle
+cuando hablemos de las relaciones.
+
+00:05:46.576 --> 00:05:51.816 align:middle
+Pero por ahora, puedes imaginar que estos dos
+métodos son en realidad un solo proceso continuo:
+
+00:05:52.256 --> 00:05:54.366 align:middle
+load() se llama, luego populate().
+
+00:05:54.966 --> 00:05:57.976 align:middle
+Y no te sorprendas, aquí
+es donde tomaremos los datos
+
+00:05:58.006 --> 00:06:01.576 align:middle
+del objeto $from y los
+pondremos en el objeto $to.
+
+00:06:02.296 --> 00:06:09.926 align:middle
+Una vez más, para mantenerme cuerdo, diré $dto
+= $from y assert($dto instanceof UserApi)...
+
+00:06:09.926 --> 00:06:15.556 align:middle
+y luego $entity = $to y
+assert($entity instanceof User).
+
+00:06:17.416 --> 00:06:20.196 align:middle
+El código de aquí abajo
+va a ser muy aburrido...
+
+00:06:20.196 --> 00:06:21.636 align:middle
+así que lo pegaré.
+
+00:06:22.516 --> 00:06:24.126 align:middle
+En la parte inferior, return $entity.
+
+00:06:25.236 --> 00:06:28.086 align:middle
+Aquí estamos utilizando
+$this->userPasswordHasher...
+
+00:06:28.326 --> 00:06:31.256 align:middle
+así que también tenemos que
+asegurarnos, en la parte superior,
+
+00:06:31.496 --> 00:06:35.726 align:middle
+de añadir private UserPasswordHasherInterface
+$userPasswordHasher.
+
+00:06:36.596 --> 00:06:39.036 align:middle
+Así que éste es básicamente el
+mismo código que teníamos antes...
+
+00:06:39.316 --> 00:06:40.466 align:middle
+pero en un lugar diferente.
+
+00:06:40.466 --> 00:06:42.616 align:middle
+¡Veamos qué opina el test!
+
+00:06:44.066 --> 00:06:45.406 align:middle
+¡Pasa!
+
+00:06:45.676 --> 00:06:46.876 align:middle
+¡Esto es enorme!
+
+00:06:47.406 --> 00:06:49.726 align:middle
+Hemos descargado este
+trabajo a nuestro mapeador...
+
+00:06:50.026 --> 00:06:53.686 align:middle
+lo que significa que nuestro procesador
+es casi completamente genérico.
+
+00:06:54.456 --> 00:06:57.716 align:middle
+Ahora podemos eliminar el
+UserPasswordHasher que ya no necesitamos...
+
+00:06:58.016 --> 00:06:59.816 align:middle
+y el UserRepository de aquí arriba.
+
+00:07:00.746 --> 00:07:04.176 align:middle
+Incluso podemos eliminar
+esas declaraciones use.
+
+00:07:04.176 --> 00:07:08.966 align:middle
+Seguimos teniendo que escribir el código de mapeo,
+pero ahora vive en una bonita ubicación central.
+
+00:07:09.936 --> 00:07:12.036 align:middle
+Listo para repetir esto para el proveedor.
+
+00:07:12.796 --> 00:07:13.916 align:middle
+Cierra el procesador...
+
+00:07:14.296 --> 00:07:15.646 align:middle
+y ábrelo.
+
+00:07:17.086 --> 00:07:20.476 align:middle
+Esta vez, pasaremos de la
+entidad User a UserApi.
+
+00:07:21.616 --> 00:07:28.106 align:middle
+Copia todo este código,
+bórralo y, como antes,
+
+00:07:28.466 --> 00:07:31.326 align:middle
+autocablea MicroMapperInterface $microMapper.
+
+00:07:32.526 --> 00:07:38.406 align:middle
+Aquí abajo, esto se simplifica a return
+$this->microMapper->map() pasando de
+
+00:07:38.406 --> 00:07:42.636 align:middle
+nuestro $entity a UserApi::class.
+
+00:07:42.696 --> 00:07:50.096 align:middle
+¡Genial! Si intentáramos esto ahora, obtendríamos
+un error 500 porque no tenemos un mapeador para ello.
+
+00:07:51.076 --> 00:07:55.976 align:middle
+De vuelta en src/Mapper/, crea una nueva
+clase llamada UserEntityToApiMapper...
+
+00:07:57.616 --> 00:07:59.396 align:middle
+implementa MapperInterface...
+
+00:07:59.816 --> 00:08:02.616 align:middle
+y encima de la clase, añade #[AsMapper()].
+
+00:08:03.376 --> 00:08:08.706 align:middle
+En este caso, vamos a from:
+User::class, to: UserApi::class.
+
+00:08:08.706 --> 00:08:13.976 align:middle
+Implementa los dos métodos que necesitamos...
+
+00:08:13.976 --> 00:08:19.246 align:middle
+y empezamos prácticamente igual
+que antes, con $entity = $from
+
+00:08:19.246 --> 00:08:21.856 align:middle
+y assert($entity instanceof User).
+
+00:08:23.716 --> 00:08:28.056 align:middle
+Aquí abajo, para crear el DTO, no
+necesitamos hacer ninguna consulta.
+
+00:08:28.416 --> 00:08:31.916 align:middle
+Siempre vamos a instanciar un nuevo UserApi().
+
+00:08:32.726 --> 00:08:37.336 align:middle
+Ponle el ID con $dto->id
+= $entity->getId()...
+
+00:08:38.006 --> 00:08:40.916 align:middle
+y luego return $dto.
+
+00:08:40.916 --> 00:08:46.166 align:middle
+Vale, el trabajo del método load()
+es realmente crear el objeto $to y...
+
+00:08:46.166 --> 00:08:49.496 align:middle
+al menos asegurarse de que tiene
+su identificador, si lo tiene.
+
+00:08:50.046 --> 00:08:52.506 align:middle
+Todo lo demás que tenemos que hacer
+está aquí abajo, en populate().
+
+00:08:52.886 --> 00:09:00.786 align:middle
+Empieza de la forma habitual: $entity = $from $dto
+= $to y dos asserts assert($entity instanceof User)
+
+00:09:02.506 --> 00:09:05.216 align:middle
+y assert($dto instanceof UserApi).
+
+00:09:06.506 --> 00:09:09.496 align:middle
+Debajo, utiliza el código
+exacto que teníamos antes.
+
+00:09:09.996 --> 00:09:11.766 align:middle
+Sólo estamos transfiriendo los datos.
+
+00:09:13.096 --> 00:09:15.116 align:middle
+En la parte inferior, return $dto.
+
+00:09:15.116 --> 00:09:17.866 align:middle
+¡Uf! ¡Vamos a probarlo!
+
+00:09:18.156 --> 00:09:22.636 align:middle
+Ve a tu navegador, actualiza esta página y...
+
+00:09:22.916 --> 00:09:26.796 align:middle
+oh... Se requiere autenticación
+completa para acceder a este recurso.
+
+00:09:27.266 --> 00:09:28.256 align:middle
+Por supuesto.
+
+00:09:28.666 --> 00:09:30.816 align:middle
+Eso es porque hemos añadido seguridad
+
+00:09:31.196 --> 00:09:35.226 align:middle
+Vuelve a la página principal, haz clic en este
+acceso directo de nombre de usuario y contraseña...
+
+00:09:36.206 --> 00:09:39.606 align:middle
+boop... y ahora intenta actualizar la página.
+
+00:09:40.556 --> 00:09:45.806 align:middle
+¡Funciona! Aunque faltan algunos
+datos, lo cual es culpa mía.
+
+00:09:45.806 --> 00:09:49.126 align:middle
+He dicho $dto = new UserApi().
+
+00:09:49.366 --> 00:09:54.166 align:middle
+Así que en vez de modificar el objeto
+$to que me pasan, creé uno nuevo...
+
+00:09:54.336 --> 00:09:56.066 align:middle
+y el original no se modificó.
+
+00:09:56.356 --> 00:09:56.996 align:middle
+Ya está.
+
+00:09:57.776 --> 00:09:58.786 align:middle
+Si lo vuelvo a intentar...
+
+00:09:59.466 --> 00:10:00.526 align:middle
+mucho mejor.
+
+00:10:01.056 --> 00:10:02.266 align:middle
+¡Así que esto es enorme gente!
+
+00:10:02.266 --> 00:10:05.216 align:middle
+¡Nuestro proveedor y
+procesador ya son genéricos!
+
+00:10:05.636 --> 00:10:10.696 align:middle
+Terminemos el proceso de hacerlos funcionar para
+cualquier clase de recurso API a continuación
