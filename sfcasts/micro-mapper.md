@@ -30,11 +30,16 @@ to another. Let's start by using it in our *processor*.
 
 ## Using the MicroMapper Service
 
-Up on top, autowire a `private MicroMapperInterface $microMapper`. And
-down here, for all the mapping stuff, copy the existing logic, because we'll
+Up on top, autowire a `private MicroMapperInterface $microMapper`.
+
+[[[ code('7d644c516b') ]]]
+
+And down here, for all the mapping stuff, copy the existing logic, because we'll
 need it in a minute. Replace it with `return $this->microMapper->map()`.
 This has two main arguments: The `$from` object, which will be `$dto` and the
 *toClass*, so `User::class`.
+
+[[[ code('32e53d12f0') ]]]
 
 Done! Well... not *quite*, but let's try running `testPostToCreateUser` anyway.
 
@@ -61,13 +66,20 @@ Let me start by closing a few things... and then creating a new `Mapper/` direct
 in `src/`. Inside of *that*, add a new PHP class called... how about
 `UserApiToEntityMapper`, because we're going from `UserApi` to the `User` entity.
 
-This class needs 2 things. First, to implement `MapperInterface`. And second, above
-the class, to describe what it's mapping *to* and *from*, we need an `#[AsMapper()]`
-attribute with `from: UserApi::class` and `to: User::class`.
+This class needs 2 things. First, to implement `MapperInterface`. 
+
+[[[ code('5f71984855') ]]
+
+And second, above the class, to describe what it's mapping *to* and *from*, 
+we need an `#[AsMapper()]` attribute with `from: UserApi::class` and `to: User::class`.
+
+[[[ code('91592238fb') ]]]
 
 To help the interface, go to "Code Generate" (or "command" + "N"
 on a Mac) and generate the two *methods* it needs: `load()` and `populate()`. For
 starters, let's `dd($from, $toClass)`.
+
+[[[ code('7f8671d42f') ]]]
 
 Now, *just* by creating this and giving it `#[AsMapper]`, when we use MicroMapper
 to do this transformation, it *should* call our `load()` method. Let's see if it
@@ -91,9 +103,13 @@ That helps my brain *and* my editor.
 Next, *if* our `$dto` has an `id`, then call `$this->userRepository->find($dto->id)`.
 *Else*, create a brand `new User()` object.
 
+[[[ code('a0846d45f6') ]]]
+
 It's *that* simple. And if, for some reason, we don't have a `$userEntity`,
 `throw new \Exception('User not found')`, similar to what we did before. Down here,
 `return $userEntity`.
+
+[[[ code('663055deb6') ]]]
 
 So we've initialized our `$to` object and returned it. And that's the point of
 `load()`: to do the *least* amount of work to get the `$to` object... but *without*
@@ -102,6 +118,8 @@ populating the data.
 Internally, after calling `load()`, micro mapper will *then* call `populate()`
 and pass us the `User` entity object that we just returned. To see this, let's
 `dd($from, $to)`.
+
+[[[ code('d9bafc0e11') ]]]
 
 Run that test:
 
@@ -126,8 +144,12 @@ and `assert($dto instanceof UserApi)`... then
 The code down here is going to be really boring... so I'll paste it.
 At the bottom, `return $entity`.
 
+[[[ code('bbcfd88120') ]]]
+
 We're using `$this->userPasswordHasher` here... so we *also* need to make sure, at
 the top, to add `private UserPasswordHasherInterface $userPasswordHasher`.
+
+[[[ code('a531320e72') ]]]
 
 So this is basically the same code we had before... but in a different spot.
 
@@ -153,17 +175,25 @@ This time, we're going from the `User` entity to `UserApi`. Copy all of this cod
 Down here, this simplifies to `return $this->microMapper->map()` going from our
 `$entity` to `UserApi::class`.
 
+[[[ code('1915317213') ]]]
+
 Sweet! If we tried this now, we'd get a 500 error because we don't have a mapper
 for it. Back in `src/Mapper/`, create a new class called `UserEntityToApiMapper`...
 implement `MapperInterface`... and above the class, add `#[AsMapper()]`. In this
 case, we're going `from: User::class`, `to: UserApi::class`.
 
+[[[ code('74670f0488') ]]]
+
 Implement both of the methods we need... and we start pretty much the same way as
 before, with `$entity = $from` and `assert($entity instanceof User)`.
+
+[[[ code('a7442cec86') ]]]
 
 Down here, to create the DTO, we don't need to do any queries. We're *always*
 going to instantiate a fresh new `UserApi()`. Set the ID onto it with
 `$dto->id = $entity->getId()`... then `return $dto`.
+
+[[[ code('ec261450dc') ]]]
 
 Ok, the job of the `load()` method is *really* to create the `$to` object and...
 *at least* make sure it has its identifier if there is one.
@@ -172,6 +202,8 @@ Everything else we need to do is down here in `populate()`. Start our usual way:
 `$entity = $from`, `$dto = $to` and two asserts: `assert($entity instanceof User)`
 and `assert($dto instanceof UserApi)`. Below that, use the exact code we had before.
 We're just transferring the data. At the bottom, `return $dto`.
+
+[[[ code('5f1b0aca01') ]]]
 
 Phew! Let's try this! Head over to your browser, refresh this page, and... *oh*...
 

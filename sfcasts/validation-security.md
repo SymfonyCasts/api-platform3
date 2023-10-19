@@ -28,20 +28,35 @@ But before we run wild and add constraints, let's specify the `operations`... so
 only have the ones we need: `new Get()`, `new GetCollection()`, `new Post()`... we'll
 add some config to *that* in a moment... as well as `new Patch()` and `new Delete()`.
 
+[[[ code('e683249524') ]]]
+
 Back when our `User` *entity* was the `#[ApiResource]`, the `Post()` operation had
 an extra `validationContext` option with `groups` set to `Default` and
-`postValidation`. Thanks to that, when the `Post()` operation happened, it
+`postValidation`. 
+
+[[[ code('0168c95e76') ]]]
+
+Thanks to that, when the `Post()` operation happened, it
 would run all the *normal* validators *plus* any that were in this
 `postValidation` group. We'll see *why* we need that in a moment.
 
 ## Adding the Constraints
 
 Ok, constraint time! `$id` isn't even writable... we want `$email` to
-be `#[NotBlank]`... and be an `#[Email]`. We want `$username` to be `#[NotBlank]`...
+be `#[NotBlank]`... and be an `#[Email]`. 
+
+[[[ code('b5f85b8cd7') ]]]
+
+We want `$username` to be `#[NotBlank]`... 
+
+[[[ code('2f237bdec1') ]]]
+
 then `$password` is an interesting one. `$password` should be *allowed* to be blank
 if we're doing a `PATCH` request to edit it... but *required* on a `POST` request.
 To accomplish that, add `#[NotBlank]` but with a `groups` option set to
 `postValidation`.
+
+[[[ code('c791483d1c') ]]]
 
 This constraint will only be run when we're validating the `postValidation` group...
 which means it will only be run for the `Post()` operation.
@@ -71,13 +86,19 @@ The next thing we need to *re-add* - code that *used to* live on `User` - is
 *security*. Up here on the API level, for the *entire* resource,
 require `is_granted("ROLE_USER")`.
 
+[[[ code('a3cddf1eef') ]]]
+
 This means that we need to be logged in to use *any* of the operations for this
 resource... *by default*. Then we *overrode* that. In `Post()`, we definitely
 can't be logged in yet because we're *registering* our user. Say,
 `security` set to `is_granted("PUBLIC_ACCESS")` which is a special attribute that
 will always pass.
 
+[[[ code('105f63b28f') ]]]
+
 Down here for `Patch()`, we had `security('is_granted("ROLE_USER_EDIT")')`.
+
+[[[ code('467f1499cc') ]]]
 
 In our app, we decided that you need to have this special tole to be able to
 edit users.
