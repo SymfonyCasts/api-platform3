@@ -84,7 +84,7 @@ symfony php bin/phpunit --filter=testTreasuresCanBeRemoved
 And by "*cannot* be removed", I, of course, mean that it *can* be removed. That was
 some good 'ol copy/paste madness right there. There we go. And... it *fails*,
 on line 81. This means that the request was successful... but the two
-`$ragonTreasures` are still the original two: `/api/treasures/2` instead of
+`$dragonTreasures` are still the original two: `/api/treasures/2` instead of
 `/api/treasures/3`. No changes were made to the treasures.
 
 Next: let's make this field writable and see how we can leverage the property
