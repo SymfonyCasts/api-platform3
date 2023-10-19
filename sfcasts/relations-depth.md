@@ -6,6 +6,8 @@ whatever we return from the state provider. So head there.... and find where
 the collection is created. Dump the DTOs. These are what's being serialized, so
 the problem must be here.
 
+[[[ code('fb4857194e') ]]]
+
 Refresh and... no surprise: we see 5 `UserApi` objects. Ah, but *here's* the problem:
 the `dragonTreasures` field holds an array of `DragonTreasure` *entity* objects...
 and each has an `owner` that points to a `User` entity... and that points *back*
@@ -17,6 +19,8 @@ relate to a `DragonTreasureApi`, not a `DragonTreasure` entity.
 Over in `UserApi`, this will now be an `array` of `DragonTreasureApi`. Once we start
 going the DTO route, for maximum smoothness, we should relate DTOs to other DTOs...
 instead of mixing them with entities.
+
+[[[ code('f332970e0c') ]]]
 
 To populate the DTO objects, go to the mapper: `UserEntityToApiMapper`. Down here,
 for `dragonTreasures`, we can't do *this* anymore because that will give us
@@ -39,6 +43,8 @@ a new array that's set onto `dragonTreasures`. And what we want to return
 is a `DragonTreasureApi` object. Do that with
 `$this->microMapper->map($dragonTreasure, DragonTreasureApi::class)`.
 
+[[[ code('6d4ad3fbbb') ]]]
+
 ## Circular Relationships
 
 Cool! When we refresh to try it... we're greeted with a *different* circular
@@ -59,6 +65,8 @@ The fix lives in your mapper, when calling the `map()` function. Pass
 a *third* argument, which is a "context"... kind of an array of options. You
 can pass whatever you want, but Micro Mapper itself only has 1 option that
 it cares about. Set `MicroMapperInterface::MAX_DEPTH` to 1. 
+
+[[[ code('0064be67d0') ]]]
 
 Let's see what that does. When we refresh... look at the dump, which comes
 from the state provider. It maps the `User` entities to `UserApi` objects... and
@@ -87,7 +95,11 @@ want to set `MAX_DEPTH` to `1`. Heck, we *could* set `MAX_DEPTH` to `0`! Though
 the only reason to do that would be a *slight* performance improvement.
 
 This time, when we map `$dragonTreasure` to `DragonTreasureApi`,
-try `MAX_DEPTH => 0`. This will cause the depth to be hit *immediately*. When it
+try `MAX_DEPTH => 0`. 
+
+[[[ code('0fc141fa54') ]]]
+
+This will cause the depth to be hit *immediately*. When it
 goes to map the `DragonTreasure` entity to `DragonTreasureApi`, it will use the
 mapper, but *only* call the `load()` method. The `populate()` method will *never*
 be called. Put the `dd()` back. What we end up with is a *shallow* object
@@ -103,6 +115,8 @@ But if you know that you're using IRIs, you *can* set `MAX_DEPTH` to `0`.
 
 Over here, let's do the *same* thing: `MicroMapperInterface::MAX_DEPTH` set to
 0 because we know that we're only showing the IRI here as well.
+
+[[[ code('0cd0139f29') ]]]
 
 ## Forcing a JSON Array
 

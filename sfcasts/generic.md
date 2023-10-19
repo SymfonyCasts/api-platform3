@@ -21,6 +21,8 @@ tell MicroMapper which class to convert our `$entity` into. Can... we fetch this
 *dynamically*? Up here, our provider receives the `$operation` and `$context`.
 Let's dump *both* of these.
 
+[[[ code('8c31294746') ]]]
+
 Since this is in our *provider*... we can just go refresh the Collection endpoint
 and... *boom*! This is a `GetCollection` operation... and check it out. The operation
 object stores the ApiResource *class* that it's attached to!
@@ -31,12 +33,16 @@ and pass *that* instead. Finally, we need to add `$resourceClass` as the argumen
 when we call `mapEntityToDto()` there... *and* right there. Remove the `use` statement
 we don't need anymore and... just like that... it *still* works!
 
+[[[ code('897a3e9811') ]]]
+
 ## Making the Processor Generic
 
 We're on a roll! Head to the *processor* and search for "user". Ah, we have the
 *same* problem except, this time, we need the `User` entity class.
 
 Ok! Up on top, `dd($operation)`. And for this, we need to run one of our tests:
+
+[[[ code('f01cab6ed2') ]]]
 
 ```terminal
 symfony php bin/phpunit --filter=testPostToCreateUser
@@ -58,9 +64,13 @@ You *can* use *different* `Options` classes for `$stateOptions`...
 like if you're getting data from ElasticSearch, but *we* know we're using *this*
 one from Doctrine. Below, say `$entityClass = $stateOptions->getEntityClass()`.
 
+[[[ code('aad0a23005') ]]]
+
 And... we don't need this `assert()` down here, then pass `$entityClass` to
 `mapDtoToEntity()`. Finally, use that with `string $entityClass`... and also pass
 it here.
+
+[[[ code('aad0a23005') ]]]
 
 When we search for "user" now... we can get rid of the two `use` statements...
 and... we're clean! It's generic! Try the test!

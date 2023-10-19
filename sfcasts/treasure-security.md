@@ -26,6 +26,8 @@ Start like we did with `UserApi`: by specifying the operations we want.
 Start with `new Get()`, `new GetCollection()`, and `new Post()`. In the original
 system, `Post()` had a `security` option set to `'is_granted("ROLE_TREASURE_CREATE")`.
 
+[[[ code('5175155b27') ]]]
+
 This is directly related to that test failure, which checks to make sure that our
 API token has that role. Well... if I spell "create" correctly, at least.
 
@@ -33,8 +35,12 @@ We also had a `Patch()` operation and that *also* had a `security` option. This
 leveraged a custom voter to check if the current user can `EDIT` this treasure.
 More on that in a minute.
 
+[[[ code('ac910a722e') ]]]
+
 And *finally*, we had `new Delete()`, which we decided only admins could do.
 Enforce that with `is_granted("ROLE_ADMIN")`.
+
+[[[ code('32edf9c6a1') ]]]
 
 Okay, we had *six* failures earlier and now:
 
@@ -86,6 +92,8 @@ be `DragonTreasureApi`. `dd($subject)`... and below, let's fix the code. This
 says that if the user doesn't have this role (actually a *scope*, which relates to
 the token scopes), return `false`.
 
+[[[ code('c7d4ae2874') ]]]
+
 The most important part is this: if the `$subject` - which is a
 `DragonTreasureApi` - has an owner that equals `$user` - the currently authenticated
 user - then return true: access granted!
@@ -116,6 +124,8 @@ will be in our app.
 this `DragonTreasureApi` doesn't have an owner: like for a treasure we're creating
 right now.
 
+[[[ code('375a148290') ]]]
+
 Phew! Head over and try it now!
 
 ```terminal-silent
@@ -138,6 +148,8 @@ need it.
 
 Let's quickly add that to all of our `patch()` requests. There's a *bunch* of them.
 Zoom!
+
+[[[ code('ca1b62c840') ]]]
 
 Let's see if we have any luck!
 
@@ -182,6 +194,8 @@ Previously, we had a custom validator that prevented this. So let's re-add that!
 Open `DragonTreasureApi` and find the `$owner` property. Add `#[IsValidOwner]`:
 a validator we created in an earlier tutorial.
 
+[[[ code('3b803b7896') ]]]
+
 You'll find it in `src/Validator/`. Previously, this validator expected its
 constraint to be used above a property that held a `User` *entity*. *We're* putting
 it on a property that holds a `UserApi`. So like with the voter, we need to update
@@ -189,11 +203,15 @@ it for the new reality.
 
 Right here, `assert()` that `$value` is an `instanceof UserApi`.
 
+[[[ code('6fcf17e2ed') ]]]
+
 Down here, we need to check if the value (meaning the `UserApi` that's on this
 property) is *not* equal to the currently authenticated user. Once again, we'll use
 the `id`s to compare this. And... *also* once again, I'll use `assert()` to help
 my editor. Now... it's happy about `getId()`... but not about my missing
 semicolon!
+
+[[[ code('7a8cffb028') ]]]
 
 Moment of truth! Run that test:
 

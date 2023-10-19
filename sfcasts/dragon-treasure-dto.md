@@ -8,6 +8,8 @@ serialization group stuff... and then we can do some cleanup on our properties.
 We had some *fairly* complex code in here... and while we won't add *all* of it
 back, we *will* add the most important things.
 
+[[[ code('3d288c604d') ]]]
+
 Lemme scroll down to make sure we got everything. Yea, that should be it! We
 *now* have a good old-fashioned, *boring* entity class. In `src/ApiPlatform/`,
 let's also delete `AdminGroupsContextBuilder`. This was a complex way to make
@@ -32,8 +34,11 @@ API classes everywhere
 
 ## Creating the DTO Class
 
-In `src/ApiResource/`, create the new class: `DragonTreasureApi`. Next, in
-`UserApi`, steal some of the basic code from our `#[ApiResource]`... paste that over
+In `src/ApiResource/`, create the new class: `DragonTreasureApi`. 
+
+[[[ code('fae02bb812') ]]]
+
+Next, in `UserApi`, steal some of the basic code from our `#[ApiResource]`... paste that over
 here, and, for now, delete `operations`. We can also get rid of these `use`
 statements. Perfect!
 
@@ -42,9 +47,13 @@ the `security` line. The *most* important thing is that we have `provider` and
 `processor` (just as they are here), and `stateOptions`, which will point to
 `DragonTreasure::class`.
 
+[[[ code('39af10eb7e') ]]]
+
 Also grab the `$id` property. Like before, we don't *really* want this to be
 part of our API, so it's `readable: false` and `writable: false`. Down here, add
 `public ?string $name = null`.
+
+[[[ code('1bab55ca04') ]]]
 
 *Great* start! We have one tiny class and... what the heck, let's just go try it!
 Refresh the docs. Yes! Our Treasure operations are here! If we try the collection
@@ -62,21 +71,31 @@ In the `src/Mapper/` directory, create a class called
 and add the `#[AsMapper()]` attribute. We're going `from: DragonTreasure::class`
 `to: DragonTreasureApi::class`.
 
+[[[ code('34af062ebb') ]]]
+
 And *just* like that, micro mapper knows to use this. Generate the
 two methods for the interface: `load()` and `populate()`. For sanity,
 add `$entity = $from`, and `assert()` that `$entity` is an
 `instanceof DragonTreasure`.
 
+[[[ code('8f41e6a0b4') ]]]
+
 Down here, create the DTO object with `$dto = new DragonTreasureApi()`. And remember,
 the job of `load()` is to create the object *and* put an identifier on it if there
 is one. So add `$dto->id = $entity->getId()`. Finally, `return $dto`.
+
+[[[ code('0bd9435748') ]]]
 
 For `populate()`, steal a few lines from above that set the `$entity` variable...
 then also say `$dto = $to`, and add one more `assert()` that `$dto` is an
 `instanceof DragonTreasureApi`.
 
+[[[ code('a8335d940e') ]]]
+
 The only property we have on our DTO right now is `name`, so all we need is
 `$dto->name = $entity->getName()`. At the end, `return $dto`.
+
+[[[ code('516aff71e1') ]]]
 
 And, people! We just created a class that maps from the entity to the DTO...
 and our state provider is using micro mapper internally... so I think this should...
@@ -94,6 +113,8 @@ relationship. But instead of this being a relation from `DragonTreasureApi` to a
 
 Check it out! Say `public ?UserApi $owner = null`.
 
+[[[ code('b630e0c2fd') ]]]
+
 Then let's go populate that in the mapper. Down here, say `$dto->owner =`... but...
 hold on a second. This isn't as simple as saying `$entity->getOwner()`, because that's
 a *user entity object*. We need a `UserApi` object! Can you think of anything
@@ -103,6 +124,8 @@ MicroMapper!
 Up here on top, inject `private MicroMapperInterface $microMapper`...
 and, down here, say `$dto->owner = $this->microMapper->map()` to map from
 `$entity->getOwner()` - the `User` entity object - to `UserApi::class`.
+
+[[[ code('5a99e8c76e') ]]]
 
 How cool is that? One thing to be aware of is that if, in *your* system,
 `$entity->getOwner()` might be `null`, you should code for that. Like, if you have
@@ -122,6 +145,8 @@ of the fields I'm adding is `$shortDescription`. That was a *custom* field befor
 but it'll be simpler now. Another custom field we had was `$isMine`, which will
 *also* just be a normal property.
 
+[[[ code('c6689df4de') ]]]
+
 Over in our mapper, let's set everything. I'll speed through the
 boring parts. But `$shortDescription` *is* a bit interesting. Before, in
 `DragonTreasure`, we had a `getShortDescription()` method and *that* was exposed
@@ -131,6 +156,8 @@ With the new setup, it's a normal property like anything else, and we handle set
 the custom data in our mapper: `$shortDescription` is equal to
 `$entity->getShortDescription()`. Finally, for `$dto->isMine`, temporarily
 hardcode that to `true`.
+
+[[[ code('45559ed8cd') ]]]
 
 Let's check it! Refresh and... that's *beautiful*!
 
@@ -155,6 +182,8 @@ is a *service*, so we can inject *other* services like the `$security` service.
 *Then*, we can populate that with whatever data we want. So `isMine`
 is true if `$this->security->getUser()` equals the `DragonTreasure`, `getOwner()`
 (which is a `User` entity object).
+
+[[[ code('3552c6a23a') ]]]
 
 Try the test one more time to make sure this is working, and... it *is*. Woo!
 

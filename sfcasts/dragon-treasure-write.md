@@ -24,6 +24,8 @@ Inside, implement `MapperInterface`, use `#[AsMapper()]` to say that
 we are mapping `from: DragonTreasureApi::class`, `to: DragonTreasure::class`...
 and add the two methods.
 
+[[[ code('45209028d0') ]]]
+
 This will be very similar to our `UserApiToEntityMapper`. In `load()`, if we have
 an ID, we want to *query* for that object. Add a constructor, with
 `private DragonTreasureRepository $repository`. Down here, include the now-familiar
@@ -40,6 +42,8 @@ constructor argument: the *name*. And we *don't* have a `setName()` method: the
 only way to set it is through the constructor. So, to transfer the `name` from the
 `$dto` *onto* the entity, pass it to the constructor.
 
+[[[ code('236cd88165') ]]]
+
 Two quick notes about this. Yes, this means that you can't *change* the name of
 an existing treasure via the API. And that's expected: if we've written our
 `DragonTreasure` without a `setName()` method, then we're intending for the name
@@ -50,6 +54,8 @@ but it can't be avoided here, and that's ok.
 Head down to `populate()` and start with the same code from `load()`. Also add
 `$entity = $to`... and one more `assert()` that `$entity instanceof DragonTreasure`.
 Just say `TODO` for a moment.
+
+[[[ code('d52af620d8') ]]]
 
 I want to make sure our mapper is at least being called. Earlier, when we ran the
 test, it executed *three* tests that match the name. So let's make the method
@@ -81,6 +87,8 @@ Let's re-add the constraints... this time to our API class. For `$name`,
 `#[GreaterThanOrEqual(0)]` and `$coolFactor` will be `#[GreaterThanOrEqual(0)]`
 and *also* `#[LessThanOrEqual(10)]`.
 
+[[[ code('1a8bb5530c') ]]]
+
 Try the test again.
 
 ```terminal-silent
@@ -105,9 +113,13 @@ Check it out: `if ($dto->owner)`, then we're going to set that onto the entity.
 Well, we won't do it *yet*, just `dd()` for now. This is the case where we *do*
 include the `owner` field in the JSON... and we'll talk more about that soon.
 
+[[[ code('474c84c9c5') ]]]
+
 For the `else`, this is when the user does *not* send an `owner` field.
 To set it to the currently authenticated user, on top, inject the `Security` service
 onto a new property. Then back below, set `owner` to `$this->security->getUser()`.
+
+[[[ code('bbe060608b') ]]]
 
 Beautiful! We *are* still missing the other field setting... so if we try to run
 the test... it will *still* hit a 500. *But*, if you check out the error, it's failing
@@ -115,6 +127,8 @@ because `description` is null. The `owner` *is* being set.
 
 So let's fill in the other fields: `$entity->setDescription($dto->description)`,
 `$entity->setCoolFactor($dto->coolFactor)`, and `$entity->setValue($dto->value)`.
+
+[[[ code('5175155b27') ]]]
 
 Boring but clear work. Also include a `TODO` down for `published`. We'll talk more
 about that shortly.
