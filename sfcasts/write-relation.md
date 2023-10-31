@@ -21,6 +21,8 @@ code that says:
 *But*, you are *allowed* to send the `owner` property and set it to *yourself*.
 Let's try that. Set `owner` to `'/api/users/'.$user->getId()`.
 
+[[[ code('2c2f58c421') ]]]
+
 ## How Relation Fields are Deserialized
 
 When we do that, it *should* hit *this* part of our code. Battle stations! Run
@@ -69,9 +71,13 @@ is a `UserApi` object. And what we *ultimately* need is a `User` entity. So, onc
 again, we'll use the mapping system to go from `UserApi` over to `User`. Up here,
 inject a `MicroMapperInterface $microMapper`.
 
+[[[ code('50bfe463ab') ]]]
+
 And below, say `$entity->setOwner()`... but use `$this->microMapper->map()` to
 go from `$dto->owner` to `User::class`. And remember, any time we map a relationship,
 we should add a `MAX_DEPTH` as well. Set `MicroMapperInterface::MAX_DEPTH` to `0`.
+
+[[[ code('138319e07f') ]]]
 
 Using `0` is enough because that will cause our mapper to query for the `User` object...
 it just won't continue and populate the individual property data from `UserApi` to
