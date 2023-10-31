@@ -18,14 +18,20 @@ That's because this is an *interesting* field. Previously, this field was readab
 *only* by admin users or the owner. Let's re-add this field and keep
 that behavior. Say `public bool $isPublished = false`.
 
+[[[ code('379ba758c6') ]]]
+
 Then... head into the mapper to populate this. Down here, get rid of the `TODO`
 and say `$entity->setIsPublished($dto->isPublished)`.
+
+[[[ code('e65a12f5c3') ]]]
 
 So if we *change* `isPublished` in the API call, the new value will sync back
 to the entity.
 
 On the other side... it doesn't matter where... say
 `$dto->isPublished = $entity->getIsPublished()`.
+
+[[[ code('d5ad5aa104') ]]]
 
 *Cool*! We don't have any security yet... so when we run the tests:
 
@@ -49,6 +55,8 @@ the logic we want to use to determine if the `isPublished` field should be seria
 
 So... let's use it! Above this property, say
 `#[ApiProperty(security: 'is_granted("EDIT", object)')]`.
+
+[[[ code('1ed624f9b1') ]]]
 
 If you want, you can change this attribute to something else - like `OWNER` -
 if that's more clear. `EDIT` sounds a little funny here... since we're just deciding
@@ -91,6 +99,8 @@ is *not* writable.
 The workaround is a bit weird, but stay with me here. We're basically
 going to allow access to this field if `object === null` or
 `is_granted("EDIT", object)`.
+
+[[[ code('c4fec1cc8f') ]]]
 
 Think about this. If we're *reading* a `DragonTreasure`, then `object` is
 *never* `null`. We will *always* have an object, so the voter will *always* be
