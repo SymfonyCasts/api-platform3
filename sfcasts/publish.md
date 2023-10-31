@@ -27,14 +27,20 @@ Call it `DragonTreasureStateProcessor`. Our goal should feel familiar: we'll
 add some custom logic here, but call the *normal* state processor to let it do
 the heavy lifting.
 
+[[[ code('46ddf47311') ]]]
+
 To do that, add a `__construct()` method with
 `private EntityClassDtoStateProcessor $innerProcessor`. Down here, use that with
 `return $this->innerProcessor->process()` passing the arguments it needs: `$data`,
 `$operation`, `$uriVariables`, and `$context`. Ah, and you can see this is
 highlighted in red. This isn't really a `void` method, so remove that.
 
+[[[ code('da9de4e448') ]]]
+
 Ok, let's hook up our API resource to use this! Inside `DragonTreasureApi`, change
 the processor to `DragonTreasureStateProcessor`.
+
+[[[ code('196d969dd3') ]]]
 
 At this point, we haven't really changed anything: the system will call our new
 processor... but then it just calls the *old* one. And so when we run the tests:
@@ -50,6 +56,8 @@ Everything still works except for that last failure.
 So let's add our notification code! Originally, we figured out if `isPublished`
 was changing from `false` to `true` by using the "previous data" that's inside
 the `$context`. Dump `$context['previous_data']` to see what that looks like.
+
+[[[ code('694e3ae205') ]]]
 
 Now, run *just* this test:
 
@@ -72,12 +80,16 @@ paste it in. This is delightfully boring! We use` $previousData` and `$data` to
 detect the state change from `isPublished` false to true... then create a
 `Notification`.
 
+[[[ code('a4ce6eae4b') ]]]
+
 The only thing that's *kind of* interesting is that the `Notification` entity is
 related to a `DragonTreasure` entity... so we query for the `$entity` using
 the `repository` and the `id` from the DTO class.
 
 Let's inject the services we need: `private EntityManagerInterface $entityManager`
 so we can save and `private DragonTreasureRepository $repository`.
+
+[[[ code('1fb1295d72') ]]]
 
 There we go! Moment of truth:
 
