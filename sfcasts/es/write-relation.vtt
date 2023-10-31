@@ -1,0 +1,268 @@
+WEBVTT
+
+00:00:01.096 --> 00:00:06.376 align:middle
+Abre DragonTreasureResourceTest y consulta
+testPostToCreateTreasureWithLogin().
+
+00:00:07.036 --> 00:00:11.736 align:middle
+Hemos hablado mucho de hacer que nuestros
+recursos puedan devolver campos de relación.
+
+00:00:11.956 --> 00:00:16.616 align:middle
+El truco principal es simplemente rellenar esos
+campos desde dentro de nuestro mapeador de datos.
+
+00:00:17.076 --> 00:00:21.256 align:middle
+Luego, API Platform se encarga
+de transformarlos en IRI.
+
+00:00:21.986 --> 00:00:26.736 align:middle
+Algo de lo que no hemos hablado es de la posibilidad
+de escribir en uno de esos campos de relación.
+
+00:00:27.356 --> 00:00:31.676 align:middle
+Cuando utilizamos esta ruta post(),
+no necesitamos enviar un campo owner.
+
+00:00:32.296 --> 00:00:36.396 align:middle
+Eso es porque, anidado en
+DragonTreasureApiToEntityMapper,
+
+00:00:36.686 --> 00:00:41.906 align:middle
+tenemos código que dice: Si no se envía un
+owner en el JSON, establécelo automáticamente
+
+00:00:41.906 --> 00:00:43.516 align:middle
+al usuario autenticado actualmente.
+
+00:00:43.956 --> 00:00:49.046 align:middle
+Pero, se te permite enviar la propiedad
+owner y establecerla a ti mismo.
+
+00:00:49.986 --> 00:00:50.896 align:middle
+Intentémoslo.
+
+00:00:51.796 --> 00:00:54.696 align:middle
+Establece owner a
+'/api/users/'.$user->getId().
+
+00:00:54.866 --> 00:00:56.366 align:middle
+Cuando
+
+00:00:56.416 --> 00:01:01.456 align:middle
+lo hagamos, debería aparecer
+esta parte de nuestro código. ¡
+
+00:01:02.626 --> 00:01:03.656 align:middle
+Puestos de combate! Ejecuta
+
+00:01:03.946 --> 00:01:10.776 align:middle
+symfony php bin/phpunit y ejecuta
+sólo esta prueba: ¡Perfecto! Golpea
+
+00:01:11.156 --> 00:01:13.986 align:middle
+y vuelca un objeto UserApi. Esto
+
+00:01:14.286 --> 00:01:16.256 align:middle
+es genial. En realidad , vuelca
+
+00:01:16.916 --> 00:01:20.786 align:middle
+todo el $dto para que podamos ver las
+cosas con más detalle. Fantástico.
+
+00:01:21.976 --> 00:01:23.436 align:middle
+Cuando
+
+00:01:23.846 --> 00:01:28.286 align:middle
+enviamos estos datos JSON, el
+serializador deserializa todo
+
+00:01:28.286 --> 00:01:31.436 align:middle
+esto en un objeto DragonTreasureApi.
+Esta cadena va a la propiedad
+
+00:01:32.316 --> 00:01:34.246 align:middle
+name, esta cadena
+
+00:01:34.376 --> 00:01:37.946 align:middle
+va a la propiedad description,
+y así sucesivamente.
+
+00:01:37.946 --> 00:01:40.446 align:middle
+Aquí vemos que: cadena... cadena...
+
+00:01:40.526 --> 00:01:42.276 align:middle
+1.000... y
+
+00:01:42.276 --> 00:01:44.276 align:middle
+5. Súper sencillo. Pero
+
+00:01:44.746 --> 00:01:48.836 align:middle
+ocurre algo especial cuando el campo
+que envías es una relación, es decir,
+
+00:01:49.216 --> 00:01:53.666 align:middle
+la propiedad contiene un objeto que
+es un #[ApiResource]. Concretamente,
+
+00:01:54.146 --> 00:02:00.816 align:middle
+¡esta cadena IRI se transforma
+en un objeto UserApi! Pero...
+
+00:02:01.436 --> 00:02:04.126 align:middle
+¿cómo y quién lo hace? La
+
+00:02:04.766 --> 00:02:10.436 align:middle
+respuesta es: un poco de trabajo en equipo entre el
+sistema serializador y el proveedor de estado. Hasta
+
+00:02:11.346 --> 00:02:14.536 align:middle
+ahora, por lo que sabemos, la única vez que se
+
+00:02:14.536 --> 00:02:18.056 align:middle
+utiliza el proveedor de estado es
+cuando obtenemos un recurso... como
+
+00:02:18.406 --> 00:02:23.446 align:middle
+si obtenemos un usuario aquí o aquí,
+o si PATCH o DELETE un usuario. En
+
+00:02:24.276 --> 00:02:28.476 align:middle
+todos esos casos, API Platform aprovecha
+el proveedor de estado de usuario para
+
+00:02:28.656 --> 00:02:31.406 align:middle
+encontrar uno o varios usuarios. Pero hay
+
+00:02:31.886 --> 00:02:37.686 align:middle
+otro punto en el que se utiliza un proveedor
+de estado: cuando alguien envía JSON que
+
+00:02:37.686 --> 00:02:41.326 align:middle
+contiene una cadena IRI en un
+campo de relación. Durante
+
+00:02:42.076 --> 00:02:47.166 align:middle
+el proceso de deserialización, el
+serializador toma esta cadena IRI, comprueba
+
+00:02:47.596 --> 00:02:53.966 align:middle
+que corresponde a un objeto UserApi y llama a
+su proveedor de estado para cargarlo. Lo que
+
+00:02:54.426 --> 00:02:58.106 align:middle
+devuelva ese proveedor de estado se
+establecerá en última instancia en
+
+00:02:58.106 --> 00:03:01.056 align:middle
+la propiedad owner de DragonTreasureApi. Esta
+
+00:03:02.016 --> 00:03:04.136 align:middle
+magia siempre ha estado ocurriendo... pero
+
+00:03:04.396 --> 00:03:06.996 align:middle
+me encanta entender la mecánica que
+hay detrás. ¡ Alerta de empollón
+
+00:03:07.356 --> 00:03:08.146 align:middle
+! De todos modos,
+
+00:03:08.776 --> 00:03:11.926 align:middle
+en nuestro mapeador, nuestro
+trabajo es bastante sencillo.
+
+00:03:12.256 --> 00:03:15.896 align:middle
+Sabemos que $dto->owner
+es un objeto UserApi. Y
+
+00:03:16.096 --> 00:03:19.106 align:middle
+lo que necesitamos en última instancia
+es una entidad User. Así que,
+
+00:03:19.606 --> 00:03:25.856 align:middle
+una vez más, utilizaremos el sistema
+de mapeo para ir de UserApi a User.
+
+00:03:27.026 --> 00:03:31.416 align:middle
+Aquí arriba, inyecta un
+MicroMapperInterface $microMapper. Y
+
+00:03:31.416 --> 00:03:36.536 align:middle
+abajo, digamos $entity->setOwner()... pero
+
+00:03:37.226 --> 00:03:44.566 align:middle
+utiliza $this->microMapper->map()
+para ir de $dto->owner a User::class. Y
+
+00:03:45.196 --> 00:03:50.486 align:middle
+recuerda, cada vez que mapeemos una relación,
+debemos añadir también un MAX_DEPTH. Establecer
+
+00:03:51.056 --> 00:03:55.376 align:middle
+MicroMapperInterface::MAX_DEPTH en 0. Utilizar
+
+00:03:56.196 --> 00:04:01.236 align:middle
+0 es suficiente porque eso hará que
+nuestro mapeador consulte el objeto User...
+
+00:04:01.586 --> 00:04:07.726 align:middle
+sólo que no continuará y rellenará los datos
+de las propiedades individuales de UserApi a User.
+
+00:04:08.266 --> 00:04:13.976 align:middle
+Sólo necesitaríamos hacer eso si permitiéramos
+que owner fuera un objeto incrustado, como
+
+00:04:14.396 --> 00:04:16.306 align:middle
+crear uno nuevo sobre la marcha.... o
+
+00:04:16.786 --> 00:04:21.266 align:middle
+si hiciéramos algo loco como añadir
+@id para cargar un usuario ... y luego
+
+00:04:21.516 --> 00:04:24.226 align:middle
+modificar ese usuario de golpe.
+
+00:04:24.756 --> 00:04:29.546 align:middle
+Cosas locas, probablemente no realistas, de las
+que ya hemos hablado en tutoriales anteriores. E
+
+00:04:29.866 --> 00:04:34.206 align:middle
+incluso si un usuario intentara esto ahora
+mismo, API Platform no lo permitiría porque
+
+00:04:34.396 --> 00:04:38.126 align:middle
+sólo se pueden escribir datos incrustados
+en un campo si hemos config urado
+
+00:04:38.126 --> 00:04:40.496 align:middle
+los grupos de serialización para
+ello. De todos modos, lo único que
+
+00:04:41.496 --> 00:04:44.776 align:middle
+nos preocupa es asegurarnos de que
+
+00:04:44.776 --> 00:04:47.576 align:middle
+estamos cargando el objeto
+entidad User correcto. Ejecuta
+
+00:04:48.776 --> 00:04:51.126 align:middle
+de nuevo la prueba y... ¡Está
+
+00:04:51.636 --> 00:04:52.756 align:middle
+bien! ¡
+
+00:04:53.116 --> 00:04:56.146 align:middle
+Ya podemos escribir el
+campo owner! Siguiente paso:
+
+00:04:57.286 --> 00:05:02.306 align:middle
+Vamos a centrarnos en hacer que se pueda escribir
+en el campo dragonTreasures de User. Éste
+
+00:05:02.896 --> 00:05:04.316 align:middle
+es un campo de relación... pero
+
+00:05:04.656 --> 00:05:08.306 align:middle
+como es una colección,
+necesitará un truco extra.
