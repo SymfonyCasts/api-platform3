@@ -1,0 +1,373 @@
+WEBVTT
+
+00:00:01.086 --> 00:00:03.126 align:middle
+Sólo nos queda una prueba fallida. Al
+
+00:00:03.426 --> 00:00:09.006 align:middle
+parecer, podemos robar tesoros parcheando
+a un usuario y enviando dragonTreasures
+
+00:00:09.006 --> 00:00:12.206 align:middle
+a un tesoro que pertenece a otra persona.
+
+00:00:12.206 --> 00:00:16.316 align:middle
+Esto debería darnos un código
+de estado 422, pero obtenemos 200.
+
+00:00:16.776 --> 00:00:20.416 align:middle
+Pero no pasa nada: ya lo
+arreglamos en el tutorial anterior.
+
+00:00:20.846 --> 00:00:25.326 align:middle
+Ahora sólo tenemos que reactivar
+y adaptar ese validador.
+
+00:00:26.496 --> 00:00:31.706 align:middle
+En UserApi, encima de la propiedad
+$dragonTreasures, podemos quitar #[ApiProperty]
+
+00:00:32.226 --> 00:00:34.826 align:middle
+y añadir #[TreasuresAllowedOwnerChange].
+
+00:00:36.226 --> 00:00:38.266 align:middle
+En el último tutorial, pusimos esto
+
+00:00:38.266 --> 00:00:42.856 align:middle
+encima de esa misma propiedad $dragonTreasures,
+pero dentro de la entidad User.
+
+00:00:43.656 --> 00:00:48.866 align:middle
+El validador haría un bucle sobre cada
+DragonTreasure, utilizaría el UnitOfWork de Doctrine
+
+00:00:48.866 --> 00:00:52.566 align:middle
+para obtener el $originalOwnerId,
+y luego comprobaría
+
+00:00:52.566 --> 00:00:55.916 align:middle
+si el $newOwnerId es diferente del original.
+
+00:00:56.236 --> 00:00:58.516 align:middle
+Si lo fuera, crearía una violación.
+
+00:00:58.516 --> 00:01:03.456 align:middle
+Lo primero es lo primero: la restricción
+ya no se utilizará en una propiedad
+
+00:01:03.456 --> 00:01:08.256 align:middle
+que contenga un objeto Collection: la
+nueva propiedad contiene una simple matriz.
+
+00:01:08.766 --> 00:01:12.516 align:middle
+También dd($value).
+
+00:01:12.516 --> 00:01:20.166 align:middle
+En la prueba, encima, pon un dump() que diga
+Real owner is con $otherUser->getId().
+
+00:01:20.626 --> 00:01:22.636 align:middle
+Eso nos ayudará a rastrear si está robado.
+
+00:01:23.576 --> 00:01:27.036 align:middle
+Ejecuta sólo esta prueba: Y...
+
+00:01:27.486 --> 00:01:30.536 align:middle
+¡perfecto! Se supone que
+el "Propietario real" es 2,
+
+00:01:30.886 --> 00:01:35.736 align:middle
+y el volcado del validador muestra
+un único objeto DragonTreasureApi.
+
+00:01:36.646 --> 00:01:42.966 align:middle
+Recordatorio: este volcado es la propiedad
+dragonTreasures del UserApi que se está actualizando.
+
+00:01:43.436 --> 00:01:48.176 align:middle
+Y, aunque no podamos verlo
+aquí, el id de ese usuario es 1.
+
+00:01:48.716 --> 00:01:52.786 align:middle
+Pero, en el volcado, fíjate en
+el propietario: ¡sigue siendo 2!
+
+00:01:53.226 --> 00:01:55.186 align:middle
+¡Sigue siendo el propietario correcto!
+
+00:01:56.246 --> 00:02:00.156 align:middle
+Cuando hacemos la petición PATCH, este
+tesoro se carga desde la base de datos, se
+
+00:02:00.426 --> 00:02:02.736 align:middle
+transforma en un DragonTreasureApi,
+
+00:02:03.446 --> 00:02:07.086 align:middle
+y luego se establece en la propiedad
+dragonTreasures del UserApi.
+
+00:02:08.196 --> 00:02:15.476 align:middle
+Pero nada ha cambiado -todavía- el owner
+del tesoro: sigue teniendo el owner original.
+
+00:02:16.386 --> 00:02:23.546 align:middle
+La parte problemática viene después, cuando nuestro
+procesador de estado, en realidad, UserApiToEntityMapper,
+
+00:02:23.806 --> 00:02:28.766 align:middle
+mapea la propiedad dragonTreasures
+de UserApi a la entidad User.
+
+00:02:29.676 --> 00:02:32.766 align:middle
+Eso hace que se llame a
+User.addDragonTreasure()...
+
+00:02:33.266 --> 00:02:37.216 align:middle
+y eso hace que se llame a
+DragonTreasure.setOwner()...
+
+00:02:37.416 --> 00:02:39.386 align:middle
+con el nuevo objeto User.
+
+00:02:40.286 --> 00:02:44.026 align:middle
+Así que, aunque las cosas parezcan
+estar bien ahora en el validador -el
+
+00:02:44.486 --> 00:02:49.706 align:middle
+propietario sigue siendo el original-,
+el tesoro acabará siendo robado.
+
+00:02:50.566 --> 00:02:54.806 align:middle
+Atención: añade un return al
+validador para que siempre pase.
+
+00:02:55.676 --> 00:02:59.836 align:middle
+Y en UserResourceTest,
+->get('/api/users/'.$otherUser->getId())
+
+00:02:59.836 --> 00:03:04.626 align:middle
+y ->dump(). Ejecuta
+
+00:03:06.316 --> 00:03:08.836 align:middle
+la prueba: Y... ¡sí!
+
+00:03:09.676 --> 00:03:16.326 align:middle
+El campo dragonTreasures está vacío para $otherUser
+¡porque les han robado el tesoro! ¡ Están
+
+00:03:16.566 --> 00:03:17.306 align:middle
+locos! Para
+
+00:03:18.296 --> 00:03:22.176 align:middle
+solucionar este lío en el validador,
+necesitamos saber dos cosas. Primero,
+
+00:03:22.176 --> 00:03:26.246 align:middle
+cuál es el propietario
+original de cada tesoro. Y
+
+00:03:26.756 --> 00:03:32.416 align:middle
+lo tenemos: cada objeto de DragonTreasureApi sigue teniendo
+su propietario original. En segundo lugar, necesitamos saber
+
+00:03:32.476 --> 00:03:38.756 align:middle
+a qué usuario pertenecen ahora
+estos tesoros: a qué objeto de
+
+00:03:39.086 --> 00:03:42.606 align:middle
+UserApi pertenece esta propiedad. Y
+
+00:03:43.056 --> 00:03:44.936 align:middle
+eso no lo tenemos. Para
+
+00:03:45.876 --> 00:03:51.206 align:middle
+conseguirlo, podemos desplazar la restricción de esta
+propiedad concreta -a la que sólo tenemos acceso a los objetos
+
+00:03:51.206 --> 00:03:55.486 align:middle
+DragonTreasureApi - hasta la clase. Eso
+
+00:03:55.926 --> 00:03:59.836 align:middle
+nos dará acceso a todo
+el objeto UserApi. El paso
+
+00:03:59.916 --> 00:04:01.486 align:middle
+1 es fácil... ¡mueve la restricción
+
+00:04:01.806 --> 00:04:04.116 align:middle
+para que esté por encima de la clase! Para
+
+00:04:05.616 --> 00:04:08.886 align:middle
+ello, abre la clase de
+la restricción. Deshazte
+
+00:04:09.816 --> 00:04:13.376 align:middle
+de las anotaciones, ya que las
+anotaciones están muertas... y
+
+00:04:13.686 --> 00:04:14.996 align:middle
+no las vamos a utilizar. Luego
+
+00:04:15.416 --> 00:04:20.646 align:middle
+cambia esto de TARGET_PROPERTY y
+TARGET_METHOD a TARGET_CLASS. Por
+
+00:04:20.676 --> 00:04:25.516 align:middle
+alguna razón, mi editor añade un
+\ extra ahí, así que elimínalo.
+
+00:04:26.886 --> 00:04:29.006 align:middle
+También necesitamos anular un método.
+
+00:04:29.006 --> 00:04:32.896 align:middle
+No estoy seguro de por qué tenemos que
+especificar el objetivo en ambos sitios... este
+
+00:04:33.286 --> 00:04:35.756 align:middle
+método es específico del
+sistema de validación, pero
+
+00:04:35.886 --> 00:04:40.886 align:middle
+no es gran cosa: return self::CLASS_CONSTRAINT.
+
+00:04:41.556 --> 00:04:44.046 align:middle
+Añade también un tipo de
+retorno: string|array. Eso
+
+00:04:44.776 --> 00:04:47.706 align:middle
+evitará un aviso de desaprobación. Vuelve
+
+00:04:47.706 --> 00:04:50.266 align:middle
+al validador, dd($value)... y
+
+00:04:50.706 --> 00:04:54.876 align:middle
+vuelve a ejecutar la prueba: Veamos... ¡sí!
+
+00:04:55.286 --> 00:05:00.326 align:middle
+Vuelca todo el objeto
+UserApi con ID 1. ¡Qué bien
+
+00:05:00.636 --> 00:05:02.276 align:middle
+! La
+
+00:05:02.356 --> 00:05:05.246 align:middle
+propiedaddragonTreasures
+contiene ese único tesoro... ¡y
+
+00:05:05.756 --> 00:05:09.676 align:middle
+aquí abajo vemos a su
+propietario original! Ahora
+
+00:05:10.286 --> 00:05:15.036 align:middle
+sólo tenemos que comprobar si el nuevo propietario es
+distinto del propietario original. ¡Así de fácil! De
+
+00:05:15.536 --> 00:05:21.936 align:middle
+vuelta en el validador, assert() que
+$value es un instanceof UserApi. Luego,
+
+00:05:23.956 --> 00:05:28.746 align:middle
+foreach sobre $value->dragonTreasures
+as $dragonTreasureApi. Lo
+
+00:05:29.856 --> 00:05:35.816 align:middle
+positivamente encantador es que ya no necesitamos
+nada de esto de $unitOfWork. ¡ Bórralo
+
+00:05:36.526 --> 00:05:37.356 align:middle
+! Entonces
+
+00:05:37.826 --> 00:05:42.196 align:middle
+di $originalOwnerId =
+$dragonTreasureApi->owner->id. El
+
+00:05:42.196 --> 00:05:47.416 align:middle
+$newOwnerId será $value->id . ¡Y ya está
+
+00:05:47.416 --> 00:05:49.286 align:middle
+! Para
+
+00:05:50.036 --> 00:05:52.306 align:middle
+codificar a la defensiva,
+puedes añadir un ? aquí...
+
+00:05:52.306 --> 00:05:54.876 align:middle
+en caso de que no haya un propietario... como
+
+00:05:55.116 --> 00:05:56.736 align:middle
+si se trata de un nuevo tesoro. La
+
+00:05:57.766 --> 00:06:03.526 align:middle
+lógica aquí abajo no está rota, así que no hay
+nada que arreglar: si no tenemos el $originalOwnerId o
+
+00:06:03.526 --> 00:06:08.236 align:middle
+el $originalOwnerId es igual a
+$newOwnerId, todo va bien. Si no,
+
+00:06:08.806 --> 00:06:10.576 align:middle
+construye esta violación. Elimina
+
+00:06:11.456 --> 00:06:15.756 align:middle
+también esta línea $unitOfWork de
+aquí, esas declaraciones use... y
+
+00:06:16.076 --> 00:06:18.936 align:middle
+este constructor
+EntityManagerInterface. Gracias
+
+00:06:19.046 --> 00:06:24.776 align:middle
+al nuevo sistema DTO, ahora tenemos un
+validador personalizado muy aburrido.
+
+00:06:26.126 --> 00:06:27.826 align:middle
+Vuelve a hacer la prueba... y
+
+00:06:28.156 --> 00:06:32.726 align:middle
+cruza los dedos de las manos y los pies para tener
+suerte: ¡Lo hemos conseguido! Choca los cinco con
+
+00:06:33.036 --> 00:06:36.546 align:middle
+algo y, a continuación, elimina este
+->dump() de la parte superior. Respira h ondo:
+
+00:06:37.986 --> 00:06:47.976 align:middle
+ejecuta todo el conjunto de pruebas:
+symfony php bin/phpunit ¡Todo verde! ¡
+
+00:06:48.546 --> 00:06:51.876 align:middle
+Hemos reconstruido completamente nuestro
+sistema utilizando DTOs! ¡Woohoo!
+
+00:06:52.126 --> 00:06:53.656 align:middle
+Y ... ¡hemos
+
+00:06:53.766 --> 00:06:54.896 align:middle
+terminado!
+
+00:06:55.376 --> 00:07:00.036 align:middle
+Nos ha costado un poco de trabajo configurar todo
+esto, ¡pero ése es el objetivo de los DTOs! Hay
+
+00:07:00.556 --> 00:07:04.636 align:middle
+más trabajo de base al principio a
+cambio de más flexibilidad y claridad
+
+00:07:04.776 --> 00:07:07.516 align:middle
+más adelante, sobre todo si
+
+00:07:07.516 --> 00:07:11.836 align:middle
+estás construyendo una API realmente
+robusta que quieres mantener estable. Como
+
+00:07:12.626 --> 00:07:15.346 align:middle
+siempre, si tienes preguntas, comentarios o
+
+00:07:15.346 --> 00:07:18.016 align:middle
+quieres POSTULAR sobre las cosas
+chulas que estás construyendo, estamos
+
+00:07:18.416 --> 00:07:20.846 align:middle
+a tu disposición en los comentarios.
+
+00:07:20.916 --> 00:07:22.516 align:middle
+Muy bien amigos, ¡hasta la próxima!
