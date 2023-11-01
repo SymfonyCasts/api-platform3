@@ -1,0 +1,374 @@
+WEBVTT
+
+00:00:01.156 --> 00:00:05.596 align:middle
+Para ver lo que ocurre aquí, dirígete
+al mapeador: UserApiToEntityMapper.
+
+00:00:07.746 --> 00:00:11.996 align:middle
+La petición patch() tomará estos
+datos, los rellenará en UserApi...
+
+00:00:12.576 --> 00:00:15.466 align:middle
+y luego lo volvemos a mapear
+a la entidad en este mapeador.
+
+00:00:16.036 --> 00:00:18.986 align:middle
+Y... la razón por la que falla
+la prueba es bastante obvia
+
+00:00:19.386 --> 00:00:24.016 align:middle
+¡no estamos mapeando la propiedad
+dragonTreasures del DTO a la entidad!
+
+00:00:24.016 --> 00:00:29.556 align:middle
+Vamos a dump($dto) para ver cómo queda
+después de deserializar los datos.
+
+00:00:30.116 --> 00:00:33.176 align:middle
+Ejecuta de nuevo la prueba: Y...
+
+00:00:33.436 --> 00:00:37.906 align:middle
+vaya. Los dragonTreasures del DTO
+siguen siendo los dos originales.
+
+00:00:38.506 --> 00:00:44.556 align:middle
+Esto me dice que este campo se está ignorando
+por completo: no se está deserializando.
+
+00:00:44.946 --> 00:00:46.826 align:middle
+Y apuesto a que sabes la razón.
+
+00:00:47.226 --> 00:00:51.746 align:middle
+¡Dentro de UserApi, la propiedad
+$dragonTreasures no es writable!
+
+00:00:52.156 --> 00:00:55.726 align:middle
+Pero está muy bien ver que
+writable: false hace su trabajo.
+
+00:00:56.666 --> 00:01:00.406 align:middle
+Cuando volvamos a ejecutar la
+prueba, verás la diferencia.
+
+00:01:00.486 --> 00:01:05.076 align:middle
+¡Sí! Sigue habiendo dos tesoros,
+pero los ID son "1" y "3".
+
+00:01:05.426 --> 00:01:08.046 align:middle
+Así que UserApi parece correcto.
+
+00:01:09.626 --> 00:01:14.156 align:middle
+Ahora, tenemos que tomar esta matriz de
+objetos DragonTreasureApi y mapearlos
+
+00:01:14.156 --> 00:01:19.006 align:middle
+a objetos de entidad DragonTreasure para
+que podamos colocarlos en la entidad User.
+
+00:01:19.816 --> 00:01:22.516 align:middle
+Una vez más, ¡necesitamos un micro mapeador!
+
+00:01:23.106 --> 00:01:27.026 align:middle
+Ya conoces el procedimiento: añade private
+MicroMapperInterface $microMapper...
+
+00:01:28.206 --> 00:01:29.486 align:middle
+y vuelve aquí abajo...
+
+00:01:29.486 --> 00:01:33.286 align:middle
+empieza con $dragonTreasureEntities = [].
+
+00:01:33.286 --> 00:01:39.256 align:middle
+Voy a simplificar las cosas y
+utilizaré un buen y anticuado foreach.
+
+00:01:39.906 --> 00:01:43.796 align:middle
+Haz un bucle sobre $dto->dragonTreasures
+como $dragonTreasureApi.
+
+00:01:45.516 --> 00:01:50.296 align:middle
+Luego di que $dragonTreasureEntities[] es
+igual a $this->microMapper->map(),
+
+00:01:50.296 --> 00:01:55.746 align:middle
+pasando por $dragonTreasureApi
+y DragonTreasure::class.
+
+00:01:56.316 --> 00:01:58.956 align:middle
+Y como ya habrás adivinado, vamos a pasar
+
+00:01:58.956 --> 00:02:03.276 align:middle
+MicroMapperInterface::MAX_DEPTH igual a 0.
+
+00:02:03.756 --> 00:02:09.236 align:middle
+0 está bien aquí porque sólo tenemos que
+asegurarnos de que el mapeador del tesoro dragón
+
+00:02:09.236 --> 00:02:11.536 align:middle
+consulta la entidad DragonTreasure correcta.
+
+00:02:11.576 --> 00:02:18.356 align:middle
+Si tiene una relación, como owner, no nos importa
+si ese objeto está totalmente mapeado y poblado.
+
+00:02:19.566 --> 00:02:23.736 align:middle
+Aquí abajo, dd($dragonTreasureEntities).
+
+00:02:23.736 --> 00:02:24.956 align:middle
+¡Pruébalo!
+
+00:02:26.136 --> 00:02:27.966 align:middle
+Y... ¡tiene buena pinta!
+
+00:02:28.596 --> 00:02:30.576 align:middle
+Tenemos 2 tesoros con id: 1...
+
+00:02:30.886 --> 00:02:33.336 align:middle
+y aquí abajo id: 3.
+
+00:02:34.026 --> 00:02:37.816 align:middle
+Así que todo lo que tenemos que hacer
+ahora es fijarlo en el objeto User.
+
+00:02:38.166 --> 00:02:40.266 align:middle
+Digamos $entity->set...
+
+00:02:40.556 --> 00:02:42.016 align:middle
+pero... uh oh.
+
+00:02:42.496 --> 00:02:45.006 align:middle
+¡No tenemos un método setDragonTreasures()!
+
+00:02:45.506 --> 00:02:47.406 align:middle
+¡Y eso es a propósito!
+
+00:02:47.466 --> 00:02:49.356 align:middle
+Mira dentro de la entidad User.
+
+00:02:50.236 --> 00:02:54.676 align:middle
+Tiene un método getDragonTreasures(),
+pero no setDragonTreasures().
+
+00:02:55.086 --> 00:03:00.136 align:middle
+En su lugar, tiene addDragonTreasure()
+y removeDragonTreasure().
+
+00:03:00.786 --> 00:03:05.696 align:middle
+No voy a profundizar demasiado en por qué no podemos tener
+un definidor, pero está relacionado con el hecho de que
+
+00:03:05.696 --> 00:03:08.636 align:middle
+necesitamos definir el lado
+propietario de la relación Doctrine.
+
+00:03:09.236 --> 00:03:11.836 align:middle
+Hablamos de ello en nuestro tutorial sobre
+las relaciones Doctrine. La cuestión
+
+00:03:12.436 --> 00:03:17.036 align:middle
+es que si pudiéramos llamar
+simplemente a ->setDragonTreasures(),
+
+00:03:17.206 --> 00:03:18.936 align:middle
+no se guardaría correctamente.
+
+00:03:19.346 --> 00:03:22.266 align:middle
+Tenemos que llamar a los
+métodos sumador y eliminador.
+
+00:03:22.656 --> 00:03:23.716 align:middle
+¡Y esto es complicado! Tenemos
+
+00:03:24.016 --> 00:03:26.276 align:middle
+que mirar $dragonTreasureEntities,
+
+00:03:26.416 --> 00:03:31.436 align:middle
+compararlo con la propiedad actual dragonTreasures, y
+luego llamar a los sumadores y eliminadores correctos
+
+00:03:31.436 --> 00:03:36.466 align:middle
+para los tesoros que sean nuevos o eliminados.
+
+00:03:36.996 --> 00:03:41.066 align:middle
+En nuestro caso, tenemos que llamar a
+removeDragonTreasure() para el del medio
+
+00:03:41.356 --> 00:03:44.346 align:middle
+y a addDragonTreasure() para este tercero.
+
+00:03:45.056 --> 00:03:46.726 align:middle
+Escribir este código suena...
+
+00:03:47.046 --> 00:03:47.966 align:middle
+molesto...
+
+00:03:47.966 --> 00:03:49.186 align:middle
+y complicado.
+
+00:03:49.646 --> 00:03:52.886 align:middle
+Afortunadamente, ¡Symfony
+tiene algo que hace esto!
+
+00:03:53.226 --> 00:03:55.906 align:middle
+Es un servicio llamado "Property Accessor".
+
+00:03:56.776 --> 00:03:57.346 align:middle
+Dirígete aquí...
+
+00:03:57.486 --> 00:04:01.526 align:middle
+y añade private PropertyAccessorInterface
+$propertyAccessor.
+
+00:04:02.216 --> 00:04:05.296 align:middle
+Property Accessor es bueno
+para establecer propiedades.
+
+00:04:05.686 --> 00:04:08.126 align:middle
+Puede detectar si una propiedad es pública...
+
+00:04:08.326 --> 00:04:10.276 align:middle
+o si tiene un método setter...
+
+00:04:10.446 --> 00:04:12.956 align:middle
+o incluso métodos sumadores o eliminadores.
+
+00:04:13.616 --> 00:04:14.096 align:middle
+Para utilizarlo, digamos
+
+00:04:14.326 --> 00:04:20.676 align:middle
+$this->propertyAccessor->setValue() pasando
+el objeto al que estamos estableciendo datos-
+
+00:04:20.956 --> 00:04:26.776 align:middle
+el User $entity , la propiedad que estamos
+estableciendo - dragonTreasures - y, por último,
+
+00:04:26.776 --> 00:04:29.386 align:middle
+el valor: $dragonTreasureEntities.
+
+00:04:30.186 --> 00:04:34.226 align:middle
+Aquí abajo, vamos a dd($entity)
+para que veamos cómo queda.
+
+00:04:34.816 --> 00:04:36.136 align:middle
+Respira hondo.
+
+00:04:36.346 --> 00:04:39.266 align:middle
+Inténtalo: Desplázate hacia arriba...
+
+00:04:39.266 --> 00:04:40.666 align:middle
+hasta el objeto User.
+
+00:04:41.256 --> 00:04:42.726 align:middle
+¡Mira dragonTreasures!
+
+00:04:43.096 --> 00:04:47.206 align:middle
+¡Tiene dos elementos con id: 1 y id: 3!
+
+00:04:47.666 --> 00:04:50.586 align:middle
+¡Ha actualizado correctamente
+la propiedad dragonTreasures!
+
+00:04:51.066 --> 00:04:53.006 align:middle
+¿Cómo demonios lo ha hecho?
+
+00:04:53.496 --> 00:04:59.266 align:middle
+Llamando a addDragonTreasure() para el id
+3 y a removeDragonTreasure() para el id 2.
+
+00:04:59.266 --> 00:05:00.756 align:middle
+Puedo demostrarlo.
+
+00:05:01.126 --> 00:05:04.346 align:middle
+Aquí abajo, añade dump('Removing
+treasure'.$treasure->getId()).
+
+00:05:05.156 --> 00:05:06.476 align:middle
+Cuando
+
+00:05:07.996 --> 00:05:09.736 align:middle
+volvamos a ejecutar la prueba... ¡Ahí
+
+00:05:11.346 --> 00:05:12.336 align:middle
+está! ¡ Eliminando el
+
+00:05:12.616 --> 00:05:14.126 align:middle
+tesoro 2! La vida es
+
+00:05:14.306 --> 00:05:15.846 align:middle
+buena. Elimina
+
+00:05:16.676 --> 00:05:17.466 align:middle
+este dump() ... así como el otro de
+
+00:05:18.426 --> 00:05:20.126 align:middle
+aquí.
+
+00:05:20.826 --> 00:05:22.486 align:middle
+Veamos algo de verde. Ejecuta
+
+00:05:22.976 --> 00:05:25.226 align:middle
+la prueba una última vez... con suerte:
+
+00:05:25.456 --> 00:05:28.266 align:middle
+¡Pasa! La
+
+00:05:28.636 --> 00:05:31.836 align:middle
+respuesta final contiene
+los tesoros 1 y 3. ¿Qué
+
+00:05:32.416 --> 00:05:33.956 align:middle
+ha pasado con el tesoro 2 ?
+
+00:05:34.366 --> 00:05:37.726 align:middle
+En realidad, se eliminó por
+completo de la base de datos.
+
+00:05:38.176 --> 00:05:41.226 align:middle
+Entre bastidores, su propietario
+se estableció en null. Luego,
+
+00:05:41.646 --> 00:05:46.086 align:middle
+gracias a orphanRemoval, cada
+vez que el propietario de uno de
+
+00:05:46.086 --> 00:05:49.776 align:middle
+estos dragonTreasures se establece en
+null, se borra. De eso ya hablamos en un
+
+00:05:50.296 --> 00:05:52.646 align:middle
+tutorial anterior. Antes de
+
+00:05:53.426 --> 00:05:55.896 align:middle
+seguir adelante, tenemos que
+limpiar la prueba. Elimina
+
+00:05:56.456 --> 00:05:59.756 align:middle
+la parte en la que estamos robando
+$dragonTreasure3. Nos desharemos
+
+00:06:00.136 --> 00:06:04.096 align:middle
+de ese objeto de ahí, de la parte en la
+que lo colocamos aquí abajo, cambiaremos
+
+00:06:05.466 --> 00:06:09.166 align:middle
+la longitud a 1, y sólo
+probaremos ese. Así que
+
+00:06:09.376 --> 00:06:13.616 align:middle
+esto ahora sí que es una prueba
+para eliminar un tesoro. Celébralo
+
+00:06:13.796 --> 00:06:16.366 align:middle
+eliminando este ->dump(). Pero...
+
+00:06:17.346 --> 00:06:21.586 align:middle
+los tesoros aún se pueden
+robar, lo cual es lamentable.
+
+00:06:22.096 --> 00:06:23.986 align:middle
+Arreglemos el validador para esto... pero
+
+00:06:24.216 --> 00:06:28.196 align:middle
+también hagámoslo mucho más sencillo,
+gracias al sistema DTO, a continuación.
