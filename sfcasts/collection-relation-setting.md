@@ -10,6 +10,8 @@ And... the reason the test fails is pretty obvious: we're not mapping the
 Let's `dump($dto)` so we can see what it looks like after deserializing the
 data.
 
+[[[ code('d6a8035083') ]]]
+
 Run the test again:
 
 ```terminal-silent
@@ -21,6 +23,8 @@ tells me that this field is being completely ignored: it's *not* being
 deserialized. And I bet you know the reason. Inside `UserApi`, the `$dragonTreasures`
 property *isn't* `writable`! But it *is* pretty cool to see `writable: false` doing
 its job.
+
+[[[ code('8f80d5391c') ]]]
 
 When we run the test again, you'll see the difference.
 
@@ -44,10 +48,14 @@ and use a good old-fashioned `foreach`. Loop over `$dto->dragonTreasures` as
 And as you may have already guessed, we're going to pass
 `MicroMapperInterface::MAX_DEPTH` set to `0`.
 
+[[[ code('73bb632870') ]]]
+
 `0` is fine here because we just need to make sure that the dragon treasure
 mapper queries for the correct `DragonTreasure` entity. If it has a relation,
 like `owner`, we don't care if *that* object is fully mapped & populated.
 Down here, `dd($dragonTreasureEntities)`.
+
+[[[ code('5bdaca14c5') ]]]
 
 Try it out!
 
@@ -83,6 +91,9 @@ Writing this code sounds... *annoying*... and complicated. *Fortunately*, Symfon
 *has* something that does this! It's a service called the "Property Accessor".
 
 Head up here... and add `private PropertyAccessorInterface $propertyAccessor`.
+
+[[[ code('7da1af2757') ]]]
+
 Property Accessor is good at *setting properties*. It can detect if a property is
 public... or if it has a setter method... or even adder, or remover methods.
 To use it, say `$this->propertyAccessor->setValue()` passing the object that we're
@@ -90,6 +101,8 @@ setting data onto - the `User` `$entity`, the property we're setting -
 `dragonTreasures` - and finally, the *value*: `$dragonTreasureEntities`.
 
 Down here, let's `dd($entity)` so we can see how it looks.
+
+[[[ code('b74268014b') ]]]
 
 Deep breath. Try it:
 
@@ -131,6 +144,8 @@ the part where we set it down here, change the length to `1`, and just test
 *that one*. So this now truly is a test for *removing* a treasure.
 
 Celebrate by removing this `->dump()`.
+
+[[[ code('0bc8575f72') ]]]
 
 But... treasures *can* still be stolen, which is lame. Let's fix the validator
 for this... but also make it a lot simpler, thanks to the DTO system, next.
