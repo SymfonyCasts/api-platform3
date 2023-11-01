@@ -12,6 +12,8 @@ reactivate and *adapt* that validator.
 In `UserApi`, above the `$dragonTreasures` property, we can remove `#[ApiProperty]`
 and add `#[TreasuresAllowedOwnerChange]`.
 
+[[[ code('36a6fd35e1') ]]]
+
 In the last tutorial, we put this above that same `$dragonTreasures` property,
 but inside the `User` entity. The validator would loop over each `DragonTreasure`,
 use Doctrine's `UnitOfWork` to get the `$originalOwnerId`, and *then* check to see
@@ -24,8 +26,12 @@ First things first: the constraint will *not* be used on a property that holds
 a `Collection` object anymore: the new property holds a simple array. Also
 `dd($value)`.
 
+[[[ code('4bc40065c7') ]]]
+
 Over in the test, on top, put a `dump()` that says `Real owner is` with
 `$otherUser->getId()`. That'll help us track if it's stolen.
+
+[[[ code('fa63cce8cf') ]]]
 
 Okay, run *just* this test:
 
@@ -55,6 +61,8 @@ owner is still the original - the treasure *will* ultimately be stolen. Watch:
 add a `return` to the validator so it always passes. And in `UserResourceTest`,
 `->get('/api/users/'.$otherUser->getId())` and `->dump()`.
 
+[[[ code('b4f337b168') ]]]
+
 Run the test:
 
 ```terminal-silent
@@ -76,10 +84,14 @@ To get it, we can move the constraint from this specific property - where all we
 have access to are the `DragonTreasureApi` objects - up to the *class*. That will
 give us access to the entire `UserApi` object.
 
+[[[ code('d6d31bebc6') ]]]
+
 Step 1 is easy... move the constraint to be above the class! To allow this,
 open the constraint class. Get rid of the annotation stuff - since annotations are
 dead... and we're not using them. Then change this from `TARGET_PROPERTY` and
 `TARGET_METHOD` to `TARGET_CLASS`.
+
+[[[ code('a0955d06ce') ]]]
 
 For some reason, my editor adds an extra `\` there, so delete that. We *also* need
 to override a method. I'm not sure why we have to specify the target in both places...
@@ -88,7 +100,11 @@ this method is specific to the validation system, but no big deal:
 
 Also add a return type - `string|array`. That'll avoid a deprecation notice.
 
+[[[ code('5181896543') ]]]
+
 Back over in the validator, `dd($value)`... then rerun the test:
+
+[[[ code('a0f8148353') ]]]
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
@@ -100,7 +116,12 @@ see its original owner! Now we can just check to see if the *new* owner is diffe
 from the *original* owner. Easy!
 
 Back in the validator, `assert()` that `$value` is an `instanceof UserApi`.
+
+[[[ code('da6e77d0c1') ]]]
+
 Then, `foreach` over `$value->dragonTreasures as $dragonTreasureApi`.
+
+[[[ code('5c75e393cb') ]]]
 
 The positively *lovely* thing is that we don't need *any* of this `$unitOfWork`
 stuff anymore. Delete it! Then say `$originalOwnerId = $dragonTreasureApi->owner->id`.
@@ -108,6 +129,8 @@ The `$newOwnerId` will be `$value->id`. That's it!
 
 To code defensively, you can add a `?` here... in case there *isn't* an owner...
 like if this is a new treasure.
+
+[[[ code('8867de088c') ]]]
 
 The logic down here ain't broke, so nothing to fix: if we *don't* have the
 `$originalOwnerId` or the `$originalOwnerId` equals `$newOwnerId`, everything is
