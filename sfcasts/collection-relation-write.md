@@ -15,6 +15,8 @@ And... everything passes except *one*. This trouble-maker test is
 Open `tests/Functional/UserResourceTest.php` and search for
 `testTreasuresCannotBeStolen()`. Here it is.
 
+[[[ code('74b89d1ebb') ]]]
+
 Let's read the story. We update a user and attempt to change its `dragonTreasures`
 property to contain a treasure owned by someone else. The test looks for a 422 status
 code - because we want to prevent stealing treasures - but the test fails with
@@ -42,15 +44,21 @@ Start by duplicating this test. Rename it to `testTreasuresCanBeRemoved`.
 I totally typo'ed that - mine says `cannot`, which is the *opposite* of what
 I want to test - so make sure you get that right in your code.
 
+[[[ code('0ff4066779') ]]]
+
 Now we can dress this up a bit. Make the first `$dragonTreasure` owned by
 `$user`. Then create a *second* `$dragonTreasure` *also* owned by `$user`, but we
 won't need a variable for it... you'll see. Finally, add a *third* `$dragonTreasure`
 called `$dragonTreasure3` that's owned by `$otherUser`.
 
+[[[ code('3613cc7e51') ]]]
+
 So we have *three* `dragonTreasures`, *two*  owned by `$user`, and one by
 `$otherUser`. Down here, we patch to modify `$user`. Remove `username` - we don't
 care about that - then send *two* `dragonTreasures`: the *first* and the *third*:
 `/api/treasures/` `$dragonTreasure3->getId()`.
+
+[[[ code('f0cdc4f723') ]]]
 
 We're going to test for *two* things. First, that the second treasure is
 removed from this user. Think about it: `$user` *started* with these two treasures...
@@ -67,11 +75,15 @@ that.
 Down here, `->assertStatus(200)` then extend the test by saying
 `->get('/api/users/' . $user->getId())` and `->dump()`.
 
+[[[ code('9fca636c25') ]]]
+
 I want to see what the user looks like *after* the update. Finally, assert that
 the `length` of the `dragonTreasures` field - I need quotes on that - is 2,
 for treasures 1 and 3. Then assert that `dragonTreasures[0]` is equal to
 `'/api/treasures/'.`, followed by `$dragonTreasure->getId()`. Copy that, paste,
 and assert that the 1 key is `$dragonTreasure3`.
+
+[[[ code('f42ca60613') ]]]
 
 Lovely! That test took some work, but it'll be *super* useful. Let's... just
 run it and see what happens! Copy the method name and, over at your terminal, run:
