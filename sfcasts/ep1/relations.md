@@ -109,7 +109,7 @@ But in `AppFixtures`, let's *override* that to do something cooler. Move the
 which is a way to override the defaults. By passing a callback, each time a
 `DragonTreasure` is created - so 40 times - it will call this method and we
 can return unique data to use for overriding the defaults for that treasure. Return
-`owner` set to `User::factory()->random()`.
+`owner` set to `UserFactory::random()`:
 
 [[[ code('e87c62ef4b')]]]
 
