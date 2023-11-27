@@ -65,6 +65,8 @@ Copy this setup code: we need to add it to our `app.js` file... over here in
 `assets/`. Paste... and we don't need all of these comments. I'll also move this
 code down below the imports.
 
+[[[ code('a2f819944d')]]]
+
 Awesome! This basically says that it will look in an `assets/react/controllers/`
 directory and make every React component inside super easy to render in Twig.
 So, let's create that: in `assets/`, add two new directories:
@@ -91,6 +93,8 @@ hardcode a "localhost" into my JavaScript.
 *Instead*, we're going to pass this in as a prop. To allow that, add a `props`
 argument... then say `props.entrypoint`.
 
+[[[ code('0b1181456c')]]]
+
 How do we pass this in? We'll see that in *just* a minute.
 
 ## Enabling React in Encore
@@ -105,6 +109,8 @@ And... *syntax error*! It sees this `.jsx` syntax and... has no idea what to do
 with it! That's because we haven't enabled React inside of WebpackEncore yet. Hit
 Ctrl+C to stop that... then spin over and open `webpack.config.js`. Find a comment
 that says `.enableReactPreset()`. There it is. Uncomment that.
+
+[[[ code('3f9e76f9e6') ]]]
 
 Now when we run
 
@@ -138,6 +144,8 @@ that's optional. Above this, add a `Route()` for `/admin`.
 All we need inside is `return $this->render()` and then
 a template: `admin/dashboard.html.twig`.
 
+[[[ code('167094b0fc') ]]]
+
 Cool! Down in the `templates/` directory, create that `admin/` directory... and
 inside, a new file called `dashboard.html.twig`. Again, this is probably one of the
 most boring *templates* you'll ever make, at least at the start. Extend
@@ -147,6 +155,8 @@ Now, how do we render the React component? Thanks to that UX React package, it's
 *super* easy. Create the element that it should render into then add
 `react_component()` followed by the name of the component. Since the file is called
 `ReactAdmin.jsx` in the `react/controllers/` directory, its name will be `ReactAdmin`.
+
+[[[ code('9b44e70388') ]]]
 
 And here's where we pass in those props. Remember: we have one called `entrypoint`.
 Oh, but let me fix my indentation... and remember to add the `</div>`. We don't
@@ -163,6 +173,8 @@ php bin/console debug:router
 
 Woh! Too big. That's better. Scroll up a bit, and... here it is. We want:
 `api_entrypoint`. Head back over, and pass that in.
+
+[[[ code('84b7e26758') ]]]
 
 Moment of truth! Find your browser, change the address to `/admin`, and...
 *hello* ReactAdmin! Woh! Behind the scenes, that made a request to our API entrypoint,

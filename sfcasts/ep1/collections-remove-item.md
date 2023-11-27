@@ -32,6 +32,8 @@ What happened? Well, our app set the `$owner` property for the `DragonTreasure` 
 just removed to `null`... and is now trying to save it. *But* since we have it set to
 `nullable: false`, it's failing.
 
+[[[ code('15cff49a62') ]]]
+
 But... let's take a step back and look at the *whole* picture. First, the serializer
 noticed that treasures `7` and `8` are *already* owned by the `User`... so it did
 nothing with those. But *then* it noticed that the treasure with id 44 - which
@@ -48,6 +50,8 @@ sure that your relationship allows `null`... and everything will save just fine.
 But in *our* case, if a `DragonTreasure` no longer has an `owner`, we want to *delete*
 it *completely*. We can do that in `User`... *way* up on the `dragonTreasures`
 property. After `cascade`, add one more option here: `orphanRemoval: true`.
+
+[[[ code('aa791b1eab') ]]]
 
 This tells Doctrine that if any of these `dragonTreasures` become "orphaned" - meaning
 they no longer have *any* owner - they should be *deleted*.

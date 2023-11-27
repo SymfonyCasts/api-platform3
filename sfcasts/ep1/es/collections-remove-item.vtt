@@ -1,0 +1,209 @@
+WEBVTT
+
+00:00:01.046 --> 00:00:06.486 align:middle
+Nuestro flamante usuario es el orgulloso
+propietario de dos tesoros con los ID 7 y 44.
+
+00:00:07.116 --> 00:00:11.356 align:middle
+Actualicemos este usuario para ver si podemos
+hacer algunos cambios en $dragonTreasures.
+
+00:00:12.046 --> 00:00:15.496 align:middle
+Utiliza la ruta PUT, haz clic en "Probar", y...
+
+00:00:15.496 --> 00:00:16.316 align:middle
+veamos...
+
+00:00:17.516 --> 00:00:19.546 align:middle
+el id que necesitamos es 14...
+
+00:00:19.886 --> 00:00:21.096 align:middle
+así que lo introduciré.
+
+00:00:22.476 --> 00:00:26.686 align:middle
+También eliminaré todos los campos excepto
+dragonTreasures para que podamos centrarnos.
+
+00:00:27.286 --> 00:00:30.506 align:middle
+Sabemos que actualmente tiene
+dos tesoros deslumbrantes:
+
+00:00:30.846 --> 00:00:37.116 align:middle
+/api/treasures/7 y /api/treasures/44.
+
+00:00:37.976 --> 00:00:42.556 align:middle
+Así que si enviamos esta petición,
+en teoría, eso debería hacer...
+
+00:00:42.836 --> 00:00:45.006 align:middle
+¡nada! Y si miramos aquí abajo...
+
+00:00:45.596 --> 00:00:47.956 align:middle
+sí: no ha hecho ningún cambio.
+
+00:00:49.006 --> 00:00:52.466 align:middle
+Supongamos que queremos añadir un
+nuevo DragonTreasure a este recurso.
+
+00:00:53.016 --> 00:00:59.896 align:middle
+Para ello, listamos los dos que ya
+tiene, junto con /api/treasures/8.
+
+00:01:00.606 --> 00:01:03.086 align:middle
+Supongo que es un id válido.
+
+00:01:03.736 --> 00:01:05.146 align:middle
+Cuando pulsemos "Ejecutar"...
+
+00:01:05.786 --> 00:01:07.486 align:middle
+funciona de maravilla.
+
+00:01:07.996 --> 00:01:12.266 align:middle
+El sistema serializador se dio cuenta
+de que ya tenía estos dos primeros,
+
+00:01:12.456 --> 00:01:14.486 align:middle
+así que no hizo nada con ellos.
+
+00:01:14.836 --> 00:01:17.286 align:middle
+Sólo añadió el nuevo con id 8.
+
+00:01:18.016 --> 00:01:22.976 align:middle
+Eso está muy bien, pero de lo que realmente
+quiero hablar es de eliminar un tesoro.
+
+00:01:23.906 --> 00:01:27.306 align:middle
+Supongamos que nuestro dragón se dejó uno
+de estos tesoros en el bolsillo del pantalón
+
+00:01:27.486 --> 00:01:29.546 align:middle
+y lo lavó accidentalmente en la lavandería.
+
+00:01:29.906 --> 00:01:30.676 align:middle
+No puedo culparles.
+
+00:01:30.956 --> 00:01:33.286 align:middle
+Yo siempre pierdo mi bálsamo labial ahí.
+
+00:01:33.916 --> 00:01:38.966 align:middle
+Como ahora el tesoro está empapado y no sirve para
+nada, tenemos que eliminarlo de la lista de tesoros.
+
+00:01:39.276 --> 00:01:40.356 align:middle
+No hay problema
+
+00:01:40.816 --> 00:01:45.416 align:middle
+Mencionaremos los dos que aún tiene
+nuestro dragón y eliminaremos el otro.
+
+00:01:46.256 --> 00:01:47.746 align:middle
+Cuando pulsemos "Ejecutar"...
+
+00:01:48.716 --> 00:01:50.036 align:middle
+¡estalla!
+
+00:01:50.556 --> 00:01:52.636 align:middle
+Se ha producido una excepción
+al ejecutar una consulta: [...]
+
+00:01:52.746 --> 00:01:54.466 align:middle
+Violación no nula: 7. valor nulo
+
+00:01:54.466 --> 00:01:58.026 align:middle
+en la columna "owner_id"
+¿Qué ha ocurrido? Bueno,
+
+00:01:58.676 --> 00:02:04.156 align:middle
+nuestra aplicación estableció la propiedad $owner para
+el DragonTreasure que acabamos de eliminar en null... y
+
+00:02:04.486 --> 00:02:06.386 align:middle
+ahora está intentando guardarlo. Pero
+
+00:02:07.116 --> 00:02:11.406 align:middle
+como la tenemos establecida en
+nullable: false, está fallando. Pero...
+
+00:02:11.966 --> 00:02:15.386 align:middle
+demos un paso atrás y veamos
+el cuadro completo. Primero, el
+
+00:02:15.946 --> 00:02:22.146 align:middle
+serializador se dio cuenta de que los tesoros
+7 y 8 ya pertenecían a User... así que
+
+00:02:22.716 --> 00:02:24.676 align:middle
+no hizo nada con ellos. Pero
+
+00:02:25.276 --> 00:02:32.956 align:middle
+entonces se dio cuenta de que el tesoro con id 44
+-que pertenecía a este User - ¡no estaba! Por eso
+
+00:02:33.636 --> 00:02:39.096 align:middle
+, en nuestra clase User, el serializador
+llamó a removeDragonTreasure(). Lo
+
+00:02:39.786 --> 00:02:44.106 align:middle
+realmente importante es que toma ese
+DragonTreasure y establece el owner en
+
+00:02:44.106 --> 00:02:46.846 align:middle
+null para romper la relación.
+
+00:02:47.846 --> 00:02:51.276 align:middle
+Dependiendo de tu aplicación, puede que
+eso sea exactamente lo que quieres. Quizá
+
+00:02:51.766 --> 00:02:54.766 align:middle
+permitas que dragonTreasures
+no tenga owner... como si...
+
+00:02:55.056 --> 00:02:59.186 align:middle
+todavía están sin descubrir y esperando
+a que un dragón los encuentre. Si
+
+00:02:59.816 --> 00:03:04.396 align:middle
+ése es el caso, sólo querrás asegurarte
+de que tu relación permite null... y
+
+00:03:04.766 --> 00:03:06.846 align:middle
+todo se salvará sin problemas. Pero
+
+00:03:07.576 --> 00:03:15.056 align:middle
+en nuestro caso, si un DragonTreasure ya no
+tiene un owner, queremos borrarlo por completo.
+
+00:03:15.776 --> 00:03:17.106 align:middle
+Podemos hacerlo en User... muy
+
+00:03:17.476 --> 00:03:20.316 align:middle
+arriba en la propiedad
+dragonTreasures. Después de
+
+00:03:20.786 --> 00:03:25.396 align:middle
+cascade, añade una opción más
+aquí: orphanRemoval: true. Esto
+
+00:03:26.206 --> 00:03:30.816 align:middle
+le dice a Doctrine que si alguno de estos
+dragonTreasures queda "huérfano" -lo que significa
+
+00:03:31.116 --> 00:03:35.176 align:middle
+que ya no tiene propietario-
+debe ser eliminado. Vamos a
+
+00:03:35.896 --> 00:03:36.426 align:middle
+probarlo. Cuando
+
+00:03:37.246 --> 00:03:38.526 align:middle
+volvamos a pulsar "Ejecutar"... ¡ya está
+
+00:03:39.396 --> 00:03:41.656 align:middle
+! Se guarda sin problemas. Siguiente paso:
+
+00:03:42.786 --> 00:03:46.796 align:middle
+Volvamos a los filtros y veamos
+cómo podemos utilizarlos para
+
+00:03:46.796 --> 00:03:48.866 align:middle
+buscar en recursos relacionados.

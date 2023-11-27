@@ -1,0 +1,394 @@
+WEBVTT
+
+00:00:01.026 --> 00:00:03.846 align:middle
+Voy a probar la ruta GET uno tesoro...
+
+00:00:03.846 --> 00:00:05.006 align:middle
+utilizando un id real.
+
+00:00:05.856 --> 00:00:10.616 align:middle
+Perfecto. Debido a los cambios que acabamos
+de hacer, el campo owner está incrustado.
+
+00:00:11.286 --> 00:00:12.836 align:middle
+¿Y si cambiamos el propietario?
+
+00:00:13.446 --> 00:00:17.536 align:middle
+Pan comido: siempre que
+el campo sea escribible...
+
+00:00:17.746 --> 00:00:18.916 align:middle
+que es el nuestro.
+
+00:00:19.666 --> 00:00:21.956 align:middle
+Ahora mismo el owner es id 1.
+
+00:00:22.626 --> 00:00:27.296 align:middle
+Utiliza la ruta PUT para actualizar el id 2.
+
+00:00:27.296 --> 00:00:32.696 align:middle
+Para la carga útil, establece
+owner en /api/users/3.
+
+00:00:33.556 --> 00:00:34.746 align:middle
+Y... ¡a ejecutar!
+
+00:00:35.816 --> 00:00:37.406 align:middle
+¡Bah! Error de sintaxis.
+
+00:00:37.786 --> 00:00:39.136 align:middle
+JSON está malhumorado.
+
+00:00:39.746 --> 00:00:42.506 align:middle
+Elimina la coma, inténtalo de nuevo y...
+
+00:00:42.856 --> 00:00:49.066 align:middle
+¡sí! El owner vuelve
+como el IRI /api/users/3.
+
+00:00:49.686 --> 00:00:52.146 align:middle
+¡Pero ahora quiero hacer algo salvaje!
+
+00:00:52.716 --> 00:00:54.906 align:middle
+Este tesoro pertenece al usuario 3.
+
+00:00:55.396 --> 00:00:56.766 align:middle
+Vamos a obtener sus datos.
+
+00:00:57.276 --> 00:01:02.376 align:middle
+Abre la ruta GET one user,
+pruébala, introduce 3 y...
+
+00:01:02.916 --> 00:01:03.556 align:middle
+¡ahí está!
+
+00:01:03.886 --> 00:01:06.496 align:middle
+El nombre de usuario es burnout400. Éste es el
+
+00:01:07.446 --> 00:01:13.776 align:middle
+objetivo: al actualizar un DragonTreasure
+-por tanto, al utilizar la ruta PUT
+
+00:01:13.776 --> 00:01:20.036 align:middle
+a /api/treasures/{id} -, en lugar
+de cambiar de un propietario a otro,
+
+00:01:20.456 --> 00:01:24.016 align:middle
+quiero cambiar el username
+del propietario existente.
+
+00:01:24.016 --> 00:01:30.216 align:middle
+Algo así: en lugar de establecer owner a
+la cadena I RI , establecerla a un objeto
+
+00:01:30.446 --> 00:01:33.066 align:middle
+con username asignado a algo nuevo.
+
+00:01:33.716 --> 00:01:35.206 align:middle
+¿Funcionaría?
+
+00:01:35.626 --> 00:01:36.546 align:middle
+¡Experimentemos!
+
+00:01:36.976 --> 00:01:40.216 align:middle
+Pulsa Ejecutar y no funciona.
+
+00:01:40.586 --> 00:01:46.466 align:middle
+Dice No se permiten documentos anidados para
+el atributo owner, utiliza en su lugar IRI.
+
+00:01:46.466 --> 00:01:51.106 align:middle
+Así que, a primera vista, parece
+que esto no está permitido:
+
+00:01:51.616 --> 00:01:55.036 align:middle
+parece que aquí sólo puedes
+utilizar una cadena IRI.
+
+00:01:55.516 --> 00:01:57.816 align:middle
+Pero, en realidad, sí está permitido.
+
+00:01:58.456 --> 00:02:03.896 align:middle
+El problema es que el campo username no se
+puede escribir mediante esta operación.
+
+00:02:04.586 --> 00:02:05.576 align:middle
+Pensemos en esto.
+
+00:02:05.956 --> 00:02:08.036 align:middle
+Estamos actualizando un DragonTreasure.
+
+00:02:08.746 --> 00:02:14.046 align:middle
+Esto significa que API Platform está utilizando
+el grupo de serialización treasure:write.
+
+00:02:14.886 --> 00:02:19.726 align:middle
+Ese grupo está por encima de la propiedad
+owner, por lo que podemos modi ficar el owner.
+
+00:02:20.286 --> 00:02:25.706 align:middle
+Pero si queremos poder cambiar el username
+del propietario, entonces también tenemos que
+
+00:02:25.706 --> 00:02:28.606 align:middle
+entrar en User y añadir ese grupo aquí.
+
+00:02:29.386 --> 00:02:33.246 align:middle
+Esto funciona exactamente igual que los
+campos incrustados cuando los leemos.
+
+00:02:34.066 --> 00:02:41.316 align:middle
+Básicamente, como al menos un campo de
+User tiene el grupo treasure:write, ahora
+
+00:02:41.316 --> 00:02:44.086 align:middle
+podemos enviar un objeto al campo owner.
+
+00:02:44.616 --> 00:02:46.386 align:middle
+Observa: enciéndelo de nuevo.
+
+00:02:48.556 --> 00:02:49.776 align:middle
+Funciona...
+
+00:02:50.056 --> 00:02:54.156 align:middle
+casi. Obtenemos un error 500: Se
+ha encontrado una nueva entidad
+
+00:02:54.156 --> 00:02:59.676 align:middle
+a través de la relación DragonTreasure.owner,
+pero no se ha configurado para que cascade persista.
+
+00:03:00.286 --> 00:03:06.546 align:middle
+Vaya. Esto significa que el serializador vio
+nuestros datos, creó un nuevo objeto User
+
+00:03:06.886 --> 00:03:09.156 align:middle
+y luego configuró el username en él.
+
+00:03:09.856 --> 00:03:14.676 align:middle
+Doctrine falló porque nunca le dijimos
+que persistiera el nuevo objeto User.
+
+00:03:15.086 --> 00:03:20.836 align:middle
+Aunque... esa no es la cuestión: ¡la
+cuestión es que no queremos un nuevo User !
+
+00:03:21.156 --> 00:03:25.296 align:middle
+Queremos coger al propietario
+existente y actualizar su username. Por
+
+00:03:26.116 --> 00:03:31.576 align:middle
+cierto, para que este ejemplo sea más realista,
+añadamos también un name a la carga útil
+
+00:03:31.876 --> 00:03:35.506 align:middle
+para que podamos fingir que realmente
+estamos actualizando el tesoro...
+
+00:03:35.766 --> 00:03:40.676 align:middle
+y decidimos actualizar también el username del
+propietario mientras estamos en el vecindario.
+
+00:03:41.366 --> 00:03:44.046 align:middle
+En cualquier caso: ¿cómo
+le decimos al serializador
+
+00:03:44.046 --> 00:03:47.966 align:middle
+que utilice el propietario existente
+en lugar de crear uno nuevo?
+
+00:03:48.586 --> 00:03:56.326 align:middle
+Añadiendo un campo @id configurado
+con el IRI del usu ario : /api/users/3.
+
+00:03:56.816 --> 00:03:58.046 align:middle
+Ya está
+
+00:03:58.756 --> 00:04:06.126 align:middle
+Cuando el serializador ve un objeto, si
+no tiene un @id, crea un objeto nuevo.
+
+00:04:06.736 --> 00:04:13.346 align:middle
+Si tiene @id, encuentra ese
+objeto y le asigna cualquier dato.
+
+00:04:13.346 --> 00:04:16.466 align:middle
+Entonces, llega el momento de la verdad.
+
+00:04:16.466 --> 00:04:17.516 align:middle
+Cuando lo probamos...
+
+00:04:17.926 --> 00:04:19.966 align:middle
+por supuesto, otro error de sintaxis.
+
+00:04:20.316 --> 00:04:21.646 align:middle
+¡Ponte las pilas, Ryan!
+
+00:04:23.446 --> 00:04:24.576 align:middle
+Después de arreglarlo...
+
+00:04:25.816 --> 00:04:28.676 align:middle
+¡perfecto! ¡Un código de estado 200!
+
+00:04:29.086 --> 00:04:33.076 align:middle
+Aunque... realmente no podemos ver
+si actualizó el username aquí...
+
+00:04:33.076 --> 00:04:34.536 align:middle
+ya que sólo muestra el propietario.
+
+00:04:35.456 --> 00:04:37.446 align:middle
+Utiliza la ruta GET one User...
+
+00:04:37.446 --> 00:04:38.736 align:middle
+busca al usuario 3...
+
+00:04:39.266 --> 00:04:41.776 align:middle
+¡y comprueba esos dulces datos!
+
+00:04:42.316 --> 00:04:44.226 align:middle
+Sí cambió el username.
+
+00:04:44.986 --> 00:04:50.336 align:middle
+Vale, me doy cuenta de que este ejemplo
+puede no haber sido el más realista,
+
+00:04:50.616 --> 00:04:56.206 align:middle
+pero poder actualizar objetos relacionados
+tiene muchos casos de uso reales.
+
+00:04:57.216 --> 00:05:00.166 align:middle
+Volviendo a esa petición de PUT,
+¿qué pasaría si quisiéramos
+
+00:05:00.166 --> 00:05:03.776 align:middle
+permitir que se creara y
+guardara un nuevo objeto User?
+
+00:05:04.356 --> 00:05:05.676 align:middle
+¿Es posible?
+
+00:05:06.326 --> 00:05:10.196 align:middle
+Sí, lo es En primer lugar,
+tendríamos que añadir una cascada :
+
+00:05:10.196 --> 00:05:14.646 align:middle
+['persistir'] al atributo
+treasure.owner ORM\Column .
+
+00:05:15.246 --> 00:05:16.936 align:middle
+Esto es algo que veremos más adelante.
+
+00:05:17.526 --> 00:05:22.926 align:middle
+Y en segundo lugar, tendríamos que asegurarnos de
+exponer todos los campos obligatorios como escribibles.
+
+00:05:23.526 --> 00:05:25.956 align:middle
+Ahora mismo sólo username es escribible...
+
+00:05:26.116 --> 00:05:28.206 align:middle
+por lo que no podríamos
+enviar password o email.
+
+00:05:28.206 --> 00:05:34.266 align:middle
+Antes de continuar, nos falta un
+pequeño, pero importante, detalle.
+
+00:05:34.856 --> 00:05:38.136 align:middle
+Intentemos esta actualización
+una vez más con el @id.
+
+00:05:38.626 --> 00:05:41.436 align:middle
+Pero establece username como una cadena vacía.
+
+00:05:42.186 --> 00:05:47.846 align:middle
+Recuerda que el campo username tiene un NotBlank
+encima, por lo que debería fallar la validación.
+
+00:05:48.716 --> 00:05:53.316 align:middle
+Y sin embargo, cuando lo intentamos,
+¡obtenemos un código de estado 200!
+
+00:05:53.816 --> 00:05:56.386 align:middle
+Y si vamos a la ruta GET de un usuario...
+
+00:05:58.016 --> 00:06:00.766 align:middle
+sí, ¡el username ahora está vacío!
+
+00:06:01.346 --> 00:06:03.096 align:middle
+Eso es... un problema.
+
+00:06:03.756 --> 00:06:04.866 align:middle
+¿Cómo ha ocurrido?
+
+00:06:05.416 --> 00:06:08.386 align:middle
+Por cómo funciona el sistema
+de validación de Symfony.
+
+00:06:08.946 --> 00:06:14.526 align:middle
+La entidad de nivel superior -el objeto que estamos
+modificando directamente- es DragonTreasure.
+
+00:06:14.526 --> 00:06:17.776 align:middle
+Así que el sistema de
+validación mira DragonTreasure
+
+00:06:17.926 --> 00:06:20.546 align:middle
+y ejecuta todas las
+restricciones de validación.
+
+00:06:21.286 --> 00:06:26.696 align:middle
+Sin embargo, cuando llega a un objeto
+como la propiedad owner, se detiene.
+
+00:06:27.056 --> 00:06:30.706 align:middle
+No sigue validando también ese objeto.
+
+00:06:30.706 --> 00:06:36.446 align:middle
+Si quieres que eso ocurra, tienes que añadir
+una restricción a esto llamada Assert\Valid.
+
+00:06:37.386 --> 00:06:39.316 align:middle
+Ahora... en nuestra ruta PUT...
+
+00:06:39.726 --> 00:06:42.786 align:middle
+si lo intentamos de nuevo, ¡sí!
+
+00:06:42.786 --> 00:06:47.616 align:middle
+422: owner.username, este
+valor no debe estar en blanco.
+
+00:06:48.526 --> 00:06:52.506 align:middle
+La posibilidad de actualizar un objeto
+incrustado es muy útil y potente.
+
+00:06:53.016 --> 00:06:57.836 align:middle
+Pero el coste de esto es hacer que
+tu API sea cada vez más compleja.
+
+00:06:58.246 --> 00:07:03.076 align:middle
+Así que, aunque puedes elegir hacer esto
+-y deberías hacerlo si es lo que quieres-,
+
+00:07:03.566 --> 00:07:07.906 align:middle
+también puedes optar por obligar al cliente
+de la API a actualizar primero el tesoro...
+
+00:07:08.326 --> 00:07:12.366 align:middle
+y luego hacer una segunda petición
+para actualizar el nombre de usuario...
+
+00:07:12.756 --> 00:07:16.156 align:middle
+en lugar de permitir que lo
+hagan todo al mismo tiempo.
+
+00:07:16.156 --> 00:07:20.606 align:middle
+A continuación: veamos esta
+relación desde el otro lado.
+
+00:07:21.116 --> 00:07:26.706 align:middle
+Cuando estamos actualizando un User, ¿podríamos actualizar
+también los tesoros que pertenecen a ese usuario?
+
+00:07:27.416 --> 00:07:28.286 align:middle
+¡Averigüémoslo!

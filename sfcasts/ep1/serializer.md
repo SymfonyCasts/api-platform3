@@ -86,6 +86,13 @@ have a Treasure with ID 1. Close this up. Let's try the PUT endpoint to do our
 first update. When you use the PUT endpoint, you *don't* need send every field:
 only the fields you want to change.
 
+***TIP
+If you're starting a new API Platform project, this `PUT` request will fail!
+You can try a `PATCH` request instead. This relates to a new `standard_put`
+config in `config/packages/api_platform.yaml`, which we talk about a bit
+later in the tutorial.
+***
+
 Pass `textDescription`... and I'll include `\n` to represent some new lines in
 JSON.
 

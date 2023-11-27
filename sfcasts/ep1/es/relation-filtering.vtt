@@ -1,0 +1,212 @@
+WEBVTT
+
+00:00:01.036 --> 00:00:04.046 align:middle
+Antes hemos añadido un montón de
+filtros a DragonTreasure. Vamos a
+
+00:00:04.486 --> 00:00:06.786 align:middle
+añadir unos cuantos más
+-empezando por User - para
+
+00:00:07.136 --> 00:00:10.726 align:middle
+que podamos mostrar algunos superpoderes
+de filtrado para las relaciones.
+
+00:00:11.686 --> 00:00:17.176 align:middle
+Empieza como de costumbre: ApiFilter y
+utilicemos primero PropertyFilter::class.
+
+00:00:17.876 --> 00:00:21.876 align:middle
+Recuerda: se trata de una especie de filtro
+falso que permite a nuestro cliente de la API
+
+00:00:21.946 --> 00:00:23.776 align:middle
+seleccionar los campos que desee.
+
+00:00:24.306 --> 00:00:26.636 align:middle
+Y todo esto es bastante familiar hasta ahora.
+
+00:00:27.556 --> 00:00:31.696 align:middle
+Cuando nos dirigimos, refrescamos y vamos
+a la ruta final de la colección GET...
+
+00:00:32.146 --> 00:00:34.146 align:middle
+vemos un nuevo campo properties[].
+
+00:00:34.806 --> 00:00:37.056 align:middle
+Podríamos elegir devolver sólo username...
+
+00:00:37.316 --> 00:00:40.096 align:middle
+o username y dragonTreasures.
+
+00:00:40.746 --> 00:00:41.906 align:middle
+Cuando pulsamos "Ejecutar"...
+
+00:00:42.836 --> 00:00:45.236 align:middle
+¡perfecto! Vemos los dos campos...
+
+00:00:45.716 --> 00:00:51.316 align:middle
+donde dragonTreasures es una matriz de objetos, cada uno
+de los cuales contiene los campos que elegimos incrustar.
+
+00:00:51.936 --> 00:00:54.586 align:middle
+De nuevo, esto es super duper normal.
+
+00:00:54.876 --> 00:00:57.216 align:middle
+Así que vamos a intentar
+algo más interesante.
+
+00:00:57.726 --> 00:01:02.626 align:middle
+De hecho, lo que vamos a intentar no está soportado
+directamente en los documentos interactivos.
+
+00:01:03.416 --> 00:01:05.316 align:middle
+Así que, copia esta URL...
+
+00:01:05.746 --> 00:01:08.756 align:middle
+pégala y añade .jsonld al final. Éste es el
+
+00:01:09.376 --> 00:01:12.856 align:middle
+objetivo: quiero devolver el campo username
+
+00:01:13.196 --> 00:01:17.326 align:middle
+y después sólo el campo
+name de cada tesoro dragón.
+
+00:01:17.946 --> 00:01:25.816 align:middle
+La sintaxis es un poco fea: es
+[dragonTreasures], seguido de []=name.
+
+00:01:27.146 --> 00:01:28.456 align:middle
+Y así...
+
+00:01:28.666 --> 00:01:30.656 align:middle
+¡sólo muestra name !
+
+00:01:31.176 --> 00:01:36.656 align:middle
+Así que, de entrada, PropertyFilter nos
+permite llegar a través de las relaciones.
+
+00:01:37.536 --> 00:01:38.886 align:middle
+Hagamos otra cosa.
+
+00:01:39.306 --> 00:01:40.536 align:middle
+Volvamos a DragonTreasure.
+
+00:01:41.736 --> 00:01:46.056 align:middle
+Podría ser útil filtrar por $owner:
+podríamos obtener rápidamente una lista
+
+00:01:46.056 --> 00:01:48.656 align:middle
+de todos los tesoros de un usuario concreto.
+
+00:01:49.086 --> 00:01:53.646 align:middle
+¡No te preocupes! Sólo tienes que añadir
+ApiFilter por encima de la propiedad $owner,
+
+00:01:54.076 --> 00:02:00.156 align:middle
+pasando el fiel SearchFilter::class
+seguido de strategy: 'exact'. Volviendo
+
+00:02:00.976 --> 00:02:04.926 align:middle
+a los documentos, si abrimos la
+ruta de la colección de tesoros GET
+
+00:02:04.926 --> 00:02:07.076 align:middle
+y le damos una vuelta...
+
+00:02:07.806 --> 00:02:08.596 align:middle
+veamos...
+
+00:02:08.946 --> 00:02:10.116 align:middle
+allá vamos: "propietario".
+
+00:02:10.676 --> 00:02:14.606 align:middle
+Introduce algo como /api/users/4...
+
+00:02:15.266 --> 00:02:19.546 align:middle
+suponiendo que se trate de un usuario
+real en nuestra base de datos, y...
+
+00:02:19.896 --> 00:02:24.286 align:middle
+¡sí! ¡Aquí están los cinco
+tesoros propiedad de ese usuario!
+
+00:02:24.876 --> 00:02:29.186 align:middle
+Pero quiero volverme más loco: quiero
+encontrar todos los tesoros que sean propiedad
+
+00:02:29.186 --> 00:02:32.486 align:middle
+de un usuario que coincida con
+un nombre de usuario concreto.
+
+00:02:32.876 --> 00:02:38.196 align:middle
+Así que en lugar de filtrar por owner,
+tenemos que filtrar por owner.username.
+
+00:02:38.776 --> 00:02:42.186 align:middle
+¿Cómo? Bueno, cuando queremos
+filtrar simplemente por owner,
+
+00:02:42.556 --> 00:02:46.106 align:middle
+podemos poner el ApiFilter
+justo encima de esa propiedad.
+
+00:02:46.976 --> 00:02:52.086 align:middle
+Pero como queremos filtrar por owner.username,
+no podemos ponerlo encima de una propi edad...
+
+00:02:52.286 --> 00:02:54.926 align:middle
+porque owner.username no es una propiedad.
+
+00:02:55.576 --> 00:02:59.736 align:middle
+Este es uno de los casos en los que
+necesitamos poner el filtro encima de la clase.
+
+00:03:00.156 --> 00:03:04.516 align:middle
+Y... eso también significa que tenemos que añadir
+una opción properties establecida en una matriz.
+
+00:03:05.406 --> 00:03:10.476 align:middle
+Dentro, digamos 'owner.username' y
+establecerla en la estrategia partial.
+
+00:03:11.406 --> 00:03:13.686 align:middle
+¡Vale! Vuelve y actualiza.
+
+00:03:14.556 --> 00:03:17.666 align:middle
+Sabemos que tenemos un propietario
+cuyo nombre de usuario es "Smaug"...
+
+00:03:18.186 --> 00:03:21.866 align:middle
+así que volvamos a la ruta
+de la colección GET y...
+
+00:03:22.246 --> 00:03:25.716 align:middle
+aquí en owner.username, busca "maug"...
+
+00:03:26.446 --> 00:03:28.186 align:middle
+y pulsa "Ejecutar".
+
+00:03:29.206 --> 00:03:29.856 align:middle
+Veamos...
+
+00:03:30.726 --> 00:03:31.746 align:middle
+¡Ha funcionado!
+
+00:03:32.076 --> 00:03:37.926 align:middle
+Esto muestra todos los tesoros propiedad de cualquier
+usuario cuyo nombre de usuario contenga maug.
+
+00:03:38.336 --> 00:03:39.306 align:middle
+¡Genial!
+
+00:03:40.176 --> 00:03:44.856 align:middle
+Bien, equipo: preparaos para
+la gran final: los Subrecursos.
+
+00:03:45.276 --> 00:03:48.406 align:middle
+Éstos han cambiado mucho en API Platform 3.
+
+00:03:48.806 --> 00:03:50.586 align:middle
+Vamos a sumergirnos en ellos.

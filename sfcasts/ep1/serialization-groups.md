@@ -57,7 +57,7 @@ and then the `$value` field... and finally `$coolFactor`:
 Good start. Move over and refresh the endpoint. Now... got it! We see `name`,
 `description`, `value`, and `coolFactor`.
 
-## DenormlizationContext: Controlling Writable Groups
+## DenormalizationContext: Controlling Writable Groups
 
 We now have control over which fields are *readable*... and we can do the same thing
 to choose which fields should be *writeable* in the API. That's called

@@ -37,9 +37,13 @@ Well, let's think about it. We know that the serializer works by grabbing all
 accessible properties on an object that are in the normalization group. And... we
 *do* have a `dragonTreasures` property on `User`.
 
+[[[ code('d9e44f867d') ]]]
+
 So... it *should* just work! To expose the field to the API, add it to the
 serialization group `user:read`. Later, we'll talk about how we can *write* to a
 collection field... but for now, just make it readable.
+
+[[[ code('0e4763871e') ]]]
 
 Ok! Refresh... and look at the same `GET` endpoint. Down here, cool! It
 shows a new `dragonTreasures` field in the example response. Let's try it: use the
