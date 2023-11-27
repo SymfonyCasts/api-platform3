@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 13e9cf1..d23163e 100644
+index 13e9cf13..d23163ec 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -28,6 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface

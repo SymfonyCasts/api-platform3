@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 66a5549..3c3a239 100644
+index 66a5549c..3c3a239b 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -8,7 +8,9 @@ use Doctrine\DBAL\Types\Types;

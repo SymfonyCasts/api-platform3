@@ -1,5 +1,5 @@
 diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
-index 659a526..6b46258 100644
+index 659a5261..6b462587 100644
 --- a/src/DataFixtures/AppFixtures.php
 +++ b/src/DataFixtures/AppFixtures.php
 @@ -11,7 +11,11 @@ class AppFixtures extends Fixture
@@ -16,7 +16,7 @@ index 659a526..6b46258 100644
      }
  }
 diff --git a/src/Factory/DragonTreasureFactory.php b/src/Factory/DragonTreasureFactory.php
-index 428b5a2..6ae3d58 100644
+index 428b5a2d..6ae3d58d 100644
 --- a/src/Factory/DragonTreasureFactory.php
 +++ b/src/Factory/DragonTreasureFactory.php
 @@ -53,6 +53,7 @@ final class DragonTreasureFactory extends ModelFactory

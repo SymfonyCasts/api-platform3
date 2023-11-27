@@ -1,5 +1,5 @@
 diff --git a/package-lock.json b/package-lock.json
-index 38b9473..e081d33 100644
+index 38b9473d..e081d338 100644
 --- a/package-lock.json
 +++ b/package-lock.json
 @@ -6,6 +6,7 @@
@@ -2860,7 +2860,7 @@ index 38b9473..e081d33 100644
              "version": "2.0.0",
              "resolved": "https://registry.npmjs.org/wildcard/-/wildcard-2.0.0.tgz",
 diff --git a/package.json b/package.json
-index d83a414..0102896 100644
+index d83a414d..0102896a 100644
 --- a/package.json
 +++ b/package.json
 @@ -1,5 +1,6 @@

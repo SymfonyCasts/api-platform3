@@ -1,5 +1,5 @@
 diff --git a/config/packages/api_platform.yaml b/config/packages/api_platform.yaml
-index b7aad3c..9341896 100644
+index b7aad3c2..9341896b 100644
 --- a/config/packages/api_platform.yaml
 +++ b/config/packages/api_platform.yaml
 @@ -3,3 +3,4 @@ api_platform:

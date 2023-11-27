@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 00bb326..54ae659 100644
+index 00bb3263..54ae6591 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -83,10 +83,12 @@
@@ -17,7 +17,7 @@ index 00bb326..54ae659 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index 2e69255..f9ba6cd 100644
+index 893b13fe..1b2d11fa 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -477,7 +477,7 @@ index 2e69255..f9ba6cd 100644
      ],
      "aliases": [],
 diff --git a/config/bundles.php b/config/bundles.php
-index fd27cd9..865268d 100644
+index fd27cd98..865268d7 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
 @@ -12,4 +12,6 @@ return [
@@ -489,7 +489,7 @@ index fd27cd9..865268d 100644
  ];
 diff --git a/config/packages/zenstruck_foundry.yaml b/config/packages/zenstruck_foundry.yaml
 new file mode 100644
-index 0000000..0657d2c
+index 00000000..0657d2c3
 --- /dev/null
 +++ b/config/packages/zenstruck_foundry.yaml
 @@ -0,0 +1,7 @@
@@ -502,7 +502,7 @@ index 0000000..0657d2c
 +when@test: *dev
 diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
 new file mode 100644
-index 0000000..987f6fe
+index 00000000..987f6fe9
 --- /dev/null
 +++ b/src/DataFixtures/AppFixtures.php
 @@ -0,0 +1,17 @@
@@ -524,7 +524,7 @@ index 0000000..987f6fe
 +    }
 +}
 diff --git a/symfony.lock b/symfony.lock
-index 6e47bb7..57eb3a3 100644
+index 6e47bb70..57eb3a3e 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -35,6 +35,18 @@

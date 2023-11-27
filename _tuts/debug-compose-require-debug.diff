@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 14f29a2..b24438d 100644
+index 14f29a2b..b24438d7 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -82,6 +82,10 @@
@@ -15,7 +15,7 @@ index 14f29a2..b24438d 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index 856bace..acb3470 100644
+index 3ec3f173..b35397ca 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -470,7 +470,7 @@ index 856bace..acb3470 100644
      ],
      "aliases": [],
 diff --git a/config/bundles.php b/config/bundles.php
-index 140f5fd..fd27cd9 100644
+index 140f5fd8..fd27cd98 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
 @@ -9,4 +9,7 @@ return [
@@ -483,7 +483,7 @@ index 140f5fd..fd27cd9 100644
  ];
 diff --git a/config/packages/debug.yaml b/config/packages/debug.yaml
 new file mode 100644
-index 0000000..ad874af
+index 00000000..ad874afd
 --- /dev/null
 +++ b/config/packages/debug.yaml
 @@ -0,0 +1,5 @@
@@ -494,7 +494,7 @@ index 0000000..ad874af
 +        dump_destination: "tcp://%env(VAR_DUMPER_SERVER)%"
 diff --git a/config/packages/monolog.yaml b/config/packages/monolog.yaml
 new file mode 100644
-index 0000000..8c9efa9
+index 00000000..8c9efa91
 --- /dev/null
 +++ b/config/packages/monolog.yaml
 @@ -0,0 +1,61 @@
@@ -561,7 +561,7 @@ index 0000000..8c9efa9
 +                path: php://stderr
 diff --git a/config/packages/web_profiler.yaml b/config/packages/web_profiler.yaml
 new file mode 100644
-index 0000000..b946111
+index 00000000..b9461110
 --- /dev/null
 +++ b/config/packages/web_profiler.yaml
 @@ -0,0 +1,17 @@
@@ -584,7 +584,7 @@ index 0000000..b946111
 +        profiler: { collect: false }
 diff --git a/config/routes/web_profiler.yaml b/config/routes/web_profiler.yaml
 new file mode 100644
-index 0000000..8d85319
+index 00000000..8d85319f
 --- /dev/null
 +++ b/config/routes/web_profiler.yaml
 @@ -0,0 +1,8 @@
@@ -597,7 +597,7 @@ index 0000000..8d85319
 +        resource: '@WebProfilerBundle/Resources/config/routing/profiler.xml'
 +        prefix: /_profiler
 diff --git a/symfony.lock b/symfony.lock
-index f73d943..e92cc6c 100644
+index f73d9437..e92cc6c2 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -93,6 +93,18 @@

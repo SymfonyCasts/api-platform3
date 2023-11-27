@@ -1,6 +1,6 @@
 diff --git a/assets/react/controllers/ReactAdmin.jsx b/assets/react/controllers/ReactAdmin.jsx
 new file mode 100644
-index 0000000..a5fdece
+index 00000000..a5fdece9
 --- /dev/null
 +++ b/assets/react/controllers/ReactAdmin.jsx
 @@ -0,0 +1,6 @@

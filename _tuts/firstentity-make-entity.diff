@@ -1,6 +1,6 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
 new file mode 100644
-index 0000000..56e30c4
+index 00000000..56e30c4e
 --- /dev/null
 +++ b/src/Entity/DragonTreasure.php
 @@ -0,0 +1,111 @@
@@ -117,7 +117,7 @@ index 0000000..56e30c4
 +}
 diff --git a/src/Repository/DragonTreasureRepository.php b/src/Repository/DragonTreasureRepository.php
 new file mode 100644
-index 0000000..62a044b
+index 00000000..62a044bd
 --- /dev/null
 +++ b/src/Repository/DragonTreasureRepository.php
 @@ -0,0 +1,66 @@

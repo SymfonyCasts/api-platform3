@@ -1,5 +1,5 @@
 diff --git a/src/Factory/UserFactory.php b/src/Factory/UserFactory.php
-index 219971e..850f064 100644
+index 219971e6..850f0642 100644
 --- a/src/Factory/UserFactory.php
 +++ b/src/Factory/UserFactory.php
 @@ -4,6 +4,7 @@ namespace App\Factory;

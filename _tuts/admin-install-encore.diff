@@ -1,5 +1,5 @@
 diff --git a/.gitignore b/.gitignore
-index a67f91e..7fdcc07 100644
+index a67f91e2..7fdcc07f 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -8,3 +8,10 @@
@@ -15,7 +15,7 @@ index a67f91e..7fdcc07 100644
 +###< symfony/webpack-encore-bundle ###
 diff --git a/assets/app.js b/assets/app.js
 new file mode 100644
-index 0000000..bb0a6aa
+index 00000000..bb0a6aa1
 --- /dev/null
 +++ b/assets/app.js
 @@ -0,0 +1,12 @@
@@ -33,7 +33,7 @@ index 0000000..bb0a6aa
 +import './bootstrap';
 diff --git a/assets/bootstrap.js b/assets/bootstrap.js
 new file mode 100644
-index 0000000..4ab2df6
+index 00000000..4ab2df64
 --- /dev/null
 +++ b/assets/bootstrap.js
 @@ -0,0 +1,11 @@
@@ -50,7 +50,7 @@ index 0000000..4ab2df6
 +// app.register('some_controller_name', SomeImportedController);
 diff --git a/assets/controllers.json b/assets/controllers.json
 new file mode 100644
-index 0000000..a1c6e90
+index 00000000..a1c6e90c
 --- /dev/null
 +++ b/assets/controllers.json
 @@ -0,0 +1,4 @@
@@ -60,7 +60,7 @@ index 0000000..a1c6e90
 +}
 diff --git a/assets/controllers/hello_controller.js b/assets/controllers/hello_controller.js
 new file mode 100644
-index 0000000..e847027
+index 00000000..e847027b
 --- /dev/null
 +++ b/assets/controllers/hello_controller.js
 @@ -0,0 +1,16 @@
@@ -82,7 +82,7 @@ index 0000000..e847027
 +}
 diff --git a/assets/styles/app.css b/assets/styles/app.css
 new file mode 100644
-index 0000000..cb33b13
+index 00000000..cb33b131
 --- /dev/null
 +++ b/assets/styles/app.css
 @@ -0,0 +1,3 @@
@@ -90,7 +90,7 @@ index 0000000..cb33b13
 +    background-color: lightgray;
 +}
 diff --git a/composer.json b/composer.json
-index 54ae659..fe71321 100644
+index 54ae6591..fe71321d 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -29,6 +29,7 @@
@@ -102,7 +102,7 @@ index 54ae659..fe71321 100644
      },
      "config": {
 diff --git a/composer.lock b/composer.lock
-index f9ba6cd..a2eb7b8 100644
+index 1b2d11fa..0d465a6b 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -195,7 +195,7 @@ index f9ba6cd..a2eb7b8 100644
              "name": "symfony/yaml",
              "version": "v6.2.2",
 diff --git a/config/bundles.php b/config/bundles.php
-index 865268d..14a3be2 100644
+index 865268d7..14a3be2c 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
 @@ -14,4 +14,5 @@ return [
@@ -206,7 +206,7 @@ index 865268d..14a3be2 100644
  ];
 diff --git a/config/packages/webpack_encore.yaml b/config/packages/webpack_encore.yaml
 new file mode 100644
-index 0000000..4c009ee
+index 00000000..4c009ee4
 --- /dev/null
 +++ b/config/packages/webpack_encore.yaml
 @@ -0,0 +1,45 @@
@@ -257,7 +257,7 @@ index 0000000..4c009ee
 +#        strict_mode: false
 diff --git a/package.json b/package.json
 new file mode 100644
-index 0000000..d83a414
+index 00000000..d83a414d
 --- /dev/null
 +++ b/package.json
 @@ -0,0 +1,22 @@
@@ -284,7 +284,7 @@ index 0000000..d83a414
 +    }
 +}
 diff --git a/symfony.lock b/symfony.lock
-index 57eb3a3..abc17bd 100644
+index 57eb3a3e..abc17bd8 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -299,6 +299,25 @@
@@ -315,7 +315,7 @@ index 57eb3a3..abc17bd 100644
      },
 diff --git a/webpack.config.js b/webpack.config.js
 new file mode 100644
-index 0000000..408012f
+index 00000000..408012fa
 --- /dev/null
 +++ b/webpack.config.js
 @@ -0,0 +1,76 @@
