@@ -154,7 +154,7 @@ environment, the `.env.local` file is *not* read:
 [[[ code('70831f3973') ]]]
 
 The `test` environment is special: it skips reading `.env.local` and only
-reads `.env.test`. You can also create a `.env.local.test` for env vars
+reads `.env.test`. You can also create a `.env.test.local` for env vars
 that are read in the `test` environment but that won't be committed to
 your repository.
 

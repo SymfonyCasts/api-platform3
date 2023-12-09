@@ -102,7 +102,7 @@ Por cierto, si no estás utilizando la configuración binaria y Docker de `symfo
 
 [[[ code('70831f3973') ]]]
 
-El entorno `test` es especial: se salta la lectura de `.env.local` y sólo lee `.env.test`. También puedes crear un `.env.local.test` para las variables de entorno que se leen en el entorno `test` pero que no se consignarán en tu repositorio.
+El entorno `test` es especial: se salta la lectura de `.env.local` y sólo lee `.env.test`. También puedes crear un `.env.test.local` para las variables de entorno que se leen en el entorno `test` pero que no se consignarán en tu repositorio.
 
 ## El rasgo ResetDatabase
 
