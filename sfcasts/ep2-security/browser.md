@@ -93,6 +93,11 @@ But... this isn't a very interesting test: we're just asserting that we get noth
 back... because the database is empty. To make our test *real*, we need data: we
 need to *seed* the database with data at the start of the test.
 
+***TIP
+To use Foundry factories in a test, also add a `use Factories;` trait to the top of your test class.
+Things worked without that in this case, but in the future, you'll likely get an error.
+***
+
 Fortunately, Foundry makes that dead-simple. At the top, call
 `DragonTreasureFactory::createMany()` and let's create 5 treasures. Now, below,
 assert that we get 5 results:

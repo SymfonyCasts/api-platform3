@@ -16,6 +16,22 @@ authenticated too. That's right! We don't need a fancy API token system where we
 attach a token to every request. We can just make a request and through the magic
 of cookies, that request will be authenticated.
 
+***TIP
+In new API Platform projects, the default `config/packages/api_platform.yaml` file
+has configuration that makes your endpoints "stateless":
+
+```yaml
+# config/packages/api_platform.yaml
+api_platform:
+    # ...
+    defaults:
+        stateless: true
+```
+
+If you want to be able to make API requests and rely in the session to stay authenticated,
+change this to: `stateless: false`.
+***
+
 ## REST and What Data to Return from our Authentication Endpoint?
 
 So, logging in *worked*... but nothing happened on the page. What *should*

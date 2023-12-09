@@ -62,6 +62,19 @@ need to tell API Platform that it is okay for it to change the behavior
 of `PUT` to the "new" way. Let's do that now by adding some extra config to
 every `ApiResource` attribute in our app.
 
+***TIP
+To solve this globally for all your resources at once, you can add this as a default
+in the API Platform configuration:
+
+```yml
+# config/packages/api_platform.yaml
+    api_platform:
+        defaults:
+        extra_properties:
+            standard_put: true
+```
+***
+
 Open `src/Entity/DragonTreasure.php`... and add a new option called `extraProperties`
 set to an array with `standard_put` set to `true`:
 

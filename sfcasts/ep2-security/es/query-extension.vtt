@@ -1,310 +1,306 @@
 WEBVTT
 
-00:00:01.056 --> 00:00:02.886 align:middle
+00:00:01.126 --> 00:00:02.946 align:middle
 Cuando conseguimos una colección de tesoros,
 
-00:00:03.256 --> 00:00:07.746 align:middle
+00:00:03.336 --> 00:00:07.806 align:middle
 actualmente devolvemos todos los
 tesoros, incluso los inéditos.
 
-00:00:08.256 --> 00:00:10.336 align:middle
+00:00:08.326 --> 00:00:10.406 align:middle
 Probablemente algunos sean inéditos.
 
-00:00:10.926 --> 00:00:13.336 align:middle
+00:00:10.996 --> 00:00:13.406 align:middle
 Hemos añadido un filtro para controlar esto...
 
-00:00:13.556 --> 00:00:16.236 align:middle
+00:00:13.626 --> 00:00:16.296 align:middle
 pero seamos sinceros, no es la mejor solución.
 
-00:00:16.816 --> 00:00:21.416 align:middle
+00:00:16.886 --> 00:00:21.506 align:middle
 En realidad, necesitamos no devolver
 tesoros inéditos en absoluto.
 
-00:00:21.416 --> 00:00:23.986 align:middle
+00:00:22.256 --> 00:00:24.046 align:middle
 Encuentra la Guía de
 Actualización de la API Platform...
 
-00:00:24.886 --> 00:00:28.536 align:middle
+00:00:24.956 --> 00:00:28.606 align:middle
 y busca la palabra "estado" para
 encontrar una sección que habla
 
-00:00:28.536 --> 00:00:30.566 align:middle
+00:00:28.606 --> 00:00:30.626 align:middle
 de "proveedores" y "procesadores".
 
-00:00:31.356 --> 00:00:36.506 align:middle
+00:00:31.426 --> 00:00:36.566 align:middle
 Antes hemos hablado de los procesadores de estado,
 como el PersistProcessor de las operaciones Put
 
-00:00:36.506 --> 00:00:41.136 align:middle
+00:00:36.566 --> 00:00:41.206 align:middle
 y Post, que se encarga de guardar
 el artículo en la base de datos.
 
-00:00:41.816 --> 00:00:45.376 align:middle
+00:00:41.886 --> 00:00:45.436 align:middle
 Pero cada operación también tiene
 algo llamado proveedor de estado.
 
-00:00:45.916 --> 00:00:50.776 align:middle
+00:00:45.986 --> 00:00:50.846 align:middle
 Éste es el responsable de cargar el
 objeto o colección de objetos. Por
 
-00:00:50.776 --> 00:00:54.926 align:middle
+00:00:51.326 --> 00:00:54.996 align:middle
 ejemplo, cuando hacemos una petición
 GET para un único elemento,
 
-00:00:55.256 --> 00:01:00.576 align:middle
+00:00:55.326 --> 00:01:00.636 align:middle
 el ItemProvider es el responsable de
 tomar el ID y consultar la base de datos.
 
-00:01:01.226 --> 00:01:04.586 align:middle
+00:01:01.316 --> 00:01:04.656 align:middle
 También hay un CollectionProvider para
 cargar una colección de elementos.
 
-00:01:05.346 --> 00:01:11.046 align:middle
+00:01:05.416 --> 00:01:11.116 align:middle
 Así que si queremos ocultar automáticamente
 los tesoros no publicados, una opción sería
 
-00:01:11.046 --> 00:01:17.576 align:middle
+00:01:11.116 --> 00:01:17.646 align:middle
 decorar este CollectionProvider, de forma muy
 parecida a como hicimos con el PersistProcessor.
 
-00:01:17.916 --> 00:01:20.946 align:middle
+00:01:17.986 --> 00:01:21.016 align:middle
 Excepto que... eso no funcionará del todo.
 
-00:01:21.786 --> 00:01:28.236 align:middle
+00:01:21.866 --> 00:01:28.286 align:middle
 ¿Por qué? El CollectionProvider de Doctrine
 ejecuta la consulta y devuelve los resultados.
 
-00:01:28.236 --> 00:01:33.226 align:middle
+00:01:28.946 --> 00:01:33.296 align:middle
 Así que lo único que podríamos
 hacer es tomar esos resultados...
 
-00:01:33.416 --> 00:01:35.586 align:middle
+00:01:33.486 --> 00:01:35.596 align:middle
 y ocultar los que no queramos. Eso..
 
-00:01:36.156 --> 00:01:38.316 align:middle
+00:01:36.226 --> 00:01:38.376 align:middle
 . no es lo ideal para el rendimiento
 
-00:01:38.556 --> 00:01:44.736 align:middle
+00:01:38.646 --> 00:01:44.806 align:middle
 -imagina cargar 50 tesoros y luego mostrar
 sólo 10- y confundiría la paginación.
 
-00:01:45.356 --> 00:01:52.866 align:middle
+00:01:45.426 --> 00:01:52.936 align:middle
 Lo que realmente queremos hacer es modificar la propia
 consulta: añadir un WHERE isPublished = true. Por
 
-00:01:53.456 --> 00:01:56.056 align:middle
+00:01:53.526 --> 00:01:56.126 align:middle
 suerte para nosotros, este CollectionProvider
 
-00:01:56.216 --> 00:02:00.886 align:middle
+00:01:56.296 --> 00:02:00.946 align:middle
 "proporciona" su propio punto de extensión
 que nos permite hacer exactamente eso.
 
-00:02:01.706 --> 00:02:05.516 align:middle
+00:02:01.776 --> 00:02:05.586 align:middle
 Antes de meternos de lleno, actualicemos una
 prueba para mostrar el comportamiento que queremos.
 
-00:02:05.516 --> 00:02:08.246 align:middle
+00:02:06.156 --> 00:02:08.306 align:middle
 Encuentra testGetCollectionOfTreasures().
 
-00:02:09.416 --> 00:02:15.396 align:middle
+00:02:09.486 --> 00:02:15.436 align:middle
 Toma el control de estos 5 tesoros y haz que todos
 sean isPublished => true: porque ahora mismo,
 
-00:02:15.706 --> 00:02:20.226 align:middle
+00:02:15.776 --> 00:02:20.296 align:middle
 en DragonTreasureFactory, isPublished
 está configurado con un valor aleatorio:
 
-00:02:21.516 --> 00:02:30.696 align:middle
+00:02:21.596 --> 00:02:30.766 align:middle
 Luego añade uno más con createOne()
 y isPublished falsos: ¡Impresionante!
 
-00:02:31.056 --> 00:02:34.806 align:middle
+00:02:31.146 --> 00:02:34.876 align:middle
 Y aún queremos afirmar que
 esto devuelve sólo 5 elementos.
 
-00:02:35.226 --> 00:02:43.436 align:middle
-Así que... asegurémonos de que
-falla: symfony php bin/console phpunit
+00:02:35.296 --> 00:02:40.526 align:middle
+Así que... asegurémonos de que falla: Y...
 
-00:02:43.436 --> 00:02:49.266 align:middle
---filter=testGetCollectionOfTreasures Y...
-
-00:02:49.266 --> 00:02:50.866 align:middle
+00:02:41.196 --> 00:02:43.666 align:middle
 ¡sí! Devuelve 6 elementos.
 
-00:02:50.866 --> 00:02:54.746 align:middle
+00:02:44.676 --> 00:02:48.226 align:middle
 Bien, para modificar la consulta
 de una ruta de colección, vamos a
 
-00:02:54.746 --> 00:02:59.546 align:middle
+00:02:48.556 --> 00:02:51.146 align:middle
 crear algo llamado extensión de consulta.
 
-00:03:01.886 --> 00:03:07.616 align:middle
+00:02:51.996 --> 00:02:55.396 align:middle
 En cualquier lugar de src/ - yo lo
 haré en el directorio ApiPlatform/ -
 
-00:03:07.616 --> 00:03:12.626 align:middle
+00:02:55.716 --> 00:02:59.616 align:middle
 crea una nueva clase llamada
 DragonTreasureIsPublishedExtension.
 
-00:03:12.626 --> 00:03:16.166 align:middle
+00:03:01.956 --> 00:03:05.256 align:middle
 Haz que ésta implemente
 QueryCollectionExtensionInterface,
 
-00:03:16.166 --> 00:03:25.286 align:middle
+00:03:05.686 --> 00:03:11.006 align:middle
 luego ve a "Código"->"Generar" o Command + N en
 un Mac - y genera el único método que necesitamos:
 
-00:03:25.286 --> 00:03:29.786 align:middle
+00:03:11.236 --> 00:03:15.106 align:middle
 applyToCollection(): Esto está muy bien:
 
-00:03:29.786 --> 00:03:33.446 align:middle
+00:03:15.406 --> 00:03:19.396 align:middle
 nos pasa el $queryBuilder y algunos datos más.
 
-00:03:33.686 --> 00:03:36.776 align:middle
+00:03:20.226 --> 00:03:22.746 align:middle
 Luego, podemos modificar ese QueryBuilder.
 
-00:03:37.016 --> 00:03:38.346 align:middle
+00:03:23.286 --> 00:03:24.146 align:middle
 ¿Y lo mejor? El
 
-00:03:38.346 --> 00:03:42.146 align:middle
+00:03:24.516 --> 00:03:28.836 align:middle
 QueryBuilder ya tiene en cuenta
 cosas como la paginación
 
-00:03:42.146 --> 00:03:44.716 align:middle
+00:03:29.196 --> 00:03:31.906 align:middle
 y cualquier filtro que se haya aplicado.
 
-00:03:44.716 --> 00:03:47.476 align:middle
+00:03:32.396 --> 00:03:35.366 align:middle
 Así que no tenemos que
 preocuparnos de esas cosas.
 
-00:03:47.526 --> 00:03:53.626 align:middle
+00:03:36.026 --> 00:03:41.606 align:middle
 Además, gracias al sistema de autoconfiguración
 de Symfony, sólo con crear esta clase
 
-00:03:53.626 --> 00:03:55.656 align:middle
+00:03:41.606 --> 00:03:43.466 align:middle
 y hacer que implemente esta interfaz,
 
-00:03:55.656 --> 00:03:59.796 align:middle
+00:03:43.746 --> 00:03:47.456 align:middle
 ¡ya será llamada cada vez que se
 utilice una ruta de recolección!
 
-00:04:00.036 --> 00:04:05.476 align:middle
+00:03:47.966 --> 00:03:50.736 align:middle
 De hecho, será llamada para cualquier recurso.
 
-00:04:05.476 --> 00:04:12.076 align:middle
+00:03:51.576 --> 00:03:57.466 align:middle
 Así que lo primero que necesitamos es if
 (DragonTreasure::class !== $resourceClass)
 
-00:04:12.076 --> 00:04:18.616 align:middle
+00:03:58.086 --> 00:04:05.536 align:middle
 -afortunadamente nos pasa el nombre de la clase- y luego
 return: A continuación, nos ponemos manos a la obra.
 
-00:04:18.616 --> 00:04:22.106 align:middle
+00:04:06.176 --> 00:04:11.506 align:middle
 Ahora, cada objeto QueryBuilder
 tiene un alias raíz que hace
 
-00:04:22.106 --> 00:04:24.336 align:middle
+00:04:11.506 --> 00:04:13.966 align:middle
 referencia a la clase o
 tabla que estás consultando.
 
-00:04:24.336 --> 00:04:26.396 align:middle
+00:04:14.596 --> 00:04:16.836 align:middle
 Normalmente, creamos el QueryBuilder...
 
-00:04:26.396 --> 00:04:31.606 align:middle
+00:04:17.266 --> 00:04:20.626 align:middle
 como si desde dentro de un
 repositorio dijéramos algo
 
-00:04:31.606 --> 00:04:37.736 align:middle
+00:04:20.626 --> 00:04:26.736 align:middle
 como $this->createQueryBuilder('d')
 y d se convierte en ese "alias raíz".
 
-00:04:38.036 --> 00:04:41.006 align:middle
+00:04:27.516 --> 00:04:29.646 align:middle
 Luego lo utilizamos en
 otras partes de la consulta.
 
-00:04:41.006 --> 00:04:49.626 align:middle
+00:04:30.256 --> 00:04:37.746 align:middle
 Sin embargo, en esta situación, no creamos el
 QueryBuilder, así que nunca elegimos ese alias raíz.
 
-00:04:49.626 --> 00:04:52.446 align:middle
+00:04:38.146 --> 00:04:39.916 align:middle
 Lo eligieron por nosotros.
 
-00:04:52.736 --> 00:04:53.366 align:middle
+00:04:40.396 --> 00:04:41.346 align:middle
 ¿Qué es?
 
-00:04:53.366 --> 00:04:53.936 align:middle
+00:04:41.916 --> 00:04:43.086 align:middle
 Es "plátano".
 
-00:04:53.936 --> 00:04:58.236 align:middle
+00:04:43.796 --> 00:04:45.756 align:middle
 En realidad, ¡no tengo ni idea de lo que es!
 
-00:04:58.236 --> 00:05:04.646 align:middle
+00:04:45.986 --> 00:04:51.616 align:middle
 Pero podemos obtenerlo con
 $queryBuilder->getRootAliases()[0]:
 
-00:05:04.646 --> 00:05:12.556 align:middle
+00:04:52.456 --> 00:04:58.826 align:middle
 Ahora es sólo lógica de consulta normal:
 $queryBuilder->andWhere() pasando sprintf().
 
-00:05:12.556 --> 00:05:21.406 align:middle
+00:04:59.856 --> 00:05:08.126 align:middle
 Esto parece un poco raro: %s.isPublished =
 :isPublished, luego pasa $rootAlias seguido
 
-00:05:21.626 --> 00:05:25.946 align:middle
+00:05:08.126 --> 00:05:13.206 align:middle
 de ->setParameter('isPublished',
 true): ¡Genial!
 
-00:05:25.946 --> 00:05:27.886 align:middle
+00:05:13.426 --> 00:05:15.116 align:middle
 ¡Gira para probar esto!
 
-00:05:27.886 --> 00:05:29.016 align:middle
+00:05:16.756 --> 00:05:18.536 align:middle
 ¡Misión cumplida!
 
-00:05:29.016 --> 00:05:30.366 align:middle
+00:05:18.736 --> 00:05:20.106 align:middle
 Es así de fácil.
 
-00:05:30.456 --> 00:05:33.186 align:middle
+00:05:20.896 --> 00:05:24.726 align:middle
 Por cierto, ¿funcionará esto
 también para los sub-recursos? Por
 
-00:05:33.186 --> 00:05:40.276 align:middle
+00:05:25.386 --> 00:05:30.986 align:middle
 ejemplo, en nuestros documentos, también
 podemos obtener una colección de tesoros
 
-00:05:40.276 --> 00:05:44.106 align:middle
+00:05:30.986 --> 00:05:36.166 align:middle
 entrando en /api/users/{user_id}/treasures.
 
-00:05:44.106 --> 00:05:48.416 align:middle
+00:05:36.686 --> 00:05:39.576 align:middle
 ¿Esto también ocultará
 los tesoros no publicados?
 
-00:05:48.416 --> 00:05:48.856 align:middle
+00:05:40.116 --> 00:05:41.106 align:middle
 La respuesta es...
 
-00:05:48.856 --> 00:05:52.296 align:middle
+00:05:41.486 --> 00:05:44.876 align:middle
 ¡sí! Así que no es algo
 de lo que debas preocuparte.
 
-00:05:52.296 --> 00:05:55.506 align:middle
+00:05:45.456 --> 00:05:49.066 align:middle
 No lo mostraré, pero esto también
 utiliza la extensión de consulta.
 
-00:05:55.616 --> 00:05:59.656 align:middle
+00:05:49.836 --> 00:05:55.286 align:middle
 Ah, y si quieres que los usuarios administradores puedan
 ver los tesoros no publicados, puedes añadir una lógica
 
-00:05:59.656 --> 00:06:05.026 align:middle
+00:05:55.286 --> 00:06:00.306 align:middle
 que sólo modifique esta consulta si
 el usuario actual no es administrador.
 
-00:06:05.026 --> 00:06:09.666 align:middle
+00:06:01.186 --> 00:06:05.276 align:middle
 A continuación: ¡esta extensión de
 consulta arregla la ruta de recogida!
 
-00:06:09.666 --> 00:06:14.556 align:middle
+00:06:05.876 --> 00:06:12.306 align:middle
 Pero... alguien aún podría obtener un único
 tesoro no publicado directamente por su id.
 
-00:06:14.586 --> 00:06:14.976 align:middle
+00:06:12.996 --> 00:06:14.176 align:middle
 ¡Vamos a arreglarlo!
