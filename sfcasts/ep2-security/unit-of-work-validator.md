@@ -118,7 +118,7 @@ Below, grab the unit of work with
 
 This is a powerful object that keeps track of *how* entity objects are changing
 and is responsible for knowing which objects need to be inserted, updated or
-deleted from the database when the entity manger flushes.
+deleted from the database when the entity manager flushes.
 
 Next, `foreach` over `$value` - which will be a collection - `as $dragonTreasure`.
 To help my editor, I'll assert that `$dragonTreasure` is an instance of
