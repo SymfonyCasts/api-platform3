@@ -59,6 +59,11 @@ with `private ProcessorInterface $innerProcessor`:
 
 [[[ code('b66e1324b2') ]]]
 
+***TIP
+In API Platform 3.2 and higher, you should `return $this->innerProcessor->process()`. This
+is also a safe thing to do in 3.0 & 3.1.
+***
+
 Then down in `process()`, call that! This method doesn't return anything - it has
 a `void` return - so we just need `$this->innerProcessor` - don't forget that
 part like I am - `->process()` passing `$data`, `$operation`, `$uriVariables` and
