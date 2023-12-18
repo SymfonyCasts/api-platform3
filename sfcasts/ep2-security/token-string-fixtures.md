@@ -23,6 +23,11 @@ Below, for `string $tokenType =` default it to
 
 [[[ code('34ca0ceeaf') ]]]
 
+***TIP
+For stronger security, avoid storing the plaintext token in the database. This is a bit
+more technical but you can find details at https://symfonycasts.com/api-token-hashed.
+***
+
 For the token itself, say `$this->token = $tokenType.` and then I'll use some code
 that will generate a random string that's 64 characters long:
 
