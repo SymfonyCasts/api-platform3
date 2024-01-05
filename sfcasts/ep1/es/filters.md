@@ -41,13 +41,13 @@ Observa: copia la línea `ApiFilter`, elimínala y baja a `$isPublished`. Pégal
 
 ## Filtro de búsqueda: Filtrar por texto
 
-¿Qué más podemos hacer? Otro filtro realmente útil es `SearchFilter`. Hagamos que sea posible buscar por texto en la propiedad `title`. Esto es casi lo mismo: encima de `$title`, añade `ApiFilter`. En este caso queremos `SearchFilter`: de nuevo, coge el del ORM. Este filtro también acepta una opción. Aquí puedes ver que, además de `properties`, `ApiFilter` tiene un argumento llamado `strategy`. Eso no se aplica a todos los filtros, pero sí a éste. Establece `strategy`en `partial`:
+¿Qué más podemos hacer? Otro filtro realmente útil es `SearchFilter`. Hagamos que sea posible buscar por texto en la propiedad `name`. Esto es casi lo mismo: encima de `$name`, añade `ApiFilter`. En este caso queremos `SearchFilter`: de nuevo, coge el del ORM. Este filtro también acepta una opción. Aquí puedes ver que, además de `properties`, `ApiFilter` tiene un argumento llamado `strategy`. Eso no se aplica a todos los filtros, pero sí a éste. Establece `strategy`en `partial`:
 
 [[[ code('bf1c077bbd') ]]]
 
-Esto nos permitirá buscar en la propiedad `title` una coincidencia parcial. Es una búsqueda "difusa". Otras estrategias son `exact`, `start` y más.
+Esto nos permitirá buscar en la propiedad `name` una coincidencia parcial. Es una búsqueda "difusa". Otras estrategias son `exact`, `start` y más.
 
-¡Vamos a intentarlo! Actualiza la página de documentos. Y... ahora la ruta de la colección tiene otro cuadro de filtro. Busca `rare` y pulsa Ejecutar. Veamos, aquí abajo... ¡sí! Al parecer, 15 de los resultados tienen `rare` en algún lugar de `title`.
+¡Vamos a intentarlo! Actualiza la página de documentos. Y... ahora la ruta de la colección tiene otro cuadro de filtro. Busca `rare` y pulsa Ejecutar. Veamos, aquí abajo... ¡sí! Al parecer, 15 de los resultados tienen `rare` en algún lugar de `name`.
 
 Y de nuevo, esto funciona añadiendo un simple `?name=rare` a la URL.
 
