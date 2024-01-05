@@ -66,8 +66,8 @@ endpoint, it still has the `isPublished` filter field.
 ## SearchFilter: Filter by Text
 
 What else can we do? Another really handy filter is `SearchFilter`. Let's make it
-possible to search by text on the `title` property. This looks *almost* the same:
-above `$title`, add `ApiFilter`. In this case we want `SearchFilter`: again, get
+possible to search by text on the `name` property. This looks *almost* the same:
+above `$name`, add `ApiFilter`. In this case we want `SearchFilter`: again, get
 the one for the ORM. This filter *also* accepts an option. You can see here that,
 in addition to `properties`, `ApiFilter` has an argument called `strategy`. That
 doesn't apply to all filters, but it *does* apply to this one. Set `strategy`
@@ -75,12 +75,12 @@ to `partial`:
 
 [[[ code('bf1c077bbd') ]]]
 
-This will allow us to search on the `title` property for a *partial* match. It's
+This will allow us to search on the `name` property for a *partial* match. It's
 a "fuzzy" search. Other strategies include `exact`, `start` and more.
 
 Let's give it a shot! Refresh the docs page. And... now the collection endpoint has
 *another* filter box. Search for `rare` and hit Execute. Let's see, down here...
-yes! Apparently 15 of the results have `rare` somewhere in the `title`.
+yes! Apparently 15 of the results have `rare` somewhere in the `name`.
 
 And again, this works by adding a simple `?name=rare` to the URL.
 
