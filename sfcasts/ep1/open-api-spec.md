@@ -20,6 +20,10 @@ URLs, like updating an existing pet, adding a new pet to the store, the response
 The format of this file is called *OpenAPI*, which is just a standard for *how*
 APIs should be described.
 
+***TIP
+In newer projects, access the JSON docs at `/api/docs.jsonopenapi`.
+***
+
 Back over in our docs, we *must* have that same type of config file, right? We do!
 Head to `/api/docs.json` to see *our* version. Yup! It looks *very* similar.
 It has paths, it describes the different operations... everything. The *best* part
