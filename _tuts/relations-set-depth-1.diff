@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/UserEntityToApiMapper.php b/src/Mapper/UserEntityToApiMapper.php
-index 3cf51992..15fbd857 100644
+index 3cf5199..15fbd85 100644
 --- a/src/Mapper/UserEntityToApiMapper.php
 +++ b/src/Mapper/UserEntityToApiMapper.php
 @@ -40,7 +40,9 @@ class UserEntityToApiMapper implements MapperInterface
