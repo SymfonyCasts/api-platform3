@@ -1,0 +1,244 @@
+WEBVTT
+
+00:00:01.076 --> 00:00:02.416 align:middle
+¿Qué pasa con la ruta del artículo?
+
+00:00:02.916 --> 00:00:06.736 align:middle
+Si vamos a /api/users/6.jsonld...
+
+00:00:07.496 --> 00:00:09.186 align:middle
+parece que funciona...
+
+00:00:09.186 --> 00:00:10.286 align:middle
+¡pero es una trampa!
+
+00:00:10.576 --> 00:00:12.706 align:middle
+Es sólo el formato de colección...
+
+00:00:12.706 --> 00:00:13.916 align:middle
+¡con un solo elemento!
+
+00:00:14.486 --> 00:00:19.416 align:middle
+Sabemos que hay dos proveedores principales:
+CollectionProvider y un proveedor de ítems,
+
+00:00:19.576 --> 00:00:22.356 align:middle
+cuyo trabajo es devolver un ítem o null.
+
+00:00:23.086 --> 00:00:26.186 align:middle
+Como hemos puesto provider en
+EntityToDtoStateProvider , está
+
+00:00:26.486 --> 00:00:29.396 align:middle
+utilizando este provider para cada operación.
+
+00:00:29.396 --> 00:00:31.016 align:middle
+Y eso está bien...
+
+00:00:31.226 --> 00:00:34.426 align:middle
+siempre que lo hagamos lo suficientemente
+inteligente como para manejar ambos casos.
+
+00:00:34.896 --> 00:00:38.636 align:middle
+Ya vimos antes cómo hacerlo:
+$operation es la clave.
+
+00:00:39.326 --> 00:00:44.066 align:middle
+Añade if ($operation instanceof
+CollectionOperationInterface).
+
+00:00:44.066 --> 00:00:47.116 align:middle
+Ahora podemos deformar todo
+este código aquí arriba.
+
+00:00:47.696 --> 00:00:50.896 align:middle
+¡Precioso! A continuación, éste
+será nuestro proveedor de artículos.
+
+00:00:50.896 --> 00:00:52.916 align:middle
+dd($uriVariables).
+
+00:00:53.826 --> 00:00:55.836 align:middle
+Cuando intentemos la operación artículo...
+
+00:00:57.546 --> 00:01:03.876 align:middle
+¡bien! Esto es lo que esperamos ver: el valor
+id, que es la parte dinámica de la ruta.
+
+00:01:04.816 --> 00:01:09.856 align:middle
+Al igual que con el proveedor de colecciones, no
+queremos hacer el trabajo de consulta manualmente.
+
+00:01:10.266 --> 00:01:11.186 align:middle
+En su lugar, vamos a...
+
+00:01:11.276 --> 00:01:14.196 align:middle
+"delegaremos" en el proveedor de
+elementos del núcleo de Doctrine.
+
+00:01:15.256 --> 00:01:16.246 align:middle
+Si añadimos un segundo argumento...
+
+00:01:16.456 --> 00:01:17.966 align:middle
+podemos simplemente copiar el primero...
+
+00:01:18.996 --> 00:01:24.796 align:middle
+con ItemProvider (el del ORM de
+Doctrine), y lo llamaremos $itemProvider.
+
+00:01:25.596 --> 00:01:26.216 align:middle
+¡Me gusta! De
+
+00:01:27.026 --> 00:01:33.736 align:middle
+vuelta abajo, deja que haga el trabajo con $entity
+= $this->itemProvider->provide() pasando
+
+00:01:33.736 --> 00:01:37.006 align:middle
+$operation, $uriVariables y $context.
+
+00:01:37.606 --> 00:01:40.696 align:middle
+Esto nos dará un objeto $entity o null.
+
+00:01:41.096 --> 00:01:43.936 align:middle
+Si no tenemos un objeto $entity, return null.
+
+00:01:44.656 --> 00:01:46.306 align:middle
+Esto provocará un 404.
+
+00:01:46.626 --> 00:01:51.476 align:middle
+Pero si tenemos un objeto $entity,
+no queremos devolverlo directamente.
+
+00:01:52.046 --> 00:01:55.916 align:middle
+Recuerda que el objetivo de esta
+clase es tomar el objeto $entity
+
+00:01:55.916 --> 00:01:59.076 align:middle
+y transformarlo en un DTO UserApi.
+
+00:01:59.076 --> 00:02:04.396 align:middle
+Así que, en su lugar, return
+$this->mapEntityToDto($entity).
+
+00:02:05.156 --> 00:02:07.106 align:middle
+Así queda bien.
+
+00:02:07.886 --> 00:02:10.906 align:middle
+Y... la ruta final funciona de maravilla.
+
+00:02:10.906 --> 00:02:19.156 align:middle
+Si intentamos un id no válido, nuestro proveedor
+devuelve null y API Platform se encarga del 404.
+
+00:02:19.156 --> 00:02:25.086 align:middle
+Nota al margen: si sigues algunos de estos tesoros
+relacionados, es posible que también devuelvan 404.
+
+00:02:25.526 --> 00:02:26.176 align:middle
+Veamos...
+
+00:02:26.176 --> 00:02:27.936 align:middle
+tenemos 21 y 27.
+
+00:02:30.046 --> 00:02:31.286 align:middle
+el 21 me funciona...
+
+00:02:31.616 --> 00:02:32.846 align:middle
+y para el 27...
+
+00:02:33.266 --> 00:02:34.736 align:middle
+también funciona...
+
+00:02:34.736 --> 00:02:35.706 align:middle
+por supuesto. De
+
+00:02:36.126 --> 00:02:42.066 align:middle
+todos modos, la razón por la que algunos podrían
+404 es que, ahora mismo, si vuelvo atrás,
+
+00:02:42.446 --> 00:02:46.356 align:middle
+la propiedad dragonTreasures incluye
+todos los tesoros relacionados
+
+00:02:46.356 --> 00:02:49.526 align:middle
+con este usuario: incluso los no publicados.
+
+00:02:49.986 --> 00:02:53.616 align:middle
+Pero en un tutorial anterior,
+creamos una extensión de consulta
+
+00:02:53.616 --> 00:02:56.746 align:middle
+que impedía que se cargaran
+los tesoros no publicados.
+
+00:02:57.746 --> 00:03:00.536 align:middle
+Cuando la entidad User era nuestro recurso API,
+
+00:03:00.746 --> 00:03:04.416 align:middle
+evitábamos devolver tesoros no
+publicados desde esta propiedad.
+
+00:03:05.036 --> 00:03:10.386 align:middle
+Creamos getPublishedDragonTreasures() y la
+convertimos en la propiedad dragonTreasures.
+
+00:03:11.346 --> 00:03:14.346 align:middle
+Pero en nuestro proveedor de estado,
+los estamos estableciendo todos.
+
+00:03:14.946 --> 00:03:19.316 align:middle
+Esto tiene fácil arreglo: cambia
+a getPublishedDragonTreasures().
+
+00:03:20.866 --> 00:03:22.346 align:middle
+En realidad, deshaz eso...
+
+00:03:22.816 --> 00:03:24.856 align:middle
+y actualiza la ruta de la colección.
+
+00:03:25.286 --> 00:03:28.516 align:middle
+Vale, vemos los tesoros 16 y 40 aquí abajo...
+
+00:03:29.486 --> 00:03:31.386 align:middle
+después de utilizar el nuevo método...
+
+00:03:31.756 --> 00:03:35.406 align:middle
+¡sólo el 16! "40" está sin publicar.
+
+00:03:35.986 --> 00:03:37.756 align:middle
+¡Ha sido fácil!
+
+00:03:38.146 --> 00:03:39.856 align:middle
+Y pone de relieve algo genial. Para
+
+00:03:40.386 --> 00:03:44.036 align:middle
+tener un campo dragonTreasures
+que devolviera algo especial
+
+00:03:44.036 --> 00:03:46.706 align:middle
+cuando nuestra entidad
+User fuera un ApiResource,
+
+00:03:46.976 --> 00:03:51.246 align:middle
+necesitábamos un método dedicado
+y un atributo SerializedName.
+
+00:03:51.806 --> 00:03:54.946 align:middle
+Pero con una clase personalizada,
+no necesitamos ninguna rareza.
+
+00:03:55.266 --> 00:03:57.796 align:middle
+Podemos hacer lo que queramos
+en el proveedor de estado.
+
+00:03:58.116 --> 00:04:00.256 align:middle
+¡Nuestras clases se mantienen
+brillantes y limpias!
+
+00:04:01.346 --> 00:04:05.056 align:middle
+A continuación: Hagamos que nuestros
+usuarios ahorren con un procesador de estado:
+
+00:04:05.556 --> 00:04:09.826 align:middle
+una danza delicada que implica
+manejar usuarios nuevos y existentes.

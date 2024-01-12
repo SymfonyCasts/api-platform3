@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index f80a25a5..3b00a882 100644
+index f80a25a..3b00a88 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -4,7 +4,9 @@ namespace App\ApiResource;

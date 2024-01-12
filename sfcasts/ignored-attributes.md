@@ -6,6 +6,8 @@ tutorials... but this time, instead of `groups`, set a key called
 `AbstractNormalizer::IGNORED_ATTRIBUTES` and *then* set that to an array. Inside,
 put `flameThrowingDistance`.
 
+[[[ code('2c012e2bbd') ]]]
+
 Whether a field is readable or writable really comes down to the serializer. This
 tells the serializer:
 
@@ -18,8 +20,11 @@ symfony php bin/phpunit --filter=testPostToCreateUser
 ```
 
 That's exactly what happens! To wrap it in a "do not write" sign, duplicate this move
-with `denormalizationContext`. Copy that, put a "de" on the front of it, and now when
-we try it:
+with `denormalizationContext`. 
+
+[[[ code('b152b7b511') ]]]
+
+Copy that, put a "de" on the front of it, and now when we try it:
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPostToCreateUser
@@ -36,6 +41,9 @@ though I *have* seen complex cases where this context option worked when the
 
 The last way to ignore a field - if you want to ignore it completely - is to
 add an attribute called... `#[Ignore]`! This comes from Symfony's serializer system.
+
+[[[ code('3a34757d6c') ]]]
+
 When we try the test:
 
 ```terminal-silent
@@ -72,8 +80,11 @@ so far. Then, during deserialization, the `id` on the `UserApi` object was
 *changed* to `47`. Finally, in the state processor, we tried to query for an entity
 with `id=47`... which is *ultimately* what we would have saved to the database.
 
-Over in `UserApi`, to fix this, above `id`, add `writable: false`. Or we could
-use the `#[Ignore]` attribute that we saw a second ago... since we don't want this
+Over in `UserApi`, to fix this, above `id`, add `writable: false`.
+
+[[[ code('c8c9e7fc79') ]]]
+
+Or we could use the `#[Ignore]` attribute that we saw a second ago... since we don't want this
 to be readable *or* writable. The `id` property helps generate the IRI...
 but it's not *really* part of our API.
 
@@ -84,8 +95,12 @@ While we're here, in `UserApi`, there are two other properties that, for now,
 I want to make read-only. Above `$dragonTreasures`, make this `writable: false`...
 though we *are* going to make this writable later.
 
+[[[ code('bf5c078818') ]]]
+
 Below, do the same for `$flameThrowingDistance`... because this is a
 fake property that we're generating as a random number.
+
+[[[ code('8b0bea19ab') ]]]
 
 ## Using "security" to hide/show a field
 
