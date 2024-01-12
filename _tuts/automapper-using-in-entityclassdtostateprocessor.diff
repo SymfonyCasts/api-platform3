@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index 16541455..28fcc57a 100644
+index 1654145..28fcc57 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -12,6 +12,7 @@ use App\Entity\User;
