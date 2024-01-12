@@ -1,0 +1,330 @@
+WEBVTT
+
+00:00:01.036 --> 00:00:03.956 align:middle
+Esto de la clase entidad parece casi
+demasiado bueno para ser verdad.
+
+00:00:04.626 --> 00:00:08.696 align:middle
+Nos da toda la flexibilidad, en
+teoría, de una clase personalizada,
+
+00:00:08.946 --> 00:00:13.096 align:middle
+al tiempo que reutiliza toda la lógica
+central del proveedor y procesador Doctrine.
+
+00:00:13.596 --> 00:00:19.136 align:middle
+Pero mantén la calma, porque hay dos
+inconvenientes, aunque solucionables.
+
+00:00:19.806 --> 00:00:23.756 align:middle
+El más importante es que no se nos permite
+tener nombres de propiedades personalizados.
+
+00:00:24.256 --> 00:00:27.026 align:middle
+Esto provocará un error al intentar
+serializar. En segundo lugar
+
+00:00:27.026 --> 00:00:32.916 align:middle
+, aún no lo he mencionado, pero
+las operaciones de escritura
+
+00:00:33.066 --> 00:00:36.296 align:middle
+-como POST o PATCH - no funcionan en absoluto.
+
+00:00:37.006 --> 00:00:41.556 align:middle
+Bueno... si nosotros, publicáramos en
+nuestra ruta, los datos se deserializarían...
+
+00:00:41.856 --> 00:00:44.176 align:middle
+pero no se guardarían en la base de datos.
+
+00:00:44.856 --> 00:00:47.656 align:middle
+Podemos intentarlo porque ya
+tenemos una prueba para ello.
+
+00:00:48.556 --> 00:00:53.766 align:middle
+Abre UserResourceTest y, aquí
+abajo, copia testPostToCreateUser().
+
+00:00:53.766 --> 00:00:58.416 align:middle
+Gíralo y ejecútalo con:
+symfony php bin/phpunit
+
+00:00:58.496 --> 00:01:02.436 align:middle
+--filter=testPostToCreateUser Y...
+
+00:01:02.436 --> 00:01:03.906 align:middle
+¡Error 400!
+
+00:01:04.946 --> 00:01:05.516 align:middle
+Abre eso.
+
+00:01:06.566 --> 00:01:11.096 align:middle
+Oh, oh: No se ha podido generar un IRI para
+el elemento de tipo App\ApiResource\UserApi.
+
+00:01:12.216 --> 00:01:13.806 align:middle
+Esto es lo que ocurre
+
+00:01:14.186 --> 00:01:19.736 align:middle
+El serializador deserializa
+este JSON en un objeto UserApi.
+
+00:01:20.036 --> 00:01:26.886 align:middle
+¡Yupi! Ese objeto UserApi se pasa entonces al
+procesador de persistencia del núcleo de Doctrine:
+
+00:01:27.326 --> 00:01:30.446 align:middle
+el que normalmente guarda las
+entidades en la base de datos.
+
+00:01:31.026 --> 00:01:36.096 align:middle
+Pero como UserApi no es una
+entidad, ese procesador no hace...
+
+00:01:36.266 --> 00:01:43.986 align:middle
+nada. Entonces, cuando UserApi se serializa
+de nuevo a JSON, el $id sigue siendo nulo
+
+00:01:44.416 --> 00:01:47.226 align:middle
+-porque nunca se guardó nada
+en la base de datos- y...
+
+00:01:47.226 --> 00:01:50.246 align:middle
+por lo que no se puede generar la IRI para él.
+
+00:01:51.086 --> 00:01:54.416 align:middle
+Podríamos solucionarlo creando un
+procesador de estado personalizado
+
+00:01:54.416 --> 00:01:57.526 align:middle
+para UserApi que lo guarde en la base de datos.
+
+00:01:57.816 --> 00:02:04.606 align:middle
+Pero incluso si lo hiciéramos, las operaciones de escritura, como
+POST y PATCH, no están diseñadas para funcionar directamente
+
+00:02:04.606 --> 00:02:07.116 align:middle
+con esta solución entityClass.
+
+00:02:07.426 --> 00:02:08.496 align:middle
+La razón...
+
+00:02:08.676 --> 00:02:11.166 align:middle
+es un poco técnica, pero importante.
+
+00:02:11.956 --> 00:02:18.376 align:middle
+Internamente, para cada petición de API, API Platform
+tiene un objeto central en el que está trabajando.
+
+00:02:18.536 --> 00:02:23.356 align:middle
+Si obtenemos un único elemento, ese
+objeto central es ese único elemento.
+
+00:02:23.726 --> 00:02:25.206 align:middle
+Y eso es muy importante. Se
+
+00:02:25.486 --> 00:02:31.106 align:middle
+utiliza en varios lugares, como el atributo
+security: cuando utilizamos is_granted,
+
+00:02:31.246 --> 00:02:34.266 align:middle
+la variable object será ese objeto "central".
+
+00:02:34.736 --> 00:02:39.966 align:middle
+Por ejemplo, si hacemos una petición Patch(),
+significa que estamos editando un tesoro dragón...
+
+00:02:40.206 --> 00:02:43.466 align:middle
+por lo que el objeto central
+será una entidad DragonTreasure.
+
+00:02:43.916 --> 00:02:44.736 align:middle
+¡Muy fácil!
+
+00:02:45.186 --> 00:02:45.946 align:middle
+¿Cuál es el truco?
+
+00:02:46.366 --> 00:02:50.886 align:middle
+Bueno, cuando utilices la solución entityClass
+con una operación de lectura (es decir,
+
+00:02:50.886 --> 00:02:55.426 align:middle
+una de estas peticiones GET ), el
+objeto central será la entidad.
+
+00:02:55.736 --> 00:02:58.416 align:middle
+Así que la entidad User
+será el objeto central.
+
+00:02:58.886 --> 00:03:05.206 align:middle
+Pero con una operación de escritura (sobre todo,
+la operación POST para crear un nuevo usuario),
+
+00:03:05.626 --> 00:03:09.676 align:middle
+ese objeto central será de
+repente un objeto UserApi.
+
+00:03:10.446 --> 00:03:16.146 align:middle
+Esto provoca una grave incoherencia: el
+objeto central será a veces una entidad...
+
+00:03:16.346 --> 00:03:18.276 align:middle
+y otras veces el DTO.
+
+00:03:18.756 --> 00:03:22.396 align:middle
+Buena suerte haciendo un sistema
+security que funcione con ambos...
+
+00:03:22.756 --> 00:03:24.816 align:middle
+y no sea completamente confuso.
+
+00:03:25.656 --> 00:03:30.976 align:middle
+Además, cuando la entidad User es el objeto
+central, es cuando nos encontramos con el problema
+
+00:03:31.136 --> 00:03:34.526 align:middle
+que nos impide tener campos
+personalizados en nuestro DTO. Así
+
+00:03:34.526 --> 00:03:40.046 align:middle
+que, si pudiéramos hacer que el UserApi
+fuera el objeto central en todos los casos,
+
+00:03:40.356 --> 00:03:42.736 align:middle
+entonces tendríamos una seguridad coherente...
+
+00:03:43.036 --> 00:03:46.246 align:middle
+y también podríamos solucionar nuestro gran
+problema de las propiedades personalizadas.
+
+00:03:47.116 --> 00:03:48.936 align:middle
+¿Cómo podemos conseguirlo?
+
+00:03:48.996 --> 00:03:53.826 align:middle
+Escribiendo un proveedor de estado
+personalizado que devuelva objetos UserApi.
+
+00:03:53.946 --> 00:03:59.836 align:middle
+Piénsalo: como el proveedor principal de la
+colección Doctrine devuelve objetos de entidad User,
+
+00:04:00.146 --> 00:04:02.446 align:middle
+éstos se convierten en los objetos centrales.
+
+00:04:03.026 --> 00:04:08.746 align:middle
+Si, en lugar de eso, devolvemos
+objetos UserDto, problema resuelto.
+
+00:04:09.266 --> 00:04:12.176 align:middle
+Si todo esto aún no tiene
+sentido, no me sorprende.
+
+00:04:12.536 --> 00:04:14.336 align:middle
+Vamos a recorrerlo paso a paso.
+
+00:04:14.336 --> 00:04:19.056 align:middle
+Empieza por ejecutar: php
+bin/console make:state-provider
+
+00:04:19.236 --> 00:04:21.566 align:middle
+Llámalo EntityToDtoStateProvider.
+
+00:04:22.716 --> 00:04:27.256 align:middle
+Mi objetivo es crear un proveedor de estado
+genérico que funcione para todos los casos
+
+00:04:27.566 --> 00:04:31.316 align:middle
+en los que tengamos una clase de recurso
+API que extraiga datos de una entidad.
+
+00:04:31.446 --> 00:04:35.336 align:middle
+Por lo tanto, mantendremos el código
+específico del usuario fuera de aquí.
+
+00:04:35.336 --> 00:04:38.436 align:middle
+En UserApi, establece provider
+en EntityToDtoStateProvider.
+
+00:04:39.976 --> 00:04:46.526 align:middle
+En EntityToDtoStateProvider, podríamos consultar
+manualmente nuestros objetos de entidad User, convertirlos
+
+00:04:46.526 --> 00:04:49.046 align:middle
+en objetos UserApi...
+
+00:04:49.126 --> 00:04:50.456 align:middle
+y luego devolverlos.
+
+00:04:50.866 --> 00:04:54.146 align:middle
+Pero ¡eso es lo que intentamos evitar!
+
+00:04:54.826 --> 00:04:59.616 align:middle
+Queremos seguir reutilizando toda esa
+bonita lógica de consulta de Doctrine:
+
+00:04:59.976 --> 00:05:02.166 align:middle
+esa es la belleza de stateOptions.
+
+00:05:02.886 --> 00:05:07.836 align:middle
+Para ello, como hemos hecho antes, vamos a
+decorar el proveedor principal de Doctrine.
+
+00:05:08.356 --> 00:05:15.696 align:middle
+Digamos public function __construct() con
+private ProviderInterface $collectionProvider.
+
+00:05:16.586 --> 00:05:22.336 align:middle
+Y para ayudar a Symfony a saber cuál debe pasar,
+utiliza el atributo #[Autowire()] y di service:
+
+00:05:22.336 --> 00:05:28.016 align:middle
+CollectionProvider (asegúrate de obtener
+el de Doctrine ORM), seguido de ::class.
+
+00:05:29.346 --> 00:05:33.986 align:middle
+Aquí abajo, añade $entities =
+$this->collectionProvider->provide() , pasando
+
+00:05:34.296 --> 00:05:38.866 align:middle
+$operation, $uriVariables, y $context.
+
+00:05:38.866 --> 00:05:43.216 align:middle
+Abajo, dd($entities) ¡Veamos qué ocurre!
+
+00:05:43.636 --> 00:05:47.406 align:middle
+Vuelve, actualiza la ruta y...
+
+00:05:47.826 --> 00:05:53.176 align:middle
+¡ya está! Estamos llamando al proveedor
+principal, y está devolviendo un objeto paginador.
+
+00:05:53.926 --> 00:06:00.246 align:middle
+Para ver qué se esconde dentro de ese
+Paginator, di dd(iterator_to_array($entities)).
+
+00:06:01.686 --> 00:06:02.516 align:middle
+De vuelta por aquí...
+
+00:06:03.386 --> 00:06:06.086 align:middle
+esto muestra cinco objetos de entidad User.
+
+00:06:06.866 --> 00:06:09.206 align:middle
+En este punto, nuestro nuevo
+proveedor no está haciendo...
+
+00:06:09.406 --> 00:06:10.466 align:middle
+nada especial.
+
+00:06:10.946 --> 00:06:14.686 align:middle
+Si devolviéramos $entities,
+estaríamos exactamente donde empezamos:
+
+00:06:15.016 --> 00:06:17.656 align:middle
+con las entidades User como objeto central.
+
+00:06:18.456 --> 00:06:21.596 align:middle
+Nuestro objetivo es devolver objetos UserApi...
+
+00:06:21.796 --> 00:06:24.726 align:middle
+y eso es lo que haremos a continuación.
