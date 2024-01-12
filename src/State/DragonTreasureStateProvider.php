@@ -24,8 +24,14 @@ class DragonTreasureStateProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof CollectionOperationInterface) {
-            dd($this->collectionProvider->provide($operation, $uriVariables, $context));
-            return $this->collectionProvider->provide($operation, $uriVariables, $context);
+            /** @var $paginator iterable<DragonTreasure> */
+            $paginator = $this->collectionProvider->provide($operation, $uriVariables, $context);
+
+            foreach ($paginator as $treasure) {
+                $treasure->setIsOwnedByAuthenticatedUser($this->security->getUser() === $treasure->getOwner());
+            }
+
+            return $paginator;
         }
 
         $treasure = $this->itemProvider->provide($operation, $uriVariables, $context);
