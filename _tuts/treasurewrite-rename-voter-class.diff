@@ -2,7 +2,7 @@ diff --git a/src/Security/Voter/DragonTreasureVoter.php b/src/Security/Voter/Dra
 similarity index 97%
 rename from src/Security/Voter/DragonTreasureVoter.php
 rename to src/Security/Voter/DragonTreasureApiVoter.php
-index 9c5254d5..98a8b6a6 100644
+index 9c5254d..98a8b6a 100644
 --- a/src/Security/Voter/DragonTreasureVoter.php
 +++ b/src/Security/Voter/DragonTreasureApiVoter.php
 @@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
