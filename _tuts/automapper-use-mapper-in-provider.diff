@@ -1,14 +1,14 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 548532fb..4d33c5bb 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index 35fc24b..e588010 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
 @@ -11,12 +11,14 @@ use ApiPlatform\State\Pagination\TraversablePaginator;
  use ApiPlatform\State\ProviderInterface;
  use App\ApiResource\UserApi;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
 +use Symfonycasts\MicroMapper\MicroMapperInterface;
  
- class EntityClassDtoStateProvider implements ProviderInterface
+ class EntityToDtoStateProvider implements ProviderInterface
  {
      public function __construct(
          #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider,
@@ -17,7 +17,7 @@ index 548532fb..4d33c5bb 100644
      )
      {
  
-@@ -52,13 +54,6 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -52,13 +54,6 @@ class EntityToDtoStateProvider implements ProviderInterface
  
      private function mapEntityToDto(object $entity): object
      {
