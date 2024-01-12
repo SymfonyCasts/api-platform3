@@ -1,5 +1,5 @@
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index dba11b99..b0bf7699 100644
+index dba11b9..b0bf769 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -2,71 +2,14 @@

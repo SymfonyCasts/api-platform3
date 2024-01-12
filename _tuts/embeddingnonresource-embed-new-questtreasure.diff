@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index 46ad2542..3c1f68bb 100644
+index 46ad254..3c1f68b 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -34,7 +34,7 @@ class DailyQuest
@@ -13,7 +13,7 @@ index 46ad2542..3c1f68bb 100644
  
 diff --git a/src/ApiResource/QuestTreasure.php b/src/ApiResource/QuestTreasure.php
 new file mode 100644
-index 00000000..08806c24
+index 0000000..08806c2
 --- /dev/null
 +++ b/src/ApiResource/QuestTreasure.php
 @@ -0,0 +1,14 @@
@@ -32,7 +32,7 @@ index 00000000..08806c24
 +    }
 +}
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index 5891e2fa..a833b302 100644
+index 5891e2f..a833b30 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -6,6 +6,7 @@ use ApiPlatform\Metadata\CollectionOperationInterface;

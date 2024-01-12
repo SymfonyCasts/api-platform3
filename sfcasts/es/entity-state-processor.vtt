@@ -1,0 +1,367 @@
+WEBVTT
+
+00:00:01.066 --> 00:00:05.086 align:middle
+Ya hemos comprobado el aspecto "proveedor"
+de nuestra nueva clase UserApi.
+
+00:00:05.296 --> 00:00:09.366 align:middle
+Así que vamos a centrarnos en el
+procesador para poder guardar las cosas.
+
+00:00:09.666 --> 00:00:14.036 align:middle
+Y tenemos algunas pruebas bastante
+encantadoras para nuestras rutas User.
+
+00:00:14.906 --> 00:00:16.456 align:middle
+Abre UserResourceTest.
+
+00:00:17.356 --> 00:00:23.506 align:middle
+Vale, testPostToCreateUser(), publica algunos
+datos, crea el usuario y, a continuación, comprueba
+
+00:00:23.506 --> 00:00:26.666 align:middle
+que la contraseña que hemos
+publicado funciona iniciando sesión.
+
+00:00:28.116 --> 00:00:30.196 align:middle
+Añade ->dump() para ayudarnos
+a ver qué está pasando.
+
+00:00:31.026 --> 00:00:37.196 align:middle
+A continuación, copia el nombre del
+método y ejecútalo: No te sorprendas...
+
+00:00:37.356 --> 00:00:42.196 align:middle
+falla: El código de estado de respuesta
+actual es 400, pero se esperaba 201.
+
+00:00:42.736 --> 00:00:44.326 align:middle
+El volcado es realmente útil.
+
+00:00:44.606 --> 00:00:46.776 align:middle
+¡Es nuestro error favorito!
+
+00:00:47.326 --> 00:00:50.826 align:middle
+No se ha podido generar un IRI
+para el elemento de tipo UserApi.
+
+00:00:52.036 --> 00:00:58.256 align:middle
+Ya hemos hablado de lo que ocurre: el
+JSON se deserializa en un objeto UserApi.
+
+00:00:58.456 --> 00:01:03.356 align:middle
+¡Bien! Entonces se llama al núcleo
+de la Doctrine PersistProcessor
+
+00:01:03.456 --> 00:01:07.336 align:middle
+porque ése es el processor por
+defecto cuando se utiliza stateOptions.
+
+00:01:07.746 --> 00:01:14.136 align:middle
+Pero... como nuestro UserApi no es una
+entidad, PersistProcessor no hace nada.
+
+00:01:14.626 --> 00:01:20.436 align:middle
+Por último, API Platform vuelve
+a serializar el UserApi en JSON...
+
+00:01:20.806 --> 00:01:25.646 align:middle
+pero sin el id rellenado,
+no consigue generar el IRI.
+
+00:01:26.606 --> 00:01:31.416 align:middle
+¡Fíjate! En UserApi, se
+omite temporalmente $id en 5.
+
+00:01:32.256 --> 00:01:34.186 align:middle
+Cuando intentemos la prueba ahora...
+
+00:01:35.316 --> 00:01:37.146 align:middle
+Parece que funciona.
+
+00:01:37.356 --> 00:01:38.576 align:middle
+Vale, falla...
+
+00:01:38.576 --> 00:01:39.936 align:middle
+pero sólo después...
+
+00:01:40.206 --> 00:01:43.216 align:middle
+aquí abajo en UserResourceTest línea 33.
+
+00:01:43.766 --> 00:01:46.396 align:middle
+El POST se realiza correctamente.
+
+00:01:46.396 --> 00:01:52.866 align:middle
+Mira la respuesta en la parte superior,
+devuelve este JSON de usuario.
+
+00:01:53.096 --> 00:01:56.146 align:middle
+Pero, aún así, no se guarda nada.
+
+00:01:56.616 --> 00:01:58.506 align:middle
+Vuelve a cambiar el id a null.
+
+00:01:59.776 --> 00:02:03.996 align:middle
+Tenemos que arreglar esta falta de guardado
+creando un nuevo procesador de estado.
+
+00:02:04.236 --> 00:02:10.086 align:middle
+Así que gíralo y ejecútalo: php
+bin/console make:state-processor Llámalo
+
+00:02:10.086 --> 00:02:15.896 align:middle
+EntityClassDtoStateProcessor porque, de nuevo,
+vamos a hacer que esta clase sea genérica para
+
+00:02:16.086 --> 00:02:20.846 align:middle
+que funcione con cualquier clase de recurso de la
+API que esté vinculada a una entidad Doctrine.
+
+00:02:21.336 --> 00:02:23.436 align:middle
+La utilizaremos más
+adelante para DragonTreasure.
+
+00:02:24.436 --> 00:02:29.776 align:middle
+Con el procesador vacío generado, ve a
+conectarlo en UserApi con el procesador :
+
+00:02:30.666 --> 00:02:33.836 align:middle
+EntityClassDtoStateProcessor::class.
+
+00:02:33.836 --> 00:02:40.656 align:middle
+A partir de ahora, cada vez que hagamos POST, PATCH o
+DELETE de este recurso, se llamará a este procesador.
+
+00:02:41.216 --> 00:02:44.106 align:middle
+Pero, ¿qué es exactamente
+esta variable $data?
+
+00:02:44.636 --> 00:02:48.766 align:middle
+Puede que lo adivines, pero por
+si acaso, vamos a dd($data)...
+
+00:02:48.766 --> 00:02:50.086 align:middle
+y volvamos a ejecutar la prueba.
+
+00:02:52.166 --> 00:02:54.896 align:middle
+Sí, ¡es un objeto UserApi!
+
+00:02:55.416 --> 00:02:59.986 align:middle
+El JSON que enviamos se
+deserializa en este objeto UserApi,
+
+00:03:00.306 --> 00:03:03.406 align:middle
+y luego se pasa a nuestro procesador de estado.
+
+00:03:04.126 --> 00:03:10.256 align:middle
+El objeto UserApi es el "objeto central"
+dentro de API Platform para esta petición.
+
+00:03:10.756 --> 00:03:17.626 align:middle
+Nuestro trabajo en el procesador de estado es sencillo
+pero importante: convertir este UserApi de nuevo en
+
+00:03:17.626 --> 00:03:20.776 align:middle
+una entidad User para que podamos guardarlo.
+
+00:03:21.366 --> 00:03:25.676 align:middle
+Digamos assert($data
+instanceof UserApi) y, dentro,
+
+00:03:25.936 --> 00:03:32.506 align:middle
+$entity = configurado en una nueva función
+de ayuda: $this->mapDtoToEntity($data).
+
+00:03:33.976 --> 00:03:35.536 align:middle
+Debajo, dd($entity).
+
+00:03:36.816 --> 00:03:40.576 align:middle
+Luego ve a añadir ese nuevo
+private function mapDtoToEntity(),
+
+00:03:40.876 --> 00:03:45.406 align:middle
+que aceptará un argumento object
+$dto y devolverá otro object.
+
+00:03:46.216 --> 00:03:52.426 align:middle
+De nuevo, sabemos que esto realmente aceptará un
+objeto UserApi y devolverá una entidad User...
+
+00:03:52.526 --> 00:03:56.366 align:middle
+pero estamos intentando mantener esta clase
+genérica para poder reutilizarla más adelante.
+
+00:03:56.816 --> 00:04:00.956 align:middle
+Aunque vamos a tener algo de código específico
+de usuario aquí abajo temporalmente.
+
+00:04:01.556 --> 00:04:06.976 align:middle
+De hecho, para ayudar a nuestro editor,
+añade otro assert($dto instanceof UserApi).
+
+00:04:08.436 --> 00:04:10.416 align:middle
+Tenemos que pensar en dos casos diferentes.
+
+00:04:10.746 --> 00:04:14.266 align:middle
+El primero es cuando vamos a
+crear un usuario totalmente nuevo.
+
+00:04:15.166 --> 00:04:18.316 align:middle
+En ese caso, $dto tendrá un id null.
+
+00:04:18.316 --> 00:04:22.356 align:middle
+Y eso significa que deberíamos
+crear un objeto User nuevo.
+
+00:04:22.986 --> 00:04:29.366 align:middle
+El otro caso es si hiciéramos, por ejemplo,
+una petición a PATCH para editar un usuario.
+
+00:04:29.946 --> 00:04:36.336 align:middle
+En ese caso, el proveedor de elementos cargará
+primero esa entidad User de la base de datos...
+
+00:04:36.366 --> 00:04:42.566 align:middle
+nuestro proveedor la convertirá en
+un objeto UserApi con id igual a 6...
+
+00:04:42.566 --> 00:04:45.886 align:middle
+y finalmente nos lo pasará aquí.
+
+00:04:46.026 --> 00:04:48.116 align:middle
+Si el id es 6...
+
+00:04:48.266 --> 00:04:51.016 align:middle
+no queremos crear un nuevo objeto User:
+
+00:04:51.176 --> 00:04:55.186 align:middle
+queremos consultar la base de
+datos en busca del User existente.
+
+00:04:55.596 --> 00:04:58.126 align:middle
+Nuestro trabajo consiste en
+manejar ambas situaciones.
+
+00:04:59.016 --> 00:05:02.096 align:middle
+Deshaz los cambios en la
+prueba para no romper nada...
+
+00:05:04.316 --> 00:05:10.176 align:middle
+y ahora, if $dto->id , necesitamos
+consultar por un User existente.
+
+00:05:10.836 --> 00:05:17.296 align:middle
+Para ello, arriba, añade un constructor
+con private UserRepository $userRepository.
+
+00:05:18.786 --> 00:05:26.016 align:middle
+Aquí abajo, digamos $entity =
+$this->userRepository->find($dto->id).
+
+00:05:27.716 --> 00:05:32.636 align:middle
+Si no encontramos ese User,
+lanza una gran excepción gigante
+
+00:05:32.636 --> 00:05:37.726 align:middle
+que provocará un error 500
+con Entity %d not found.
+
+00:05:38.466 --> 00:05:42.756 align:middle
+Puede que te preguntes: ¿No
+debería esto provocar un error 404?
+
+00:05:43.256 --> 00:05:46.036 align:middle
+La respuesta, en este caso, es no.
+
+00:05:46.036 --> 00:05:53.016 align:middle
+Si nos encontramos en esta situación, significa que el
+proveedor de estado del artículo ya ha consultado con éxito
+
+00:05:53.016 --> 00:05:55.286 align:middle
+un User con este id.
+
+00:05:55.776 --> 00:05:59.366 align:middle
+Así que no debería haber forma de
+que, de repente, no lo encontremos.
+
+00:05:59.816 --> 00:06:05.996 align:middle
+Hay algunas excepciones a esto, como si
+permitieras a tu usuario cambiar su id...
+
+00:06:06.256 --> 00:06:11.836 align:middle
+o si permitieras a los usuarios crear objetos
+nuevos y establecer el id manualmente...
+
+00:06:12.286 --> 00:06:18.086 align:middle
+pero en la mayoría de las situaciones, incluida
+la nuestra, si esto ocurre, es que algo ha ido mal.
+
+00:06:19.246 --> 00:06:24.066 align:middle
+A continuación, si no tenemos un
+id, digamos $entity = new User().
+
+00:06:25.156 --> 00:06:31.976 align:middle
+¡Listo! En ambos casos, aquí abajo, vamos
+a mapear el objeto $dto al objeto $entity.
+
+00:06:32.516 --> 00:06:34.556 align:middle
+Este código es aburrido...
+
+00:06:34.556 --> 00:06:36.366 align:middle
+así que lo haré más rápido.
+
+00:06:36.396 --> 00:06:41.936 align:middle
+Para la contraseña, pon un TODO temporalmente
+porque aún tenemos que hacer el hash.
+
+00:06:42.646 --> 00:06:45.456 align:middle
+Añade también un TODO para
+handle dragon treasures.
+
+00:06:45.926 --> 00:06:48.126 align:middle
+Céntrate en lo fácil...
+
+00:06:48.156 --> 00:06:50.056 align:middle
+y al final, return $entity.
+
+00:06:51.496 --> 00:06:54.866 align:middle
+Si hemos hecho las cosas
+bien, cogeremos el UserApi,
+
+00:06:55.356 --> 00:06:58.136 align:middle
+lo transformaremos en un
+$entity y lo volcaremos.
+
+00:06:59.226 --> 00:07:02.156 align:middle
+Vuelve a ejecutar la prueba: Y...
+
+00:07:02.916 --> 00:07:06.266 align:middle
+¡404! Veamos qué ha pasado aquí.
+
+00:07:06.726 --> 00:07:07.986 align:middle
+Ah... claro.
+
+00:07:08.326 --> 00:07:10.366 align:middle
+No he vuelto a montar el test.
+
+00:07:11.246 --> 00:07:14.366 align:middle
+Esto debería ser ->post('/api/users').
+
+00:07:15.296 --> 00:07:16.276 align:middle
+Inténtalo de nuevo y...
+
+00:07:17.696 --> 00:07:23.926 align:middle
+¡lo tengo! ¡Ahí está nuestro objeto entidad User con el correo
+electrónico y el nombre de usuario transferidos correctamente!
+
+00:07:24.896 --> 00:07:31.256 align:middle
+Siguiente: Guardemos esto aprovechando el núcleo
+de Doctrine PersistProcessor y RemoveProcessor.
+
+00:07:31.736 --> 00:07:33.926 align:middle
+También nos encargaremos del
+hashing de la contraseña.
+
+00:07:34.466 --> 00:07:38.556 align:middle
+Al final, nuestras pruebas de
+usuario estarán pasando con éxito.
