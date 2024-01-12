@@ -1,5 +1,5 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index 6aa69ca2..b9bcf034 100644
+index 6aa69ca..b9bcf03 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
 @@ -6,12 +6,14 @@ use ApiPlatform\Doctrine\Orm\State\ItemProvider;

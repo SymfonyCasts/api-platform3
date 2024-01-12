@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 19559fa8..d3e3bd34 100644
+index d74b9a0..85f4a1e 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -12,7 +12,6 @@ use ApiPlatform\Metadata\Get;
@@ -8,7 +8,7 @@ index 19559fa8..d3e3bd34 100644
  use ApiPlatform\Metadata\Post;
 -use App\Entity\DragonTreasure;
  use App\State\EntityClassDtoStateProcessor;
- use App\State\EntityClassDtoStateProvider;
+ use App\State\EntityToDtoStateProvider;
  use App\Entity\User;
 @@ -61,7 +60,7 @@ class UserApi
      public ?string $password = null;
