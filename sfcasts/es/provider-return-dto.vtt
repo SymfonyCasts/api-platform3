@@ -1,0 +1,263 @@
+WEBVTT
+
+00:00:01.156 --> 00:00:02.236 align:middle
+Sigamos el objetivo. La
+
+00:00:02.986 --> 00:00:07.286 align:middle
+primera vez que utilizamos stateOptions, se activó
+el proveedor principal de recogida Doctrine.
+
+00:00:08.536 --> 00:00:09.456 align:middle
+Eso está muy bien...
+
+00:00:09.806 --> 00:00:12.536 align:middle
+salvo que devuelve entidades User, lo que
+
+00:00:12.806 --> 00:00:17.516 align:middle
+significa que éstas se convirtieron en
+los objetos centrales de las rutas UserApi.
+
+00:00:18.176 --> 00:00:21.206 align:middle
+Eso provoca una grave limitación
+a la hora de serializar
+
+00:00:21.546 --> 00:00:25.226 align:middle
+nuestras propiedades UserApi tienen que
+coincidir con nuestras propiedades User...
+
+00:00:25.486 --> 00:00:27.716 align:middle
+de lo contrario, el serializador explota.
+
+00:00:28.826 --> 00:00:33.606 align:middle
+Para solucionarlo y darnos el control total,
+hemos creado nuestro propio proveedor de estado
+
+00:00:33.736 --> 00:00:36.036 align:middle
+que llama al proveedor de colección central.
+
+00:00:36.596 --> 00:00:42.596 align:middle
+Pero en lugar de devolver estos objetos de
+entidad User, vamos a devolver objetos UserApi
+
+00:00:42.836 --> 00:00:46.576 align:middle
+para que se conviertan en los objetos
+centrales y se serialicen normalmente.
+
+00:00:47.246 --> 00:00:51.796 align:middle
+Crea un array $dtos y foreach
+sobre $entities as $entity.
+
+00:00:53.316 --> 00:00:59.346 align:middle
+A continuación, añade al array $dtos llamando
+a un nuevo método: mapEntityToDto($entity).
+
+00:01:00.586 --> 00:01:02.776 align:middle
+Pulsa "alt" + "enter" para
+añadir ese método al final.
+
+00:01:03.996 --> 00:01:05.846 align:middle
+Esto devolverá un object.
+
+00:01:06.366 --> 00:01:08.776 align:middle
+Bueno... será un objeto UserApi...
+
+00:01:09.156 --> 00:01:11.626 align:middle
+pero estamos intentando que
+esta clase sea genérica. Voy a
+
+00:01:12.726 --> 00:01:17.286 align:middle
+pegar algo de lógica -puedes copiarla
+del bloque de código de esta página-
+
+00:01:17.586 --> 00:01:20.316 align:middle
+y luego pulsar "alt" + "enter" para
+añadir la declaración use que falta.
+
+00:01:20.856 --> 00:01:22.906 align:middle
+Este código es específico del usuario...
+
+00:01:22.906 --> 00:01:27.696 align:middle
+pero lo haremos más genérico más adelante, para
+poder reutilizar esta clase para los tesoros dragón.
+
+00:01:28.316 --> 00:01:32.326 align:middle
+Pero, ¿no es este código
+refrescantemente aburrido y comprensible?
+
+00:01:32.666 --> 00:01:35.336 align:middle
+Sólo transferimos propiedades
+del User $entity ...
+
+00:01:35.606 --> 00:01:36.386 align:middle
+al DTO.
+
+00:01:36.386 --> 00:01:42.496 align:middle
+Lo único un poco extravagante es que
+cambiamos esta colección por una matriz...
+
+00:01:42.866 --> 00:01:45.406 align:middle
+porque esta propiedad es una array en UserApi.
+
+00:01:45.646 --> 00:01:50.506 align:middle
+Por último, en la parte inferior
+de provide(), return $dtos.
+
+00:01:51.016 --> 00:01:55.336 align:middle
+Gracias a esto, los objetos
+centrales serán objetos UserApi...
+
+00:01:55.656 --> 00:02:01.376 align:middle
+y éstos se serializarán normalmente: nada de
+fantasías en las que el serializador intenta pasar
+
+00:02:01.376 --> 00:02:04.256 align:middle
+de una entidad User a una UserApi.
+
+00:02:05.426 --> 00:02:07.176 align:middle
+¡Drumoll, por favor!
+
+00:02:07.796 --> 00:02:09.916 align:middle
+¡Tada! Funciona...
+
+00:02:10.066 --> 00:02:11.676 align:middle
+¡con el mismo resultado que antes!
+
+00:02:12.136 --> 00:02:15.606 align:middle
+Pero ahora tenemos la posibilidad de
+añadir propiedades personalizadas.
+
+00:02:16.146 --> 00:02:18.756 align:middle
+Vuelve a añadir el public
+int $flameThrowingDistance.
+
+00:02:20.246 --> 00:02:25.766 align:middle
+Luego, en el proveedor, es donde tenemos la oportunidad
+de establecer esas propiedades personalizadas,
+
+00:02:26.296 --> 00:02:30.966 align:middle
+como $dto->flameThrowingDistance
+= rand(1, 10).
+
+00:02:32.816 --> 00:02:34.326 align:middle
+Y... ¡voilà!
+
+00:02:34.976 --> 00:02:37.516 align:middle
+¡Ahora somos jodidamente peligrosos! Estamos
+
+00:02:38.026 --> 00:02:41.006 align:middle
+reutilizando el núcleo de
+Doctrine CollectionProvider,
+
+00:02:41.156 --> 00:02:43.636 align:middle
+pero con la posibilidad de
+añadir campos personalizados.
+
+00:02:44.156 --> 00:02:49.936 align:middle
+Ah, y me olvidé de mencionarlo: los campos
+JSON-LD @id y @type están de vuelta.
+
+00:02:50.626 --> 00:02:51.236 align:middle
+¡Lo hemos conseguido!
+
+00:02:51.656 --> 00:02:54.836 align:middle
+Aunque, parece que ahora
+nos falta la paginación.
+
+00:02:55.276 --> 00:02:56.896 align:middle
+El filtro está documentado...
+
+00:02:57.096 --> 00:03:01.636 align:middle
+¡pero el campo hydra:view que documenta
+la paginación ha desaparecido!
+
+00:03:02.446 --> 00:03:05.656 align:middle
+Vale, en realidad, la
+paginación sigue funcionando.
+
+00:03:06.156 --> 00:03:10.526 align:middle
+Observa: si voy a ?page=2, el
+primer usuario "usuario 1"...
+
+00:03:10.526 --> 00:03:12.436 align:middle
+se convierte en "usuario 6".
+
+00:03:13.006 --> 00:03:18.846 align:middle
+Sí, internamente, el núcleo CollectionProvider
+de Doctrine sigue leyendo la página actual
+
+00:03:18.976 --> 00:03:22.526 align:middle
+y buscando el conjunto correcto
+de objetos para esa página.
+
+00:03:23.126 --> 00:03:28.576 align:middle
+Nos falta el campo hdra:view de la parte
+inferior que describe la paginación simplemente
+
+00:03:28.576 --> 00:03:33.506 align:middle
+porque ya no devolvemos un objeto
+que implemente PaginationInterface.
+
+00:03:34.066 --> 00:03:38.726 align:middle
+Recuerda que esta variable $entities
+es en realidad un objeto Pagination.
+
+00:03:39.466 --> 00:03:43.416 align:middle
+Ahora que sólo devolvemos una
+matriz, la API Platform piensa que no
+
+00:03:43.416 --> 00:03:44.986 align:middle
+admitimos la paginación.
+
+00:03:45.626 --> 00:03:47.026 align:middle
+La solución es muy sencilla.
+
+00:03:47.306 --> 00:03:51.826 align:middle
+En lugar de devolver $dtos,
+return new TraversablePaginator()
+
+00:03:52.006 --> 00:03:56.206 align:middle
+con un nuevo \ArrayIterator() de $dtos.
+
+00:03:56.206 --> 00:04:00.126 align:middle
+Para los demás argumentos, podemos
+tomarlos del paginador original.
+
+00:04:00.736 --> 00:04:05.456 align:middle
+Como ayuda, assert($entities instanceof
+Paginator) (el de Doctrine ORM).
+
+00:04:06.826 --> 00:04:10.226 align:middle
+Luego, aquí abajo, utiliza
+$entities->getCurrentPage(),
+
+00:04:10.226 --> 00:04:17.126 align:middle
+$entities->getItemsPerPage(),
+y $entities->getTotalItems().
+
+00:04:18.486 --> 00:04:22.306 align:middle
+El proveedor de la colección principal ya
+ha hecho todo ese trabajo duro por nosotros.
+
+00:04:22.656 --> 00:04:23.216 align:middle
+Qué amigo.
+
+00:04:23.936 --> 00:04:24.936 align:middle
+Actualiza ahora.
+
+00:04:25.686 --> 00:04:26.796 align:middle
+Los resultados no cambian...
+
+00:04:27.066 --> 00:04:30.326 align:middle
+pero aquí abajo, ¡ha vuelto hydra:view!
+
+00:04:31.396 --> 00:04:36.956 align:middle
+Ahora: Hagamos que esto funcione para nuestras
+operaciones de artículos, como GET uno o PATCH.
+
+00:04:37.456 --> 00:04:43.026 align:middle
+También aprovecharemos nuestro nuevo sistema para
+añadir algo a UserApi que antes teníamos....
+
+00:04:43.296 --> 00:04:46.366 align:middle
+pero esta vez, vamos a hacerlo
+de una forma mucho más chula.

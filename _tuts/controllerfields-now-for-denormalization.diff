@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index c2be7565..63b70c59 100644
+index 545aa78..6c313fe 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -16,6 +16,7 @@ use App\Entity\User;
@@ -8,5 +8,5 @@ index c2be7565..63b70c59 100644
      normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
 +    denormalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
      paginationItemsPerPage: 5,
-     provider: EntityClassDtoStateProvider::class,
+     provider: EntityToDtoStateProvider::class,
      processor: EntityClassDtoStateProcessor::class,
