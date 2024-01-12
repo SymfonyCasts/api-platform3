@@ -1,6 +1,6 @@
 diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
 new file mode 100644
-index 00000000..61ce6bc0
+index 0000000..61ce6bc
 --- /dev/null
 +++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -0,0 +1,46 @@
