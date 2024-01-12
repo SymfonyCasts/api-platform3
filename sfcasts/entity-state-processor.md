@@ -55,8 +55,12 @@ Call it `EntityClassDtoStateProcessor` because, again, we're going to make this
 class generic so that it works for *any* API resource class that's tied to a Doctrine
 entity. We'll use it later for `DragonTreasure`.
 
+[[[ code('74612c8838') ]]]
+
 With the empty processor generated, go hook it up in `UserApi` with
 `processor: EntityClassDtoStateProcessor::class`.
+
+[[[ code('83860cae49') ]]]
 
 Henceforth, every time we POST, PATCH, or DELETE this resource, *this* processor
 will be called.
@@ -65,6 +69,8 @@ will be called.
 
 But what is this `$data` variable exactly? You may have a guess, but just in case,
 let's `dd($data)`... and rerun the test.
+
+[[[ code('83860cae49') ]]]
 
 ```terminal-silent
 symfony php bin/phpunit --filter=testPostToCreateUser
@@ -79,6 +85,8 @@ back to a `User` entity so that we can save it. Say `assert($data instanceof Use
 and, inside, `$entity =` set to a new helper function: `$this->mapDtoToEntity($data)`.
 Below, `dd($entity)`.
 
+[[[ code('a24e17818d') ]]]
+
 Then go add that new `private function mapDtoToEntity()`, which will accept an
 `object $dto` argument and return another `object`.
 
@@ -86,6 +94,8 @@ Again, we know this will *really* accept a `UserApi` object and return a `User`
 entity... but we're trying to keep this class generic so we can reuse it later.
 Though we *are* going to have some user-specific code down here temporarily.
 In fact, to help our editor, add another `assert($dto instanceof UserApi)`.
+
+[[[ code('ef0007c3a8') ]]]
 
 ## Querying for the Existing Entity
 
@@ -101,11 +111,16 @@ handle *both* situations.
 
 Undo the changes to the test so we don't break anything... and now, `if`
 `$dto->id`, we need to query for an existing `User`. To do that, on top, add a
-constructor with `private UserRepository $userRepository`. Back down here,
-say `$entity = $this->userRepository->find($dto->id)`.
+constructor with `private UserRepository $userRepository`. 
+
+[[[ code('7e5f1f358e') ]]]
+
+Back down here, say `$entity = $this->userRepository->find($dto->id)`.
 
 If we *don't* find that `User`, throw a big giant exception that will trigger
 a 500 error with `Entity %d not found`.
+
+[[[ code('1940784361') ]]]
 
 You might be wondering:
 
@@ -120,11 +135,15 @@ situations, including ours, if this happens, something went weird.
 
 Next up, if we *don't* have an `id`, say `$entity = new User()`.
 
+[[[ code('8b8036b3fb') ]]]
+
 Done! In both cases, down here, we're going to map the `$dto` object to the
 `$entity` object. This code is boring... so I'll speed through this. For the password,
 put a `TODO` temporarily because we still need to hash that. *Also* add a `TODO`
 for `handle dragon treasures`. Just focus on the easy stuff... and at the bottom,
 `return $entity`.
+
+[[[ code('4c79b2c5b0') ]]]
 
 If we've done things correctly, we'll take the `UserApi`, transform that into
 an `$entity` and dump it. Rerun the test:

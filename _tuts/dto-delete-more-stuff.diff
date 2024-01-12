@@ -1,6 +1,6 @@
 diff --git a/src/State/UserHashPasswordStateProcessor.php b/src/State/UserHashPasswordStateProcessor.php
 deleted file mode 100644
-index 816b0a89..00000000
+index 816b0a8..0000000
 --- a/src/State/UserHashPasswordStateProcessor.php
 +++ /dev/null
 @@ -1,26 +0,0 @@
