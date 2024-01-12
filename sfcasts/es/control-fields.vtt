@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00:01.056 --> 00:00:05.576 align:middle
+Cuando tu recurso API está en una entidad, los
+grupos de serialización son imprescindibles
+
+00:00:05.576 --> 00:00:09.646 align:middle
+porque seguro que tendrás algunas
+propiedades que querrás mostrar o no mostrar.
+
+00:00:10.056 --> 00:00:12.636 align:middle
+Pero los grupos de serialización
+añaden complejidad.
+
+00:00:13.156 --> 00:00:15.436 align:middle
+Una de las grandes ventajas de
+tener una clase independiente
+
+00:00:15.436 --> 00:00:19.106 align:middle
+para tu API es no necesitar
+grupos de serialización.
+
+00:00:19.576 --> 00:00:19.956 align:middle
+Porque...
+
+00:00:20.146 --> 00:00:23.926 align:middle
+el objetivo de tu clase API
+es representar tu API...
+
+00:00:24.316 --> 00:00:28.636 align:middle
+así que, en teoría, querrás que todas
+las propiedades formen parte de tu API.
+
+00:00:29.156 --> 00:00:32.466 align:middle
+Pero, en el mundo real,
+eso no siempre es cierto.
+
+00:00:32.656 --> 00:00:37.806 align:middle
+Y acabamos de encontrarnos con un caso: password
+debería ser un campo de sólo escritura.
+
+00:00:38.426 --> 00:00:43.516 align:middle
+Intentemos reproducir parte de la complejidad
+que tenía originalmente nuestra entidad User,
+
+00:00:43.766 --> 00:00:47.206 align:middle
+pero evitando los grupos de serialización.
+
+00:00:47.206 --> 00:00:51.146 align:middle
+En UserResourceTest, aquí
+abajo, elimina el ->dump()...
+
+00:00:51.496 --> 00:00:56.826 align:middle
+y después de ->assertStatus(201), afirma
+que la propiedad password no se devuelve.
+
+00:00:57.356 --> 00:01:01.916 align:middle
+Para ello, podemos decir
+->use(function(Json $json)).
+
+00:01:01.916 --> 00:01:07.296 align:middle
+La función use() proviene del navegador y
+hay algunos objetos diferentes -como Json -
+
+00:01:07.486 --> 00:01:10.166 align:middle
+que puedes pedirle que te pase a
+través de la sugerencia de tipo.
+
+00:01:10.166 --> 00:01:13.786 align:middle
+En este caso, el navegador toma
+el JSON de la última respuesta,
+
+00:01:13.956 --> 00:01:18.096 align:middle
+lo pone en un objeto Json y nos lo pasa.
+
+00:01:18.096 --> 00:01:21.776 align:middle
+Utilízalo diciendo
+$json->assertMissing('password').
+
+00:01:23.516 --> 00:01:30.266 align:middle
+Si lo intentamos ahora Falla
+porque password sí existe.
+
+00:01:30.266 --> 00:01:35.596 align:middle
+Bien, vamos a dar una vuelta por cómo podemos
+personalizar nuestros campos API sin grupos.
+
+00:01:35.946 --> 00:01:38.886 align:middle
+Uno de los más sencillos (y, casualmente,
+
+00:01:38.886 --> 00:01:43.506 align:middle
+mi favorito) es utilizar
+#[ApiProperty()] con readable: false.
+
+00:01:44.426 --> 00:01:48.006 align:middle
+Queremos que esto sea
+escribible, pero no legible.
+
+00:01:49.186 --> 00:01:51.266 align:middle
+Y... ¡eso arregla las cosas!
+
+00:01:51.526 --> 00:01:52.276 align:middle
+Estupendo.
+
+00:01:52.966 --> 00:01:54.686 align:middle
+Repitamos esto para id...
+
+00:01:55.096 --> 00:02:00.236 align:middle
+porque id es bastante
+inútil ya que tenemos @id.
+
+00:02:00.236 --> 00:02:01.426 align:middle
+Cuando lo ejecutamos...
+
+00:02:02.886 --> 00:02:05.266 align:middle
+falla porque se devuelve id.
+
+00:02:05.746 --> 00:02:07.326 align:middle
+Así que ahora, copia...
+
+00:02:07.326 --> 00:02:09.056 align:middle
+sólo la parte de readable: false...
+
+00:02:10.326 --> 00:02:16.046 align:middle
+añade #[ApiProperty] encima de id, pega,
+y también añadiré identifier: true...
+
+00:02:16.046 --> 00:02:17.796 align:middle
+sólo para ser explícito.
+
+00:02:17.796 --> 00:02:18.866 align:middle
+Y ahora...
+
+00:02:20.086 --> 00:02:21.496 align:middle
+Ya está.
+
+00:02:22.276 --> 00:02:23.016 align:middle
+Sigamos.
+
+00:02:23.366 --> 00:02:30.356 align:middle
+Copia el nombre de la siguiente prueba -
+testPatchToUpdateUser - y ejecútala: symfony php bin/phpunit
+
+00:02:30.356 --> 00:02:36.666 align:middle
+--filter=testPatchToUpdateUser
+¡Pasa inmediatamente!
+
+00:02:36.896 --> 00:02:39.376 align:middle
+Yupi! ->patch() ya funciona.
+
+00:02:40.236 --> 00:02:43.016 align:middle
+Para profundizar en otras formas en
+que podemos ocultar o mostrar campos,
+
+00:02:43.326 --> 00:02:48.256 align:middle
+envía también un campo flameThrowingDistance
+en el JSON establecido en 999.
+
+00:02:49.496 --> 00:02:51.186 align:middle
+Y aquí abajo, ->dump() la respuesta.
+
+00:02:51.186 --> 00:02:56.316 align:middle
+Antes de probar esto, busca
+EntityClassDtoStateProcessor.
+
+00:02:56.966 --> 00:02:59.376 align:middle
+Justo después de establecer
+el id, dump($data).
+
+00:03:00.316 --> 00:03:04.876 align:middle
+Esos dos volcados nos ayudarán a entender
+exactamente cómo funciona todo esto.
+
+00:03:04.876 --> 00:03:08.226 align:middle
+Ahora ejecuta la prueba: Y...
+
+00:03:08.646 --> 00:03:15.916 align:middle
+impresionante. El primer volcado de arriba -del procesador de
+estado- muestra flameThrowingDistance 999, lo que significa que
+
+00:03:15.916 --> 00:03:18.256 align:middle
+el campo es escribible.
+
+00:03:18.706 --> 00:03:24.096 align:middle
+Y abajo, la respuesta devuelve 999, lo que
+significa que el campo también es legible.
+
+00:03:24.866 --> 00:03:28.036 align:middle
+Sí... se trata de un campo normal y aburrido.
+
+00:03:28.156 --> 00:03:34.516 align:middle
+Si el usuario envía el campo en JSON, ese
+nuevo valor se deserializa en el objeto.
+
+00:03:35.556 --> 00:03:37.956 align:middle
+Bien, ¡hora de experimentar!
+
+00:03:38.346 --> 00:03:44.526 align:middle
+En UserApi, encima de la propiedad, empieza con
+las mismas #[ApiProperty()] y readable: false.
+
+00:03:45.246 --> 00:03:47.866 align:middle
+Esto ya lo hemos visto.
+
+00:03:47.906 --> 00:03:54.766 align:middle
+Cuando ejecutamos la prueba, en la parte
+superior, el "999" se escribió en el UserApi,
+
+00:03:55.356 --> 00:03:57.516 align:middle
+pero no aparece en la respuesta.
+
+00:03:57.816 --> 00:03:59.766 align:middle
+Se puede escribir, pero no leer.
+
+00:04:00.596 --> 00:04:02.756 align:middle
+Si pasamos también writable: false...
+
+00:04:03.236 --> 00:04:04.246 align:middle
+e intentamos de nuevo.
+
+00:04:05.816 --> 00:04:08.526 align:middle
+Arriba, el valor es sólo "10".
+
+00:04:09.026 --> 00:04:13.266 align:middle
+El campo no es escribible, por lo
+que se ignoró el campo en el JSON.
+
+00:04:13.726 --> 00:04:17.326 align:middle
+Tampoco está en la respuesta:
+no es legible ni escribible.
+
+00:04:17.956 --> 00:04:22.696 align:middle
+Las opciones de legible/escribible por sí solas
+probablemente resolverán la mayoría de las situaciones.
+
+00:04:23.336 --> 00:04:27.706 align:middle
+Pero, a continuación, vamos a aprender otros trucos
+y a ver por qué probablemente quieras asegur arte de
+
+00:04:27.706 --> 00:04:30.366 align:middle
+que tu identificador no es escribible.
