@@ -1,0 +1,329 @@
+WEBVTT
+
+00:00:01.086 --> 00:00:03.556 align:middle
+Sigamos jugando con cómo
+podemos ocultar o mostrar campos.
+
+00:00:04.196 --> 00:00:06.126 align:middle
+Elimina el atributo #[ApiProperty].
+
+00:00:06.396 --> 00:00:10.346 align:middle
+A continuación, en la parte superior,
+establece la opción normalizationContext.
+
+00:00:11.036 --> 00:00:13.336 align:middle
+Esto ya lo utilizamos en
+tutoriales anteriores...
+
+00:00:13.506 --> 00:00:15.876 align:middle
+pero esta vez, en lugar de groups , pon
+
+00:00:15.956 --> 00:00:19.986 align:middle
+una clave llamada
+AbstractNormalizer::IGNORED_ATTRIBUTES
+
+00:00:20.496 --> 00:00:22.336 align:middle
+y luego ponla en una matriz.
+
+00:00:23.056 --> 00:00:25.326 align:middle
+Dentro, pon flameThrowingDistance.
+
+00:00:26.616 --> 00:00:30.666 align:middle
+Que un campo sea legible o
+escribible depende del serializador.
+
+00:00:31.196 --> 00:00:33.426 align:middle
+Esto le dice al serializador ¡Oye!
+
+00:00:33.616 --> 00:00:38.656 align:middle
+Cuando normalices, es decir, cuando
+pases a JSON, ignora esta propiedad.
+
+00:00:39.226 --> 00:00:41.816 align:middle
+Esto debería hacer que sea
+escribible, pero no legible.
+
+00:00:42.336 --> 00:00:43.456 align:middle
+Cuando lo probamos...
+
+00:00:45.116 --> 00:00:47.136 align:middle
+¡Eso es exactamente lo que ocurre!
+
+00:00:48.356 --> 00:00:54.876 align:middle
+Para envolverlo en un signo de "no escribir",
+duplica este movimiento con denormalizationContext.
+
+00:00:55.336 --> 00:01:02.786 align:middle
+Cópialo, ponle un "de" delante,
+y ahora cuando lo probemos: ¡Sí!
+
+00:01:03.046 --> 00:01:07.746 align:middle
+flameThrowingDistance es "1", por lo que
+no se puede escribir, y aquí abajo...
+
+00:01:08.056 --> 00:01:09.706 align:middle
+tampoco es legible.
+
+00:01:09.906 --> 00:01:15.806 align:middle
+Genial. Así que ésta es sólo una opción diferente
+que debería funcionar igual que ApiProperty...
+
+00:01:16.106 --> 00:01:20.936 align:middle
+aunque he visto casos complejos en los
+que esta opción contextual funcionaba
+
+00:01:20.996 --> 00:01:23.546 align:middle
+cuando la solución de
+ApiProperty no lo hacía.
+
+00:01:23.956 --> 00:01:25.196 align:middle
+En cualquier caso, elimínalos.
+
+00:01:26.346 --> 00:01:29.006 align:middle
+La última forma de ignorar
+un campo -si quieres
+
+00:01:29.006 --> 00:01:32.676 align:middle
+ignorarlo por completo- es
+añadir un atributo llamado...
+
+00:01:33.156 --> 00:01:34.226 align:middle
+#[Ignore]¡!
+
+00:01:34.706 --> 00:01:37.006 align:middle
+Esto proviene del sistema
+serializador de Symfony.
+
+00:01:38.066 --> 00:01:43.746 align:middle
+Cuando probamos Perfecto: No
+se puede escribir ni leer.
+
+00:01:44.096 --> 00:01:49.106 align:middle
+¡Genial! Muy bien, vamos a darle al botón
+de reinicio de todo ese código ficticio.
+
+00:01:49.736 --> 00:01:50.906 align:middle
+Deshazte del #[Ignore]...
+
+00:01:51.346 --> 00:01:54.656 align:middle
+y veamos si nos sobra alguna sentencia use.
+
+00:01:55.396 --> 00:01:57.936 align:middle
+Luego, en nuestro procesador,
+elimina ->dump()...
+
+00:01:58.586 --> 00:02:02.526 align:middle
+y en nuestra prueba, deshazte de ese
+campo extra y del otro ->dump().
+
+00:02:03.356 --> 00:02:04.286 align:middle
+¡Todo limpio!
+
+00:02:05.086 --> 00:02:08.096 align:middle
+En este tema de lo legible
+y lo escribible, ahora mismo
+
+00:02:08.096 --> 00:02:11.886 align:middle
+podemos cambiar el campo
+id en una petición PATCH.
+
+00:02:12.396 --> 00:02:14.726 align:middle
+Mira: pon esto en 47...
+
+00:02:14.916 --> 00:02:17.696 align:middle
+que me acabo de inventar, y...
+
+00:02:18.486 --> 00:02:20.896 align:middle
+¡falla con un error 500!
+
+00:02:21.506 --> 00:02:25.046 align:middle
+Abre el error: Entidad 47 no encontrada.
+
+00:02:25.486 --> 00:02:27.796 align:middle
+Eso viene de nuestro procesador de estado.
+
+00:02:28.886 --> 00:02:30.796 align:middle
+Viene de aquí abajo...
+
+00:02:31.456 --> 00:02:35.906 align:middle
+lee el id aquí arriba e intenta
+encontrarlo en la base de datos...
+
+00:02:35.996 --> 00:02:37.186 align:middle
+pero no está ahí.
+
+00:02:38.166 --> 00:02:43.566 align:middle
+Si hubiéramos utilizado un id válido,
+habría buscado esa otra entidad User...
+
+00:02:43.906 --> 00:02:46.886 align:middle
+y habríamos actualizado sus propiedades.
+
+00:02:47.406 --> 00:02:49.226 align:middle
+Eso es un gran no-no. Al
+
+00:02:49.546 --> 00:02:55.096 align:middle
+menos, tal y como está escrito nuestro código, al hacer
+que id sea escribible, estamos permitiendo al usuario
+
+00:02:55.096 --> 00:02:58.196 align:middle
+cambiar qué usuario se está modificando.
+
+00:02:59.096 --> 00:03:00.496 align:middle
+Veamos el flujo completo.
+
+00:03:01.236 --> 00:03:06.126 align:middle
+En primer lugar, nuestro proveedor encontró
+la entidad User original con la id de la URL...
+
+00:03:06.396 --> 00:03:09.406 align:middle
+y la mapeó a un objeto UserApi.
+
+00:03:09.866 --> 00:03:11.146 align:middle
+Bien hasta aquí.
+
+00:03:11.736 --> 00:03:18.946 align:middle
+Después, durante la deserialización,
+el id del objeto UserApi se cambió a 47.
+
+00:03:19.706 --> 00:03:25.216 align:middle
+Por último, en el procesador de estado,
+intentamos consultar una entidad con id=47...
+
+00:03:25.396 --> 00:03:28.846 align:middle
+que es en definitiva lo que habríamos
+guardado en la base de datos.
+
+00:03:29.586 --> 00:03:34.696 align:middle
+En UserApi, para solucionar esto,
+encima de id, añade writable: false.
+
+00:03:35.586 --> 00:03:39.176 align:middle
+O podríamos utilizar el atributo
+#[Ignore] que vimos hace un segundo...
+
+00:03:39.386 --> 00:03:42.406 align:middle
+ya que no queremos que
+sea legible ni escribible.
+
+00:03:42.876 --> 00:03:45.716 align:middle
+La propiedad id ayuda a generar el IRI...
+
+00:03:45.716 --> 00:03:48.116 align:middle
+pero en realidad no forma parte de nuestra API.
+
+00:03:48.966 --> 00:03:50.236 align:middle
+Si ejecutamos esa prueba ahora...
+
+00:03:51.596 --> 00:03:56.336 align:middle
+pasa porque ignora el
+nuevo campo id en el JSON.
+
+00:03:56.636 --> 00:03:58.136 align:middle
+La vida es buena.
+
+00:03:58.926 --> 00:04:02.756 align:middle
+Mientras estamos aquí, en UserApi,
+hay otras dos propiedades que,
+
+00:04:02.976 --> 00:04:05.246 align:middle
+por ahora, quiero que sean de sólo lectura.
+
+00:04:05.676 --> 00:04:08.556 align:middle
+Encima de $dragonTreasures,
+haz esto writable: false...
+
+00:04:08.956 --> 00:04:11.636 align:middle
+aunque lo haremos escribible más adelante.
+
+00:04:12.506 --> 00:04:15.546 align:middle
+Abajo, haz lo mismo para
+$flameThrowingDistance...
+
+00:04:15.946 --> 00:04:19.376 align:middle
+porque ésta es una propiedad falsa que
+estamos generando como un número aleatorio.
+
+00:04:19.796 --> 00:04:22.686 align:middle
+Ah, y otra forma de controlar
+si un campo es legible
+
+00:04:22.686 --> 00:04:25.866 align:middle
+o escribible es el atributo security. Por
+
+00:04:26.476 --> 00:04:32.596 align:middle
+ejemplo, si $flameThrowingDistance sólo fuera
+legible o escribible si tienes un determinado rol,
+
+00:04:32.986 --> 00:04:35.636 align:middle
+podrías utilizar el atributo
+security para comprobarlo.
+
+00:04:36.056 --> 00:04:37.396 align:middle
+Veremos esto un poco más adelante.
+
+00:04:38.526 --> 00:04:42.846 align:middle
+Por último, quiero mencionar una última
+estrategia para los campos condicionales...
+
+00:04:43.016 --> 00:04:44.506 align:middle
+aunque no lo haremos.
+
+00:04:45.226 --> 00:04:51.466 align:middle
+Si el JSON de entrada y el JSON de salida de tu
+recurso API empiezan a parecer realmente diferentes,
+
+00:04:51.786 --> 00:04:56.136 align:middle
+es posible tener clases separadas
+para tu entrada y tu salida.
+
+00:04:56.676 --> 00:05:02.116 align:middle
+Podrías tener algo así como un
+UserApiRead y otro UserApiWrite.
+
+00:05:02.726 --> 00:05:07.856 align:middle
+El UserApiRead se utilizaría para las operaciones
+de lectura como la recogida de GET y GET.
+
+00:05:08.246 --> 00:05:12.616 align:middle
+Y UserApiWrite se utilizaría para
+las operaciones PUT, PATCH y POST.
+
+00:05:13.076 --> 00:05:16.916 align:middle
+Aunque, para ser sincero,
+aún no he jugado con esto.
+
+00:05:17.276 --> 00:05:21.676 align:middle
+Debería funcionar, pero probablemente haya
+algunos baches y detalles por el camino.
+
+00:05:22.616 --> 00:05:27.446 align:middle
+Otra cosa a tener en cuenta es
+que, en UserApiWrite, podrías,
+
+00:05:27.886 --> 00:05:31.966 align:middle
+en teoría, establecer
+el output en UserApiRead.
+
+00:05:32.456 --> 00:05:36.806 align:middle
+Eso permitiría al usuario enviar
+datos en el formato de UserApiWrite,
+
+00:05:37.026 --> 00:05:40.636 align:middle
+pero ser devueltos JSON desde UserApiRead.
+
+00:05:41.146 --> 00:05:46.416 align:middle
+Pero, para que esto funcione, después de guardar
+el UserApiWrite en tu procesador de estado,
+
+00:05:46.836 --> 00:05:50.916 align:middle
+tendrías que convertirlo en
+un UserApiRead y devolverlo.
+
+00:05:51.896 --> 00:05:56.976 align:middle
+En fin, esto es definitivamente más avanzado, pero si
+te parece interesante y lo pruebas, ¡házmelo saber!
+
+00:05:57.866 --> 00:06:03.286 align:middle
+A continuación: Pulamos nuestro nuevo recurso
+API volviendo a añadir validación y seguridad.
