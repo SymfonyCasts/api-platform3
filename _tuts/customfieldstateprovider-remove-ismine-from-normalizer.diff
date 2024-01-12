@@ -1,5 +1,5 @@
 diff --git a/src/Normalizer/AddOwnerGroupsNormalizer.php b/src/Normalizer/AddOwnerGroupsNormalizer.php
-index b74d28ba..776fef90 100644
+index b74d28b..776fef9 100644
 --- a/src/Normalizer/AddOwnerGroupsNormalizer.php
 +++ b/src/Normalizer/AddOwnerGroupsNormalizer.php
 @@ -22,13 +22,7 @@ class AddOwnerGroupsNormalizer implements NormalizerInterface, SerializerAwareIn
