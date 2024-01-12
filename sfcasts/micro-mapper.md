@@ -1,85 +1,222 @@
-# Micro Mapper
+# MicroMapper: Central DTO Mapping
 
-Coming soon...
+Doing the data transformation, from `UserApi` to the `User` entity, or the `User`
+entity to `UserApi`, is the *only* part of our provider and processor that
+*isn't* generic and reusable. Rats! If it wasn't for that code, we could
+create a `DragonTreasureApi` class and do this whole thing over again with, like
+almost no work! *Fortunately*, this is a well-known problem called "data mapping".
 
-Doing the data transformation like from the User API to the User Entity, or the User
-Entity to the User API, is the only part of our provider and processor that isn't
-generic and reusable. Darn it, if it weren't for this code, we could quickly create a
-Dragon Treasure API class and do this whole thing over again with almost no work.
-Fortunately, this is a well-known problem, basically called data mapping. And for
-this tutorial, I tried a few libraries to help with this, most notably the JanePHP
-automapper bundle, which is super fast and advanced. And fun to use. However, it also
-seemed to not be quite as flexible as I needed it to, and extending it started to
-look kind of complex. I honestly got stuck in a couple spots. So I hope that I am
-proven wrong by that library. Maybe I was just using it wrong. Because it's very
-cool, and I know some of the people that work on it, and they're awesome. So the
-point is, we're not going to use that library instead to handle the mapping. I
-created my own very small library that we're going to reuse in this tutorial. It's
-easy to understand, and gives us full control, even if it's not quite as cool as
-JanePHP's automapper. So let's get it installed. Composer require symphonycasts slash
-micromapper. Sounds like a superhero. All right, when that installs, we now have a
-new micromapper service that we can use. So here's how we're going to do it. Let's
-start with the processor. So up top here, we are going to inject a new private
-micromapper interface, micromapper service. And down here, for all the mapping stuff,
-if you want you can copy this. We're going to kind of reuse a bunch of this in a
-second, in a different spot. And all we're going to say is return this arrow
-micromapper, arrow map. And this has two big main arguments, the from object, which
-is going to be our DTO from, and the to class. We want to convert this to a user
-entity, so user colon colon class. And that's it. Okay, that's not it. It's not going
-to quite work yet, but let's actually try running our test post to create a user
-test. And it fails with 500 error. But the really interesting thing is what that 500
-error is. Let me actually view page source so we can read this even better. So it
-says no mapper found for user API to user, and this is coming from micromapper. So
-it's basically saying, hey, I don't know how to convert a user API object to a user
-object. Micromapper is very not magic. We do everything by hand. So the way we're
-going to do it is we're going to create a class that explains how to do this
-transformation called a mapper class. So these are kind of fun, I'm going to create a
-new, close a few things, a new mapper directory and source. And inside of there, a
-new PHP class called, how about user API to entity mapper. So we're going from user
-API to entity. There's two requirements on this needs to implement a mapper
-interface. Perfect. And then above it to describe what it's mapping to and from, from
-and to, we're going to add an as mapper attribute with from user API, colon, colon
-class, and to user, colon, colon class. That's how the micromapper is going to know
-to use this when we're doing that direction. Now because we've implemented this
-interface, I'll go to code generate or Command N on a Mac and implement the two
-methods that we need, which are load and populate. And just to start, I'm going to DD
-the from object in the to class inside of the load method. Now just by creating this
-and giving it this as mapper, when we use the micromapper and try to do that
-transformation, it should call our load method. So let's try it. Let's rerun the test
-again. And I have a syntax error. Let's actually get rid of that. And got it perfect.
-So there's the user API object we're passing, and it's passing us the user class. So
-there's two methods inside of here. The purpose of load is basically to load the to
-object and return it. So in our case, it's going to be loading it from the database.
-So we're going from a user API to a user entity. We basically want to load the user
-from the database or return a new user if we need it. So let me show you. I'm going
-to create public function underscore, underscore construct. We will inject our normal
-user repository, user repository. And down here is going to be kind of the same code
-that we saw earlier. I'm actually going to start just to help my brain, I'm going to
-say DTO equals from. And then I'm gonna say assert DTO is an instance of user API. So
-it's going to help my brain and help my editor. And then the user entity is going to
-be like this. If our DTO has an ID, then we're going to use this error user
-repository arrow find DTO arrow ID, else, we're going to create a new user object.
-That simple. And that's why the purpose of the load method is either load it from a
-data source, or just create a new object on there. And just for clarity, just to help
-give me a better air, for some reason, we don't have a user entity, I'll throw a new
-exception, kind of like we did before, user not found that shouldn't happen down here
-or return user entity. So we've kind of initialized our to object and returned it.
-Now whatever we return from the load method, our user object is immediately get micro
-members then immediately going to call populate passes the from object and passes the
-user entity the to object. So to show you, I'll D, D from n two. And we run it.
-Perfect. So here's our from user API object. And here is our new user object right
-there. Now, if you're wondering why we have both a load method and a populate method,
-it really seems like these can just be one method. And you're right, there's a
-technical reason why they're separated, it's going to come in handy later when we
-talk about relationships. But right now, you can really almost think of this as one
-method here. This is where we kind of load the object from the database. And then
-down here is going to be where we populate all the properties, taking them from the
-from and putting them onto the two. And once again, for my own sanity, I'm going to
-say DTO equals from and assert DTO as an instance of user API, I should do the same
-thing for from I'm gonna say entity equals to and assert entity is an instance of
-user. So now my code down here is gonna be really normal and boring. I'm gonna just
-type this quickly. So this is the same code that we had earlier. DTO. DTO. DTO. So
-I'm gonna do DTO. DTO. DTO. DTO. DTO. DTO. DTO. So this is the same code that I had
-earlier. So I'm gonna do DTO. DTO. DTO. DTO. DTO.
+For this tutorial, I tried a few data mapping libraries, most notably
+`jane-php/automapper-bundle`, which is super-fast, advanced, *and* fun to use.
+However, it isn't *quite* as flexible as I needed... and extending it looked complex.
+Honestly... I got stuck in a few places... though I know that work *is* being done
+to make this package even friendlier.
 
-So that code is the exact same code we had before, at the bottom I'll return Entity and the other thing here is I'm using the user password hasher, so let's also make sure we have that up here, private user password hasher interface, user password hasher. So same code, just kind of moved to a different location. All right, now let's try that test again. And it passes! So this is huge, we've offloaded all this work to this mapper, and our processor, look, it's now basically completely generic. We can remove the old user password hasher, we don't need that. And we also don't need the user repository from up here, I'll even remove those use statements. Love that. So we still have to do all the work of mapping, but we now have it in this nice central location. So let's repeat this also for the provider. So let me close the processor, and let's open up our provider. In this case we're going from the entity over to user API, so I'm going to copy all this code here, and delete it, and just like we did in the other spot, we're going to auto-wire the micro mapper interface, micro mapper, and then down here, this simplifies greatly to return this arrow micro mapper, arrow map, we're going to go from our entity to our user API class. And of course if we tried that right now, that would 500 error, because we don't have a mapper for that. So let's jump straight to creating it. So in source mapper, we'll create a new class called user entity to API mapper, we'll implement the mapper interface, we'll say, put our little as mapper, in this case, we're going from user colon colon class to user API colon colon class, then I will implement both the methods that we need, and kind of start the same way as before, I'm going to say entity equals from, just for my own sanity, and then assert entity as an instance of user to help out my editor, and then down here we'll create the DTO, there's no querying the database for the DTO, we're always going to be creating a new, fresh user API object, and then we're going to set the ID onto it, so, and return DTO. So in this case, the job of the load method in this case is just to create the user API object, but make sure that it has the identifier on it, so that's all the work that we need to do in load. All the other work will be done down here in populate, so I'll very quickly start the same way I was doing before, entity equals from, DTO equals to, those two asserts, and then down here it's the exact same code that we had before, we're just transferring the data, at the bottom, I will return DTO, alright, let's try this, I'm going to go to my browser, let's just refresh this page, oh, full authentication required to access the resource, of course because we added security back on, let me pop to my homepage real quick, we can click this username and password, boop, go back and refresh, and it works, though we're missing some of our data, that's actually my fault, I did DTO equals new user API, so instead of modifying the two object I was being passed, I was actually creating a new one, so the original one was never actually getting modified, there we go, now that's working better, and it works, this is huge, so now our provider and our processor are completely generic, let's finish the process of making them work for any API resource class next, next.
+The point is, we're not going to use that library. *Instead*, to handle the mapping,
+I created a small package of my own. It's easy to understand, and gives us *full*
+control... even if it's not *quite* as cool as jane's automapper.
+
+## Installing micro-mapper
+
+So let's get it installed! Run:
+
+```terminal
+composer require symfonycasts/micro-mapper
+```
+
+That kind of sounds like a superhero. Now that we have this in our app, we have
+one new micromapper service that's good at converting data from *one* object
+to another. Let's start by using it in our *processor*.
+
+## Using the MicroMapper Service
+
+Up on top, autowire a `private MicroMapperInterface $microMapper`.
+
+[[[ code('7d644c516b') ]]]
+
+And down here, for all the mapping stuff, copy the existing logic, because we'll
+need it in a minute. Replace it with `return $this->microMapper->map()`.
+This has two main arguments: The `$from` object, which will be `$dto` and the
+*toClass*, so `User::class`.
+
+[[[ code('32e53d12f0') ]]]
+
+Done! Well... not *quite*, but let's try running `testPostToCreateUser` anyway.
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+And... it *fails* with a *500* error. The interesting thing is *what* that 500
+error says. Let's "View Page Source" so we can read this even better. It says
+
+> No mapper found for `App\UserResource\UserApi` -> `App\Entity\User`
+
+And this comes from `MicroMapper`. This basically says:
+
+> Hey, I don't know *how* to convert a `UserApi` object to a `User` object! Halp!
+
+## Creating a Mapper
+
+MicroMapper *isn't* magic... it's really the opposite. To teach micro mapper how
+to do this conversion, we need to create a class that *explains* what we want.
+That's called a *mapper class*. And these are fun!
+
+Let me start by closing a few things... and then creating a new `Mapper/` directory
+in `src/`. Inside of *that*, add a new PHP class called... how about
+`UserApiToEntityMapper`, because we're going from `UserApi` to the `User` entity.
+
+This class needs 2 things. First, to implement `MapperInterface`. 
+
+[[[ code('5f71984855') ]]
+
+And second, above the class, to describe what it's mapping *to* and *from*, 
+we need an `#[AsMapper()]` attribute with `from: UserApi::class` and `to: User::class`.
+
+[[[ code('91592238fb') ]]]
+
+To help the interface, go to "Code Generate" (or "command" + "N"
+on a Mac) and generate the two *methods* it needs: `load()` and `populate()`. For
+starters, let's `dd($from, $toClass)`.
+
+[[[ code('7f8671d42f') ]]]
+
+Now, *just* by creating this and giving it `#[AsMapper]`, when we use MicroMapper
+to do this transformation, it *should* call our `load()` method. Let's see if it
+does!
+
+Run the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+And... got it! *There's* the `UserApi` object we're passing, and *it's* passing
+*us* the `User` class. The purpose of `load()` is to *load* the `$toClass` object
+and return it, like by querying for a `User` entity or creating a new one.
+
+To do the query, on top, add `public function __construct()` and inject the normal
+`UserRepository $userRepository`. Down here, this will hold the same code that we
+saw earlier. I like to say `$dto = $from` and `assert($dto instanceof UserApi)`.
+That helps my brain *and* my editor.
+
+Next, *if* our `$dto` has an `id`, then call `$this->userRepository->find($dto->id)`.
+*Else*, create a brand `new User()` object.
+
+[[[ code('a0846d45f6') ]]]
+
+It's *that* simple. And if, for some reason, we don't have a `$userEntity`,
+`throw new \Exception('User not found')`, similar to what we did before. Down here,
+`return $userEntity`.
+
+[[[ code('663055deb6') ]]]
+
+So we've initialized our `$to` object and returned it. And that's the point of
+`load()`: to do the *least* amount of work to get the `$to` object... but *without*
+populating the data.
+
+Internally, after calling `load()`, micro mapper will *then* call `populate()`
+and pass us the `User` entity object that we just returned. To see this, let's
+`dd($from, $to)`.
+
+[[[ code('d9bafc0e11') ]]]
+
+Run that test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+Perfect! Here's our "from" `UserApi` object, and the *new* `User` entity.
+
+Now... you might be wondering why we have both a `load()` method *and* a `populate()`
+method... when it seems like these could just be *one* method. And you'd mostly
+be right! But there's a technical reason why they're separated, and it'll
+come in handy later when we talk about relationships. But for now, you can
+imagine these two methods are really just one, continuous process: `load()` is
+called, then `populate()`.
+
+And no surprise, *this* is where we will take the data from the `$from` object and
+put it onto the `$to` object. Once again, to keep me sane, I'll say `$dto = $from`
+and `assert($dto instanceof UserApi)`... then
+`$entity = $to` and `assert($entity instanceof User)`.
+
+The code down here is going to be really boring... so I'll paste it.
+At the bottom, `return $entity`.
+
+[[[ code('bbcfd88120') ]]]
+
+We're using `$this->userPasswordHasher` here... so we *also* need to make sure, at
+the top, to add `private UserPasswordHasherInterface $userPasswordHasher`.
+
+[[[ code('a531320e72') ]]]
+
+So this is basically the same code we had before... but in a different spot.
+
+Let's see what the test thinks!
+
+```terminal-silent
+symfony php bin/phpunit --filter=testPostToCreateUser
+```
+
+It *passes*! This is *huge*! We've offloaded this work to our mapper... which
+means our processor is almost completely generic. Now we can remove the
+`UserPasswordHasher` that we don't need anymore... and the `UserRepository` up here.
+We can even remove those `use` statements.
+
+We still *do* need to write the mapping code, but now it lives in a nice, central
+location.
+
+## Mapping the Other Direction
+
+Ready to *repeat* this for the provider. Close the processor... and open it up.
+This time, we're going from the `User` entity to `UserApi`. Copy all of this code,
+*delete* it and, just like before, autowire `MicroMapperInterface $microMapper`.
+Down here, this simplifies to `return $this->microMapper->map()` going from our
+`$entity` to `UserApi::class`.
+
+[[[ code('1915317213') ]]]
+
+Sweet! If we tried this now, we'd get a 500 error because we don't have a mapper
+for it. Back in `src/Mapper/`, create a new class called `UserEntityToApiMapper`...
+implement `MapperInterface`... and above the class, add `#[AsMapper()]`. In this
+case, we're going `from: User::class`, `to: UserApi::class`.
+
+[[[ code('74670f0488') ]]]
+
+Implement both of the methods we need... and we start pretty much the same way as
+before, with `$entity = $from` and `assert($entity instanceof User)`.
+
+[[[ code('a7442cec86') ]]]
+
+Down here, to create the DTO, we don't need to do any queries. We're *always*
+going to instantiate a fresh new `UserApi()`. Set the ID onto it with
+`$dto->id = $entity->getId()`... then `return $dto`.
+
+[[[ code('ec261450dc') ]]]
+
+Ok, the job of the `load()` method is *really* to create the `$to` object and...
+*at least* make sure it has its identifier if there is one.
+
+Everything else we need to do is down here in `populate()`. Start our usual way:
+`$entity = $from`, `$dto = $to` and two asserts: `assert($entity instanceof User)`
+and `assert($dto instanceof UserApi)`. Below that, use the exact code we had before.
+We're just transferring the data. At the bottom, `return $dto`.
+
+[[[ code('5f1b0aca01') ]]]
+
+Phew! Let's try this! Head over to your browser, refresh this page, and... *oh*...
+
+> Full authentication is required to access this resource.
+
+*Of course*. That's because we added security! Head back over to the homepage,
+click this username and password shortcut... *boop*... and *now* try to refresh
+that page. It *works*! We *are* missing some of the data, though, which is
+my fault.
+
+I said `$dto = new UserApi()`. So instead of *modifying* the `$to` object I'm being
+passed, I created a *new* one... and the original wasn't modified. There we go. If
+I try it again... *much* better.
+
+So this is *huge* people! Our provider and processor are now generic!
+Let's finish the process of making them work for *any* API resource class *next*

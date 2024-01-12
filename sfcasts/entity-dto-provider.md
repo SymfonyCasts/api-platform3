@@ -79,7 +79,11 @@ Call it `EntityToDtoStateProvider`. My goal is to create a *generic* state provi
 that will work for *all* cases where we have an API resource class that pulls data
 from an entity. So, we'll mostly keep user-specific code out of here.
 
+[[[ code('a6aeac9b54') ]]]
+
 Over in `UserApi`, set `provider` to `EntityToDtoStateProvider`.
+
+[[[ code('b452854c45') ]]]
 
 Ok! In `EntityToDtoStateProvider`, we could *manually* query for our `User`
 entity objects, turn those into `UserApi` objects... then return them. *But* that's
@@ -92,12 +96,18 @@ provider. Say `public function __construct()` with
 pass in, use the `#[Autowire()]` attribute and say `service: CollectionProvider`
 (make sure you get the one from Doctrine ORM), followed by `::class`.
 
+[[[ code('b452854c45') ]]]
+
 Down here, add `$entities = $this->collectionProvider->provide()`, passing
 `$operation`, `$uriVariables`, and `$context`. Below, `dd($entities)`
+
+[[[ code('cd465e6798') ]]]
 
 Let's see what happens! Head back over, refresh the endpoint, and... *got it*! We
 *are* calling the core provider, and it's returning a *paginator* object. To see
 what's hiding *inside* that `Paginator`, say `dd(iterator_to_array($entities))`.
+
+[[[ code('610b7a07dc') ]]]
 
 Back over here... this show *five* `User` entity objects.
 
