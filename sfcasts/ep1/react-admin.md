@@ -122,7 +122,7 @@ again... it *still* won't work! *But* it gives us the command we need to install
 the one missing package for React support! Copy that, run it:
 
 ```terminal-silent
-npm install @babel/react-preset@^7.0.0 --save-dev
+npm install @babel/preset-react@^7.0.0 --save-dev
 ```
 
 And *now* when we try
