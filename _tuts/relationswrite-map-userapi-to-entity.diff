@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
-index f41ea3ea..d4c9f5e1 100644
+index f41ea3e..d4c9f5e 100644
 --- a/src/Mapper/DragonTreasureApiToEntityMapper.php
 +++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -4,10 +4,12 @@ namespace App\Mapper;
