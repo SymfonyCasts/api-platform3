@@ -16,9 +16,13 @@ better to reuse this class than try to roll our own logic.
 which service we want, include the `#[Autowire()]` attribute, with `service` set
 to `PersistProcessor` (in this case, there's only one to choose from) `::class`.
 
+[[[ code('30e342cb40') ]]]
+
 Very nice! Below, save with `$this->persistProcessor->process()` passing
 `$entity`, `$operation`, `$uriVariables`, and `$context`... which are all the same
 arguments we have up here.
+
+[[[ code('c090b91c44') ]]]
 
 Oh, and like before, when we generated this class, it generated `process()` with
 a `void` return type. That's not exactly correct. You don't *have to* return anything
@@ -26,6 +30,8 @@ from state processors, but you *can*. And whatever you *do* return - in this
 case, we'll return `$data` - will ultimately become the "thing" that is serialized
 and returned back to the user. If you don't return anything, it will use
 `$data`.
+
+[[[ code('e53f469063') ]]]
 
 ## Setting the id onto the DTO
 
@@ -43,6 +49,8 @@ So... what's going on? We map the `UserApi` to a new `User` object and *save* th
 we never take that new id and put it *back* onto our `UserApi`.
 
 To fix this, after saving, add `$data->id = $entity->getId()`.
+
+[[[ code('ae8dcd02a8') ]]]
 
 And if we try it now...
 
@@ -63,18 +71,27 @@ became the processor for *all* operations: `POST`, `PUT`, `PATCH`, *and*
 to the database. But `DELETE` is different: we're not saving, we're *removing*.
 
 To handle that, check `if ($operation instanceof DeleteOperationInterface)`.
+
+[[[ code('056da4ecba') ]]]
+
 Like with saving, deleting isn't hard... but it's still better to offload
 this work to the core Doctrine remove processor. So, up here, copy the argument...
 and inject *another* processor: `RemoveProcessor`... and rename this to
 `$removeProcessor`.
 
+[[[ code('d6f507ebad') ]]]
+
 Back down here, say `$this->removeProcessor->process()` and pass `$entity`,
 `$operation`, `$uriVariables`, and `$context` just like the other processor.
+
+[[[ code('86f49faf2a') ]]]
 
 A key thing to note is that we're going to `return null`. In the case of a `DELETE`
 operation, we don't return *anything* in the response... which we accomplish by
 returning `null` from here. I don't have a test set up for this, but
 we'll take a leap of faith and assume it works. Ship it!
+
+[[[ code('00b4dbf920') ]]]
 
 ## Hashing the Password
 
@@ -94,6 +111,8 @@ To do the hashing, on top, add one more argument:
 `private UserPasswordHasherInterface $userPasswordHasher`. Then back below,
 `$entity->setPassword()` set to `$this->userPasswordHasher->hashPassword()`, passing
 `$entity` (the `User` object) and the plain password: `$dto->password`.
+
+[[[ code('545fd04d31') ]]]
 
 *Phew*. Let's try the test again. And... it *fails*... with
 
