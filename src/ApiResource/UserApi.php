@@ -9,7 +9,6 @@ use App\Entity\User;
 
 #[ApiResource(
     shortName: 'User',
-    provider: CollectionProvider::class,
     stateOptions: new Options(entityClass: User::class),
 )]
 class UserApi
