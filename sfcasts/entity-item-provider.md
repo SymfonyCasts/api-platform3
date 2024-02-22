@@ -14,7 +14,11 @@ We saw how to do this earlier: `$operation` is the key. Add
 `if ($operation instanceof CollectionOperationInterface)`. Now we can warp all of
 this code up here. Lovely!
 
+[[[ code('bdbdef05a3') ]]]
+
 Below, this will be our item provider. `dd($uriVariables)`.
+
+[[[ code('bfeae4c31f') ]]]
 
 ## Calling the Core Item Provider
 
@@ -26,9 +30,13 @@ manually. Instead, we'll... "delegate" it the core Doctrine item provider. Add
 a second argument... we can just copy the first... type-hinted with `ItemProvider`
 (the one from Doctrine ORM), and called `$itemProvider`.
 
+[[[ code('fc94d77867') ]]]
+
 I like it! Back below, let *it* do the work with
 `$entity = $this->itemProvider->provide()` passing `$operation`, `$uriVariables`
 and `$context`.
+
+[[[ code('39921ce749') ]]]
 
 This will give us an `$entity` object or null. If we *don't* have an `$entity` object,
 `return null`. That will trigger a 404. But if we *do* have an `$entity` object,
@@ -36,6 +44,8 @@ we don't want to return that directly. Remember, the whole point of this class i
 to take the `$entity` object and *transform* it into a `UserApi` DTO.
 
 So instead, `return $this->mapEntityToDto($entity)`.
+
+[[[ code('901c9e27e4') ]]]
 
 *That* feels good. And... the endpoint works *beautifully*. If we try an
 *invalid* id, our provider returns null and API Platform takes care of the 404.
@@ -54,7 +64,11 @@ treasures from this property. We created `getPublishedDragonTreasures()` and mad
 *that* the `dragonTreasures` property.
 
 But in our state provider, we're setting *all* of them. This is an easy fix:
-change to `getPublishedDragonTreasures()`. Actually, undo that... then refresh
+change to `getPublishedDragonTreasures()`. 
+
+[[[ code('84586ed7d2') ]]]
+
+Actually, undo that... then refresh
 the collection endpoint. Ok, we see treasures 16 and 40 down here... then after
 using the new method... only 16! "40" is *unpublished*.
 
