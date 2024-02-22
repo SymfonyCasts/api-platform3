@@ -1,5 +1,5 @@
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index a41ba419..48336b38 100644
+index a41ba41..48336b3 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -28,9 +28,8 @@ class DailyQuestStateProvider implements ProviderInterface

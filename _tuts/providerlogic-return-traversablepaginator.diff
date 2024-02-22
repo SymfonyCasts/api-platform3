@@ -1,7 +1,7 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 5f5871b0..4836672c 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index 2fcbaeb..f6c725c 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
 @@ -2,8 +2,10 @@
  
  namespace App\State;
@@ -13,7 +13,7 @@ index 5f5871b0..4836672c 100644
  use ApiPlatform\State\ProviderInterface;
  use App\ApiResource\UserApi;
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
-@@ -20,13 +22,19 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -20,13 +22,19 @@ class EntityToDtoStateProvider implements ProviderInterface
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
          $entities = $this->collectionProvider->provide($operation, $uriVariables, $context);
