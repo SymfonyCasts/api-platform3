@@ -39,7 +39,7 @@ class DailyQuestStateProvider implements ProviderInterface
             );
         }
 
-        $quests = $this->createQuests();
+        $quests = $this->createQuests(0, $this->countTotalQuests());
 
         return $quests[$uriVariables['dayString']] ?? null;
     }
