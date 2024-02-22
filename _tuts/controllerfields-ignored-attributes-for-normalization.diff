@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 215c40b1..c2be7565 100644
+index 21aa4dd..545aa78 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -8,12 +8,14 @@ use ApiPlatform\Metadata\ApiFilter;
@@ -8,14 +8,14 @@ index 215c40b1..c2be7565 100644
  use App\Entity\DragonTreasure;
 +use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
  use App\State\EntityClassDtoStateProcessor;
- use App\State\EntityClassDtoStateProvider;
+ use App\State\EntityToDtoStateProvider;
  use App\Entity\User;
  
  #[ApiResource(
      shortName: 'User',
 +    normalizationContext: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['flameThrowingDistance']],
      paginationItemsPerPage: 5,
-     provider: EntityClassDtoStateProvider::class,
+     provider: EntityToDtoStateProvider::class,
      processor: EntityClassDtoStateProcessor::class,
 @@ -42,6 +44,5 @@ class UserApi
       */
