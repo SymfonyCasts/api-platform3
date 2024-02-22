@@ -11,10 +11,10 @@ use App\State\DailyQuestStateProvider;
 )]
 class DailyQuest
 {
-    public int $id;
+    public \DateTimeInterface $day;
 
-    public function __construct(int $id)
+    public function __construct(\DateTimeInterface $day)
     {
-        $this->id = $id;
+        $this->day = $day;
     }
 }
