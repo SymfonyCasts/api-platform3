@@ -19,6 +19,8 @@ from browser and there are a few different objects - like `Json` - that you can
 the last response, puts it into a `Json` object and passes it to us. Use it by
 saying `$json->assertMissing('password')`.
 
+[[[ code('97b3ed5586') ]]]
+
 If we try that now:
 
 ```terminal-silent
@@ -33,6 +35,8 @@ Okay, let's take a tour of *how* we can customize our API fields without groups.
 One of the easiest, (and, coincidentally, my *favorite*) is to use `#[ApiProperty()]`
 with `readable: false`.
 
+[[[ code('a6507bc61f') ]]]
+
 We want this to be *writable*, but not *readable*.
 
 ```terminal-silent
@@ -42,9 +46,14 @@ symfony php bin/phpunit --filter=testPostToCreateUser
 And... that fixes things! *Beautiful*.
 
 Let's repeat this for `id`... because `id` is pretty useless since we have `@id`.
+
+[[[ code('ff5ae00188') ]]]
+
 When we run that... it fails because `id` *is* being returned. So now, copy...
 just the `readable: false` part... add `#[ApiProperty]` above `id`, paste, and
 I'll also add `identifier: true`... just to be explicit.
+
+[[[ code('7cd7018435') ]]]
 
 And now...
 
@@ -67,9 +76,13 @@ It passes *immediately*! Yay! `->patch()` is already working. To dive deeper int
 other ways we can hide or show fields, also send a `flameThrowingDistance` field
 in the JSON set to 999. And down here, `->dump()` the response.
 
+[[[ code('2686685532') ]]]
+
 Before we try this, find `EntityClassDtoStateProcessor`. Right after we
 set the `id`, `dump($data)`. Those two dumps will help us understand
 *exactly* how this all works.
+
+[[[ code('e17159ef5a') ]]]
 
 *Now* run the test:
 
@@ -86,11 +99,16 @@ value *is* deserialized onto the object.
 Ok, experimentation time! In `UserApi`, above the property, start with the same
 `#[ApiProperty()]` and `readable: false`. We've already seen this.
 
+[[[ code('6f60442c10') ]]]
+
 When we run the test, on top, the "999" was *written* onto the `UserApi`,
 but it doesn't show up in the response. It's writable, but not readable.
 
 If we *also* pass `writable: false`... and try again. On top, the value is
 just "10". The field is *not* writable, so the field in the JSON was ignored.
+
+[[[ code('2c012e2bbd') ]]]
+
 It's also not in the response: it's not readable or writable.
 
 The readable/writable options alone are probably going to solve most situations.
