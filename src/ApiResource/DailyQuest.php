@@ -3,9 +3,11 @@
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\State\DailyQuestStateProvider;
 
 #[ApiResource(
-    shortName: 'Quest'
+    shortName: 'Quest',
+    provider: DailyQuestStateProvider::class,
 )]
 class DailyQuest
 {
