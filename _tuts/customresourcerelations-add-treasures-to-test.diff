@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DailyQuestResourceTest.php b/tests/Functional/DailyQuestResourceTest.php
-index a192c957..122c6fa8 100644
+index a192c95..122c6fa 100644
 --- a/tests/Functional/DailyQuestResourceTest.php
 +++ b/tests/Functional/DailyQuestResourceTest.php
 @@ -2,6 +2,7 @@
