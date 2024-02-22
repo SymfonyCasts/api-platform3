@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index d76139c9..f1bb2a94 100644
+index d76139c..f1bb2a9 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -4,6 +4,7 @@ namespace App\ApiResource;
@@ -23,7 +23,7 @@ index d76139c9..f1bb2a94 100644
      {
 diff --git a/src/Enum/DailyQuestStatusEnum.php b/src/Enum/DailyQuestStatusEnum.php
 new file mode 100644
-index 00000000..09c7c1a1
+index 0000000..09c7c1a
 --- /dev/null
 +++ b/src/Enum/DailyQuestStatusEnum.php
 @@ -0,0 +1,9 @@
@@ -37,7 +37,7 @@ index 00000000..09c7c1a1
 +    case COMPLETED = 'completed';
 +}
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index 5a76b05c..6828f941 100644
+index 5a76b05..6828f94 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -5,14 +5,28 @@ namespace App\State;
