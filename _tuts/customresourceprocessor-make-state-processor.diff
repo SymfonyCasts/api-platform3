@@ -1,6 +1,6 @@
 diff --git a/src/State/DailyQuestStateProcessor.php b/src/State/DailyQuestStateProcessor.php
 new file mode 100644
-index 00000000..41f00cee
+index 0000000..41f00ce
 --- /dev/null
 +++ b/src/State/DailyQuestStateProcessor.php
 @@ -0,0 +1,14 @@
