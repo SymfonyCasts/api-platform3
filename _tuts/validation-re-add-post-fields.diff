@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index a8e98b4e..18d5dd31 100644
+index a8e98b4..18d5dd3 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
 @@ -18,9 +18,9 @@ class UserResourceTest extends ApiTestCase
