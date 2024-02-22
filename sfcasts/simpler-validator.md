@@ -1,89 +1,140 @@
-# Simpler Validator
+# Simpler Validator for Checking State Change
 
-Coming soon...
+We're down to *one failing test*. Apparently we *can* steal treasures by patching
+a user and sending `dragonTreasures` set to a treasure that's owned by someone else.
+This should give us a `422` status code, but we get *200*.
 
-We are down to one last failing test. Apparently we can steal treasures. And you do
-this by having a treasure owned by one user and then patching a different user and
-sending that treasure on this property. This should give us a 422 status code. It's
-currently giving us a 200 status code. But that's actually okay. We fixed this
-already in the previous tutorial. We talked about all the complexity of this. We just
-need to reactivate and adapt that validator. So in the User API class, above the
-Dragon Treasures property we can say TreasuresAllowedOwnerChange. And the logic
-behind this is TreasuresAllowedOwnerChangeValidator. So previously we put this above
-that same Dragon Treasures property inside of our user entity. It would loop over
-each Dragon Treasure, use Doctrine's unit of work to get the original owner ID, and
-then check to see if the new owner ID was different than the original owner ID. And
-if it was, it would build a violation. Now first things first, this is not going to
-be above a Doctrine collection field anymore. This is just going to be an array. And
-let's just start by DDing value. And one other thing here, just to help make things
-very clear, I'm going to put a little dump up at the top of the test that says
-RealOwnerIs, and then I'll say OtherUserArrowGetID. That'll help us kind of track
-whether or not it's getting stolen. All right, let's run just this test. Okay,
-perfect. So the RealOwner is supposed to be 2. And apparently when we dump our array,
-we can see the one Dragon Treasure object inside of there. And check this out. The
-owner is still 2. So by the time we get into this validator here, we're past the
-array of Dragon Treasure API objects there, and it looks like the owner is just fine.
-The owner has not changed to another thing. But of course everything is fine. So far
-in the test, all we've done is tell the serializer to load this specific treasure,
-basically from the database, and of course it will be owned by this user, and then
-set it onto our user API. So this object hasn't actually changed owners yet. The
-problem is going to come later when we allow our state property to be changed. And
-really our user API to entity mapper to map the new Dragon Treasures that are on that
-user onto our user entity. This is the spot where, without going too deeply into it,
-this would actually cause the owner of the Dragon Treasure to be changed. I know it's
-kind of hard to think about. We talked more about this in the previous tutorial. It
-has to do with the fact that, for example, when addDragonTreasure is finally called
-on user, it's actually going to call setOwner in the treasure and change it then. So
-the point is, the problem of the stealing is going to come later. We need to stop it
-before saving in this validator. But right now in this validator, everything seems to
-be fine. Watch, I'll prove that this is actually not going to work. I'm going to
-temporarily short circuit this validator by putting a return statement there. And in
-userResourceTest, we're just going to fetch API slash users slash other user arrow
-getID. And then I'm going to put dump on there. And when we run the test, check this
-out. Dragon Treasures is now on the user entity. It's empty for that user. It
-shouldn't be empty. This other user should own this Dragon Treasure, but I'm showing
-you that it actually was ultimately stolen right here. All right, to sort this whole
-mess out in our validator, we need to know two things. First, we need to know what
-the original owner for each of these Dragon Treasures was. And we just saw a second
-ago that each of these Dragon Treasures API objects here still has their original
-owner set on, so that's easy to get. The second thing we need to know is which user
-we are trying to change these treasures to. And we don't have that info yet. To get
-that, we actually need to change the target of the validator from this specific
-property, where all we have access to are the Dragon Treasure objects, up onto the
-class. That'll give us access to this user API object as well as the Dragon
-Treasures. So check this out. I'm going to move this up above the class. Perfect. But
-then to make that work, we actually need to open up that class. And I'm actually
-going to get rid of the annotation stuff. We're not using annotations anymore. The
-important thing here is to change this from attribute target or method to target
-class. For some reason, my editor adds an extra slash there. We also need to override
-a method here from the parent thing. Not sure why we had to specify the target in
-both places, but we do. And here we're going to return self class constant. So this
-is another way in the validator system that it figures out that this validator can be
-applied to a class. And I'm going to add a little return type there that's optional,
-but I might get a deprecation notice if I don't do that. All right. Now in our
-validator, let's DD value. And all right. Perfect. So what we're going to see here is
-it's dumping the entire user API object with ID one, right? Good stuff. Then the
-Dragon Treasures property holds just our one Dragon Treasure, but there inside of
-here, you can see what their original owner was. So this makes us really dangerous.
-We can just check to see if the kind of new owner is different than the original
-owner. If we do, we have a problem. This means actually life is a lot easier inside
-of here. So I'm going to add an assert here that value is an instance of user API.
-And then we're going to for each over value arrow, arrow Dragon Treasures as let's
-call it Dragon Treasure API. And I don't need any of this unit of work stuff anymore.
-We can actually fill this stuff in, we can say the original owner ID is going to be
-the Dragon Treasure API arrow owner arrow ID. We saw already that that's still set to
-the original ID. And then the new owner ID is going to be value arrow ID. That's it.
-And if you want, I can code defensively in case for some reason there isn't an owner
-there should be but depends on how your API is set up. Then this logic down here is
-still perfect. If we don't have original owner ID or the original owner ID equals the
-new owner ID, life is good. Else build this violation down there. So the cool thing
-is unit of work, gone. You statements up here gone entity manager constructor thing
-gone. This now becomes a really boring looking custom validation constraint. That's
-thanks to the new system having our API class separate from our entity classes. So
-let's run that test and green. Alright team, I think we got it. Let's remove this
-dump from up top. And we're going to celebrate here by running the whole test suite.
-Symphony PHP bin slash PHP units. And done all green, we have completely rebuilt our
-system using DTOs. All right, friends, I took a little bit of work to kind of get
-that all set up. But that's the whole point of DTOs. There's more groundwork in the
-beginning for more flexibility and clarity later, especially if you're building a
-really big robust API that you need to not change. Yeah, and bye. See you later.
+But no huge deal: we fixed this in the previous tutorial. *Now* we just need to
+reactivate and *adapt* that validator.
+
+## Re-Adding the Constraint
+
+In `UserApi`, above the `$dragonTreasures` property, we can remove `#[ApiProperty]`
+and add `#[TreasuresAllowedOwnerChange]`.
+
+In the last tutorial, we put this above that same `$dragonTreasures` property,
+but inside the `User` entity. The validator would loop over each `DragonTreasure`,
+use Doctrine's `UnitOfWork` to get the `$originalOwnerId`, and *then* check to see
+if the `$newOwnerId` is different from the original. If it *was*, it would build
+a violation.
+
+## Adapting the Validator
+
+First things first: the constraint will *not* be used on a property that holds
+a `Collection` object anymore: the new property holds a simple array. Also
+`dd($value)`.
+
+Over in the test, on top, put a `dump()` that says `Real owner is` with
+`$otherUser->getId()`. That'll help us track if it's stolen.
+
+Okay, run *just* this test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
+```
+
+And... perfect! The "Real owner" is supposed to be `2`, and the dump from the
+validator shows a single `DragonTreasureApi` object.
+
+Reminder: this dump is the `dragonTreasures` property for the `UserApi` that's
+being updated. And, though we can't see it here, that user's id is 1. But, in
+the dump, look at the owner: it's still `2`! That's *still* the correct owner!
+
+When we make the PATCH request, this treasure is loaded from the database,
+transformed into a `DragonTreasureApi`, then set onto the `dragonTreasures`
+property of the `UserApi`. *But*, nothing has - yet - *changed* the treasure's
+`owner`: it still has the original `owner`.
+
+The *problematic* part comes later when our state processor, really,
+`UserApiToEntityMapper`, maps the `dragonTreasures` property from `UserApi` to the
+`User` entity. That causes `User.addDragonTreasure()` to be called... and *that*
+causes `DragonTreasure.setOwner()` to be called... with the *new* `User` object.
+
+So even though things *kind of* seem ok right now in the validator - the
+owner is still the original - the treasure *will* ultimately be stolen. Watch:
+add a `return` to the validator so it always passes. And in `UserResourceTest`,
+`->get('/api/users/'.$otherUser->getId())` and `->dump()`.
+
+Run the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
+```
+
+And... yup! The `dragonTreasures` field is *empty* for `$otherUser` because their
+treasure was stolen! They're mad!
+
+## Changing the Constraint to be above the Class
+
+To sort out this mess in the validator, we need to know *two* things. First, what
+the *original* owner is for each treasure. And we have that: each `DragonTreasureApi`
+object stills has its original owner. *Second*, we need to know which *user* these
+treasures belong to now: which `UserApi` object this property belongs to.
+And we *don't* have that.
+
+To get it, we can move the constraint from this specific property - where all we
+have access to are the `DragonTreasureApi` objects - up to the *class*. That will
+give us access to the entire `UserApi` object.
+
+Step 1 is easy... move the constraint to be above the class! To allow this,
+open the constraint class. Get rid of the annotation stuff - since annotations are
+dead... and we're not using them. Then change this from `TARGET_PROPERTY` and
+`TARGET_METHOD` to `TARGET_CLASS`.
+
+For some reason, my editor adds an extra `\` there, so delete that. We *also* need
+to override a method. I'm not sure why we have to specify the target in both places...
+this method is specific to the validation system, but no big deal:
+`return self::CLASS_CONSTRAINT`.
+
+Also add a return type - `string|array`. That'll avoid a deprecation notice.
+
+Back over in the validator, `dd($value)`... then rerun the test:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
+```
+
+Let's see... yes! It dumps the *entire* `UserApi` object with ID `1`. Good stuff!
+The `dragonTreasures` property holds that single treasure... and down here, we
+see its original owner! Now we can just check to see if the *new* owner is different
+from the *original* owner. Easy!
+
+Back in the validator, `assert()` that `$value` is an `instanceof UserApi`.
+Then, `foreach` over `$value->dragonTreasures as $dragonTreasureApi`.
+
+The positively *lovely* thing is that we don't need *any* of this `$unitOfWork`
+stuff anymore. Delete it! Then say `$originalOwnerId = $dragonTreasureApi->owner->id`.
+The `$newOwnerId` will be `$value->id`. That's it!
+
+To code defensively, you can add a `?` here... in case there *isn't* an owner...
+like if this is a new treasure.
+
+The logic down here ain't broke, so nothing to fix: if we *don't* have the
+`$originalOwnerId` or the `$originalOwnerId` equals `$newOwnerId`, everything is
+cool. *Else*, build this violation. Remove this `$unitOfWork` line here as well,
+those `use` statements... and this `EntityManagerInterface` constructor. Thanks
+to the new DTO system, we now have a *very* boring custom validator.
+
+Try the test again... and cross your fingers and toes for good luck:
+
+```terminal-silent
+symfony php bin/phpunit --filter=testTreasuresCannotBeStolen
+```
+
+We got it! High-five something, then remove this `->dump()` from the top. Deep
+breath: run the *entire* test suite:
+
+```terminal
+symfony php bin/phpunit
+```
+
+All green! We have *completely* rebuilt our system using DTOs! Woohoo!
+
+And... we're done! It took a bit of work to get this all set up, but that's
+the whole point of DTOs! There's more groundwork in the beginning in exchange for
+more flexibility and clarity later on, *especially* if you're building a really robust
+API that you want to keep stable.
+
+As always, if you have questions, comments, or want to POST about the cool
+stuff you're building, we're here for you down in the comments. All right friends,
+seeya next time!
