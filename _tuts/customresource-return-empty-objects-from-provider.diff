@@ -1,5 +1,5 @@
 diff --git a/src/State/DailyQuestStateProvider.php b/src/State/DailyQuestStateProvider.php
-index 3ed0e39c..6e6b627f 100644
+index 3ed0e39..6e6b627 100644
 --- a/src/State/DailyQuestStateProvider.php
 +++ b/src/State/DailyQuestStateProvider.php
 @@ -4,11 +4,15 @@ namespace App\State;
