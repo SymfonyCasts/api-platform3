@@ -36,6 +36,7 @@ class DailyQuest
     /**
      * @var QuestTreasure[]
      */
+    #[ApiProperty(genId: false)]
     public array $treasures = [];
 
     public function __construct(\DateTimeInterface $day)
