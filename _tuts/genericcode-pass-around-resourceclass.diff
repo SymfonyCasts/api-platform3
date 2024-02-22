@@ -1,7 +1,7 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index 2ffd62b5..a1b4779c 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index 7b86ecf..de489de 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
 @@ -9,7 +9,6 @@ use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
  use ApiPlatform\Metadata\Operation;
  use ApiPlatform\State\Pagination\TraversablePaginator;
@@ -10,7 +10,7 @@ index 2ffd62b5..a1b4779c 100644
  use Symfony\Component\DependencyInjection\Attribute\Autowire;
  use Symfonycasts\MicroMapper\MicroMapperInterface;
  
-@@ -26,14 +25,14 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -26,14 +25,14 @@ class EntityToDtoStateProvider implements ProviderInterface
  
      public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
      {
@@ -27,7 +27,7 @@ index 2ffd62b5..a1b4779c 100644
              }
  
              return new TraversablePaginator(
-@@ -50,11 +49,11 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -50,11 +49,11 @@ class EntityToDtoStateProvider implements ProviderInterface
              return null;
          }
  
