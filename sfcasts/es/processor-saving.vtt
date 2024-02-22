@@ -1,0 +1,365 @@
+WEBVTT
+
+00:00:01.086 --> 00:00:01.916 align:middle
+¡Mira cómo vamos!
+
+00:00:02.106 --> 00:00:07.546 align:middle
+En nuestro procesador de estados, hemos transformado
+con éxito la UserApi en una entidad User.
+
+00:00:07.836 --> 00:00:08.746 align:middle
+Así que ¡vamos a guardarla!
+
+00:00:09.476 --> 00:00:12.616 align:middle
+Podríamos inyectar el gestor de
+entidades, persistir y vaciar...
+
+00:00:12.726 --> 00:00:14.276 align:middle
+y ya está.
+
+00:00:14.596 --> 00:00:18.126 align:middle
+Pero prefiero descargar ese trabajo
+al núcleo PersistProcessor.
+
+00:00:18.126 --> 00:00:20.686 align:middle
+Busca ese archivo y ábrelo.
+
+00:00:22.886 --> 00:00:25.256 align:middle
+Hace la simple persistencia y descarga...
+
+00:00:25.486 --> 00:00:29.686 align:middle
+pero también tiene una lógica bastante
+compleja para las operaciones de PUT.
+
+00:00:30.126 --> 00:00:32.836 align:middle
+En realidad no las estamos
+utilizando, pero el caso es que
+
+00:00:33.026 --> 00:00:37.136 align:middle
+es mejor reutilizar esta clase que intentar
+desarrollar nuestra propia lógica.
+
+00:00:37.746 --> 00:00:40.236 align:middle
+A estas alturas, ya deberías estar
+familiarizado con cómo lo hacemos.
+
+00:00:41.006 --> 00:00:43.876 align:middle
+Añade un private ProcessorInterface
+$persistProcessor...
+
+00:00:45.126 --> 00:00:50.916 align:middle
+y para que Symfony sepa exactamente qué servicio
+queremos, incluye el atributo #[Autowire()],
+
+00:00:51.306 --> 00:00:58.046 align:middle
+con service ajustado a PersistProcessor (en
+este caso, sólo hay uno para elegir) ::class.
+
+00:00:58.466 --> 00:00:59.446 align:middle
+¡Muy bonito!
+
+00:01:00.786 --> 00:01:01.286 align:middle
+A continuación,
+
+00:01:02.066 --> 00:01:06.646 align:middle
+guarda con $this->persistProcessor->process()
+pasando $entity,
+
+00:01:06.646 --> 00:01:10.296 align:middle
+$operation, $uriVariables, y $context...
+
+00:01:10.616 --> 00:01:12.936 align:middle
+que son los mismos argumentos
+que tenemos aquí arriba.
+
+00:01:13.666 --> 00:01:16.566 align:middle
+Ah, y como antes, cuando generamos esta clase,
+
+00:01:16.756 --> 00:01:19.926 align:middle
+generó process() con un tipo de retorno void.
+
+00:01:20.206 --> 00:01:22.176 align:middle
+Eso no es exactamente correcto.
+
+00:01:22.556 --> 00:01:26.616 align:middle
+No tienes que devolver nada de los
+procesadores de estado, pero puedes hacerlo.
+
+00:01:26.956 --> 00:01:32.896 align:middle
+Y lo que devuelvas -en este caso, devolveremos
+$data - se convertirá en última instancia en la
+
+00:01:32.896 --> 00:01:36.066 align:middle
+"cosa" que se serializa
+y se devuelve al usuario.
+
+00:01:36.066 --> 00:01:40.396 align:middle
+Si no devuelves nada, se utilizará $data.
+
+00:01:40.396 --> 00:01:45.266 align:middle
+Vale, creo que esto debería funcionar
+(Famosas últimas palabras...). Y...
+
+00:01:45.516 --> 00:01:48.996 align:middle
+explota. Seguimos recibiendo un error 400,
+
+00:01:49.146 --> 00:01:52.986 align:middle
+y sigue siendo Unable to
+generate an IRI for the item.
+
+00:01:53.516 --> 00:01:55.686 align:middle
+Entonces... ¿qué pasa?
+
+00:01:56.416 --> 00:02:00.866 align:middle
+Mapeamos el UserApi a un nuevo objeto
+User y guardamos el nuevo User...
+
+00:02:00.976 --> 00:02:05.666 align:middle
+lo que hace que Doctrine asigne
+el nuevo id a ese objeto entidad.
+
+00:02:06.076 --> 00:02:10.756 align:middle
+Pero nunca cogemos ese nuevo id y lo
+volvemos a poner en nuestro UserApi.
+
+00:02:10.846 --> 00:02:16.466 align:middle
+Para solucionarlo, después de guardar,
+añade $data->id = $entity->getId().
+
+00:02:16.466 --> 00:02:19.556 align:middle
+Y si lo intentamos ahora...
+
+00:02:20.386 --> 00:02:21.576 align:middle
+sigue fallando...
+
+00:02:21.576 --> 00:02:23.116 align:middle
+¡pero esta vez hemos llegado más lejos!
+
+00:02:23.706 --> 00:02:24.976 align:middle
+La respuesta parece buena.
+
+00:02:24.976 --> 00:02:29.116 align:middle
+Devuelve un código de estado 201 con
+la nueva información del usuario.
+
+00:02:29.496 --> 00:02:34.186 align:middle
+Falla en la parte de la prueba en la que intenta
+utilizar la contraseña para iniciar sesión.
+
+00:02:34.746 --> 00:02:37.036 align:middle
+Esto se debe a que nuestra contraseña
+está actualmente configurada como...
+
+00:02:37.306 --> 00:02:39.356 align:middle
+TODO. Lo arreglaremos dentro de un momento.
+
+00:02:39.856 --> 00:02:45.886 align:middle
+Pero primero, cuando fijamos el processor en el nivel
+superior #[ApiResource], éste se convirtió en el procesador
+
+00:02:45.886 --> 00:02:50.816 align:middle
+de todas las operaciones:
+POST, PUT, PATCH, y DELETE.
+
+00:02:51.556 --> 00:02:56.436 align:middle
+POST, PUT, y PATCH son todas prácticamente
+iguales: guardar el objeto en la base de datos.
+
+00:02:56.726 --> 00:03:00.866 align:middle
+Pero DELETE es diferente: no
+estamos guardando, sino eliminando.
+
+00:03:02.096 --> 00:03:07.566 align:middle
+Para ello, consulta if ($operation
+instanceof DeleteOperationInterface).
+
+00:03:08.136 --> 00:03:11.076 align:middle
+Al igual que guardar,
+eliminar no es difícil...
+
+00:03:11.076 --> 00:03:16.326 align:middle
+pero sigue siendo mejor descargar este trabajo al
+procesador de eliminación del núcleo de Doctrine.
+
+00:03:16.806 --> 00:03:19.376 align:middle
+Así que, aquí arriba, copia el argumento...
+
+00:03:19.946 --> 00:03:23.496 align:middle
+e inyecta otro procesador: RemoveProcessor...
+
+00:03:24.886 --> 00:03:27.166 align:middle
+y cámbiale el nombre a $removeProcessor.
+
+00:03:28.276 --> 00:03:33.426 align:middle
+De vuelta aquí abajo, di
+$this->removeProcessor->process() y pásale
+
+00:03:33.556 --> 00:03:40.186 align:middle
+$entity, $operation, $uriVariables, y
+$context igual que al otro procesador.
+
+00:03:40.186 --> 00:03:44.836 align:middle
+Una cosa clave a tener en cuenta
+es que vamos a return null.
+
+00:03:44.836 --> 00:03:49.756 align:middle
+En el caso de una operación DELETE,
+no devolvemos nada en la respuesta...
+
+00:03:49.896 --> 00:03:52.956 align:middle
+lo que conseguimos
+devolviendo null desde aquí.
+
+00:03:53.856 --> 00:03:59.316 align:middle
+No tengo una prueba preparada para esto, pero
+haremos un acto de fe y supondremos que funciona.
+
+00:03:59.466 --> 00:04:04.946 align:middle
+¡Envíalo! Sólo queda un problema por
+resolver: el hash de la contraseña simple.
+
+00:04:05.476 --> 00:04:07.666 align:middle
+Ya lo hemos hecho antes, así que no pasa nada.
+
+00:04:08.056 --> 00:04:10.636 align:middle
+Antes de hacer demasiado aquí, abre UserApi...
+
+00:04:10.636 --> 00:04:15.416 align:middle
+y añade un public ?string $password = null...
+
+00:04:15.736 --> 00:04:16.736 align:middle
+con un comentario.
+
+00:04:18.056 --> 00:04:23.356 align:middle
+Esto siempre contendrá null o la contraseña
+en "texto plano" si el usuario envía una.
+
+00:04:23.816 --> 00:04:27.576 align:middle
+Nunca vamos a necesitar manejar la
+contraseña "hash" en nuestra API,
+
+00:04:28.156 --> 00:04:30.196 align:middle
+así que no necesitamos espacio para eso...
+
+00:04:30.196 --> 00:04:32.146 align:middle
+¡lo cual está muy bien! De
+
+00:04:32.276 --> 00:04:37.036 align:middle
+vuelta en el procesador, if ($dto->password),
+entonces sabemos que tenemos que aplicar el hash
+
+00:04:37.036 --> 00:04:38.916 align:middle
+y establecerlo en el usuario.
+
+00:04:38.916 --> 00:04:43.546 align:middle
+Si se está creando un nuevo usuario,
+esto siempre estará establecido...
+
+00:04:43.916 --> 00:04:47.316 align:middle
+pero al actualizar un usuario,
+haremos que este campo sea opcional.
+
+00:04:47.316 --> 00:04:53.016 align:middle
+Si no se establece, no haremos nada, de modo que
+se mantendrá la contraseña actual del usuario.
+
+00:04:54.026 --> 00:04:57.856 align:middle
+Para hacer el hashing, encima,
+añade un argumento más:
+
+00:04:58.276 --> 00:05:02.506 align:middle
+private UserPasswordHasherInterface
+$userPasswordHasher.
+
+00:05:03.826 --> 00:05:11.626 align:middle
+Luego, abajo, $entity->setPassword() establecido
+en $this->userPasswordHasher->hashPassword(),
+
+00:05:11.626 --> 00:05:18.306 align:middle
+pasando $entity (el objeto User ) y la
+contraseña sin formato: $dto->password.
+
+00:05:19.696 --> 00:05:22.456 align:middle
+Uf. Intentemos de nuevo la prueba.
+
+00:05:23.626 --> 00:05:26.176 align:middle
+Y... falla...
+
+00:05:26.646 --> 00:05:32.176 align:middle
+con La anotación "@El" de la propiedad
+UserApi::$password nunca se importó.
+
+00:05:32.176 --> 00:05:38.746 align:middle
+Así que... me he tropezado con el teclado
+y he añadido un @ de más. Elimina eso...
+
+00:05:38.946 --> 00:05:43.986 align:middle
+e inténtalo de nuevo: ¡Pasa!
+
+00:05:44.156 --> 00:05:47.716 align:middle
+¡Lo que significa que se ha registrado
+completamente utilizando esa contraseña!
+
+00:05:48.276 --> 00:05:54.696 align:middle
+Aunque, oh oh, mira la respuesta JSON volcada:
+esto es después de que POST creara el usuario.
+
+00:05:55.476 --> 00:06:01.656 align:middle
+En la respuesta JSON, se incluye la propiedad password
+en texto plano que el usuario acaba de establecer.
+
+00:06:02.026 --> 00:06:04.666 align:middle
+¡Vaya! Desglosemos esto.
+
+00:06:05.386 --> 00:06:10.926 align:middle
+Nuestro proveedor de estado se utiliza para todas las
+operaciones GET, así como para la operación PATCH.
+
+00:06:11.406 --> 00:06:14.936 align:middle
+Y fíjate, no estamos estableciendo
+el password nunca. No queremos
+
+00:06:15.306 --> 00:06:20.266 align:middle
+devolver ese campo en el
+JSON, así que, correctamente,
+
+00:06:20.436 --> 00:06:23.916 align:middle
+no lo estamos mapeando desde
+nuestra entidad a nuestro DTO.
+
+00:06:24.326 --> 00:06:25.336 align:middle
+¡Eso está bien!
+
+00:06:25.856 --> 00:06:30.996 align:middle
+Pero la operación POST es la única situación
+en la que nunca se llama al proveedor.
+
+00:06:31.486 --> 00:06:36.386 align:middle
+Estos datos se deserializan
+directamente en un nuevo objeto UserApi
+
+00:06:36.386 --> 00:06:38.466 align:middle
+y se pasan a nuestro procesador.
+
+00:06:39.046 --> 00:06:44.146 align:middle
+Esto significa que nuestro DTO sí tiene
+establecida la contraseña simple...
+
+00:06:44.146 --> 00:06:49.276 align:middle
+Y, en última instancia, ese objeto DTO es
+lo que se serializa y se devuelve al usuario.
+
+00:06:50.156 --> 00:06:57.516 align:middle
+Esto es una forma larga de decir que, en UserApi,
+esta contraseña debe ser un campo de sólo escritura.
+
+00:06:57.966 --> 00:07:00.906 align:middle
+El usuario nunca debería poder leerla.
+
+00:07:02.046 --> 00:07:06.856 align:middle
+A continuación: hablemos de cómo podemos hacer
+personalizaciones como ésta dentro de UserApi,
+
+00:07:07.506 --> 00:07:11.076 align:middle
+evitando la complejidad de
+los grupos de serialización.
