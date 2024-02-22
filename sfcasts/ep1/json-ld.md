@@ -18,7 +18,7 @@ the "meaning" of these fields on your own. But *machines* - okay, maybe *minus*
 futuristic AIs - well, they *can't* figure this out. They don't know what these keys
 *mean*. So... how *can* we give context and meaning to our data?
 
-# RDF: Resource Description Framework
+## RDF: Resource Description Framework
 
 First, there's this thing called "RDF" or "Resource Description Framework", which
 is a set of rules about how we describe the meaning of data so that computers can
