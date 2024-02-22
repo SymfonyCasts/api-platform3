@@ -1,6 +1,6 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
 new file mode 100644
-index 00000000..79148b27
+index 0000000..79148b2
 --- /dev/null
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -0,0 +1,25 @@
