@@ -1,8 +1,8 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index a1b4779c..f72e9003 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
-@@ -34,6 +34,7 @@ class EntityClassDtoStateProvider implements ProviderInterface
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index de489de..48cf0ff 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
+@@ -34,6 +34,7 @@ class EntityToDtoStateProvider implements ProviderInterface
              foreach ($entities as $entity) {
                  $dtos[] = $this->mapEntityToDto($entity, $resourceClass);
              }
