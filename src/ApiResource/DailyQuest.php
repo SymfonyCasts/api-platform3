@@ -31,6 +31,7 @@ class DailyQuest
     public string $description;
     public int $difficultyLevel;
     public DailyQuestStatusEnum $status;
+    public \DateTimeInterface $lastUpdated;
 
     public function __construct(\DateTimeInterface $day)
     {
