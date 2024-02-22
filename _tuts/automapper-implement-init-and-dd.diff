@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/UserApiToEntityMapper.php b/src/Mapper/UserApiToEntityMapper.php
-index 3a77c59a..5f9266ec 100644
+index 3a77c59..5f9266e 100644
 --- a/src/Mapper/UserApiToEntityMapper.php
 +++ b/src/Mapper/UserApiToEntityMapper.php
 @@ -4,20 +4,34 @@ namespace App\Mapper;
