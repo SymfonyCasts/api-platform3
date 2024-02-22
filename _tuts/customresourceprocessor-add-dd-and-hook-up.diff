@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DailyQuest.php b/src/ApiResource/DailyQuest.php
-index f4a58dd8..d17ab361 100644
+index f4a58dd..d17ab36 100644
 --- a/src/ApiResource/DailyQuest.php
 +++ b/src/ApiResource/DailyQuest.php
 @@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
@@ -25,7 +25,7 @@ index f4a58dd8..d17ab361 100644
  class DailyQuest
  {
 diff --git a/src/State/DailyQuestStateProcessor.php b/src/State/DailyQuestStateProcessor.php
-index 41f00cee..cee09b5b 100644
+index 41f00ce..cee09b5 100644
 --- a/src/State/DailyQuestStateProcessor.php
 +++ b/src/State/DailyQuestStateProcessor.php
 @@ -9,6 +9,6 @@ class DailyQuestStateProcessor implements ProcessorInterface

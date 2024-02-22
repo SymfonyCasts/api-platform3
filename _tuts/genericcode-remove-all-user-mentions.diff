@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityClassDtoStateProcessor.php b/src/State/EntityClassDtoStateProcessor.php
-index ba3d790f..0ba3d2bc 100644
+index ba3d790..0ba3d2b 100644
 --- a/src/State/EntityClassDtoStateProcessor.php
 +++ b/src/State/EntityClassDtoStateProcessor.php
 @@ -8,7 +8,6 @@ use ApiPlatform\Doctrine\Orm\State\Options;

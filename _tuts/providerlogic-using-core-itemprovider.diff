@@ -1,7 +1,7 @@
-diff --git a/src/State/EntityClassDtoStateProvider.php b/src/State/EntityClassDtoStateProvider.php
-index ef19fd66..a0b92ee5 100644
---- a/src/State/EntityClassDtoStateProvider.php
-+++ b/src/State/EntityClassDtoStateProvider.php
+diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
+index 5f7f61e..7d9753b 100644
+--- a/src/State/EntityToDtoStateProvider.php
++++ b/src/State/EntityToDtoStateProvider.php
 @@ -2,6 +2,7 @@
  
  namespace App\State;
@@ -11,7 +11,7 @@ index ef19fd66..a0b92ee5 100644
  use ApiPlatform\Doctrine\Orm\Paginator;
  use ApiPlatform\Doctrine\Orm\State\CollectionProvider;
 @@ -14,7 +15,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
- class EntityClassDtoStateProvider implements ProviderInterface
+ class EntityToDtoStateProvider implements ProviderInterface
  {
      public function __construct(
 -        #[Autowire(service: CollectionProvider::class)] private ProviderInterface $collectionProvider
@@ -20,7 +20,7 @@ index ef19fd66..a0b92ee5 100644
      )
      {
  
-@@ -39,7 +41,13 @@ class EntityClassDtoStateProvider implements ProviderInterface
+@@ -39,7 +41,13 @@ class EntityToDtoStateProvider implements ProviderInterface
              );
          }
  
