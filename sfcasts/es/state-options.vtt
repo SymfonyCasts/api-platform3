@@ -1,0 +1,523 @@
+WEBVTT
+
+00:00:00.946 --> 00:00:06.586 align:middle
+Cuando creamos un recurso API que no es una entidad,
+somos responsables de cargar y guardar los datos.
+
+00:00:07.086 --> 00:00:11.666 align:middle
+Lo frustrante es que, si creamos un proveedor
+de estado personalizado para UserApi,
+
+00:00:11.776 --> 00:00:17.856 align:middle
+hará exactamente lo mismo que el proveedor de estado
+básico de Doctrine: consultar la base de datos.
+
+00:00:18.356 --> 00:00:21.576 align:middle
+Es un fastidio tener que reinventar
+toda esa lógica nosotros mismos.
+
+00:00:22.146 --> 00:00:26.826 align:middle
+Históricamente, éste ha sido
+el talón de Aquiles de los DTO.
+
+00:00:27.776 --> 00:00:30.966 align:middle
+Abre el núcleo CollectionProvider
+del ORM Doctrine.
+
+00:00:33.396 --> 00:00:37.276 align:middle
+Si alguna vez has querido ver cómo es
+el CollectionProvider, ¡aquí lo tienes!
+
+00:00:37.766 --> 00:00:39.706 align:middle
+Es más complejo de lo que imaginaba.
+
+00:00:40.206 --> 00:00:45.986 align:middle
+Crea el QueryBuilder, llama a handleLinks()
+(que une inteligentemente a otras tablas en
+
+00:00:45.986 --> 00:00:49.496 align:middle
+función de los datos que necesites), y
+alberga el sistema de extensión de consultas.
+
+00:00:50.476 --> 00:00:54.046 align:middle
+En el último tutorial, creamos una
+extensión de consulta para DragonTreasure de
+
+00:00:54.126 --> 00:00:56.506 align:middle
+modo que sólo devolviera elementos publicados.
+
+00:00:57.576 --> 00:01:01.076 align:middle
+Y parte de ese sistema de extensión,
+aunque no podamos verlo aquí,
+
+00:01:01.376 --> 00:01:03.926 align:middle
+es donde se añade la
+paginación y el filtrado.
+
+00:01:03.926 --> 00:01:07.346 align:middle
+Así pues, esta clase nos proporciona mucho...
+
+00:01:07.346 --> 00:01:08.546 align:middle
+y quiero reutilizarla.
+
+00:01:08.956 --> 00:01:12.306 align:middle
+Así que, maldita sea, ¡vamos
+a yolo esta cosa y a intentarlo!
+
+00:01:12.696 --> 00:01:19.576 align:middle
+Dirígete a UserApi, di provider, y apunta
+a CollectionProvider (la de Doctrine ORM).
+
+00:01:19.576 --> 00:01:22.606 align:middle
+¡A ver qué pasa!
+
+00:01:22.966 --> 00:01:28.006 align:middle
+En el navegador, ve directamente
+a la ruta - /api/users.jsonld.
+
+00:01:28.446 --> 00:01:34.256 align:middle
+Y... obtenemos un error Llamada a una
+función miembro getRepository() en null.
+
+00:01:34.736 --> 00:01:36.896 align:middle
+Procedente del núcleo CollectionProvider.
+
+00:01:37.126 --> 00:01:39.936 align:middle
+Buf. Pero no es sorprendente.
+
+00:01:40.266 --> 00:01:42.616 align:middle
+Nuestro UserApi no es una entidad...
+
+00:01:43.036 --> 00:01:47.446 align:middle
+y por eso, cuando intenta averiguar
+cómo consultarlo, ¡explosiones!
+
+00:01:47.696 --> 00:01:49.116 align:middle
+Pero psst...
+
+00:01:49.246 --> 00:01:50.196 align:middle
+¿quieres oír un secreto?
+
+00:01:50.696 --> 00:01:53.976 align:middle
+Hay una forma de indicar
+al proveedor que los datos
+
+00:01:53.976 --> 00:01:56.766 align:middle
+de esta clase deben proceder
+de la entidad User. Se
+
+00:01:57.296 --> 00:02:02.816 align:middle
+parece a esto: stateOptions ponlo en un
+objeto new Options (asegurándote de coger el
+
+00:02:02.816 --> 00:02:06.886 align:middle
+del ORM), y dentro, entityClass: User::class.
+
+00:02:06.886 --> 00:02:10.316 align:middle
+¡Veamos qué ocurre ahora!
+
+00:02:10.746 --> 00:02:12.096 align:middle
+Cuando nos dirigimos y actualizamos...
+
+00:02:12.626 --> 00:02:15.446 align:middle
+¡parece que ha funcionado!
+
+00:02:15.706 --> 00:02:17.306 align:middle
+Vemos "totalItems: 11"...
+
+00:02:17.456 --> 00:02:20.546 align:middle
+con los elementos 1-11 justo aquí.
+
+00:02:21.066 --> 00:02:24.816 align:middle
+Sólo tenemos una propiedad $id,
+pero supongo que tiene sentido...
+
+00:02:25.036 --> 00:02:28.676 align:middle
+ya que sólo tenemos una propiedad
+$id dentro de nuestro UserApi.
+
+00:02:29.556 --> 00:02:31.076 align:middle
+¡Añadamos algunas propiedades más!
+
+00:02:31.506 --> 00:02:37.656 align:middle
+¿Qué te parecen public ?string $email
+= null y public ?string $username = null.
+
+00:02:38.836 --> 00:02:41.716 align:middle
+Estas dos propiedades también
+viven en nuestra entidad User.
+
+00:02:43.746 --> 00:02:45.076 align:middle
+Cuando actualizamos...
+
+00:02:45.636 --> 00:02:46.886 align:middle
+¡también aparecerán!
+
+00:02:47.276 --> 00:02:48.906 align:middle
+Esto funciona....
+
+00:02:48.906 --> 00:02:51.846 align:middle
+¿pero cómo? ¿Qué demonios está pasando?
+
+00:02:52.426 --> 00:02:55.306 align:middle
+Si pudiéramos echar un vistazo
+bajo el capó de API Platform,
+
+00:02:55.556 --> 00:03:00.846 align:middle
+veríamos que los objetos de
+recursos API subyacentes son UserApi.
+
+00:03:01.596 --> 00:03:07.396 align:middle
+Así que lo que estamos viendo aquí es el
+JSON de una colección de objetos UserApi.
+
+00:03:07.766 --> 00:03:14.246 align:middle
+Pero hay varios lugares en el sistema que
+buscan stateOptions y, si está presente,
+
+00:03:14.626 --> 00:03:17.076 align:middle
+utilizarán el entityClass de ahí.
+
+00:03:17.986 --> 00:03:20.346 align:middle
+El CollectionProvider que hemos
+abierto hace un momento -el
+
+00:03:20.646 --> 00:03:24.066 align:middle
+de Doctrine ORM- es uno de esos casos.
+
+00:03:24.556 --> 00:03:28.326 align:middle
+Coge el entityClass de
+stateOptions si lo hay...
+
+00:03:28.626 --> 00:03:31.536 align:middle
+y lo utiliza cuando hace la consulta. De
+
+00:03:31.536 --> 00:03:36.796 align:middle
+hecho, en cuanto tenemos esto
+de stateOptions + entityClass,
+
+00:03:37.106 --> 00:03:43.276 align:middle
+API Platform establece automáticamente el proveedor
+y el procesador en los del núcleo de Doctrine.
+
+00:03:43.376 --> 00:03:47.676 align:middle
+Así que ni siquiera necesitamos tener la
+clave provider: se establece por nosotros.
+
+00:03:48.476 --> 00:03:53.106 align:middle
+Vale, pero si el proveedor está
+consultando objetos de entidad User,
+
+00:03:53.436 --> 00:03:58.206 align:middle
+¿cómo y cuándo se convierte
+eso en objetos UserApi...
+
+00:03:58.366 --> 00:04:01.596 align:middle
+para que puedan serializarse a JSON?
+
+00:04:02.296 --> 00:04:05.176 align:middle
+La respuesta es durante la serialización...
+
+00:04:05.176 --> 00:04:06.636 align:middle
+y es algo extraño.
+
+00:04:06.816 --> 00:04:13.186 align:middle
+Gracias a stateOptions, API Platform está
+serializando realmente el objeto entidad User.
+
+00:04:13.286 --> 00:04:17.196 align:middle
+Pero para obtener la lista de las
+propiedades que debe serializar,
+
+00:04:17.486 --> 00:04:20.246 align:middle
+lee los metadatos de UserApi.
+
+00:04:21.016 --> 00:04:24.406 align:middle
+Luego, coge los valores de
+las propiedades de User...
+
+00:04:24.566 --> 00:04:27.466 align:middle
+y los coloca en una instancia de UserApi.
+
+00:04:28.256 --> 00:04:33.836 align:middle
+Esencialmente, serializa la entidad
+User en un objeto UserApi...
+
+00:04:34.086 --> 00:04:35.776 align:middle
+y luego a JSON.
+
+00:04:36.286 --> 00:04:37.826 align:middle
+Esto parece funcionar bien...
+
+00:04:38.136 --> 00:04:40.816 align:middle
+pero con una limitación importante.
+
+00:04:41.566 --> 00:04:47.656 align:middle
+Añade una propiedad que no esté en nuestra
+entidad, como public int $flameThrowingDistance = 0.
+
+00:04:48.836 --> 00:04:52.156 align:middle
+No hay ninguna propiedad
+$flameThrowingDistance en User.
+
+00:04:53.466 --> 00:04:54.706 align:middle
+Cuando intentamos esto...
+
+00:04:55.426 --> 00:04:56.956 align:middle
+¡explosión!
+
+00:04:57.556 --> 00:05:01.816 align:middle
+Si nos desplazamos un poco hacia abajo, vemos
+que esto procede del sistema normalizador...
+
+00:05:01.956 --> 00:05:03.836 align:middle
+que forma parte del serializador.
+
+00:05:04.426 --> 00:05:09.686 align:middle
+Mira UserApi, piensa "Oh, necesito
+un campo $flameThrowingDistance ",
+
+00:05:09.956 --> 00:05:14.616 align:middle
+intenta obtenerlo de User, y,
+como no está ahí, ¡boom!
+
+00:05:15.486 --> 00:05:22.516 align:middle
+Así que la colosal, monstruosa, titánica
+limitación de la estrategia entityClass es...
+
+00:05:22.896 --> 00:05:26.796 align:middle
+que no podemos tener campos
+adicionales en nuestra clase UserApi.
+
+00:05:27.226 --> 00:05:31.746 align:middle
+Pero no te preocupes: encontraremos una
+forma de evitarlo en el próximo capítulo.
+
+00:05:32.056 --> 00:05:34.136 align:middle
+Por ahora, elimina la propiedad extra.
+
+00:05:34.786 --> 00:05:38.106 align:middle
+Ah, y otra limitación que habrás notado es
+
+00:05:38.106 --> 00:05:42.756 align:middle
+que no tenemos los campos JSON-LD @id o @type.
+
+00:05:43.456 --> 00:05:46.756 align:middle
+Nos ocuparemos de eso mientras arreglamos
+el tema de los campos personalizados...
+
+00:05:47.066 --> 00:05:49.276 align:middle
+como los magos multitarea que somos.
+
+00:05:50.436 --> 00:05:55.746 align:middle
+Añadamos otra propiedad: public
+array $dragonTreasures = []?
+
+00:05:55.746 --> 00:05:58.666 align:middle
+Tenemos una propiedad $dragonTreasures en User
+
+00:05:58.726 --> 00:06:01.566 align:middle
+que contiene una colección
+de objetos DragonTreasure.
+
+00:06:01.646 --> 00:06:03.916 align:middle
+Así que si vamos y probamos esto...
+
+00:06:05.326 --> 00:06:06.296 align:middle
+¡funciona bien!
+
+00:06:06.756 --> 00:06:11.556 align:middle
+Aunque, sorprendentemente, está
+incrustando los dragonTreasures en lugar
+
+00:06:11.556 --> 00:06:15.006 align:middle
+de devolverlos como IRI.
+
+00:06:15.086 --> 00:06:18.916 align:middle
+Este es el mismo problema que vimos
+antes, y la solución es la misma.
+
+00:06:19.666 --> 00:06:23.086 align:middle
+Sin embargo, quiero señalar algo interesante.
+
+00:06:23.506 --> 00:06:28.356 align:middle
+Cuando incrusta el dragonTreasures,
+una de las propiedades es owner.
+
+00:06:28.906 --> 00:06:32.956 align:middle
+Ahora mismo, ese propietario
+es en realidad la entidad User.
+
+00:06:33.546 --> 00:06:40.046 align:middle
+Como la entidad User ya no es un recurso de
+la API, añade esta cosa aleatoria genid.
+
+00:06:40.646 --> 00:06:46.856 align:middle
+Hablaré más de esto dentro de un rato, pero una vez
+que empecemos a crear DTOs y a utilizarlos en lugar
+
+00:06:46.856 --> 00:06:52.156 align:middle
+de entidades, probablemente querremos utilizar
+DTOs para todos nuestros recursos API...
+
+00:06:52.216 --> 00:06:54.896 align:middle
+en lugar de mezclar entidades y DTOs...
+
+00:06:54.936 --> 00:06:58.086 align:middle
+porque crea problemas como éste.
+
+00:06:58.086 --> 00:07:02.906 align:middle
+De todos modos, soluciona esto anunciando
+que se trata de un array de DragonTreasure.
+
+00:07:03.456 --> 00:07:07.306 align:middle
+Estoy utilizando una sintaxis de array ligeramente
+diferente, pero en realidad no importa.
+
+00:07:07.896 --> 00:07:09.306 align:middle
+Si volvemos a intentarlo...
+
+00:07:09.706 --> 00:07:11.436 align:middle
+¡volvemos a las IRI!
+
+00:07:11.666 --> 00:07:16.336 align:middle
+¡Guau! Hasta ahora, sabemos que
+stateOptions hace tres cosas. Una:
+
+00:07:16.676 --> 00:07:20.076 align:middle
+configura automáticamente el proveedor y el
+
+00:07:20.076 --> 00:07:22.656 align:middle
+procesador para que utilicen el proveedor
+y el procesador del núcleo de Doctrine.
+
+00:07:23.316 --> 00:07:27.196 align:middle
+Dos: el proveedor es lo suficientemente inteligente
+como para realizar consultas a partir de esta entidad.
+
+00:07:27.716 --> 00:07:33.006 align:middle
+Esto también funciona para elementos
+individuales, como /users/1.jsonld.
+
+00:07:33.756 --> 00:07:40.876 align:middle
+Y tres: El serializador serializa la
+entidad User en un objeto UserApi.
+
+00:07:40.906 --> 00:07:45.336 align:middle
+El hecho de que stateOptions haga que se utilice
+el proveedor de estado básico de Doctrine tiene
+
+00:07:45.336 --> 00:07:49.416 align:middle
+otros efectos secundarios muy importantes.
+
+00:07:49.416 --> 00:07:53.616 align:middle
+En primer lugar, obtenemos paginación gratis.
+
+00:07:54.756 --> 00:08:00.256 align:middle
+Añade paginationItemsPerPage:
+5, repasa y actualiza.
+
+00:08:01.006 --> 00:08:03.886 align:middle
+Vemos que el número total
+de elementos es "11"...
+
+00:08:03.946 --> 00:08:06.046 align:middle
+pero sólo muestra cinco...
+
+00:08:06.306 --> 00:08:08.496 align:middle
+y las páginas están aquí abajo.
+
+00:08:08.546 --> 00:08:14.576 align:middle
+En segundo lugar, el proveedor de colecciones también
+hace funcionar el sistema de extensión de consultas.
+
+00:08:15.226 --> 00:08:20.976 align:middle
+No tenemos ninguna extensión de consulta
+para User, pero sí para DragonTreasure.
+
+00:08:21.666 --> 00:08:26.146 align:middle
+Más adelante, cuando convirtamos
+DragonTreasure en su propia clase DTO,
+
+00:08:26.516 --> 00:08:28.886 align:middle
+esta extensión seguirá funcionando.
+
+00:08:29.896 --> 00:08:34.156 align:middle
+La tercera y última golosina es que ¡el
+sistema de filtros sigue funcionando!
+
+00:08:34.726 --> 00:08:40.166 align:middle
+Observa: encima de UserApi, añade
+#[ApiFilter()] con SearchFilter::class
+
+00:08:40.666 --> 00:08:43.426 align:middle
+y properties: con username ajustado a partial.
+
+00:08:45.486 --> 00:08:46.936 align:middle
+Vuelve a mirar la documentación...
+
+00:08:48.786 --> 00:08:52.206 align:middle
+ups. Autocompleté el SearchFilter desde ODM.
+
+00:08:52.206 --> 00:08:58.586 align:middle
+Bórralo y pulsa Alt+Enter
+para coger el de ORM.
+
+00:09:00.846 --> 00:09:01.976 align:middle
+Vuelve a actualizar la documentación...
+
+00:09:02.306 --> 00:09:05.256 align:middle
+y mira la ruta /api/users.
+
+00:09:05.566 --> 00:09:10.906 align:middle
+Está anunciando que hay un filtro
+username, ¡y va a funcionar!
+
+00:09:11.876 --> 00:09:15.076 align:middle
+En la otra pestaña, añade ?username=Clumsy.
+
+00:09:16.906 --> 00:09:18.316 align:middle
+Y... ¡sí!
+
+00:09:18.516 --> 00:09:21.076 align:middle
+¡Sólo devuelve esos 5 resultados!
+
+00:09:21.216 --> 00:09:24.316 align:middle
+¡Así que el sistema de filtros funciona!
+
+00:09:24.686 --> 00:09:28.226 align:middle
+Aunque, una cosa a tener en cuenta
+es que, cuando decimos username , nos
+
+00:09:28.446 --> 00:09:32.236 align:middle
+estamos refiriendo a la propiedad
+$username de la entidad User.
+
+00:09:32.236 --> 00:09:37.656 align:middle
+En lo que respecta al filtro, ni siquiera
+necesitamos un username en UserApi.
+
+00:09:37.866 --> 00:09:42.406 align:middle
+Así que: estamos reutilizando toda esta
+lógica central del proveedor Doctrine,
+
+00:09:42.536 --> 00:09:45.146 align:middle
+tenemos paginación, filtros y....
+
+00:09:45.236 --> 00:09:47.976 align:middle
+es lo mejor desde los sándwiches de helado.
+
+00:09:48.556 --> 00:09:55.706 align:middle
+Excepto... por esa gran y aterradora limitación:
+que nuestro DTO no puede tener campos personalizados.
+
+00:09:56.026 --> 00:10:00.886 align:middle
+Y... ése es realmente el objetivo
+de un DTO: obtener la flexibilidad
+
+00:10:00.886 --> 00:10:03.256 align:middle
+de tener campos diferentes a los de tu entidad.
+
+00:10:03.776 --> 00:10:07.236 align:middle
+Así que vamos a ver cómo solucionar
+esa limitación a continuación.
