@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 21aa4dd..545aa78 100644
+index 21aa4dd7..545aa78c 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -8,12 +8,14 @@ use ApiPlatform\Metadata\ApiFilter;

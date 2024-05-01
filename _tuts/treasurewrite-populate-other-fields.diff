@@ -1,5 +1,5 @@
 diff --git a/src/Mapper/DragonTreasureApiToEntityMapper.php b/src/Mapper/DragonTreasureApiToEntityMapper.php
-index 64c35c9..8591a09 100644
+index 64c35c9f..8591a09b 100644
 --- a/src/Mapper/DragonTreasureApiToEntityMapper.php
 +++ b/src/Mapper/DragonTreasureApiToEntityMapper.php
 @@ -46,8 +46,11 @@ class DragonTreasureApiToEntityMapper implements MapperInterface

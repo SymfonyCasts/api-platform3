@@ -1,5 +1,5 @@
 diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
-index 868324a..ed30707 100644
+index 868324ad..ed30707f 100644
 --- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 +++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 @@ -2,17 +2,13 @@

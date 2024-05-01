@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 3247548..a4f442e 100644
+index 32475480..a4f442e5 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -21,7 +21,7 @@ use App\Entity\User;

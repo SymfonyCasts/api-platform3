@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 44deb65..d74b9a0 100644
+index 44deb650..d74b9a05 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -24,12 +24,16 @@ use Symfony\Component\Validator\Constraints as Assert;

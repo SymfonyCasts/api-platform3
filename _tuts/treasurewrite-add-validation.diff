@@ -1,11 +1,11 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index c1723f1..c409f54 100644
+index ca7ef466..8609fdc9 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -8,6 +8,9 @@ use ApiPlatform\Metadata\ApiResource;
  use App\Entity\DragonTreasure;
  use App\State\EntityClassDtoStateProcessor;
- use App\State\EntityClassDtoStateProvider;
+ use App\State\EntityToDtoStateProvider;
 +use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 +use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 +use Symfony\Component\Validator\Constraints\NotBlank;

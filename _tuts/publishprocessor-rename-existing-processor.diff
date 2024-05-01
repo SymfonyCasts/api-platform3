@@ -2,7 +2,7 @@ diff --git a/src/State/DragonTreasureSetOwnerProcessor.php b/src/State/DragonTre
 similarity index 93%
 rename from src/State/DragonTreasureSetOwnerProcessor.php
 rename to src/State/DragonTreasureStateProcessor.php
-index 3a745d3..8029135 100644
+index 3a745d3e..80291354 100644
 --- a/src/State/DragonTreasureSetOwnerProcessor.php
 +++ b/src/State/DragonTreasureStateProcessor.php
 @@ -9,7 +9,7 @@ use Symfony\Bundle\SecurityBundle\Security;

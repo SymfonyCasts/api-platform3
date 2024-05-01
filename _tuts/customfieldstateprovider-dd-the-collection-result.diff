@@ -1,5 +1,5 @@
 diff --git a/src/State/DragonTreasureStateProvider.php b/src/State/DragonTreasureStateProvider.php
-index ec4f1cd..d034ead 100644
+index ec4f1cd6..d034ead3 100644
 --- a/src/State/DragonTreasureStateProvider.php
 +++ b/src/State/DragonTreasureStateProvider.php
 @@ -24,6 +24,7 @@ class DragonTreasureStateProvider implements ProviderInterface

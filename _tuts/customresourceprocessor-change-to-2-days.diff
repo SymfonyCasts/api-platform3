@@ -1,5 +1,5 @@
 diff --git a/tests/Functional/DailyQuestResourceTest.php b/tests/Functional/DailyQuestResourceTest.php
-index 52742f5..bfb78bf 100644
+index 52742f54..bfb78bff 100644
 --- a/tests/Functional/DailyQuestResourceTest.php
 +++ b/tests/Functional/DailyQuestResourceTest.php
 @@ -12,9 +12,9 @@ class DailyQuestResourceTest extends ApiTestCase

@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 61b1831..2c85b05 100644
+index 61b1831a..2c85b05b 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -41,6 +41,7 @@ use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +19,7 @@ index 61b1831..2c85b05 100644
  
      #[ApiProperty(writable: false)]
 diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
-index f712ef1..868324a 100644
+index f712ef17..868324ad 100644
 --- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 +++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 @@ -21,7 +21,7 @@ class TreasuresAllowedOwnerChangeValidator extends ConstraintValidator

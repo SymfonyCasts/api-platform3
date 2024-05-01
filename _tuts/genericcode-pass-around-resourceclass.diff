@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
-index 7b86ecf..de489de 100644
+index 7b86ecf1..de489de1 100644
 --- a/src/State/EntityToDtoStateProvider.php
 +++ b/src/State/EntityToDtoStateProvider.php
 @@ -9,7 +9,6 @@ use ApiPlatform\Doctrine\Orm\State\CollectionProvider;

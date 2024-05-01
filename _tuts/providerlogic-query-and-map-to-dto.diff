@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
-index f014dde..51df606 100644
+index f014dde5..51df6067 100644
 --- a/src/State/EntityToDtoStateProvider.php
 +++ b/src/State/EntityToDtoStateProvider.php
 @@ -2,13 +2,23 @@

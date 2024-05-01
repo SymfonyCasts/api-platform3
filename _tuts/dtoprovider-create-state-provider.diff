@@ -1,6 +1,6 @@
 diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
 new file mode 100644
-index 0000000..f014dde
+index 00000000..f014dde5
 --- /dev/null
 +++ b/src/State/EntityToDtoStateProvider.php
 @@ -0,0 +1,14 @@

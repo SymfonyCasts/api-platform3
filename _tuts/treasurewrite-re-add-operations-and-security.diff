@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index c409f54..79b1c1e 100644
+index 8609fdc9..896cab23 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -5,6 +5,11 @@ namespace App\ApiResource;
@@ -13,7 +13,7 @@ index c409f54..79b1c1e 100644
 +use ApiPlatform\Metadata\Post;
  use App\Entity\DragonTreasure;
  use App\State\EntityClassDtoStateProcessor;
- use App\State\EntityClassDtoStateProvider;
+ use App\State\EntityToDtoStateProvider;
 @@ -14,6 +19,19 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  
  #[ApiResource(
@@ -32,5 +32,5 @@ index c409f54..79b1c1e 100644
 +        )
 +    ],
      paginationItemsPerPage: 10,
-     provider: EntityClassDtoStateProvider::class,
+     provider: EntityToDtoStateProvider::class,
      processor: EntityClassDtoStateProcessor::class,

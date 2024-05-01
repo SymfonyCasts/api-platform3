@@ -1,5 +1,5 @@
 diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
-index 35fc24b..e588010 100644
+index 35fc24b2..e588010d 100644
 --- a/src/State/EntityToDtoStateProvider.php
 +++ b/src/State/EntityToDtoStateProvider.php
 @@ -11,12 +11,14 @@ use ApiPlatform\State\Pagination\TraversablePaginator;

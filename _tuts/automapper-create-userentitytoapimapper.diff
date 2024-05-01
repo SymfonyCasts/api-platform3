@@ -1,6 +1,6 @@
 diff --git a/src/Mapper/UserEntityToApiMapper.php b/src/Mapper/UserEntityToApiMapper.php
 new file mode 100644
-index 0000000..7dfc1bc
+index 00000000..7dfc1bc8
 --- /dev/null
 +++ b/src/Mapper/UserEntityToApiMapper.php
 @@ -0,0 +1,38 @@

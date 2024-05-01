@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 4f93e9b..a4f442e 100644
+index 4f93e9bc..a4f442e5 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -31,4 +31,6 @@ class UserApi
@@ -10,7 +10,7 @@ index 4f93e9b..a4f442e 100644
 +    public int $flameThrowingDistance = 0;
  }
 diff --git a/src/State/EntityToDtoStateProvider.php b/src/State/EntityToDtoStateProvider.php
-index d7671b7..2fcbaeb 100644
+index d7671b7e..2fcbaebe 100644
 --- a/src/State/EntityToDtoStateProvider.php
 +++ b/src/State/EntityToDtoStateProvider.php
 @@ -36,6 +36,7 @@ class EntityToDtoStateProvider implements ProviderInterface

@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/UserApi.php b/src/ApiResource/UserApi.php
-index 8c4efde..61b1831 100644
+index 8c4efde7..61b1831a 100644
 --- a/src/ApiResource/UserApi.php
 +++ b/src/ApiResource/UserApi.php
 @@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
@@ -19,7 +19,7 @@ index 8c4efde..61b1831 100644
  
      #[ApiProperty(writable: false)]
 diff --git a/src/Validator/TreasuresAllowedOwnerChangeValidator.php b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
-index 7e5fc96..868324a 100644
+index 7e5fc96d..868324ad 100644
 --- a/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 +++ b/src/Validator/TreasuresAllowedOwnerChangeValidator.php
 @@ -3,7 +3,6 @@
@@ -41,7 +41,7 @@ index 7e5fc96..868324a 100644
          $unitOfWork = $this->entityManager->getUnitOfWork();
          foreach ($value as $dragonTreasure) {
 diff --git a/tests/Functional/UserResourceTest.php b/tests/Functional/UserResourceTest.php
-index 523680f..1c42b10 100644
+index 523680f1..1c42b10a 100644
 --- a/tests/Functional/UserResourceTest.php
 +++ b/tests/Functional/UserResourceTest.php
 @@ -83,6 +83,7 @@ class UserResourceTest extends ApiTestCase

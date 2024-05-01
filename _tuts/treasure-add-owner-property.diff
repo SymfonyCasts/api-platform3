@@ -1,5 +1,5 @@
 diff --git a/src/ApiResource/DragonTreasureApi.php b/src/ApiResource/DragonTreasureApi.php
-index 79148b2..92508c5 100644
+index 96133cba..e37a6a5c 100644
 --- a/src/ApiResource/DragonTreasureApi.php
 +++ b/src/ApiResource/DragonTreasureApi.php
 @@ -22,4 +22,6 @@ class DragonTreasureApi
@@ -10,7 +10,7 @@ index 79148b2..92508c5 100644
 +    public ?UserApi $owner = null;
  }
 diff --git a/src/Mapper/DragonTreasureEntityToApiMapper.php b/src/Mapper/DragonTreasureEntityToApiMapper.php
-index 647c999..d46464d 100644
+index 647c999f..d46464d1 100644
 --- a/src/Mapper/DragonTreasureEntityToApiMapper.php
 +++ b/src/Mapper/DragonTreasureEntityToApiMapper.php
 @@ -3,13 +3,21 @@
