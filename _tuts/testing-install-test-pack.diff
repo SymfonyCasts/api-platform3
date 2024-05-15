@@ -72,7 +72,7 @@ index ae31637..08d7009 100644
          "symfony/web-profiler-bundle": "6.2.*",
          "zenstruck/foundry": "^1.26"
 diff --git a/composer.lock b/composer.lock
-index 76f3869..95a1bd9 100644
+index 279c21e..c75499c 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -2211,19 +2211,6 @@ index 76f3869..95a1bd9 100644
          {
              "name": "zenstruck/assert",
              "version": "v1.3.0",
-diff --git a/package.json b/package.json
-index 38b3215..3028932 100644
---- a/package.json
-+++ b/package.json
-@@ -19,7 +19,7 @@
-         "react-dom": "^18.0",
-         "regenerator-runtime": "^0.13.9",
-         "tailwindcss": "^3.2.6",
--        "vue": "^3.2.47",
-+        "vue": "^3.0",
-         "vue-loader": "^17.0.1",
-         "webpack": "^5.74.0",
-         "webpack-cli": "^4.10.0",
 diff --git a/phpunit.xml.dist b/phpunit.xml.dist
 new file mode 100644
 index 0000000..af3f147

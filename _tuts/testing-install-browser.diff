@@ -11,7 +11,7 @@ index 08d7009..4c78a27 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index 95a1bd9..15f288a 100644
+index c75499c..7eea066 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
