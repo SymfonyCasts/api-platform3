@@ -1,5 +1,5 @@
 diff --git a/assets/controllers.json b/assets/controllers.json
-index a1c6e90c..7e8416fd 100644
+index a1c6e90..7e8416f 100644
 --- a/assets/controllers.json
 +++ b/assets/controllers.json
 @@ -1,4 +1,11 @@
@@ -16,7 +16,7 @@ index a1c6e90c..7e8416fd 100644
      "entrypoints": []
  }
 diff --git a/composer.json b/composer.json
-index fe71321d..38913a23 100644
+index fe71321..38913a2 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -28,6 +28,7 @@
@@ -28,7 +28,7 @@ index fe71321d..38913a23 100644
          "symfony/webpack-encore-bundle": "^1.16",
          "symfony/yaml": "6.2.*"
 diff --git a/composer.lock b/composer.lock
-index 0d465a6b..7d3f80fa 100644
+index 1306a97..81f1933 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -121,7 +121,7 @@ index 0d465a6b..7d3f80fa 100644
              "name": "symfony/validator",
              "version": "v6.2.3",
 diff --git a/config/bundles.php b/config/bundles.php
-index 14a3be2c..cbed50ce 100644
+index 14a3be2..cbed50c 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
 @@ -15,4 +15,5 @@ return [
@@ -131,7 +131,7 @@ index 14a3be2c..cbed50ce 100644
 +    Symfony\UX\React\ReactBundle::class => ['all' => true],
  ];
 diff --git a/package.json b/package.json
-index 0102896a..bc0a9d5e 100644
+index 0102896..bc0a9d5 100644
 --- a/package.json
 +++ b/package.json
 @@ -5,8 +5,11 @@
@@ -147,7 +147,7 @@ index 0102896a..bc0a9d5e 100644
          "webpack": "^5.74.0",
          "webpack-cli": "^4.10.0",
 diff --git a/symfony.lock b/symfony.lock
-index abc17bd8..bc5cd2bc 100644
+index abc17bd..bc5cd2b 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -268,6 +268,9 @@

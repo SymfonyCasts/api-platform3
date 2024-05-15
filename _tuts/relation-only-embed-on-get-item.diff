@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 6d052101..5176ee20 100644
+index 6d05210..5176ee2 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -27,7 +27,11 @@ use function Symfony\Component\String\u;
@@ -16,7 +16,7 @@ index 6d052101..5176ee20 100644
          new Post(),
          new Put(),
 diff --git a/src/Entity/User.php b/src/Entity/User.php
-index 66f3941f..4fa7cc6c 100644
+index 66f3941..4fa7cc6 100644
 --- a/src/Entity/User.php
 +++ b/src/Entity/User.php
 @@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface

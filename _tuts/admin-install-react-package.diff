@@ -1,5 +1,5 @@
 diff --git a/package-lock.json b/package-lock.json
-index e081d338..c5fe4ef6 100644
+index e081d33..c5fe4ef 100644
 --- a/package-lock.json
 +++ b/package-lock.json
 @@ -11,8 +11,11 @@
@@ -57,7 +57,7 @@ index e081d338..c5fe4ef6 100644
                  "loose-envify": "^1.1.0"
              }
 diff --git a/package.json b/package.json
-index bc0a9d5e..af3f2f46 100644
+index bc0a9d5..af3f2f4 100644
 --- a/package.json
 +++ b/package.json
 @@ -8,7 +8,7 @@

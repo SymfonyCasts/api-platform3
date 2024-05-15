@@ -1,5 +1,5 @@
 diff --git a/package-lock.json b/package-lock.json
-index c5fe4ef6..e7ad2ab9 100644
+index c5fe4ef..e7ad2ab 100644
 --- a/package-lock.json
 +++ b/package-lock.json
 @@ -9,6 +9,7 @@
@@ -110,7 +110,7 @@ index c5fe4ef6..e7ad2ab9 100644
              "version": "7.20.7",
              "resolved": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.20.7.tgz",
 diff --git a/package.json b/package.json
-index af3f2f46..d5595dc8 100644
+index af3f2f4..d5595dc 100644
 --- a/package.json
 +++ b/package.json
 @@ -3,6 +3,7 @@

@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 69def9fa..47ab9ecc 100644
+index 69def9f..47ab9ec 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;

@@ -1,6 +1,6 @@
 diff --git a/src/Factory/DragonTreasureFactory.php b/src/Factory/DragonTreasureFactory.php
 new file mode 100644
-index 00000000..f3871bdf
+index 0000000..f3871bd
 --- /dev/null
 +++ b/src/Factory/DragonTreasureFactory.php
 @@ -0,0 +1,73 @@

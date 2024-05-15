@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 61393825..a7fc7bc4 100644
+index 6139382..a7fc7bc 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -61,7 +61,7 @@ class DragonTreasure

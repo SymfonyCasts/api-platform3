@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index b24438d7..00bb3263 100644
+index b24438d..00bb326 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -13,6 +13,7 @@
@@ -11,7 +11,7 @@ index b24438d7..00bb3263 100644
          "phpstan/phpdoc-parser": "^1.15",
          "symfony/asset": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index b35397ca..893b13fe 100644
+index dddc22f..92d10c3 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
@@ -239,7 +239,7 @@ index b35397ca..893b13fe 100644
              "version": "v3.2.0",
 diff --git a/config/packages/translation.yaml b/config/packages/translation.yaml
 new file mode 100644
-index 00000000..abb76aae
+index 0000000..abb76aa
 --- /dev/null
 +++ b/config/packages/translation.yaml
 @@ -0,0 +1,13 @@
@@ -257,7 +257,7 @@ index 00000000..abb76aae
 +#            lokalise:
 +#                dsn: '%env(LOKALISE_DSN)%'
 diff --git a/symfony.lock b/symfony.lock
-index e92cc6c2..6e47bb70 100644
+index e92cc6c..6e47bb7 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -230,6 +230,19 @@
@@ -282,4 +282,4 @@ index e92cc6c2..6e47bb70 100644
          "recipe": {
 diff --git a/translations/.gitignore b/translations/.gitignore
 new file mode 100644
-index 00000000..e69de29b
+index 0000000..e69de29

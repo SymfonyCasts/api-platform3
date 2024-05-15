@@ -1,5 +1,5 @@
 diff --git a/.env b/.env
-index b16915dd..f61a2060 100644
+index b16915d..f61a206 100644
 --- a/.env
 +++ b/.env
 @@ -18,3 +18,16 @@
@@ -20,7 +20,7 @@ index b16915dd..f61a2060 100644
 +CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 +###< nelmio/cors-bundle ###
 diff --git a/composer.json b/composer.json
-index fa81609a..4dd635f8 100644
+index fa81609..4dd635f 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -7,11 +7,27 @@
@@ -62,7 +62,7 @@ index fa81609a..4dd635f8 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index bd109d16..2a6b1588 100644
+index d604140..4ee4f13 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,34 +4,137 @@
@@ -1873,29 +1873,29 @@ index bd109d16..2a6b1588 100644
 +        },
 +        {
 +            "name": "laminas/laminas-code",
-+            "version": "4.8.0",
++            "version": "4.13.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/laminas/laminas-code.git",
-+                "reference": "dd19fe8e07cc3f374308565667eecd4958c22106"
++                "reference": "7353d4099ad5388e84737dd16994316a04f48dbf"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/dd19fe8e07cc3f374308565667eecd4958c22106",
-+                "reference": "dd19fe8e07cc3f374308565667eecd4958c22106",
++                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/7353d4099ad5388e84737dd16994316a04f48dbf",
++                "reference": "7353d4099ad5388e84737dd16994316a04f48dbf",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "php": "~8.1.0 || ~8.2.0"
++                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
 +            },
 +            "require-dev": {
-+                "doctrine/annotations": "^1.13.3",
++                "doctrine/annotations": "^2.0.1",
 +                "ext-phar": "*",
-+                "laminas/laminas-coding-standard": "^2.3.0",
-+                "laminas/laminas-stdlib": "^3.6.1",
-+                "phpunit/phpunit": "^9.5.26",
-+                "psalm/plugin-phpunit": "^0.18.0",
-+                "vimeo/psalm": "^5.1.0"
++                "laminas/laminas-coding-standard": "^2.5.0",
++                "laminas/laminas-stdlib": "^3.17.0",
++                "phpunit/phpunit": "^10.3.3",
++                "psalm/plugin-phpunit": "^0.18.4",
++                "vimeo/psalm": "^5.15.0"
 +            },
 +            "suggest": {
 +                "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
@@ -1932,7 +1932,7 @@ index bd109d16..2a6b1588 100644
 +                    "type": "community_bridge"
 +                }
 +            ],
-+            "time": "2022-12-08T02:08:23+00:00"
++            "time": "2023-10-18T10:00:55+00:00"
 +        },
 +        {
 +            "name": "nelmio/cors-bundle",
@@ -6442,7 +6442,7 @@ index bd109d16..2a6b1588 100644
      ],
      "packages-dev": [],
 diff --git a/config/bundles.php b/config/bundles.php
-index 49d3fb6f..ccc600f7 100644
+index 49d3fb6..ccc600f 100644
 --- a/config/bundles.php
 +++ b/config/bundles.php
 @@ -2,4 +2,10 @@
@@ -6458,7 +6458,7 @@ index 49d3fb6f..ccc600f7 100644
  ];
 diff --git a/config/packages/doctrine.yaml b/config/packages/doctrine.yaml
 new file mode 100644
-index 00000000..ba9d078e
+index 0000000..ba9d078
 --- /dev/null
 +++ b/config/packages/doctrine.yaml
 @@ -0,0 +1,43 @@
@@ -6507,7 +6507,7 @@ index 00000000..ba9d078e
 +                    adapter: cache.system
 diff --git a/config/packages/doctrine_migrations.yaml b/config/packages/doctrine_migrations.yaml
 new file mode 100644
-index 00000000..29231d94
+index 0000000..29231d9
 --- /dev/null
 +++ b/config/packages/doctrine_migrations.yaml
 @@ -0,0 +1,6 @@
@@ -6519,7 +6519,7 @@ index 00000000..29231d94
 +    enable_profiler: false
 diff --git a/config/packages/nelmio_cors.yaml b/config/packages/nelmio_cors.yaml
 new file mode 100644
-index 00000000..c7665081
+index 0000000..c766508
 --- /dev/null
 +++ b/config/packages/nelmio_cors.yaml
 @@ -0,0 +1,10 @@
@@ -6535,7 +6535,7 @@ index 00000000..c7665081
 +        '^/': null
 diff --git a/config/packages/security.yaml b/config/packages/security.yaml
 new file mode 100644
-index 00000000..367af25a
+index 0000000..367af25
 --- /dev/null
 +++ b/config/packages/security.yaml
 @@ -0,0 +1,39 @@
@@ -6580,7 +6580,7 @@ index 00000000..367af25a
 +                memory_cost: 10 # Lowest possible value for argon
 diff --git a/config/packages/twig.yaml b/config/packages/twig.yaml
 new file mode 100644
-index 00000000..f9f4cc53
+index 0000000..f9f4cc5
 --- /dev/null
 +++ b/config/packages/twig.yaml
 @@ -0,0 +1,6 @@
@@ -6592,7 +6592,7 @@ index 00000000..f9f4cc53
 +        strict_variables: true
 diff --git a/config/packages/validator.yaml b/config/packages/validator.yaml
 new file mode 100644
-index 00000000..0201281d
+index 0000000..0201281
 --- /dev/null
 +++ b/config/packages/validator.yaml
 @@ -0,0 +1,13 @@
@@ -6611,7 +6611,7 @@ index 00000000..0201281d
 +            not_compromised_password: false
 diff --git a/config/routes/api_platform.yaml b/config/routes/api_platform.yaml
 new file mode 100644
-index 00000000..38f11cba
+index 0000000..38f11cb
 --- /dev/null
 +++ b/config/routes/api_platform.yaml
 @@ -0,0 +1,4 @@
@@ -6621,7 +6621,7 @@ index 00000000..38f11cba
 +    prefix: /api
 diff --git a/docker-compose.override.yml b/docker-compose.override.yml
 new file mode 100644
-index 00000000..f2247d5d
+index 0000000..f2247d5
 --- /dev/null
 +++ b/docker-compose.override.yml
 @@ -0,0 +1,8 @@
@@ -6635,7 +6635,7 @@ index 00000000..f2247d5d
 +###< doctrine/doctrine-bundle ###
 diff --git a/docker-compose.yml b/docker-compose.yml
 new file mode 100644
-index 00000000..8aa1121a
+index 0000000..8aa1121
 --- /dev/null
 +++ b/docker-compose.yml
 @@ -0,0 +1,21 @@
@@ -6662,18 +6662,18 @@ index 00000000..8aa1121a
 +###< doctrine/doctrine-bundle ###
 diff --git a/migrations/.gitignore b/migrations/.gitignore
 new file mode 100644
-index 00000000..e69de29b
+index 0000000..e69de29
 diff --git a/src/ApiResource/.gitignore b/src/ApiResource/.gitignore
 new file mode 100644
-index 00000000..e69de29b
+index 0000000..e69de29
 diff --git a/src/Entity/.gitignore b/src/Entity/.gitignore
 new file mode 100644
-index 00000000..e69de29b
+index 0000000..e69de29
 diff --git a/src/Repository/.gitignore b/src/Repository/.gitignore
 new file mode 100644
-index 00000000..e69de29b
+index 0000000..e69de29
 diff --git a/symfony.lock b/symfony.lock
-index 70137049..336a104d 100644
+index 7013704..336a104 100644
 --- a/symfony.lock
 +++ b/symfony.lock
 @@ -1,4 +1,65 @@
@@ -6794,7 +6794,7 @@ index 70137049..336a104d 100644
      },
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 new file mode 100644
-index 00000000..d4f83f7f
+index 0000000..d4f83f7
 --- /dev/null
 +++ b/templates/base.html.twig
 @@ -0,0 +1,19 @@

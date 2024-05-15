@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 4e3d1120..88d443b7 100644
+index 4e3d112..88d443b 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -38,7 +38,14 @@ use function Symfony\Component\String\u;

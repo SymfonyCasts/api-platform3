@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 3e8b1e10..c1b35cca 100644
+index 3e8b1e1..c1b35cc 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiFilter;

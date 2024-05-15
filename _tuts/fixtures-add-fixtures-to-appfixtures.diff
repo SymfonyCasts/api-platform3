@@ -1,5 +1,5 @@
 diff --git a/README.md b/README.md
-index 32d3cba5..52908700 100644
+index 32d3cba..5290870 100644
 --- a/README.md
 +++ b/README.md
 @@ -42,6 +42,7 @@ Next, build the database and the schema with:
@@ -11,7 +11,7 @@ index 32d3cba5..52908700 100644
  
  If you do *not* want to use Docker, just make sure to start your own
 diff --git a/src/DataFixtures/AppFixtures.php b/src/DataFixtures/AppFixtures.php
-index 987f6fe9..7137f2bb 100644
+index 987f6fe..7137f2b 100644
 --- a/src/DataFixtures/AppFixtures.php
 +++ b/src/DataFixtures/AppFixtures.php
 @@ -2,6 +2,7 @@

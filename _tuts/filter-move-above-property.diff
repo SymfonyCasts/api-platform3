@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 45a6eccc..44ead2fd 100644
+index 45a6ecc..44ead2f 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -36,7 +36,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;

@@ -1,5 +1,5 @@
 diff --git a/src/Entity/DragonTreasure.php b/src/Entity/DragonTreasure.php
-index 013bbe1d..469af307 100644
+index 013bbe1..469af30 100644
 --- a/src/Entity/DragonTreasure.php
 +++ b/src/Entity/DragonTreasure.php
 @@ -13,6 +13,7 @@ use Carbon\Carbon;
