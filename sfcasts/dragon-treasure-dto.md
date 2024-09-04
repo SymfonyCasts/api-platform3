@@ -47,13 +47,13 @@ the `security` line. The *most* important thing is that we have `provider` and
 `processor` (just as they are here), and `stateOptions`, which will point to
 `DragonTreasure::class`.
 
-[[[ code('39af10eb7e') ]]]
+[[[ code('03015f665a') ]]]
 
 Also grab the `$id` property. Like before, we don't *really* want this to be
 part of our API, so it's `readable: false` and `writable: false`. Down here, add
 `public ?string $name = null`.
 
-[[[ code('1bab55ca04') ]]]
+[[[ code('945876c9ce') ]]]
 
 *Great* start! We have one tiny class and... what the heck, let's just go try it!
 Refresh the docs. Yes! Our Treasure operations are here! If we try the collection
