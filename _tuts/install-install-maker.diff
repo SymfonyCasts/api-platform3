@@ -1,8 +1,8 @@
 diff --git a/composer.json b/composer.json
-index 4dd635f..14f29a2 100644
+index bec5ddc..77dc010 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -80,5 +80,8 @@
+@@ -81,5 +81,8 @@
              "require": "6.2.*",
              "docker": true
          }

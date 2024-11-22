@@ -20,7 +20,7 @@ index b16915d..f61a206 100644
 +CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 +###< nelmio/cors-bundle ###
 diff --git a/composer.json b/composer.json
-index fa81609..4dd635f 100644
+index f17cb06..bec5ddc 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -7,11 +7,27 @@
@@ -51,7 +51,7 @@ index fa81609..4dd635f 100644
          "symfony/yaml": "6.2.*"
      },
      "config": {
-@@ -61,7 +77,8 @@
+@@ -62,7 +78,8 @@
      "extra": {
          "symfony": {
              "allow-contrib": false,

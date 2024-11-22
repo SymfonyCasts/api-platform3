@@ -1,8 +1,8 @@
 diff --git a/composer.json b/composer.json
-index 00bb326..54ae659 100644
+index c09e435..2b33d8b 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -83,10 +83,12 @@
+@@ -84,10 +84,12 @@
          }
      },
      "require-dev": {

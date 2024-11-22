@@ -90,7 +90,7 @@ index 0000000..cb33b13
 +    background-color: lightgray;
 +}
 diff --git a/composer.json b/composer.json
-index 54ae659..fe71321 100644
+index 2b33d8b..1fa6fdf 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -29,6 +29,7 @@
