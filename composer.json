@@ -56,7 +56,8 @@
         ]
     },
     "conflict": {
-        "symfony/symfony": "*"
+        "symfony/symfony": "*",
+        "phpstan/phpdoc-parser": ">=2.0"
     },
     "extra": {
         "symfony": {
