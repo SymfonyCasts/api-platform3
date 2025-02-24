@@ -72,7 +72,7 @@ index ae31637..08d7009 100644
          "symfony/web-profiler-bundle": "6.2.*",
          "zenstruck/foundry": "^1.26"
 diff --git a/composer.lock b/composer.lock
-index 279c21e..c75499c 100644
+index bcc27fd..f1327d4 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@

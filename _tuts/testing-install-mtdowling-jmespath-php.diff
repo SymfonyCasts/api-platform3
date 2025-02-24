@@ -11,7 +11,7 @@ index 4c78a27..aa6da28 100644
          "symfony/browser-kit": "6.2.*",
          "symfony/css-selector": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index 7eea066..b2b1226 100644
+index 1730ba2..53d08ac 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
