@@ -12,15 +12,15 @@ index bec5ddc..77dc010 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index 4ee4f13..acae800 100644
+index 9bc5295..d9c5c57 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "17c17a7868c753e1fe4ee7f34a95343c",
-+    "content-hash": "88a522e9b105bc3cb0b8215ba33469d9",
+-    "content-hash": "0d8156c846f182ded0307ba5a6f66cfd",
++    "content-hash": "37a833e9f2b266008117be68aed49ad7",
      "packages": [
          {
              "name": "api-platform/core",
@@ -182,7 +182,7 @@ index 4ee4f13..acae800 100644
 +    ],
      "aliases": [],
      "minimum-stability": "dev",
-     "stability-flags": [],
+     "stability-flags": {},
 diff --git a/config/bundles.php b/config/bundles.php
 index ccc600f..140f5fd 100644
 --- a/config/bundles.php

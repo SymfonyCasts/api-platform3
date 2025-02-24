@@ -17,15 +17,15 @@ index c09e435..2b33d8b 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index 92d10c3..668c0ab 100644
+index a73ebae..c91b765 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "fc0b0f09521c4a07186dd174b22749f5",
-+    "content-hash": "739e38a2e28d712d0a777db76352e6de",
+-    "content-hash": "6bba3d8fe8e0faf1d4fe6e5ebd05596e",
++    "content-hash": "d019d608b63244767c561486e5aba3ad",
      "packages": [
          {
              "name": "api-platform/core",

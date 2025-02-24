@@ -28,15 +28,15 @@ index 1fa6fdf..e2c7eaf 100644
          "symfony/webpack-encore-bundle": "^1.16",
          "symfony/yaml": "6.2.*"
 diff --git a/composer.lock b/composer.lock
-index 1306a97..81f1933 100644
+index 2176169..0e98dc4 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "5016068e0bc8915aa48e72cfd3cd760c",
-+    "content-hash": "eba1d5c2088b63de741910ae038bfa0c",
+-    "content-hash": "f7f256cce75014c67159a5156aba8a6b",
++    "content-hash": "5a5dd85d9a26f6f73f8e0c41e2a4e14c",
      "packages": [
          {
              "name": "api-platform/core",

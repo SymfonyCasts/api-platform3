@@ -11,15 +11,15 @@ index 9435b04..c09e435 100644
          "phpstan/phpdoc-parser": "^1.15",
          "symfony/asset": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index dddc22f..92d10c3 100644
+index 8a512ba..a73ebae 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "374c7ec6bab5e689608a5484fb62fe16",
-+    "content-hash": "fc0b0f09521c4a07186dd174b22749f5",
+-    "content-hash": "b8e5070c209eaa3e345c7a76cb06526e",
++    "content-hash": "6bba3d8fe8e0faf1d4fe6e5ebd05596e",
      "packages": [
          {
              "name": "api-platform/core",
