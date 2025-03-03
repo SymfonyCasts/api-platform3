@@ -50,7 +50,13 @@ our API. They describe the models we have, the operations... *everything*.
 
 And *yes*, if this sounds *very* similar to the point of OpenAPI, you're *absolutely*
 correct. Both of them do the same thing: describe our API. In fact, if you go to
-`/api/docs.json`, *this* is the OpenAPI description of our API. If we replace the
+`/api/docs.json`, *this* is the OpenAPI description of our API.
+
+***TIP
+In API Platform 3.2 and higher, the URL changed to `/api/docs.jsonopenapi`
+***
+
+If we replace the
 `.json` with  `.jsonld`, this is the *JSON-LD Hydra* description of the *same* API.
 Why do we have both? Hydra is a bit more powerful: there are certain things it can
 describe that OpenAPI can't. But OpenAPI is a lot more common and has more tools
