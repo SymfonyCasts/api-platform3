@@ -54,7 +54,7 @@ index 0000000..f26f2c7
 +    require dirname(__DIR__).'/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
 +}
 diff --git a/composer.json b/composer.json
-index ae31637..08d7009 100644
+index 0c4405d..feca84d 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -87,9 +87,13 @@
@@ -72,15 +72,15 @@ index ae31637..08d7009 100644
          "symfony/web-profiler-bundle": "6.2.*",
          "zenstruck/foundry": "^1.26"
 diff --git a/composer.lock b/composer.lock
-index bcc27fd..f1327d4 100644
+index ac3d0be..108e6d5 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "ff96ed0e17f65d6db367ab91bbd79e27",
-+    "content-hash": "f0dd7ae4ca5508c5e5cf4150d4e6afcc",
+-    "content-hash": "fd0c21af1e9570f25a49acb45235b36a",
++    "content-hash": "4855b821f40168d8c9fa5fecda108838",
      "packages": [
          {
              "name": "api-platform/core",
@@ -2260,10 +2260,10 @@ index 0000000..af3f147
 +    -->
 +</phpunit>
 diff --git a/symfony.lock b/symfony.lock
-index 93975cf..58dae62 100644
+index 35fc39e..4974c60 100644
 --- a/symfony.lock
 +++ b/symfony.lock
-@@ -72,6 +72,20 @@
+@@ -81,6 +81,20 @@
              "config/packages/nelmio_cors.yaml"
          ]
      },
@@ -2284,7 +2284,7 @@ index 93975cf..58dae62 100644
      "psr/cache": {
          "version": "3.0.0"
      },
-@@ -199,6 +213,21 @@
+@@ -208,6 +222,21 @@
              "config/packages/monolog.yaml"
          ]
      },

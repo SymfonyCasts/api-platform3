@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 4c78a27..aa6da28 100644
+index 79d09c6..e367421 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -87,6 +87,7 @@
@@ -11,15 +11,15 @@ index 4c78a27..aa6da28 100644
          "symfony/browser-kit": "6.2.*",
          "symfony/css-selector": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index 1730ba2..53d08ac 100644
+index 054baca..28d7eda 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "3618ae1130be293162460b92cb92f486",
-+    "content-hash": "1d3d29a6559d0dfd066b3d837c30dcc3",
+-    "content-hash": "d7ad9bc758cd5c238ec692c32711286e",
++    "content-hash": "7b3d388df1f96fca176a8b0151a4c877",
      "packages": [
          {
              "name": "api-platform/core",
