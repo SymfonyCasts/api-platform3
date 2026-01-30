@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index c09e435..2b33d8b 100644
+index 2fb7d11..7ac570c 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -84,10 +84,12 @@
@@ -17,15 +17,15 @@ index c09e435..2b33d8b 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index a73ebae..c91b765 100644
+index 2858f37..9cc80c4 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "6bba3d8fe8e0faf1d4fe6e5ebd05596e",
-+    "content-hash": "d019d608b63244767c561486e5aba3ad",
+-    "content-hash": "4e05a71089e9ccc5ff79370a3b171b07",
++    "content-hash": "f2ab5d803fa5a64fc6fb412a68abb9e0",
      "packages": [
          {
              "name": "api-platform/core",
@@ -524,10 +524,10 @@ index 0000000..987f6fe
 +    }
 +}
 diff --git a/symfony.lock b/symfony.lock
-index 6e47bb7..57eb3a3 100644
+index 12b39d8..7407d02 100644
 --- a/symfony.lock
 +++ b/symfony.lock
-@@ -35,6 +35,18 @@
+@@ -44,6 +44,18 @@
              "src/Repository/.gitignore"
          ]
      },
@@ -546,7 +546,7 @@ index 6e47bb7..57eb3a3 100644
      "doctrine/doctrine-migrations-bundle": {
          "version": "3.2",
          "recipe": {
-@@ -289,5 +301,17 @@
+@@ -298,5 +310,17 @@
      },
      "symfony/yaml": {
          "version": "v6.2.2"

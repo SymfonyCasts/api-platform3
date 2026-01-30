@@ -90,7 +90,7 @@ index 0000000..cb33b13
 +    background-color: lightgray;
 +}
 diff --git a/composer.json b/composer.json
-index 2b33d8b..1fa6fdf 100644
+index 7ac570c..21ec3aa 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -29,6 +29,7 @@
@@ -102,15 +102,15 @@ index 2b33d8b..1fa6fdf 100644
      },
      "config": {
 diff --git a/composer.lock b/composer.lock
-index c91b765..2176169 100644
+index 9cc80c4..380060f 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "d019d608b63244767c561486e5aba3ad",
-+    "content-hash": "f7f256cce75014c67159a5156aba8a6b",
+-    "content-hash": "f2ab5d803fa5a64fc6fb412a68abb9e0",
++    "content-hash": "a2d0ac69ffb08ad55092521c96d3c138",
      "packages": [
          {
              "name": "api-platform/core",
@@ -284,10 +284,10 @@ index 0000000..d83a414
 +    }
 +}
 diff --git a/symfony.lock b/symfony.lock
-index 57eb3a3..abc17bd 100644
+index 7407d02..8c7734a 100644
 --- a/symfony.lock
 +++ b/symfony.lock
-@@ -299,6 +299,25 @@
+@@ -308,6 +308,25 @@
              "config/routes/web_profiler.yaml"
          ]
      },

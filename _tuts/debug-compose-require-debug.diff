@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 77dc010..9435b04 100644
+index 3ba994d..ca3a534 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -83,6 +83,10 @@
@@ -15,15 +15,15 @@ index 77dc010..9435b04 100644
      }
  }
 diff --git a/composer.lock b/composer.lock
-index d9c5c57..8a512ba 100644
+index 600df3d..896436e 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "37a833e9f2b266008117be68aed49ad7",
-+    "content-hash": "b8e5070c209eaa3e345c7a76cb06526e",
+-    "content-hash": "f764cb8de3359b0e748aba7226886205",
++    "content-hash": "5ca3e513ef5737990eddf4c1ad77986d",
      "packages": [
          {
              "name": "api-platform/core",
@@ -597,10 +597,10 @@ index 0000000..8d85319
 +        resource: '@WebProfilerBundle/Resources/config/routing/profiler.xml'
 +        prefix: /_profiler
 diff --git a/symfony.lock b/symfony.lock
-index f73d943..e92cc6c 100644
+index c5a7c1d..cc23acb 100644
 --- a/symfony.lock
 +++ b/symfony.lock
-@@ -93,6 +93,18 @@
+@@ -102,6 +102,18 @@
              "bin/console"
          ]
      },
@@ -619,7 +619,7 @@ index f73d943..e92cc6c 100644
      "symfony/dependency-injection": {
          "version": "v6.2.3"
      },
-@@ -163,6 +175,18 @@
+@@ -172,6 +184,18 @@
              "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
          }
      },
@@ -638,7 +638,7 @@ index f73d943..e92cc6c 100644
      "symfony/polyfill-intl-grapheme": {
          "version": "v1.27.0"
      },
-@@ -237,6 +261,19 @@
+@@ -246,6 +270,19 @@
      "symfony/var-exporter": {
          "version": "v6.2.3"
      },

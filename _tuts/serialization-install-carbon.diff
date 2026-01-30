@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 9435b04..c09e435 100644
+index ca3a534..2fb7d11 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -13,6 +13,7 @@
@@ -11,15 +11,15 @@ index 9435b04..c09e435 100644
          "phpstan/phpdoc-parser": "^1.15",
          "symfony/asset": "6.2.*",
 diff --git a/composer.lock b/composer.lock
-index 8a512ba..a73ebae 100644
+index 896436e..2858f37 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
          "This file is @generated automatically"
      ],
--    "content-hash": "b8e5070c209eaa3e345c7a76cb06526e",
-+    "content-hash": "6bba3d8fe8e0faf1d4fe6e5ebd05596e",
+-    "content-hash": "5ca3e513ef5737990eddf4c1ad77986d",
++    "content-hash": "4e05a71089e9ccc5ff79370a3b171b07",
      "packages": [
          {
              "name": "api-platform/core",
@@ -257,10 +257,10 @@ index 0000000..abb76aa
 +#            lokalise:
 +#                dsn: '%env(LOKALISE_DSN)%'
 diff --git a/symfony.lock b/symfony.lock
-index e92cc6c..6e47bb7 100644
+index cc23acb..12b39d8 100644
 --- a/symfony.lock
 +++ b/symfony.lock
-@@ -230,6 +230,19 @@
+@@ -239,6 +239,19 @@
      "symfony/string": {
          "version": "v6.2.2"
      },
